@@ -1,0 +1,2182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>ABUESA — Culture Akposso</title>
+<meta name="description" content="ABUESA : dictionnaire, chat, carte et culture du peuple Akposso (Ikposso) de Wawa, Togo.">
+
+<!-- Aperçu de partage (WhatsApp, Facebook, Messenger...) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="ABUESA — Culture Akposso">
+<meta property="og:description" content="Dictionnaire, chat, carte et culture du peuple Akposso (Ikposso) de Wawa, Togo.">
+<meta property="og:image" content="https://adomhub.github.io/ABUESA-IA-/og-image.jpg">
+<meta property="og:url" content="https://adomhub.github.io/ABUESA-IA-/">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ABUESA — Culture Akposso">
+<meta name="twitter:description" content="Dictionnaire, chat, carte et culture du peuple Akposso (Ikposso) de Wawa, Togo.">
+<meta name="twitter:image" content="https://adomhub.github.io/ABUESA-IA-/og-image.jpg">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#C7D92E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ABUESA">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F3E8;
+    --paper-dim:#EFE9D8;
+    --citron:#C7D92E;
+    --citron-deep:#A9BC1E;
+    --gold:#B8860B;
+    --clay:#8A3D24;
+    --ink:#0F0F0C;
+    --ink-soft:#3A3830;
+    --line:#D8CFAF;
+    --white:#FFFFFF;
+    --radius:14px;
+    --shadow:0 2px 10px rgba(43,43,34,0.08);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    overscroll-behavior:none;
+  }
+  h1,h2,h3,.serif{ font-family:'Fraunces',serif; }
+
+  /* ---------- App shell ---------- */
+  #app{
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    height:100dvh; /* hauteur réelle sur mobile, sans la barre d'adresse qui bouge */
+    max-width:560px;
+    margin:0 auto;
+    background:var(--paper);
+    position:relative;
+    overflow:hidden;
+  }
+
+  header.topbar{
+    background:var(--citron);
+    padding:14px 14px 12px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid var(--citron-deep);
+    flex-shrink:0;
+    gap:6px;
+  }
+  .brand-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+  }
+  .logo-mark{
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    background:var(--paper);
+    border:2px solid var(--gold);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    box-shadow:var(--shadow);
+  }
+  .logo-mark svg{ width:30px; height:35px; }
+  header.topbar .wordmark{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:30px;
+    letter-spacing:0.2px;
+    color:var(--ink);
+    line-height:1;
+    white-space:nowrap;
+  }
+  header.topbar .wordmark span{ color:var(--gold); }
+  header.topbar .subtitle{
+    font-size:14.5px;
+    color:var(--ink-soft);
+    margin-top:3px;
+  }
+  header.topbar button.icon-btn{
+    background:none;
+    border:none;
+    font-size:20px;
+    padding:6px;
+    cursor:pointer;
+    color:var(--ink);
+  }
+
+  main.view{
+    flex:1;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+    display:none;
+    flex-direction:column;
+  }
+  main.view.active{ display:flex; }
+
+  /* ---------- Bottom nav ---------- */
+  nav.tabbar{
+    display:flex;
+    border-top:1px solid var(--line);
+    background:var(--white);
+    flex-shrink:0;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  nav.tabbar button{
+    flex:1;
+    background:none;
+    border:none;
+    padding:9px 2px 8px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:3px;
+    font-family:'Inter',sans-serif;
+    font-size:10.5px;
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  nav.tabbar button .emoji{ font-size:19px; line-height:1; }
+  nav.tabbar button.active{ color:var(--clay); }
+  nav.tabbar button.active .emoji{ filter:none; }
+
+  /* ================= CHAT ================= */
+  #chat-view{ padding:0; }
+  #chat-messages{
+    flex:1;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:16px 14px 8px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .msg{
+    max-width:82%;
+    padding:11px 14px;
+    border-radius:16px;
+    font-size:15px;
+    line-height:1.5;
+    white-space:pre-wrap;
+    word-wrap:break-word;
+  }
+  .msg.user{
+    align-self:flex-end;
+    background:var(--clay);
+    color:var(--white);
+    border-bottom-right-radius:4px;
+  }
+  .msg.bot{
+    align-self:flex-start;
+    background:var(--white);
+    border:1px solid var(--line);
+    color:var(--ink);
+    border-bottom-left-radius:4px;
+  }
+  .msg.bot.typing{ color:var(--ink-soft); font-style:italic; }
+  .welcome-block{
+    padding:28px 22px 10px;
+    text-align:center;
+  }
+  .welcome-block h2{
+    font-size:26px;
+    margin:0 0 4px;
+    color:var(--ink);
+    line-height:1.15;
+    letter-spacing:0.2px;
+  }
+  .welcome-block .fr-translation{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:20px;
+    color:var(--clay);
+    margin:0 0 10px;
+  }
+  .welcome-block p{
+    font-size:15.5px;
+    color:var(--ink-soft);
+    margin:0 auto;
+    max-width:320px;
+    line-height:1.5;
+  }
+  .suggestion-row{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding:14px 14px 4px;
+    flex-shrink:0;
+  }
+  .suggestion-chip{
+    flex-shrink:0;
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:8px 14px;
+    font-size:14.5px;
+    color:var(--ink);
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  form#chat-form{
+    display:flex;
+    align-items:flex-end;
+    gap:8px;
+    padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+    border-top:1px solid var(--line);
+    background:var(--white);
+    flex-shrink:0;
+  }
+  form#chat-form textarea{
+    flex:1;
+    resize:none;
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:10px 16px;
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+    max-height:110px;
+    background:var(--paper);
+    color:var(--ink);
+  }
+  form#chat-form textarea:focus{ outline:2px solid var(--gold); outline-offset:1px; }
+  form#chat-form button{
+    background:var(--clay);
+    color:var(--white);
+    border:none;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    font-size:18px;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  form#chat-form button:disabled{ opacity:0.4; }
+
+  /* ================= GENERIC SECTION ================= */
+  .section-pad{ padding:16px 16px 24px; }
+  .section-title{
+    font-size:19px;
+    margin:4px 0 4px;
+  }
+  .section-desc{
+    font-size:15px;
+    color:var(--ink-soft);
+    margin:0 0 16px;
+    line-height:1.45;
+  }
+
+  /* ---- Dictionnaire ---- */
+  #dict-search{
+    width:100%;
+    padding:11px 14px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    font-size:15px;
+    background:var(--white);
+    margin-bottom:14px;
+  }
+  .word-card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:13px 15px;
+    margin-bottom:10px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+  }
+  .word-card .akposso{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:17px;
+    color:var(--clay);
+  }
+  .word-card .french{
+    font-size:15px;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+  .word-card button.play{
+    background:var(--citron);
+    border:none;
+    border-radius:50%;
+    width:34px;
+    height:34px;
+    font-size:14px;
+    flex-shrink:0;
+    cursor:pointer;
+  }
+  .empty-state{
+    text-align:center;
+    padding:30px 20px;
+    color:var(--ink-soft);
+    font-size:15.5px;
+  }
+
+  /* ---- Carte ---- */
+  #map{
+    width:100%;
+    height:280px;
+    border-radius:var(--radius);
+    border:1px solid var(--line);
+    margin-bottom:12px;
+  }
+
+  /* ---- Quiz ---- */
+  .quiz-card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px;
+  }
+  .quiz-card .question{
+    font-family:'Fraunces',serif;
+    font-size:18px;
+    margin-bottom:14px;
+  }
+  .quiz-option{
+    display:block;
+    width:100%;
+    text-align:left;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:11px 14px;
+    margin-bottom:8px;
+    font-size:14.5px;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+  }
+  .quiz-option.correct{ background:#DDEBC0; border-color:var(--citron-deep); }
+  .quiz-option.wrong{ background:#EBD0C4; border-color:var(--clay); }
+  .quiz-score{ font-size:15px; color:var(--ink-soft); margin-top:10px; }
+
+  /* ---- Artistes ---- */
+  .artist-card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px;
+    margin-bottom:12px;
+  }
+  .artist-card h3{
+    margin:0 0 4px;
+    font-size:17px;
+    color:var(--clay);
+  }
+  .artist-card p{
+    margin:0;
+    font-size:15.5px;
+    color:var(--ink-soft);
+    line-height:1.5;
+  }
+
+  /* ---- Settings modal ---- */
+  #settings-modal, #feedback-modal, #search-modal, #artist-modal, #gallery-modal{
+    position:absolute;
+    inset:0;
+    background:rgba(43,43,34,0.45);
+    display:none;
+    align-items:flex-end;
+    z-index:50;
+  }
+  #settings-modal.active, #feedback-modal.active, #search-modal.active, #artist-modal.active, #gallery-modal.active{ display:flex; }
+  .modal-sheet{
+    background:var(--white);
+    width:100%;
+    border-radius:20px 20px 0 0;
+    padding:22px 20px calc(24px + env(safe-area-inset-bottom));
+    max-height:80vh;
+    overflow-y:auto;
+  }
+  .modal-sheet h3{ margin:0 0 14px; font-size:18px; }
+  .modal-sheet label{
+    font-size:14.5px;
+    color:var(--ink-soft);
+    display:block;
+    margin:12px 0 5px;
+  }
+  .modal-sheet input[type=text],
+  .modal-sheet input[type=password]{
+    width:100%;
+    padding:10px 13px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    font-size:14px;
+    background:var(--paper);
+  }
+  .modal-sheet .save-btn{
+    width:100%;
+    background:var(--clay);
+    color:var(--white);
+    border:none;
+    border-radius:12px;
+    padding:12px;
+    font-size:15px;
+    margin-top:18px;
+    cursor:pointer;
+  }
+  .modal-sheet .close-row{ text-align:right; }
+  .modal-sheet .close-row button{
+    background:none;border:none;font-size:22px;color:var(--ink-soft);cursor:pointer;
+  }
+  .status-line{ font-size:15.5px; margin-top:8px; }
+  .status-ok{ color:#4E7A1F; }
+  .status-bad{ color:var(--clay); }
+
+  /* ---- Toast ---- */
+  #toast-container{
+    position:absolute;
+    left:0; right:0;
+    bottom:calc(78px + env(safe-area-inset-bottom));
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    pointer-events:none;
+    z-index:80;
+  }
+  .toast{
+    background:var(--ink);
+    color:var(--white);
+    padding:9px 16px;
+    border-radius:20px;
+    font-size:14.5px;
+    box-shadow:var(--shadow);
+    opacity:0;
+    transform:translateY(6px);
+    transition:opacity .25s ease, transform .25s ease;
+  }
+  .toast.show{ opacity:1; transform:translateY(0); }
+
+  /* ---- Favoris (dictionnaire) ---- */
+  .word-card{ position:relative; }
+  .fav-btn{
+    background:none;
+    border:none;
+    font-size:18px;
+    cursor:pointer;
+    padding:4px 6px;
+    line-height:1;
+    flex-shrink:0;
+  }
+  .word-actions{ display:flex; align-items:center; gap:2px; flex-shrink:0; }
+  .dict-filter-row{
+    display:flex;
+    gap:8px;
+    margin-bottom:12px;
+  }
+  .dict-filter-row button{
+    flex:1;
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:8px;
+    font-size:14.5px;
+    font-family:'Inter',sans-serif;
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .dict-filter-row button.active{
+    background:var(--clay);
+    border-color:var(--clay);
+    color:var(--white);
+  }
+
+  /* ---- Mot du jour ---- */
+  .word-of-day{
+    margin:0 16px 6px;
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:12px 16px;
+    text-align:left;
+  }
+  .word-of-day .label{
+    font-size:14.5px;
+    text-transform:uppercase;
+    letter-spacing:0.4px;
+    color:var(--gold);
+    font-weight:600;
+    margin-bottom:3px;
+  }
+  .word-of-day .word{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:19px;
+    color:var(--clay);
+  }
+  .word-of-day .meaning{ font-size:15px; color:var(--ink-soft); }
+
+  /* ---- Admin panel ---- */
+  .admin-section{
+    margin-top:18px;
+    padding-top:16px;
+    border-top:1px dashed var(--line);
+  }
+  .admin-section h4{
+    font-size:15.5px;
+    margin:0 0 10px;
+    color:var(--clay);
+  }
+  .admin-row{ display:flex; gap:8px; margin-bottom:8px; }
+  .admin-row input{
+    flex:1;
+    padding:9px 11px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    font-size:15.5px;
+    background:var(--paper);
+  }
+  .admin-row button, .admin-actions button{
+    background:var(--citron);
+    border:none;
+    border-radius:9px;
+    padding:9px 13px;
+    font-size:15px;
+    cursor:pointer;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  .admin-actions{ display:flex; gap:8px; margin-top:6px; }
+  .admin-actions button.secondary{ background:var(--paper-dim); }
+  .admin-list{ max-height:120px; overflow-y:auto; font-size:14px; color:var(--ink-soft); margin-top:8px; }
+
+  /* ---- Credits ---- */
+  .credits-toggle{
+    background:none;
+    border:none;
+    color:var(--ink-soft);
+    font-size:14px;
+    text-decoration:underline;
+    padding:0;
+    margin-top:16px;
+    cursor:pointer;
+  }
+  .credits-box{
+    display:none;
+    margin-top:10px;
+    font-size:15.5px;
+    color:var(--ink-soft);
+    line-height:1.6;
+    background:var(--paper);
+    border-radius:10px;
+    padding:12px;
+  }
+  .credits-box.show{ display:block; }
+  .credits-box a{ color:var(--clay); }
+
+  /* ---- Galerie ---- */
+  .gallery-item{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .gallery-item img, .gallery-item video{
+    width:100%;
+    height:110px;
+    object-fit:cover;
+    display:block;
+    background:var(--paper-dim);
+  }
+  .gallery-item .gi-caption{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    padding:6px 8px;
+    line-height:1.35;
+  }
+
+  /* ---- Recherche universelle ---- */
+  .search-category{
+    font-size:15px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    color:var(--gold);
+    font-weight:600;
+    margin:16px 0 8px;
+  }
+  .search-category:first-child{ margin-top:0; }
+  .search-result{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:11px 14px;
+    margin-bottom:8px;
+    cursor:pointer;
+  }
+  .search-result .sr-title{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:15px;
+    color:var(--clay);
+  }
+  .search-result .sr-sub{
+    font-size:14.5px;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <header class="topbar">
+    <div class="brand-row">
+      <div class="logo-mark" id="logo-tap-trigger" style="cursor:pointer;">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" aria-label="Carte de l'Afrique">
+          <path fill="var(--clay)" d="M36 4 C46 1 56 3 61 9 C69 6 80 12 77 21 C84 26 82 37 75 42 C80 50 75 61 67 63 C71 73 65 85 57 89 C59 99 51 113 45 117 C43 109 41 99 39 91 C31 87 27 77 31 69 C23 65 21 55 27 49 C19 45 17 35 23 29 C17 23 19 13 29 9 C31 6 34 5 36 4 Z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="wordmark">ABU<span>ESA</span></div>
+        <div class="subtitle">Culture Akposso · Wawa, Togo</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:1px;">
+      <button class="icon-btn" id="open-search" aria-label="Recherche">🔍</button>
+      <button class="icon-btn" id="open-gallery" aria-label="Galerie photos et vidéos">📸</button>
+      <button class="icon-btn" id="open-feedback" aria-label="Avis et suggestions">📝</button>
+      <button class="icon-btn" id="open-settings" aria-label="Réglages">⚙️</button>
+    </div>
+  </header>
+
+  <!-- ===== CHAT VIEW ===== -->
+  <main class="view active" id="chat-view">
+    <div id="chat-messages">
+      <div class="welcome-block" id="welcome-block">
+        <h2>YANASĒ-BA-ABUESA</h2>
+        <div class="fr-translation">Bienvenue à ABUESA</div>
+        <p>Pose une question sur la culture, la langue ou les traditions Akposso. Je réponds en français, avec le cœur de Wawa.</p>
+      </div>
+      <div class="word-of-day" id="word-of-day"></div>
+    </div>
+    <div class="suggestion-row" id="suggestion-row">
+      <div class="suggestion-chip" data-q="Comment dit-on merci en Akposso ?">Comment dit-on « merci » ?</div>
+      <div class="suggestion-chip" data-q="Raconte-moi une tradition de Wawa">Une tradition de Wawa</div>
+      <div class="suggestion-chip" data-q="Qui est le chef traditionnel à Wawa ?">Le rôle du chef</div>
+      <div class="suggestion-chip" data-q="Parle-moi des danses Akposso">Les danses Akposso</div>
+    </div>
+    <form id="chat-form">
+      <textarea id="chat-input" rows="1" placeholder="Écris ton message..."></textarea>
+      <button type="submit" id="chat-send" aria-label="Envoyer">➤</button>
+    </form>
+  </main>
+
+  <!-- ===== DICTIONNAIRE VIEW ===== -->
+  <main class="view" id="dict-view">
+    <div class="section-pad">
+      <h2 class="section-title serif">Dictionnaire</h2>
+      <p class="section-desc">Français ⇄ Akposso (Ikposso). Tape un mot dans les deux langues.</p>
+      <input type="text" id="dict-search" placeholder="Chercher un mot…">
+      <div class="dict-filter-row">
+        <button id="dict-filter-all" class="active">Tous les mots</button>
+        <button id="dict-filter-fav">★ Mes favoris</button>
+      </div>
+      <div id="dict-results"></div>
+    </div>
+  </main>
+
+  <!-- ===== CARTE VIEW ===== -->
+  <main class="view" id="map-view">
+    <div class="section-pad">
+      <h2 class="section-title serif">Carte de Wawa</h2>
+      <p class="section-desc">Les 11 cantons de la préfecture de Wawa et leurs villages, terre du peuple Akposso.</p>
+      <div id="map"></div>
+      <p class="section-desc" style="margin-top:6px;">Touche un repère pour voir les villages du canton.</p>
+    </div>
+  </main>
+
+  <!-- ===== QUIZ VIEW ===== -->
+  <main class="view" id="quiz-view">
+    <div class="section-pad">
+      <h2 class="section-title serif">Quiz Akposso</h2>
+      <p class="section-desc">Teste ce que tu sais de la langue et de la culture.</p>
+      <div class="quiz-card" id="quiz-card"></div>
+      <div class="quiz-score" id="quiz-score"></div>
+    </div>
+  </main>
+
+  <!-- ===== CULTURE VIEW ===== -->
+  <main class="view" id="culture-view">
+    <div class="section-pad">
+      <h2 class="section-title serif">Culture Akposso</h2>
+      <p class="section-desc">Traditions et repères du peuple Kpɔsɔ wanɩ — sources vérifiées.</p>
+      <div id="culture-list"></div>
+
+      <footer style="margin-top:26px;padding-top:20px;border-top:1px solid var(--line);">
+        <div style="text-align:center;margin-bottom:12px;">
+          <div class="logo-mark" style="margin:0 auto 8px;width:48px;height:48px;">
+            <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:33px;">
+              <path fill="var(--clay)" d="M36 4 C46 1 56 3 61 9 C69 6 80 12 77 21 C84 26 82 37 75 42 C80 50 75 61 67 63 C71 73 65 85 57 89 C59 99 51 113 45 117 C43 109 41 99 39 91 C31 87 27 77 31 69 C23 65 21 55 27 49 C19 45 17 35 23 29 C17 23 19 13 29 9 C31 6 34 5 36 4 Z"/>
+            </svg>
+          </div>
+          <h3 class="serif" style="margin:0;font-size:17px;">À propos de ABUESA</h3>
+        </div>
+        <p style="font-size:15px;line-height:1.6;color:var(--ink-soft);">
+          ABUESA est un espace numérique dédié à la culture, à la langue et aux traditions du peuple <b style="color:var(--ink);">Akposso (Ikposso)</b>, originaire du canton de Wawa, dans la région des Plateaux au Togo.
+        </p>
+        <p style="font-size:15px;line-height:1.6;color:var(--ink-soft);">
+          L'application rassemble un dictionnaire français–akposso, une carte des villages, des repères culturels, un espace pour les artistes, et un chat pour poser des questions — pensée pour que cette culture continue de se transmettre, se documenter et se faire connaître, ici et dans la diaspora.
+        </p>
+        <p style="font-size:15px;line-height:1.6;color:var(--ink-soft);">
+          ABUESA est vivant : il grandit avec les contributions de chacun — mots ajoutés, artistes inscrits, avis laissés par les visiteurs.
+        </p>
+
+        <div style="margin-top:16px;background:var(--white);border:1px solid var(--line);border-radius:12px;padding:14px;">
+          <div style="font-family:'Fraunces',serif;font-weight:600;font-size:15px;color:var(--clay);margin-bottom:6px;">🌱 Construis ABUESA avec nous</div>
+          <p style="font-size:14.5px;line-height:1.6;color:var(--ink-soft);margin:0;">
+            Un mot que tu connais et qui manque ? Une tradition à raconter ? Tu es artiste et tu veux te faire connaître ? ABUESA n'est pas figé — c'est un espace vivant que la communauté Akposso construit ensemble. Laisse ton avis dans <b style="color:var(--ink);">📝 Avis</b> ou inscris-toi dans <b style="color:var(--ink);">🎤 Artistes</b> : chaque contribution compte.
+          </p>
+        </div>
+
+        <div style="margin-top:12px;background:var(--white);border:1px solid var(--line);border-radius:12px;padding:14px;">
+          <div style="font-family:'Fraunces',serif;font-weight:600;font-size:15px;color:var(--clay);margin-bottom:6px;">💚 Soutenir ABUESA</div>
+          <p style="font-size:14.5px;line-height:1.6;color:var(--ink-soft);margin:0 0 10px;">
+            ABUESA est gratuit et le restera. Mais le faire vivre a un coût réel (hébergement, IA, temps de recherche). Si ce projet te touche, tu peux contribuer :
+          </p>
+          <p style="font-size:14.5px;line-height:1.8;color:var(--ink);margin:0 0 10px;">
+            📱 <b>Flooz / Mobile Money :</b> +228 99-61-99-69
+          </p>
+          <a href="https://wa.me/22899619969?text=Bonjour%2C%20je%20souhaite%20soutenir%20ABUESA%20financièrement." target="_blank" rel="noopener" style="display:block;text-align:center;background:var(--clay);color:var(--white);border-radius:10px;padding:11px;font-size:14.5px;text-decoration:none;font-weight:600;">Contacter Alexi pour contribuer</a>
+        </div>
+
+        <div style="margin-top:14px;font-size:14.5px;color:var(--ink-soft);line-height:1.8;">
+          <b style="color:var(--ink);">Créateur</b> — Adom K. Alexi, fils de Wawa, auteur et développeur.<br>
+          <b style="color:var(--ink);">Adresse</b> — Wawa, Badou, Togo<br>
+          <b style="color:var(--ink);">Contact</b> — 📧 alexiadom64@gmail.com · 📱 +228 99-61-99-69
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <!-- ===== ARTISTES VIEW ===== -->
+  <main class="view" id="artists-view">
+    <div class="section-pad">
+      <h2 class="section-title serif">Artistes</h2>
+      <p class="section-desc">Voix et créateurs qui portent la culture Akposso aujourd'hui.</p>
+      <button id="open-artist-form" style="width:100%;background:var(--clay);color:var(--white);border:none;border-radius:12px;padding:12px;font-size:14.5px;font-family:'Inter',sans-serif;cursor:pointer;margin-bottom:16px;">🎤 Fais-toi connaître comme artiste</button>
+      <div id="artists-list"></div>
+    </div>
+  </main>
+
+  <!-- ===== ARTIST SUBMISSION MODAL ===== -->
+  <div id="artist-modal">
+    <div class="modal-sheet">
+      <div class="close-row"><button id="close-artist-form">×</button></div>
+      <h3 class="serif">🎤 Fais-toi connaître</h3>
+      <p class="section-desc" style="margin-top:-6px;">Artiste Akposso ? Présente-toi et partage ta chanson d'actualité — elle apparaîtra dans l'onglet Artistes.</p>
+
+      <label for="artist-name">Ton nom d'artiste *</label>
+      <input type="text" id="artist-name" placeholder="Ex : Zambé">
+
+      <label for="artist-songs">Titres de tes musiques (séparés par des virgules)</label>
+      <input type="text" id="artist-songs" placeholder="Ex : Fatinimè, Ivlo, Sens-toi chez toi">
+
+      <label for="artist-current-title">Ta chanson d'actualité</label>
+      <input type="text" id="artist-current-title" placeholder="Titre de ta dernière sortie">
+
+      <label for="artist-current-link">Lien vers cette chanson (YouTube, Spotify, TikTok…)</label>
+      <input type="text" id="artist-current-link" placeholder="https://...">
+
+      <label for="artist-contact">Ton contact (facultatif, pour qu'Alexi te recontacte)</label>
+      <input type="text" id="artist-contact" placeholder="Téléphone ou email">
+
+      <button class="save-btn" id="artist-submit">Publier mon profil 📣</button>
+      <div class="status-line" id="artist-submit-status"></div>
+    </div>
+  </div>
+
+  <nav class="tabbar">
+    <button data-view="chat-view" class="active"><span class="emoji">💬</span>Chat</button>
+    <button data-view="dict-view"><span class="emoji">📖</span>Dico</button>
+    <button data-view="map-view"><span class="emoji">🗺️</span>Carte</button>
+    <button data-view="quiz-view"><span class="emoji">🎯</span>Quiz</button>
+    <button data-view="culture-view"><span class="emoji">🌿</span>Culture</button>
+    <button data-view="artists-view"><span class="emoji">🎤</span>Artistes</button>
+  </nav>
+
+  <div id="toast-container"></div>
+
+  <!-- ===== GALLERY MODAL ===== -->
+  <div id="gallery-modal">
+    <div class="modal-sheet" style="max-height:88vh;">
+      <div class="close-row"><button id="close-gallery">×</button></div>
+      <h3 class="serif">📸 Galerie ABUESA</h3>
+      <p class="section-desc" style="margin-top:-6px;">Partage une photo ou une vidéo de la culture, des lieux ou des moments Akposso. Visible par tous.</p>
+
+      <div id="gallery-upload-zone">
+        <label for="gallery-file" style="display:block;text-align:center;background:var(--paper);border:2px dashed var(--line);border-radius:12px;padding:22px 14px;cursor:pointer;font-size:14.5px;color:var(--ink-soft);margin-bottom:10px;">
+          📷 Touche ici pour choisir une photo ou une vidéo
+        </label>
+        <input type="file" id="gallery-file" accept="image/*,video/*" style="display:none;">
+        <div id="gallery-file-preview"></div>
+
+        <label for="gallery-caption">Légende (facultatif)</label>
+        <input type="text" id="gallery-caption" placeholder="Ex : Marché de Badou, un dimanche matin">
+        <label for="gallery-name">Ton prénom (facultatif)</label>
+        <input type="text" id="gallery-name" placeholder="Ton prénom">
+
+        <button class="save-btn" id="gallery-submit">Publier dans la galerie 📤</button>
+        <div class="status-line" id="gallery-status"></div>
+      </div>
+
+      <div id="gallery-grid" style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:8px;"></div>
+    </div>
+  </div>
+
+  <!-- ===== SEARCH MODAL ===== -->
+  <div id="search-modal">
+    <div class="modal-sheet" style="max-height:88vh;">
+      <div class="close-row"><button id="close-search">×</button></div>
+      <h3 class="serif">🔍 Rechercher sur ABUESA</h3>
+      <input type="text" id="global-search-input" placeholder="Un mot, un village, un artiste, une tradition…" style="width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:12px;font-size:15px;background:var(--paper);margin:6px 0 14px;">
+      <div id="global-search-results"></div>
+    </div>
+  </div>
+
+  <!-- ===== FEEDBACK MODAL ===== -->
+  <div id="feedback-modal">
+    <div class="modal-sheet">
+      <div class="close-row"><button id="close-feedback">×</button></div>
+      <h3 class="serif">💬 Avis &amp; suggestions</h3>
+      <p class="section-desc" style="margin-top:-6px;">Une idée pour enrichir ABUESA ? Un mot manquant, une tradition à ajouter, un bug ? Écris-le ici — ton avis rejoint le mur public ci-dessous (ou part par email à Alexi si le mur n'est pas encore branché).</p>
+
+      <label for="fb-name">Ton prénom (facultatif)</label>
+      <input type="text" id="fb-name" placeholder="Ton prénom">
+
+      <label for="fb-message">Ton message</label>
+      <textarea id="fb-message" rows="4" placeholder="Ex : Il manque le mot pour « famille »..." style="width:100%;padding:10px 13px;border:1px solid var(--line);border-radius:10px;font-size:14px;background:var(--paper);font-family:'Inter',sans-serif;resize:vertical;"></textarea>
+
+      <button class="save-btn" id="fb-send">Envoyer 📩</button>
+      <div class="status-line" id="fb-status"></div>
+
+      <div style="margin-top:18px;">
+        <label style="margin:0 0 8px;">🌍 Mur des avis (visible par tous)</label>
+        <div id="fb-wall"></div>
+      </div>
+
+      <div id="fb-history" style="margin-top:14px;"></div>
+    </div>
+  </div>
+
+  <!-- ===== SETTINGS MODAL ===== -->
+  <div id="settings-modal">
+    <div class="modal-sheet">
+      <div class="close-row"><button id="close-settings">×</button></div>
+      <h3 class="serif">Réglages</h3>
+
+      <label for="groq-key">Clé API Groq (pour le chat IA)</label>
+      <input type="password" id="groq-key" placeholder="gsk_...">
+
+      <label for="supabase-url">URL Supabase (mémoire partagée)</label>
+      <input type="text" id="supabase-url" placeholder="https://xxxx.supabase.co">
+
+      <label for="supabase-key">Clé publique (anon) Supabase</label>
+      <input type="password" id="supabase-key" placeholder="eyJhbGci...">
+
+      <button class="save-btn" id="save-settings">Enregistrer</button>
+      <div class="status-line" id="settings-status"></div>
+
+      <div class="admin-section" id="admin-section" style="display:none;"></div>
+
+      <button class="credits-toggle" id="credits-toggle">Sources &amp; crédits</button>
+      <div class="credits-box" id="credits-box">
+        <b>Langue &amp; dictionnaire :</b> Guide de transition Français–Ikposso, Louise Dozeman &amp; Julien Koufedji, SIL Togo (2015) — akpossowadza.net.<br><br>
+        <b>Culture &amp; traditions :</b> Joshua Project, togocultures.com, Wikipédia (Musique du Togo, Préfecture de Wawa).<br><br>
+        <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
+        <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
+        Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+/* =========================================================
+   ABUESA — script principal
+   Toute la config (clé Groq, code admin) est stockée en local
+   sur l'appareil, jamais dans ce fichier -> plus de bannissement
+   GitHub secret scanning.
+   ========================================================= */
+
+const STORE_KEYS = {
+  groqKey:'abuesa_groq_key', adminUnlocked:'abuesa_admin_unlocked', history:'abuesa_chat_history',
+  favorites:'abuesa_favorites', extraWords:'abuesa_extra_words', extraArtists:'abuesa_extra_artists',
+  quizBest:'abuesa_quiz_best', wordOfDayDate:'abuesa_wod_date', wordOfDayIndex:'abuesa_wod_index',
+  feedbackSent:'abuesa_feedback_sent', supabaseUrl:'abuesa_supabase_url', supabaseKey:'abuesa_supabase_key',
+  localArtistSubmissions:'abuesa_local_artist_submissions', throttle:'abuesa_throttle_',
+};
+const ALEXI_EMAIL = 'alexiadom64@gmail.com';
+
+function showToast(msg){
+  const container = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  container.appendChild(t);
+  requestAnimationFrame(()=> t.classList.add('show'));
+  setTimeout(()=>{
+    t.classList.remove('show');
+    setTimeout(()=> t.remove(), 300);
+  }, 2200);
+}
+
+/* ---------- Anti-spam simple (côté appareil) ---------- */
+/* Empêche les envois répétés trop rapides sur les murs publics (Avis,
+   Artistes, Galerie). Ce n'est pas une protection absolue (un visiteur motivé
+   peut vider son stockage local), mais ça bloque l'abus involontaire ou
+   basique — l'essentiel pour un site communautaire de cette taille. */
+function checkThrottle(key, cooldownSeconds){
+  const storeKey = STORE_KEYS.throttle + key;
+  const last = parseInt(localStorage.getItem(storeKey) || '0', 10);
+  const now = Date.now();
+  const elapsed = (now - last) / 1000;
+  if(elapsed < cooldownSeconds){
+    return { ok:false, remaining: Math.ceil(cooldownSeconds - elapsed) };
+  }
+  return { ok:true, remaining:0 };
+}
+function markThrottled(key){
+  localStorage.setItem(STORE_KEYS.throttle + key, String(Date.now()));
+}
+
+/* Service worker (mode hors-ligne + installable) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{ /* silencieux si non servi en https */ });
+  });
+}
+
+/* ---------- Supabase (mémoire / mur partagé) ---------- */
+/* Déclaré tôt car plusieurs sections (Artistes, Avis) l'utilisent dès leur premier rendu. */
+let supabaseClient = null;
+
+function initSupabase(){
+  const url = localStorage.getItem(STORE_KEYS.supabaseUrl);
+  const key = localStorage.getItem(STORE_KEYS.supabaseKey);
+  if(url && key && window.supabase){
+    try{
+      supabaseClient = window.supabase.createClient(url, key);
+    }catch(e){
+      supabaseClient = null;
+      console.error('Supabase init error', e);
+    }
+  } else {
+    supabaseClient = null;
+  }
+}
+initSupabase();
+
+/* ---------- Navigation ---------- */
+document.querySelectorAll('nav.tabbar button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav.tabbar button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('main.view').forEach(v=>v.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.view).classList.add('active');
+  });
+});
+
+/* ---------- Settings modal ---------- */
+const settingsModal = document.getElementById('settings-modal');
+const adminSection = document.getElementById('admin-section');
+
+/* Le code admin n'est jamais stocké ni comparé en clair : seule son empreinte
+   SHA-256 est présente dans ce fichier. Impossible de le retrouver en lisant
+   le code source. */
+const ADMIN_CODE_HASH = 'bf6ee186c564bc8654283e903adde7a943819f11f0448f962c7f455eb05c805a';
+
+async function sha256Hex(text){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b=> b.toString(16).padStart(2,'0')).join('');
+}
+
+function isAdminUnlocked(){
+  return localStorage.getItem(STORE_KEYS.adminUnlocked) === 'true';
+}
+
+function refreshAdminVisibility(){
+  if(isAdminUnlocked()){
+    adminSection.style.display = 'block';
+    renderAdminPanel();
+  } else {
+    adminSection.style.display = 'none';
+    adminSection.innerHTML = '';
+  }
+}
+
+/* Geste secret : 5 taps rapides sur le logo pour faire apparaître l'accès admin.
+   Un visiteur normal ne voit jamais ce champ. */
+let logoTapCount = 0;
+let logoTapTimer = null;
+document.getElementById('logo-tap-trigger').addEventListener('click', async ()=>{
+  logoTapCount++;
+  clearTimeout(logoTapTimer);
+  logoTapTimer = setTimeout(()=>{ logoTapCount = 0; }, 3000);
+
+  if(logoTapCount >= 5){
+    logoTapCount = 0;
+    clearTimeout(logoTapTimer);
+    const entered = prompt('Code admin :');
+    if(entered === null) return;
+    const hash = await sha256Hex(entered.trim());
+    if(hash === ADMIN_CODE_HASH){
+      localStorage.setItem(STORE_KEYS.adminUnlocked, 'true');
+      showToast('Mode admin activé ✓');
+      refreshAdminVisibility();
+      document.getElementById('open-settings').click();
+    } else {
+      showToast('Code incorrect');
+    }
+  }
+});
+
+document.getElementById('open-settings').addEventListener('click', ()=>{
+  document.getElementById('groq-key').value = localStorage.getItem(STORE_KEYS.groqKey) || '';
+  document.getElementById('supabase-url').value = localStorage.getItem(STORE_KEYS.supabaseUrl) || '';
+  document.getElementById('supabase-key').value = localStorage.getItem(STORE_KEYS.supabaseKey) || '';
+  refreshAdminVisibility();
+  settingsModal.classList.add('active');
+});
+document.getElementById('close-settings').addEventListener('click', ()=> settingsModal.classList.remove('active'));
+document.getElementById('save-settings').addEventListener('click', async ()=>{
+  const key = document.getElementById('groq-key').value.trim();
+  const sbUrl = document.getElementById('supabase-url').value.trim();
+  const sbKey = document.getElementById('supabase-key').value.trim();
+  if(key) localStorage.setItem(STORE_KEYS.groqKey, key);
+  if(sbUrl) localStorage.setItem(STORE_KEYS.supabaseUrl, sbUrl);
+  if(sbKey) localStorage.setItem(STORE_KEYS.supabaseKey, sbKey);
+  initSupabase();
+  await fetchCloudWords();
+  renderDictionary(getFullDictionary());
+  renderArtists();
+  if(isAdminUnlocked()) renderAdminAddedList();
+  const status = document.getElementById('settings-status');
+  status.textContent = 'Réglages enregistrés ✓';
+  status.className = 'status-line status-ok';
+  setTimeout(()=> settingsModal.classList.remove('active'), 900);
+});
+
+document.getElementById('credits-toggle').addEventListener('click', ()=>{
+  document.getElementById('credits-box').classList.toggle('show');
+});
+
+/* ---------- Avis & suggestions ---------- */
+const feedbackModal = document.getElementById('feedback-modal');
+
+function getSentFeedback(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEYS.feedbackSent) || '[]'); }
+  catch(e){ return []; }
+}
+function renderFeedbackHistory(){
+  const el = document.getElementById('fb-history');
+  const list = getSentFeedback();
+  if(list.length === 0){ el.innerHTML=''; return; }
+  const rows = list.slice().reverse().map(f=>
+    `<div class="word-card" style="display:block;">
+       <div style="font-size:15px;color:var(--ink-soft);margin-bottom:3px;">${f.date}${f.name ? ' · '+f.name : ''}</div>
+       <div style="font-size:15px;">${f.message}</div>
+     </div>`
+  ).join('');
+  el.innerHTML = `<label style="margin-bottom:8px;">Envoyés par email depuis cet appareil</label>${rows}`;
+}
+
+async function renderFeedbackWall(){
+  const wallEl = document.getElementById('fb-wall');
+  if(!supabaseClient){
+    wallEl.innerHTML = `<div class="empty-state" style="padding:16px;">Le mur partagé n'est pas encore branché. En attendant, ton avis part par email directement à Alexi.</div>`;
+    return;
+  }
+  wallEl.innerHTML = `<div class="empty-state" style="padding:16px;">Chargement…</div>`;
+  const { data, error } = await supabaseClient
+    .from('feedback')
+    .select('name, message, created_at')
+    .order('created_at', { ascending:false })
+    .limit(30);
+  if(error){
+    wallEl.innerHTML = `<div class="empty-state" style="padding:16px;">Impossible de charger le mur (${error.message}).</div>`;
+    return;
+  }
+  if(!data || data.length===0){
+    wallEl.innerHTML = `<div class="empty-state" style="padding:16px;">Aucun avis pour l'instant — sois le premier 🌱</div>`;
+    return;
+  }
+  wallEl.innerHTML = data.map(f=>{
+    const d = new Date(f.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric' });
+    return `<div class="word-card" style="display:block;">
+      <div style="font-size:15px;color:var(--ink-soft);margin-bottom:3px;">${d}${f.name ? ' · '+f.name : ''}</div>
+      <div style="font-size:15px;">${f.message}</div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('open-feedback').addEventListener('click', ()=>{
+  renderFeedbackHistory();
+  renderFeedbackWall();
+  feedbackModal.classList.add('active');
+});
+document.getElementById('close-feedback').addEventListener('click', ()=> feedbackModal.classList.remove('active'));
+
+document.getElementById('fb-send').addEventListener('click', async ()=>{
+  const name = document.getElementById('fb-name').value.trim();
+  const message = document.getElementById('fb-message').value.trim();
+  const status = document.getElementById('fb-status');
+  const sendBtn = document.getElementById('fb-send');
+  if(!message){
+    status.textContent = 'Écris un message avant d\'envoyer.';
+    status.className = 'status-line status-bad';
+    return;
+  }
+  const throttle = checkThrottle('feedback', 60);
+  if(!throttle.ok){
+    status.textContent = `Merci ! Attends encore ${throttle.remaining}s avant un nouvel envoi.`;
+    status.className = 'status-line status-bad';
+    return;
+  }
+
+  if(supabaseClient){
+    sendBtn.disabled = true;
+    const { error } = await supabaseClient.from('feedback').insert({ name: name || null, message });
+    sendBtn.disabled = false;
+    if(error){
+      status.textContent = 'Erreur d\'envoi : ' + error.message;
+      status.className = 'status-line status-bad';
+      return;
+    }
+    status.textContent = 'Avis publié sur le mur ✓';
+    status.className = 'status-line status-ok';
+    document.getElementById('fb-message').value = '';
+    markThrottled('feedback');
+    renderFeedbackWall();
+    showToast('Merci pour ton avis 🙏');
+    return;
+  }
+
+  // Repli : pas de Supabase configuré -> envoi par email
+  const subject = 'Avis ABUESA' + (name ? ' — ' + name : '');
+  const body = `Message :\n${message}\n\n— Envoyé depuis l'app ABUESA${name ? ' par ' + name : ''}`;
+  const mailto = `mailto:${ALEXI_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+  const list = getSentFeedback();
+  list.push({ name, message, date: new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric' }) });
+  localStorage.setItem(STORE_KEYS.feedbackSent, JSON.stringify(list.slice(-20)));
+  markThrottled('feedback');
+
+  window.location.href = mailto;
+
+  status.textContent = 'Ta messagerie va s\'ouvrir pour envoyer le message ✓';
+  status.className = 'status-line status-ok';
+  document.getElementById('fb-message').value = '';
+  renderFeedbackHistory();
+  showToast('Merci pour ton avis 🙏');
+});
+
+/* ---------- Chat ---------- */
+const chatMessages = document.getElementById('chat-messages');
+const chatForm = document.getElementById('chat-form');
+const chatInput = document.getElementById('chat-input');
+const welcomeBlock = document.getElementById('welcome-block');
+const suggestionRow = document.getElementById('suggestion-row');
+const wordOfDayEl = document.getElementById('word-of-day');
+
+chatInput.addEventListener('input', ()=>{
+  chatInput.style.height='auto';
+  chatInput.style.height = Math.min(chatInput.scrollHeight,110)+'px';
+});
+
+document.querySelectorAll('.suggestion-chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    chatInput.value = chip.dataset.q;
+    chatForm.dispatchEvent(new Event('submit'));
+  });
+});
+
+function addMessage(text, role){
+  if(welcomeBlock) welcomeBlock.remove();
+  if(suggestionRow) suggestionRow.remove();
+  if(wordOfDayEl) wordOfDayEl.remove();
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.textContent = text;
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  return div;
+}
+
+const SYSTEM_PROMPT_BASE = `Tu es ABUESA, un assistant culturel bilingue qui connaît en profondeur la culture, la langue et les traditions du peuple Akposso (Ikposso) du canton de Wawa, au Togo. Tu réponds toujours en français, de façon chaleureuse, précise et respectueuse, en intégrant des mots Akposso quand c'est pertinent (avec leur traduction). Tu ne connais que ce qui t'a été enseigné sur cette culture ; si tu n'es pas sûr d'un détail, dis-le honnêtement plutôt que d'inventer.
+
+Faits vérifiés à ta disposition :
+- Les Akposso (Kpɔsɔ wanɩ) habitent la région des Plateaux au Togo, principalement les préfectures de Wawa, Amou et Ogou, avec une communauté aussi au Ghana voisin.
+- Leur langue, l'ikposso (ɩkpɔsɔ), est une langue kwa tonale à 10 voyelles et 24 consonnes (dont 5 digrammes : dz, ts, gb, kp, ny), standardisée sur le parler Uwi.
+- Ils suivent un calendrier traditionnel de 5 jours et célèbrent chaque année la fête des moissons OVAZU, centrée sur le fonio, rassemblant aussi les Akébou voisins.
+- L'Assafou est un rythme guerrier traditionnel Akposso/Akébou/Ewé, repris par des artistes modernes (ex. le "Regsaf", fusion Assafou-reggae de l'artiste Zambé).
+- Les Akposso pratiquent aussi le Gadzo, danse frénétique partagée avec les Ewé.
+- La préfecture de Wawa (chef-lieu Badou) compte 11 cantons : Badou, Tomégbé, Kpété-Bena, Gobé, Klabè-Efoukpa, Okou, Ekéto, Ounabé, Késsibo, Gbadi-N'Kugna, Doumé.
+- Le point culminant du territoire est le mont Djogbé.
+- Artistes contemporains notables : Zambé (Koffi Efa-Aboè Okouma, créateur du Regsaf), Rasta Lilo, et le regretté Itadi Bonney.`;
+
+/* Le dictionnaire complet (mots de base + mots ajoutés en admin, locaux ou
+   partagés via Supabase) est injecté à chaque question, pour que le chat
+   connaisse toujours les derniers mots ajoutés. */
+function buildSystemPrompt(){
+  const dict = getFullDictionary();
+  if(dict.length === 0) return SYSTEM_PROMPT_BASE;
+  const dictLines = dict.map(w=> `${w.ak} = ${w.fr}`).join(' ; ');
+  return `${SYSTEM_PROMPT_BASE}
+
+Dictionnaire français–akposso à ta disposition (utilise-le en priorité si la question porte sur la traduction d'un mot ; s'il n'y est pas, dis que tu ne le sais pas encore plutôt que d'inventer) :
+${dictLines}`;
+}
+
+async function callGroq(userText){
+  const apiKey = localStorage.getItem(STORE_KEYS.groqKey);
+  if(!apiKey){
+    return "⚠️ Aucune clé API n'est configurée. Ouvre les réglages (⚙️ en haut) pour ajouter ta clé Groq.";
+  }
+  const history = JSON.parse(localStorage.getItem(STORE_KEYS.history) || '[]');
+  const messages = [{role:'system', content:buildSystemPrompt()}, ...history.slice(-10), {role:'user', content:userText}];
+
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+apiKey },
+    body: JSON.stringify({ model:'llama-3.3-70b-versatile', messages, temperature:0.7, max_tokens:800 })
+  });
+  if(!res.ok){
+    const errText = await res.text().catch(()=> '');
+    throw new Error('Groq API '+res.status+': '+errText.slice(0,200));
+  }
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content || "Je n'ai pas pu générer de réponse.";
+}
+
+chatForm.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const text = chatInput.value.trim();
+  if(!text) return;
+  chatInput.value=''; chatInput.style.height='auto';
+  addMessage(text, 'user');
+
+  const history = JSON.parse(localStorage.getItem(STORE_KEYS.history) || '[]');
+  history.push({role:'user', content:text});
+
+  const sendBtn = document.getElementById('chat-send');
+  sendBtn.disabled = true;
+  const typingEl = addMessage('…', 'bot typing');
+
+  try{
+    const reply = await callGroq(text);
+    typingEl.remove();
+    addMessage(reply, 'bot');
+    history.push({role:'assistant', content:reply});
+    localStorage.setItem(STORE_KEYS.history, JSON.stringify(history.slice(-30)));
+  }catch(err){
+    typingEl.remove();
+    addMessage("Erreur : "+err.message, 'bot');
+  }finally{
+    sendBtn.disabled = false;
+  }
+});
+
+/* ---------- Dictionnaire ---------- */
+/* Source : "Guide de transition Français-Ikposso", Louise Dozeman & Julien Koufedji,
+   SIL Togo, 2015 (akpossowadza.net). Orthographe officielle à tons non marqués.
+   Alexi : envoie-moi d'autres mots / corrections et j'enrichis encore. */
+const DICTIONARY = [
+  // Nature, éléments
+  { fr:'eau', ak:'ivi' }, { fr:'feu', ak:'ivu' }, { fr:'pluie', ak:'adɩ' },
+  { fr:'ciel', ak:'ava' }, { fr:'montagne', ak:'ito' }, { fr:'terre (matière)', ak:'eti' },
+  { fr:'champ', ak:'usi' }, { fr:'savane', ak:'ugbe' }, { fr:'chemin', ak:'une' },
+  { fr:'village', ak:'alɩ' }, { fr:'marigot', ak:'ɔbɛ' }, { fr:'trou', ak:'ɔtɔ' },
+  { fr:'bois (matière)', ak:'itsu' },
+  // Famille
+  { fr:'mère', ak:'ɩna' }, { fr:'mon père', ak:'anʋla' }, { fr:'ma mère', ak:'anʋna' },
+  { fr:'ton fils', ak:'yanɩlɛ' }, { fr:'son frère', ak:'ɔvla' }, { fr:'ma sœur', ak:'anʋnedzǝ' },
+  { fr:'femme', ak:'ɔsɩ' }, { fr:'enfant', ak:'evidze' }, { fr:'les enfants', ak:'emlo' },
+  { fr:'jeune fille', ak:'ovitsɔ' }, { fr:'jeune garçon', ak:'olevi' },
+  // Corps
+  { fr:'visage', ak:'alɔ' }, { fr:'œil', ak:'emu' }, { fr:'bouche', ak:'unuku' },
+  { fr:'main', ak:'aɣla' }, { fr:'poitrine', ak:'ɛgba' }, { fr:'épaule', ak:'agbatɛ' },
+  // Animaux
+  { fr:'chien', ak:'ukpi' }, { fr:'poule', ak:'ɔɣlɔ' }, { fr:'rat', ak:'oglo' },
+  { fr:'oiseau', ak:'ɩvlɔ' }, { fr:'éléphant', ak:'unyi' }, { fr:'serpent', ak:'ɔɣɔ' },
+  { fr:'crabe', ak:'ikpǝ' }, { fr:'tortue', ak:'imlekpǝ' }, { fr:'lièvre', ak:'ɔta' },
+  { fr:'fourmi', ak:'ʋvla' }, { fr:'bœuf', ak:'ʋlɛ' }, { fr:'scorpion', ak:'ɔlɩ' },
+  // Nourriture / vie quotidienne
+  { fr:'igname', ak:'isi' }, { fr:'manioc', ak:'agbedi' }, { fr:'riz', ak:'umoli' },
+  { fr:'gombo', ak:'unoko' }, { fr:'nourriture', ak:'ɛkʋdzi' }, { fr:'boisson', ak:'ɔfɩ' },
+  { fr:'maison', ak:'udunu' }, { fr:'chaise', ak:'ikpoku' }, { fr:'habit', ak:'ɛkʋdʋ' },
+  { fr:'grenier', ak:'uli' }, { fr:'houe', ak:'elute' }, { fr:'sac', ak:'akpo' },
+  { fr:'couteau', ak:'ɩɣɛ' }, { fr:'marmite', ak:'awɛ' },
+  // Verbes courants
+  { fr:'venir', ak:'ba' }, { fr:'aller', ak:'ɣa' }, { fr:'manger', ak:'yɛ' },
+  { fr:'boire', ak:'nyuǝ' }, { fr:'acheter', ak:'vu' }, { fr:'vendre', ak:'yi' },
+  { fr:'savoir', ak:'yi' }, { fr:'marcher', ak:'sɛ' }, { fr:'prendre', ak:'yɔ' },
+  { fr:'voir', ak:'mʋ' }, { fr:'se lever', ak:'mli' }, { fr:'descendre', ak:'zi' },
+  { fr:'rester', ak:'ya' }, { fr:'laver', ak:'wele' }, { fr:'coudre', ak:'wlɛ' },
+  { fr:'écrire', ak:'ŋlo' }, { fr:'creuser', ak:'gbɔ' }, { fr:'faire / créer', ak:'kele' },
+  // Nombres
+  { fr:'deux', ak:'ɛfʋa' }, { fr:'cinq', ak:'ɛtʋ' }, { fr:'six', ak:'ɛwlʋ' },
+  { fr:'sept', ak:'ɛwlʋdɩ' }, { fr:'neuf', ak:'ɛlɛdɩ' }, { fr:'dix', ak:'idzo' },
+  { fr:'cent', ak:'gbɔwa' },
+  // Notions / expressions
+  { fr:'Dieu', ak:'Uwolowu' }, { fr:'vérité', ak:'sisi' }, { fr:'joie', ak:'ɛdɩ' },
+  { fr:'bonheur', ak:'ɛdzɛ' }, { fr:'pauvreté', ak:'aga' }, { fr:'vie', ak:'inyeza' },
+  { fr:'peuple Akposso', ak:'Kpɔsɔ wanɩ' }, { fr:'langue Akposso', ak:'ɩkpɔsɔ' },
+  { fr:"aujourd'hui", ak:'emie' }, { fr:'hier', ak:'adza' }, { fr:'demain', ak:'ɛtsɛ' },
+  { fr:'matin', ak:'ɩdɩkadɩ' }, { fr:'soir', ak:'idisenǝ' }, { fr:'alors', ak:'go' },
+];
+
+function getExtraWords(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEYS.extraWords) || '[]'); }
+  catch(e){ return []; }
+}
+
+/* Mots ajoutés depuis n'importe quel appareil via le panneau Admin,
+   stockés dans Supabase -> visibles par tous les visiteurs. */
+let cloudWords = [];
+async function fetchCloudWords(){
+  if(!supabaseClient){ cloudWords = []; return; }
+  const { data, error } = await supabaseClient
+    .from('dictionary_words')
+    .select('fr, ak, created_at')
+    .order('created_at', { ascending:false });
+  if(!error && data) cloudWords = data;
+}
+
+function getFullDictionary(){
+  return [...DICTIONARY, ...getExtraWords(), ...cloudWords];
+}
+function getFavorites(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEYS.favorites) || '[]'); }
+  catch(e){ return []; }
+}
+function toggleFavorite(key){
+  const favs = getFavorites();
+  const i = favs.indexOf(key);
+  if(i>-1) favs.splice(i,1); else favs.push(key);
+  localStorage.setItem(STORE_KEYS.favorites, JSON.stringify(favs));
+  return favs;
+}
+function wordKey(entry){ return entry.fr+'::'+entry.ak; }
+
+/* Prononciation : lit le mot français à voix haute (le moteur du téléphone
+   ne connaît pas l'ikposso). Utile en attendant de vrais enregistrements audio. */
+function speakWord(entry){
+  if(entry.audio){ new Audio(entry.audio).play(); return; }
+  if('speechSynthesis' in window){
+    const utter = new SpeechSynthesisUtterance(entry.fr);
+    utter.lang = 'fr-FR';
+    utter.rate = 0.9;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
+  }
+}
+
+let dictShowFavoritesOnly = false;
+const dictResults = document.getElementById('dict-results');
+
+function renderDictionary(list){
+  dictResults.innerHTML='';
+  const favs = getFavorites();
+  const filtered = dictShowFavoritesOnly ? list.filter(e=> favs.includes(wordKey(e))) : list;
+  if(filtered.length===0){
+    dictResults.innerHTML = dictShowFavoritesOnly
+      ? '<div class="empty-state">Pas encore de favoris. Touche ★ sur un mot pour le garder ici.</div>'
+      : '<div class="empty-state">Aucun mot trouvé. Le dictionnaire est encore en construction 🌱</div>';
+    return;
+  }
+  filtered.forEach(entry=>{
+    const key = wordKey(entry);
+    const isFav = favs.includes(key);
+    const card = document.createElement('div');
+    card.className='word-card';
+    card.innerHTML = `
+      <div>
+        <div class="akposso">${entry.ak}</div>
+        <div class="french">${entry.fr}</div>
+      </div>
+      <div class="word-actions">
+        <button class="fav-btn" aria-label="Favori">${isFav ? '★' : '☆'}</button>
+        <button class="play" aria-label="Écouter">▶</button>
+      </div>`;
+    card.querySelector('.play').addEventListener('click', ()=> speakWord(entry));
+    card.querySelector('.fav-btn').addEventListener('click', (e)=>{
+      toggleFavorite(key);
+      renderDictionary(getFullDictionary());
+      if(document.getElementById('dict-search').value.trim()){
+        document.getElementById('dict-search').dispatchEvent(new Event('input'));
+      }
+    });
+    dictResults.appendChild(card);
+  });
+}
+renderDictionary(getFullDictionary());
+fetchCloudWords().then(()=>{
+  renderDictionary(getFullDictionary());
+  renderWordOfDay();
+});
+
+function renderWordOfDay(){
+  const el = document.getElementById('word-of-day');
+  if(!el) return;
+  const dict = getFullDictionary();
+  if(dict.length === 0) return;
+  const today = new Date().toISOString().slice(0,10);
+  let idx;
+  if(localStorage.getItem(STORE_KEYS.wordOfDayDate) === today){
+    idx = parseInt(localStorage.getItem(STORE_KEYS.wordOfDayIndex), 10);
+  } else {
+    idx = Math.floor(Math.random() * dict.length);
+    localStorage.setItem(STORE_KEYS.wordOfDayDate, today);
+    localStorage.setItem(STORE_KEYS.wordOfDayIndex, String(idx));
+  }
+  const w = dict[idx] || dict[0];
+  el.innerHTML = `<div class="label">Mot du jour</div><div class="word">${w.ak}</div><div class="meaning">${w.fr}</div>`;
+}
+renderWordOfDay();
+
+document.getElementById('dict-search').addEventListener('input', (e)=>{
+  const q = e.target.value.toLowerCase().trim();
+  renderDictionary(getFullDictionary().filter(d=> d.fr.toLowerCase().includes(q) || d.ak.toLowerCase().includes(q)));
+});
+document.getElementById('dict-filter-all').addEventListener('click', function(){
+  dictShowFavoritesOnly = false;
+  this.classList.add('active');
+  document.getElementById('dict-filter-fav').classList.remove('active');
+  renderDictionary(getFullDictionary());
+});
+document.getElementById('dict-filter-fav').addEventListener('click', function(){
+  dictShowFavoritesOnly = true;
+  this.classList.add('active');
+  document.getElementById('dict-filter-all').classList.remove('active');
+  renderDictionary(getFullDictionary());
+});
+
+/* ---------- Carte ---------- */
+/* Données réelles : préfecture de Wawa (chef-lieu Badou), région des Plateaux, Togo.
+   Coordonnées confirmées (OpenStreetMap / GeoNames) pour 6 cantons.
+   Les 5 restants sont positionnés de façon approximative dans le territoire de la
+   préfecture (source : découpage administratif) — à affiner avec toi si tu as des
+   points GPS plus précis relevés sur place. */
+const WAWA_CANTONS = [
+  { name:'Badou', chef:true, confirmed:true, lat:7.5833, lng:0.6000,
+    villages:['Agbo kopé','Anani kopé','Anonoé','Badou','Badou Dzindzi','Johnson kopé'] },
+  { name:'Tomégbé', confirmed:true, lat:7.50915, lng:0.60433,
+    villages:['Adomi Abra','Akloa','Bethel','Tomégbé','Wobé'] },
+  { name:'Kpété-Bena', confirmed:true, lat:7.44135, lng:0.60417,
+    villages:['Kpété Atikpa','Kpété Bena','Aboreh','Mangbé','Ménou','Kpété Bibi','Kpété Maflo','Kpété Mempassem','Kpété Zogbé','Mangoassi'] },
+  { name:'Okou', confirmed:true, lat:7.5727, lng:0.85393,
+    villages:['Okou','Béna plateaux','Zongo Yéyé'] },
+  { name:'Gobé', confirmed:true, lat:7.5167, lng:0.8000,
+    villages:['Agbo kopé','Adomi Plateaux (Abra)','Doumé','Gobè','Onyawou Enyalavassé','Doum'] },
+  { name:'Ekéto', confirmed:true, lat:7.5000, lng:0.8331,
+    villages:['Agadja','Ekéto','Ekéto Elavanyo','Gbadi Gawodo','Omoutchi'] },
+  { name:'Késsibo', confirmed:false, lat:7.46, lng:0.70,
+    villages:['Abrewankor','Kessibo','Kessibo Dzodzi','Kessibo Wawa',"N'Taré kopé",'Totamé','Wamba kopé'] },
+  { name:'Klabè-Efoukpa', confirmed:false, lat:7.60, lng:0.78,
+    villages:['Adossou','Azafi','Bénali','Klabè Soto','Klabè Adapé','Klabè Apégamé','Klabè Efoukpa','Otandjobo','Todomé','Zogbégan'] },
+  { name:"Ounabé", confirmed:false, lat:7.55, lng:0.75,
+    villages:['Imoussa','Oudjè','Ounabè'] },
+  { name:"Gbadi-N'Kugna", confirmed:false, lat:7.48, lng:0.78,
+    villages:['Enawoè','Djogbé kopé',"Gbadi N'kougna",'Otsoana','Ona','Zomenou kopé'] },
+  { name:'Doumé', confirmed:false, lat:7.52, lng:0.82,
+    villages:['Doumé'] },
+];
+
+let mapInitialized = false;
+document.querySelector('[data-view="map-view"]').addEventListener('click', ()=>{
+  if(mapInitialized) return;
+  mapInitialized = true;
+  setTimeout(()=>{
+    const map = L.map('map').setView([7.53, 0.72], 10.3);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:'&copy; OpenStreetMap'
+    }).addTo(map);
+
+    WAWA_CANTONS.forEach(c=>{
+      const marker = L.marker([c.lat, c.lng]).addTo(map);
+      const villagesList = c.villages.map(v=>`<li>${v}</li>`).join('');
+      const note = c.confirmed ? '' : '<div style="font-size:15px;color:var(--clay);margin-top:4px;">Position approximative — à confirmer</div>';
+      marker.bindPopup(
+        `<b>${c.name}</b>${c.chef ? ' (chef-lieu de la préfecture)' : ''}<br>
+         <ul style="margin:6px 0 0 16px;padding:0;font-size:14.5px;">${villagesList}</ul>${note}`
+      );
+    });
+  }, 150);
+});
+
+/* ---------- Quiz ---------- */
+const QUIZ = [
+  { q:'Comment dit-on « merci » en Akposso ?', options:['ɛ yao','ɔ dɔ','ɛtsi','ɟikpa'], correct:0 },
+  { q:'Que signifie « ɟikpa » ?', options:['Eau','Famille','Chef','Bonjour'], correct:1 },
+  { q:'Le peuple Akposso est aussi appelé ?', options:['Ewé','Ikposso','Kabyè','Mina'], correct:1 },
+];
+let quizIndex=0, quizScore=0;
+function bestScoreLine(){
+  const best = parseInt(localStorage.getItem(STORE_KEYS.quizBest) || '0', 10);
+  return `Meilleur score : ${best} / ${QUIZ.length}`;
+}
+function renderQuiz(){
+  const card = document.getElementById('quiz-card');
+  if(quizIndex >= QUIZ.length){
+    const best = parseInt(localStorage.getItem(STORE_KEYS.quizBest) || '0', 10);
+    if(quizScore > best){
+      localStorage.setItem(STORE_KEYS.quizBest, String(quizScore));
+      showToast('Nouveau record ! 🎉');
+    }
+    card.innerHTML = `<div class="question">Quiz terminé 🎉</div>
+      <button class="quiz-option" id="quiz-replay" style="text-align:center;font-weight:600;">🔁 Rejouer</button>`;
+    document.getElementById('quiz-score').innerHTML = `Score final : ${quizScore} / ${QUIZ.length}<br>${bestScoreLine()}`;
+    document.getElementById('quiz-replay').addEventListener('click', ()=>{
+      quizIndex = 0; quizScore = 0; renderQuiz();
+    });
+    return;
+  }
+  const item = QUIZ[quizIndex];
+  card.innerHTML = `<div class="question">${item.q}</div>` +
+    item.options.map((opt,i)=>`<button class="quiz-option" data-i="${i}">${opt}</button>`).join('');
+  document.getElementById('quiz-score').innerHTML = `Question ${quizIndex+1} / ${QUIZ.length} · ${bestScoreLine()}`;
+  card.querySelectorAll('.quiz-option').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const i = parseInt(btn.dataset.i);
+      card.querySelectorAll('.quiz-option').forEach(b=>b.disabled=true);
+      if(i===item.correct){ btn.classList.add('correct'); quizScore++; }
+      else{
+        btn.classList.add('wrong');
+        card.children[item.correct+1].classList.add('correct');
+      }
+      setTimeout(()=>{ quizIndex++; renderQuiz(); }, 1100);
+    });
+  });
+}
+renderQuiz();
+
+
+/* ---------- Culture ---------- */
+/* Faits vérifiés via recherche web (Joshua Project, togocultures.com, Wikipédia). */
+const CULTURE_FACTS = [
+  {
+    title:'La fête OVAZU',
+    text:"Chaque année, les Akposso célèbrent OVAZU, une fête des moissons centrée sur le fonio, une céréale culturellement essentielle. Elle rassemble aussi les Akébou voisins et se tient traditionnellement à Badou.",
+  },
+  {
+    title:'Le calendrier de 5 jours',
+    text:"Les Akposso suivent un calendrier traditionnel rythmé par des semaines de 5 jours, une spécificité qui structure encore aujourd'hui la vie sociale et les marchés locaux.",
+  },
+  {
+    title:"L'Assafou, rythme guerrier",
+    text:"L'Assafou est un rythme traditionnel exécuté autrefois par les guerriers Akposso, Akébou et Ewé. Il inspire encore la musique actuelle : l'artiste Zambé l'a fusionné avec le reggae pour créer le « Regsaf ».",
+  },
+  {
+    title:'Le Gadzo',
+    text:"Danse frénétique partagée par les Akposso et les Ewé du Togo, exécutée lors des grandes occasions festives.",
+  },
+  {
+    title:'La langue Ikposso',
+    text:"L'ɩkpɔsɔ est une langue kwa tonale à 10 voyelles et 24 consonnes, standardisée sur le parler Uwi. Un guide de transition a été publié par la SIL Togo en 2015 pour aider les locuteurs à apprendre à la lire et l'écrire.",
+  },
+  {
+    title:'Terre et géographie',
+    text:"Les Akposso vivent principalement dans les préfectures de Wawa, Amou et Ogou, dans la région des Plateaux au Togo, une zone vallonnée dont le point culminant est le mont Djogbé.",
+  },
+];
+
+const cultureList = document.getElementById('culture-list');
+CULTURE_FACTS.forEach(f=>{
+  const div = document.createElement('div');
+  div.className='artist-card';
+  div.innerHTML = `<h3 style="color:var(--gold);">${f.title}</h3><p>${f.text}</p>`;
+  cultureList.appendChild(div);
+});
+
+/* ---------- Artistes ---------- */
+/* Données vérifiées via recherche web (Music In Africa, TogoActualité, TikTok officiel).
+   Divalgo Djez n'a pas pu être confirmé publiquement en ligne — à vérifier avec Alexi. */
+const ARTISTS = [
+  {
+    name:'ZAMBÉ',
+    realName:'Koffi Efa-Aboè Okouma',
+    bio:"Fils Akposso né en 1989, Zambé est auteur-compositeur, guitariste, pianiste et percussionniste. Il est le créateur du « Regsaf », fusion entre le reggae et l'Assafou (rythme guerrier traditionnel Akposso, Akébou et Ewé). Maître du tam-tam parlant (Atoupani), il préside l'association AASECAA qui rassemble les artistes Akposso-Akébou. Il a représenté le Togo aux Jeux de la Francophonie (2017) et au MASA d'Abidjan (2018).",
+    songs:['Zambé (single, 2009)', 'Fatinimè', "N'aie pas peur", 'Ivlo', 'Sens-toi chez toi', 'Zambé Zambé', 'Ça fait mal', 'Tinoutido'],
+    verified:true,
+  },
+  {
+    name:'RASTA LILO',
+    bio:"Artiste attaché à la promotion de la musique et de la langue Akposso, très présent sur les scènes culturelles togolaises (notamment le festival FESPIAA). Sa musique porte des messages de paix et de fierté identitaire chantés en Ikposso.",
+    songs:['Aimons-nous vivants', 'Soyons heureux vivants', 'Akana Kou Nayè'],
+    verified:true,
+  },
+  {
+    name:'ITADI BONNEY',
+    bio:"Chanteur Akposso disparu, pionnier ayant fait carrière aux États-Unis (Washington D.C.) dans le Folk, la World Music, la Country et le Reggae, tout en restant fidèle à ses racines togolaises.",
+    songs:[],
+    verified:true,
+    historical:true,
+  },
+  {
+    name:'DIVALGO DJEZ',
+    bio:"Artiste mentionné dans la mémoire du projet ABUESA, mais non retrouvé de façon indépendante lors de la recherche en ligne. À confirmer avec Alexi (nom exact, orthographe, plateforme où l'écouter).",
+    songs:[],
+    verified:false,
+  },
+];
+
+function getExtraArtists(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEYS.extraArtists) || '[]'); }
+  catch(e){ return []; }
+}
+
+function getLocalArtistSubmissions(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEYS.localArtistSubmissions) || '[]'); }
+  catch(e){ return []; }
+}
+
+async function renderArtists(){
+  const artistsList = document.getElementById('artists-list');
+  artistsList.innerHTML = '<div class="empty-state">Chargement…</div>';
+
+  let submitted = [];
+  if(supabaseClient){
+    const { data, error } = await supabaseClient
+      .from('artist_submissions')
+      .select('name, songs, current_song_title, current_song_link, created_at')
+      .order('created_at', { ascending:false });
+    if(!error && data){
+      submitted = data.map(s=>({
+        name:s.name,
+        bio:'Artiste inscrit via ABUESA.',
+        songs: s.songs ? s.songs.split(',').map(x=>x.trim()).filter(Boolean) : [],
+        currentSongTitle: s.current_song_title,
+        currentSongLink: s.current_song_link,
+        selfSubmitted:true,
+      }));
+    }
+  } else {
+    submitted = getLocalArtistSubmissions().map(s=>({
+      name:s.name,
+      bio:"Artiste inscrit via ABUESA (visible seulement sur cet appareil en attendant la connexion du mur public).",
+      songs: s.songs ? s.songs.split(',').map(x=>x.trim()).filter(Boolean) : [],
+      currentSongTitle: s.currentSongTitle,
+      currentSongLink: s.currentSongLink,
+      selfSubmitted:true,
+    }));
+  }
+
+  const all = [...ARTISTS, ...getExtraArtists(), ...submitted];
+  artistsList.innerHTML = '';
+  all.forEach(a=>{
+    const div = document.createElement('div');
+    div.className='artist-card';
+    const songsHtml = (a.songs && a.songs.length)
+      ? `<div style="margin-top:8px;font-size:14.5px;color:var(--ink);"><b>Titres :</b> ${a.songs.join(' · ')}</div>`
+      : '';
+    const currentSongHtml = a.currentSongTitle
+      ? `<div style="margin-top:8px;font-size:14.5px;">🎵 <b>Chanson d'actualité :</b> ${a.currentSongTitle}${a.currentSongLink ? ` — <a href="${a.currentSongLink}" target="_blank" rel="noopener" style="color:var(--clay);">écouter</a>` : ''}</div>`
+      : '';
+    const flag = a.verified === false
+      ? `<div style="margin-top:8px;font-size:15px;color:var(--clay);">⚠️ Non confirmé en ligne — à vérifier</div>`
+      : a.selfSubmitted
+        ? `<div style="margin-top:8px;font-size:15px;color:#4E7A1F;">✓ Inscrit par l'artiste lui-même</div>`
+        : (a.addedByAdmin ? `<div style="margin-top:8px;font-size:15px;color:#4E7A1F;">Ajouté depuis l'app</div>` : '');
+    div.innerHTML = `<h3>${a.name}</h3>${a.realName ? `<div style="font-size:14px;color:var(--ink);margin-bottom:4px;">${a.realName}</div>` : ''}<p>${a.bio}</p>${songsHtml}${currentSongHtml}${flag}`;
+    artistsList.appendChild(div);
+  });
+}
+renderArtists();
+
+/* ---------- Formulaire "Fais-toi connaître" ---------- */
+const artistModal = document.getElementById('artist-modal');
+document.getElementById('open-artist-form').addEventListener('click', ()=> artistModal.classList.add('active'));
+document.getElementById('close-artist-form').addEventListener('click', ()=> artistModal.classList.remove('active'));
+
+document.getElementById('artist-submit').addEventListener('click', async ()=>{
+  const name = document.getElementById('artist-name').value.trim();
+  const songs = document.getElementById('artist-songs').value.trim();
+  const currentSongTitle = document.getElementById('artist-current-title').value.trim();
+  const currentSongLink = document.getElementById('artist-current-link').value.trim();
+  const contact = document.getElementById('artist-contact').value.trim();
+  const status = document.getElementById('artist-submit-status');
+  const btn = document.getElementById('artist-submit');
+
+  if(!name){
+    status.textContent = 'Le nom d\'artiste est obligatoire.';
+    status.className = 'status-line status-bad';
+    return;
+  }
+  const throttle = checkThrottle('artist', 60);
+  if(!throttle.ok){
+    status.textContent = `Attends encore ${throttle.remaining}s avant un nouvel envoi.`;
+    status.className = 'status-line status-bad';
+    return;
+  }
+
+  if(supabaseClient){
+    btn.disabled = true;
+    const { error } = await supabaseClient.from('artist_submissions').insert({
+      name, songs, current_song_title: currentSongTitle || null,
+      current_song_link: currentSongLink || null, contact: contact || null,
+    });
+    btn.disabled = false;
+    if(error){
+      status.textContent = 'Erreur : ' + error.message;
+      status.className = 'status-line status-bad';
+      return;
+    }
+    status.textContent = 'Profil publié sur le mur public ✓';
+    status.className = 'status-line status-ok';
+  } else {
+    const list = getLocalArtistSubmissions();
+    list.push({ name, songs, currentSongTitle, currentSongLink, contact });
+    localStorage.setItem(STORE_KEYS.localArtistSubmissions, JSON.stringify(list));
+
+    const subject = 'Nouvel artiste ABUESA — ' + name;
+    const body = `Nom d'artiste : ${name}\nTitres : ${songs}\nChanson d'actualité : ${currentSongTitle}\nLien : ${currentSongLink}\nContact : ${contact}\n\n— Envoyé depuis l'app ABUESA`;
+    window.location.href = `mailto:${ALEXI_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    status.textContent = 'Profil ajouté sur cet appareil + email envoyé à Alexi ✓';
+    status.className = 'status-line status-ok';
+  }
+
+  ['artist-name','artist-songs','artist-current-title','artist-current-link','artist-contact'].forEach(id=>{
+    document.getElementById(id).value = '';
+  });
+  markThrottled('artist');
+  renderArtists();
+  showToast('Merci, bienvenue sur ABUESA 🎤');
+  setTimeout(()=> artistModal.classList.remove('active'), 1200);
+});
+
+/* ================= PANNEAU ADMIN ================= */
+/* Ce panneau n'est injecté dans le DOM que si isAdminUnlocked() est vrai
+   (voir refreshAdminVisibility). Un visiteur qui inspecte la page sans avoir
+   déverrouillé ne voit qu'un <div> vide. */
+function renderAdminPanel(){
+  adminSection.innerHTML = `
+    <h4>🔓 Mode Admin — Ajouter du contenu</h4>
+
+    <label style="margin-top:0;">Ajouter un mot au dictionnaire</label>
+    <div class="admin-row">
+      <input type="text" id="admin-word-fr" placeholder="Français">
+      <input type="text" id="admin-word-ak" placeholder="Akposso">
+      <button id="admin-add-word">+</button>
+    </div>
+
+    <label>Ajouter un artiste</label>
+    <div class="admin-row">
+      <input type="text" id="admin-artist-name" placeholder="Nom de l'artiste">
+    </div>
+    <div class="admin-row">
+      <input type="text" id="admin-artist-bio" placeholder="Courte bio">
+      <button id="admin-add-artist">+</button>
+    </div>
+
+    <div class="admin-actions">
+      <button id="admin-export">⬇ Exporter (sauvegarde)</button>
+      <button class="secondary" id="admin-import">⬆ Importer</button>
+    </div>
+    <input type="file" id="admin-import-file" accept="application/json" style="display:none;">
+    <div class="admin-list" id="admin-added-list"></div>
+
+    <button class="credits-toggle" id="admin-lock" style="color:var(--clay);">🔒 Quitter le mode admin</button>
+  `;
+
+  renderAdminAddedList();
+
+  document.getElementById('admin-add-word').addEventListener('click', async ()=>{
+    const fr = document.getElementById('admin-word-fr').value.trim();
+    const ak = document.getElementById('admin-word-ak').value.trim();
+    if(!fr || !ak){ showToast('Remplis les deux champs du mot'); return; }
+    const btn = document.getElementById('admin-add-word');
+
+    if(supabaseClient){
+      btn.disabled = true;
+      const { error } = await supabaseClient.from('dictionary_words').insert({ fr, ak });
+      btn.disabled = false;
+      if(error){ showToast('Erreur : ' + error.message); return; }
+      await fetchCloudWords();
+      showToast('Mot ajouté à la mémoire partagée ✓ (visible par tous)');
+    } else {
+      const words = getExtraWords();
+      words.push({ fr, ak });
+      localStorage.setItem(STORE_KEYS.extraWords, JSON.stringify(words));
+      showToast('Mot ajouté sur cet appareil (branche Supabase pour le partager partout)');
+    }
+
+    document.getElementById('admin-word-fr').value = '';
+    document.getElementById('admin-word-ak').value = '';
+    renderDictionary(getFullDictionary());
+    renderAdminAddedList();
+  });
+
+  document.getElementById('admin-add-artist').addEventListener('click', ()=>{
+    const name = document.getElementById('admin-artist-name').value.trim();
+    const bio = document.getElementById('admin-artist-bio').value.trim();
+    if(!name || !bio){ showToast('Remplis le nom et la bio'); return; }
+    const artists = getExtraArtists();
+    artists.push({ name, bio, songs:[], addedByAdmin:true });
+    localStorage.setItem(STORE_KEYS.extraArtists, JSON.stringify(artists));
+    document.getElementById('admin-artist-name').value = '';
+    document.getElementById('admin-artist-bio').value = '';
+    renderArtists();
+    renderAdminAddedList();
+    showToast('Artiste ajouté ✓');
+  });
+
+  document.getElementById('admin-export').addEventListener('click', ()=>{
+    const backup = {
+      extraWords: getExtraWords(),
+      extraArtists: getExtraArtists(),
+      favorites: getFavorites(),
+      exportedAt: new Date().toISOString(),
+    };
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type:'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'abuesa-sauvegarde-' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Sauvegarde téléchargée');
+  });
+
+  document.getElementById('admin-import').addEventListener('click', ()=>{
+    document.getElementById('admin-import-file').click();
+  });
+  document.getElementById('admin-import-file').addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try{
+        const data = JSON.parse(reader.result);
+        if(Array.isArray(data.extraWords)) localStorage.setItem(STORE_KEYS.extraWords, JSON.stringify(data.extraWords));
+        if(Array.isArray(data.extraArtists)) localStorage.setItem(STORE_KEYS.extraArtists, JSON.stringify(data.extraArtists));
+        if(Array.isArray(data.favorites)) localStorage.setItem(STORE_KEYS.favorites, JSON.stringify(data.favorites));
+        renderDictionary(getFullDictionary());
+        renderArtists();
+        renderAdminAddedList();
+        showToast('Sauvegarde importée ✓');
+      }catch(err){
+        showToast('Fichier invalide');
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  document.getElementById('admin-lock').addEventListener('click', ()=>{
+    localStorage.removeItem(STORE_KEYS.adminUnlocked);
+    refreshAdminVisibility();
+    showToast('Mode admin désactivé');
+  });
+}
+
+function renderAdminAddedList(){
+  const el = document.getElementById('admin-added-list');
+  if(!el) return;
+  const words = getExtraWords();
+  const artists = getExtraArtists();
+  const cloudNote = supabaseClient
+    ? `<div style="margin:8px 0;color:var(--ink-soft);">🌍 ${cloudWords.length} mot(s) dans la mémoire partagée (Supabase) — pour en retirer un, utilise le Table Editor sur supabase.com.</div>`
+    : `<div style="margin:8px 0;color:var(--ink-soft);">Supabase non branché : les mots ajoutés restent sur cet appareil.</div>`;
+  if(words.length === 0 && artists.length === 0){
+    el.innerHTML = cloudNote + 'Rien ajouté localement pour le moment.';
+    return;
+  }
+  const wordLines = words.map((w,i)=> `<div>📖 ${w.ak} — ${w.fr} <button data-type="word" data-i="${i}" style="border:none;background:none;color:var(--clay);cursor:pointer;">✕</button></div>`).join('');
+  const artistLines = artists.map((a,i)=> `<div>🎤 ${a.name} <button data-type="artist" data-i="${i}" style="border:none;background:none;color:var(--clay);cursor:pointer;">✕</button></div>`).join('');
+  el.innerHTML = cloudNote + wordLines + artistLines;
+  el.querySelectorAll('button[data-type]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const i = parseInt(btn.dataset.i, 10);
+      if(btn.dataset.type === 'word'){
+        const words = getExtraWords();
+        words.splice(i,1);
+        localStorage.setItem(STORE_KEYS.extraWords, JSON.stringify(words));
+        renderDictionary(getFullDictionary());
+      } else {
+        const artists = getExtraArtists();
+        artists.splice(i,1);
+        localStorage.setItem(STORE_KEYS.extraArtists, JSON.stringify(artists));
+        renderArtists();
+      }
+      renderAdminAddedList();
+      showToast('Supprimé');
+    });
+  });
+}
+
+/* ================= GALERIE PHOTOS / VIDÉOS ================= */
+const galleryModal = document.getElementById('gallery-modal');
+let selectedGalleryFile = null;
+const GALLERY_MAX_SIZE = 15 * 1024 * 1024; // 15 Mo, avant compression
+
+/* Redimensionne et compresse une image côté téléphone avant l'envoi.
+   Une photo de smartphone moderne (4000×3000px, 5-10 Mo) devient une image
+   de 1600px de large maximum en JPEG qualité 80% (souvent < 500 Ko) —
+   ça économise le stockage Supabase ET la data mobile du visiteur. */
+function compressImage(file, maxDim = 1600, quality = 0.8){
+  return new Promise((resolve)=>{
+    if(!file.type.startsWith('image')){ resolve(file); return; }
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (e) => { img.src = e.target.result; };
+    reader.onerror = () => resolve(file); // en cas d'échec, on envoie l'original
+    img.onload = () => {
+      let { width, height } = img;
+      if(width > maxDim || height > maxDim){
+        if(width > height){ height = Math.round(height * maxDim / width); width = maxDim; }
+        else { width = Math.round(width * maxDim / height); height = maxDim; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      canvas.toBlob((blob)=>{
+        if(!blob){ resolve(file); return; }
+        resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type:'image/jpeg' }));
+      }, 'image/jpeg', quality);
+    };
+    img.onerror = () => resolve(file);
+    reader.readAsDataURL(file);
+  });
+}
+
+async function renderGallery(){
+  const grid = document.getElementById('gallery-grid');
+  if(!supabaseClient){
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">La galerie nécessite Supabase (branche-le dans ⚙️ Réglages) pour être visible par tous.</div>';
+    return;
+  }
+  grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">Chargement…</div>';
+  const { data, error } = await supabaseClient
+    .from('gallery')
+    .select('name, caption, media_url, media_type, created_at')
+    .order('created_at', { ascending:false })
+    .limit(40);
+  if(error){
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">Erreur de chargement (${error.message}).</div>`;
+    return;
+  }
+  if(!data || data.length===0){
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">Aucune photo pour l\'instant — sois le premier 🌱</div>';
+    return;
+  }
+  grid.innerHTML = data.map(item=>{
+    const media = item.media_type === 'video'
+      ? `<video src="${item.media_url}" controls muted playsinline></video>`
+      : `<img src="${item.media_url}" alt="${item.caption || 'Photo ABUESA'}" loading="lazy">`;
+    const caption = (item.caption || item.name)
+      ? `<div class="gi-caption">${item.caption || ''}${item.caption && item.name ? ' · ' : ''}${item.name || ''}</div>`
+      : '';
+    return `<div class="gallery-item">${media}${caption}</div>`;
+  }).join('');
+}
+
+document.getElementById('open-gallery').addEventListener('click', ()=>{
+  galleryModal.classList.add('active');
+  renderGallery();
+});
+document.getElementById('close-gallery').addEventListener('click', ()=> galleryModal.classList.remove('active'));
+
+document.getElementById('gallery-file').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  const preview = document.getElementById('gallery-file-preview');
+  const status = document.getElementById('gallery-status');
+  status.textContent = '';
+  if(!file){ selectedGalleryFile = null; preview.innerHTML = ''; return; }
+  if(file.size > GALLERY_MAX_SIZE){
+    showToast('Fichier trop lourd (15 Mo max)');
+    selectedGalleryFile = null;
+    preview.innerHTML = '';
+    e.target.value = '';
+    return;
+  }
+  selectedGalleryFile = file;
+  const url = URL.createObjectURL(file);
+  preview.innerHTML = file.type.startsWith('video')
+    ? `<video src="${url}" controls muted style="width:100%;border-radius:10px;margin-bottom:10px;max-height:200px;"></video>`
+    : `<img src="${url}" style="width:100%;border-radius:10px;margin-bottom:10px;max-height:200px;object-fit:cover;">`;
+});
+
+document.getElementById('gallery-submit').addEventListener('click', async ()=>{
+  const status = document.getElementById('gallery-status');
+  const btn = document.getElementById('gallery-submit');
+  const caption = document.getElementById('gallery-caption').value.trim();
+  const name = document.getElementById('gallery-name').value.trim();
+
+  if(!selectedGalleryFile){
+    status.textContent = 'Choisis une photo ou une vidéo avant de publier.';
+    status.className = 'status-line status-bad';
+    return;
+  }
+  if(!supabaseClient){
+    status.textContent = 'La galerie n\'est pas encore branchée (Supabase manquant dans Réglages).';
+    status.className = 'status-line status-bad';
+    return;
+  }
+  const throttle = checkThrottle('gallery', 90);
+  if(!throttle.ok){
+    status.textContent = `Attends encore ${throttle.remaining}s avant un nouvel envoi.`;
+    status.className = 'status-line status-bad';
+    return;
+  }
+
+  btn.disabled = true;
+  status.textContent = selectedGalleryFile.type.startsWith('image') ? 'Compression de la photo…' : 'Envoi en cours…';
+  status.className = 'status-line';
+
+  const fileToUpload = await compressImage(selectedGalleryFile);
+  status.textContent = 'Envoi en cours…';
+
+  const isVideo = fileToUpload.type.startsWith('video');
+  const ext = fileToUpload.name.split('.').pop();
+  const path = `${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+
+  const { error: uploadError } = await supabaseClient.storage.from('media').upload(path, fileToUpload);
+  if(uploadError){
+    btn.disabled = false;
+    status.textContent = 'Erreur d\'envoi : ' + uploadError.message;
+    status.className = 'status-line status-bad';
+    return;
+  }
+
+  const { data: urlData } = supabaseClient.storage.from('media').getPublicUrl(path);
+  const { error: insertError } = await supabaseClient.from('gallery').insert({
+    name: name || null,
+    caption: caption || null,
+    media_url: urlData.publicUrl,
+    media_type: isVideo ? 'video' : 'image',
+  });
+
+  btn.disabled = false;
+  if(insertError){
+    status.textContent = 'Erreur : ' + insertError.message;
+    status.className = 'status-line status-bad';
+    return;
+  }
+
+  status.textContent = 'Publié dans la galerie ✓';
+  status.className = 'status-line status-ok';
+  document.getElementById('gallery-caption').value = '';
+  document.getElementById('gallery-name').value = '';
+  document.getElementById('gallery-file').value = '';
+  document.getElementById('gallery-file-preview').innerHTML = '';
+  selectedGalleryFile = null;
+  markThrottled('gallery');
+  showToast('Merci pour ta contribution 📸');
+  renderGallery();
+});
+
+/* ================= RECHERCHE UNIVERSELLE ================= */
+const searchModal = document.getElementById('search-modal');
+
+function switchToView(viewId){
+  document.querySelectorAll('nav.tabbar button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('main.view').forEach(v=>v.classList.remove('active'));
+  const navBtn = document.querySelector(`nav.tabbar button[data-view="${viewId}"]`);
+  if(navBtn) navBtn.classList.add('active');
+  document.getElementById(viewId).classList.add('active');
+}
+
+function runGlobalSearch(q){
+  const resultsEl = document.getElementById('global-search-results');
+  const query = q.toLowerCase().trim();
+  if(!query){
+    resultsEl.innerHTML = '<div class="empty-state">Tape un mot français, akposso, un nom de village ou d\'artiste…</div>';
+    return;
+  }
+
+  const blocks = [];
+
+  // Dictionnaire
+  const wordMatches = getFullDictionary().filter(w=>
+    w.fr.toLowerCase().includes(query) || w.ak.toLowerCase().includes(query));
+  if(wordMatches.length){
+    blocks.push(`<div class="search-category">📖 Dictionnaire (${wordMatches.length})</div>` +
+      wordMatches.slice(0,15).map(w=>
+        `<div class="search-result" data-goto="dict-view"><div class="sr-title">${w.ak}</div><div class="sr-sub">${w.fr}</div></div>`
+      ).join(''));
+  }
+
+  // Culture
+  const cultureMatches = CULTURE_FACTS.filter(f=>
+    f.title.toLowerCase().includes(query) || f.text.toLowerCase().includes(query));
+  if(cultureMatches.length){
+    blocks.push(`<div class="search-category">🌿 Culture (${cultureMatches.length})</div>` +
+      cultureMatches.map(f=>
+        `<div class="search-result" data-goto="culture-view"><div class="sr-title">${f.title}</div><div class="sr-sub">${f.text.slice(0,90)}…</div></div>`
+      ).join(''));
+  }
+
+  // Artistes
+  const artistMatches = [...ARTISTS, ...getExtraArtists()].filter(a=>
+    a.name.toLowerCase().includes(query) || (a.bio && a.bio.toLowerCase().includes(query)) ||
+    (a.songs && a.songs.join(' ').toLowerCase().includes(query)));
+  if(artistMatches.length){
+    blocks.push(`<div class="search-category">🎤 Artistes (${artistMatches.length})</div>` +
+      artistMatches.map(a=>
+        `<div class="search-result" data-goto="artists-view"><div class="sr-title">${a.name}</div><div class="sr-sub">${(a.bio||'').slice(0,90)}…</div></div>`
+      ).join(''));
+  }
+
+  // Carte / villages / cantons
+  const cantonMatches = WAWA_CANTONS.filter(c=>
+    c.name.toLowerCase().includes(query) || c.villages.some(v=> v.toLowerCase().includes(query)));
+  if(cantonMatches.length){
+    blocks.push(`<div class="search-category">🗺️ Carte (${cantonMatches.length})</div>` +
+      cantonMatches.map(c=>{
+        const matchedVillage = c.villages.find(v=> v.toLowerCase().includes(query));
+        const sub = matchedVillage && matchedVillage.toLowerCase() !== c.name.toLowerCase()
+          ? `Village : ${matchedVillage} (canton ${c.name})`
+          : `Canton${c.chef ? ' — chef-lieu de la préfecture' : ''}`;
+        return `<div class="search-result" data-goto="map-view"><div class="sr-title">${c.name}</div><div class="sr-sub">${sub}</div></div>`;
+      }).join(''));
+  }
+
+  if(blocks.length === 0){
+    resultsEl.innerHTML = `<div class="empty-state">Rien trouvé pour « ${q} ». Tu peux le proposer dans 📝 Avis !</div>`;
+    return;
+  }
+  resultsEl.innerHTML = blocks.join('');
+  resultsEl.querySelectorAll('.search-result').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      switchToView(el.dataset.goto);
+      searchModal.classList.remove('active');
+      document.getElementById('global-search-input').value = '';
+    });
+  });
+}
+
+document.getElementById('open-search').addEventListener('click', ()=>{
+  searchModal.classList.add('active');
+  document.getElementById('global-search-results').innerHTML =
+    '<div class="empty-state">Tape un mot français, akposso, un nom de village ou d\'artiste…</div>';
+  document.getElementById('global-search-input').value = '';
+  setTimeout(()=> document.getElementById('global-search-input').focus(), 150);
+});
+document.getElementById('close-search').addEventListener('click', ()=> searchModal.classList.remove('active'));
+document.getElementById('global-search-input').addEventListener('input', (e)=> runGlobalSearch(e.target.value));
+</script>
+</body>
+</html>

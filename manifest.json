@@ -1,0 +1,16 @@
+{
+  "name": "ABUESA — Culture Akposso",
+  "short_name": "ABUESA",
+  "description": "Dictionnaire, chat et culture du peuple Akposso (Ikposso) de Wawa, Togo.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F7F3E8",
+  "theme_color": "#C7D92E",
+  "lang": "fr",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
