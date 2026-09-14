@@ -18,8 +18,8 @@
 <meta name="twitter:description" content="Dictionnaire, chat, carte et culture du peuple Akposso (Ikposso) de Wawa, Togo.">
 <meta name="twitter:image" content="https://adomhub.github.io/ABUESA-IA-/og-image.jpg">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icône-192.png">
+<link rel="apple-touch-icon" href="icône-192.png">
 <meta name="theme-color" content="#C7D92E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -2053,7 +2053,7 @@ document.getElementById('gallery-submit').addEventListener('click', async ()=>{
   const ext = fileToUpload.name.split('.').pop();
   const path = `${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
 
-  const { error: uploadError } = await supabaseClient.storage.from('media').upload(path, fileToUpload);
+  const { error: uploadError } = await supabaseClient.storage.from('médias').upload(path, fileToUpload);
   if(uploadError){
     btn.disabled = false;
     status.textContent = 'Erreur d\'envoi : ' + uploadError.message;
@@ -2061,7 +2061,7 @@ document.getElementById('gallery-submit').addEventListener('click', async ()=>{
     return;
   }
 
-  const { data: urlData } = supabaseClient.storage.from('media').getPublicUrl(path);
+  const { data: urlData } = supabaseClient.storage.from('médias').getPublicUrl(path);
   const { error: insertError } = await supabaseClient.from('gallery').insert({
     name: name || null,
     caption: caption || null,
