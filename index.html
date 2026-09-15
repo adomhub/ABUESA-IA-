@@ -923,7 +923,7 @@
 
 const STORE_KEYS = {
   groqKey:'abuesa_groq_key', adminUnlocked:'abuesa_admin_unlocked', history:'abuesa_chat_history',
-  favorites:'abuesa_favorites', extraWords:'abuesa_extra_words', extraArtists:'abuesa_extra_artists',
+  favorites:'abuesa_favorites', extraWords:'abuesa_extra_words', extraArtists:'abuesa_extra_artists', personalityExtra:'abuesa_personality_extra',
   quizBest:'abuesa_quiz_best', wordOfDayDate:'abuesa_wod_date', wordOfDayIndex:'abuesa_wod_index',
   feedbackSent:'abuesa_feedback_sent', supabaseUrl:'abuesa_supabase_url', supabaseKey:'abuesa_supabase_key',
   localArtistSubmissions:'abuesa_local_artist_submissions', throttle:'abuesa_throttle_',
@@ -1070,6 +1070,7 @@ document.getElementById('save-settings').addEventListener('click', async ()=>{
   if(sbKey) localStorage.setItem(STORE_KEYS.supabaseKey, sbKey);
   initSupabase();
   await fetchCloudWords();
+  await fetchCloudPersonality();
   renderDictionary(getFullDictionary());
   renderArtists();
   if(isAdminUnlocked()) renderAdminAddedList();
@@ -1239,12 +1240,31 @@ Faits vérifiés à ta disposition :
 
 /* Le dictionnaire complet (mots de base + mots ajoutés en admin, locaux ou
    partagés via Supabase) est injecté à chaque question, pour que le chat
-   connaisse toujours les derniers mots ajoutés. */
+   connaisse toujours les derniers mots ajoutés. La "personnalité" additionnelle
+   (traits/ton ajoutés par l'admin) est injectée de la même façon. */
+let cloudPersonality = '';
+function getLocalPersonality(){
+  return localStorage.getItem(STORE_KEYS.personalityExtra) || '';
+}
+async function fetchCloudPersonality(){
+  if(!supabaseClient){ cloudPersonality = ''; return; }
+  const { data, error } = await supabaseClient
+    .from('app_personality')
+    .select('content')
+    .order('created_at', { ascending:false })
+    .limit(1);
+  if(!error && data && data[0]) cloudPersonality = data[0].content;
+}
 function buildSystemPrompt(){
   const dict = getFullDictionary();
-  if(dict.length === 0) return SYSTEM_PROMPT_BASE;
+  const personality = (cloudPersonality || getLocalPersonality()).trim();
+  let prompt = SYSTEM_PROMPT_BASE;
+  if(personality){
+    prompt += `\n\nTraits de personnalité supplémentaires à respecter en plus de ce qui précède :\n${personality}`;
+  }
+  if(dict.length === 0) return prompt;
   const dictLines = dict.map(w=> `${w.ak} = ${w.fr}`).join(' ; ');
-  return `${SYSTEM_PROMPT_BASE}
+  return `${prompt}
 
 Dictionnaire français–akposso à ta disposition (utilise-le en priorité si la question porte sur la traduction d'un mot ; s'il n'y est pas, dis que tu ne le sais pas encore plutôt que d'inventer) :
 ${dictLines}`;
@@ -1437,6 +1457,7 @@ fetchCloudWords().then(()=>{
   renderDictionary(getFullDictionary());
   renderWordOfDay();
 });
+fetchCloudPersonality();
 
 function renderWordOfDay(){
   const el = document.getElementById('word-of-day');
@@ -1528,12 +1549,36 @@ document.querySelector('[data-view="map-view"]').addEventListener('click', ()=>{
 });
 
 /* ---------- Quiz ---------- */
-const QUIZ = [
-  { q:'Comment dit-on « merci » en Akposso ?', options:['ɛ yao','ɔ dɔ','ɛtsi','ɟikpa'], correct:0 },
-  { q:'Que signifie « ɟikpa » ?', options:['Eau','Famille','Chef','Bonjour'], correct:1 },
-  { q:'Le peuple Akposso est aussi appelé ?', options:['Ewé','Ikposso','Kabyè','Mina'], correct:1 },
-];
+const QUIZ_LENGTH = 10;
+let QUIZ = [];
 let quizIndex=0, quizScore=0;
+
+function pickDistractors(pool, item, field, n){
+  const seen = new Set([item[field]]);
+  const result = [];
+  for(const w of [...pool].sort(()=>Math.random()-0.5)){
+    if(result.length >= n) break;
+    if(w === item || seen.has(w[field])) continue;
+    seen.add(w[field]);
+    result.push(w);
+  }
+  return result;
+}
+function buildQuiz(){
+  const dict = getFullDictionary().filter(w=>w.fr && w.ak);
+  const count = Math.min(QUIZ_LENGTH, dict.length);
+  const chosen = [...dict].sort(()=>Math.random()-0.5).slice(0, count);
+  QUIZ = chosen.map(item=>{
+    const askAk = Math.random() < 0.5; // true: on donne le mot ikposso, on devine le français
+    const field = askAk ? 'fr' : 'ak';
+    const distractors = pickDistractors(dict, item, field, 3);
+    const options = [item, ...distractors].sort(()=>Math.random()-0.5);
+    const correct = options.findIndex(o=>o===item);
+    return askAk
+      ? { q:`Que signifie « ${item.ak} » en français ?`, options: options.map(o=>o.fr), correct }
+      : { q:`Comment dit-on « ${item.fr} » en Ikposso ?`, options: options.map(o=>o.ak), correct };
+  });
+}
 function bestScoreLine(){
   const best = parseInt(localStorage.getItem(STORE_KEYS.quizBest) || '0', 10);
   return `Meilleur score : ${best} / ${QUIZ.length}`;
@@ -1550,7 +1595,7 @@ function renderQuiz(){
       <button class="quiz-option" id="quiz-replay" style="text-align:center;font-weight:600;">🔁 Rejouer</button>`;
     document.getElementById('quiz-score').innerHTML = `Score final : ${quizScore} / ${QUIZ.length}<br>${bestScoreLine()}`;
     document.getElementById('quiz-replay').addEventListener('click', ()=>{
-      quizIndex = 0; quizScore = 0; renderQuiz();
+      quizIndex = 0; quizScore = 0; buildQuiz(); renderQuiz();
     });
     return;
   }
@@ -1571,6 +1616,7 @@ function renderQuiz(){
     });
   });
 }
+buildQuiz();
 renderQuiz();
 
 
@@ -1783,6 +1829,13 @@ function renderAdminPanel(){
       <button id="admin-add-word">+</button>
     </div>
 
+    <label>Personnalité de l'assistant (chat)</label>
+    <textarea id="admin-personality" rows="4" placeholder="Ex : Sois joueur et utilise des expressions typiques de Wawa. Tutoie toujours les jeunes visiteurs. Termine parfois par un proverbe akposso." style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:14.5px;">${(cloudPersonality || getLocalPersonality())}</textarea>
+    <div class="admin-actions">
+      <button id="admin-save-personality">💾 Enregistrer la personnalité</button>
+    </div>
+    <div id="admin-personality-status" class="status-line"></div>
+
     <label>Ajouter un artiste</label>
     <div class="admin-row">
       <input type="text" id="admin-artist-name" placeholder="Nom de l'artiste">
@@ -1828,6 +1881,29 @@ function renderAdminPanel(){
     document.getElementById('admin-word-ak').value = '';
     renderDictionary(getFullDictionary());
     renderAdminAddedList();
+  });
+
+  document.getElementById('admin-save-personality').addEventListener('click', async ()=>{
+    const content = document.getElementById('admin-personality').value.trim();
+    const status = document.getElementById('admin-personality-status');
+    const btn = document.getElementById('admin-save-personality');
+    localStorage.setItem(STORE_KEYS.personalityExtra, content);
+    if(supabaseClient){
+      btn.disabled = true;
+      const { error } = await supabaseClient.from('app_personality').insert({ content });
+      btn.disabled = false;
+      if(error){
+        status.textContent = 'Erreur : ' + error.message;
+        status.className = 'status-line status-bad';
+        return;
+      }
+      cloudPersonality = content;
+      status.textContent = 'Personnalité enregistrée ✓ (visible par tous les visiteurs)';
+      status.className = 'status-line status-ok';
+    } else {
+      status.textContent = 'Enregistré sur cet appareil (branche Supabase pour que ça s\'applique à tous les visiteurs)';
+      status.className = 'status-line status-ok';
+    }
   });
 
   document.getElementById('admin-add-artist').addEventListener('click', ()=>{
@@ -1930,7 +2006,7 @@ function renderAdminAddedList(){
 /* ================= GALERIE PHOTOS / VIDÉOS ================= */
 const galleryModal = document.getElementById('gallery-modal');
 let selectedGalleryFile = null;
-const GALLERY_MAX_SIZE = 15 * 1024 * 1024; // 15 Mo, avant compression
+const GALLERY_MAX_SIZE = 25 * 1024 * 1024; // 25 Mo, avant compression
 
 /* Redimensionne et compresse une image côté téléphone avant l'envoi.
    Une photo de smartphone moderne (4000×3000px, 5-10 Mo) devient une image
@@ -2004,15 +2080,20 @@ document.getElementById('gallery-file').addEventListener('change', (e)=>{
   const preview = document.getElementById('gallery-file-preview');
   const status = document.getElementById('gallery-status');
   status.textContent = '';
+  status.className = 'status-line';
   if(!file){ selectedGalleryFile = null; preview.innerHTML = ''; return; }
   if(file.size > GALLERY_MAX_SIZE){
-    showToast('Fichier trop lourd (15 Mo max)');
+    const sizeMo = (file.size / (1024*1024)).toFixed(1);
+    status.textContent = `Ce fichier fait ${sizeMo} Mo, la limite est de 25 Mo. Choisis un fichier plus léger.`;
+    status.className = 'status-line status-bad';
     selectedGalleryFile = null;
     preview.innerHTML = '';
     e.target.value = '';
     return;
   }
   selectedGalleryFile = file;
+  status.textContent = `Fichier prêt : ${file.name} (${(file.size/(1024*1024)).toFixed(1)} Mo)`;
+  status.className = 'status-line status-ok';
   const url = URL.createObjectURL(file);
   preview.innerHTML = file.type.startsWith('video')
     ? `<video src="${url}" controls muted style="width:100%;border-radius:10px;margin-bottom:10px;max-height:200px;"></video>`
