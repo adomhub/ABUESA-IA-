@@ -1079,7 +1079,7 @@
         <label for="gallery-file" style="display:block;text-align:center;background:var(--paper);border:2px dashed var(--line);border-radius:12px;padding:22px 14px;cursor:pointer;font-size:14.5px;color:var(--ink-soft);margin-bottom:10px;">
           📷 Touche ici pour choisir une photo ou une vidéo
         </label>
-        <input type="file" id="gallery-file" accept="image/*,video/*" style="display:none;">
+        <input type="file" id="gallery-file" accept="image/*,video/*" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">
         <div id="gallery-file-preview"></div>
 
         <label for="gallery-caption">Légende (facultatif)</label>
