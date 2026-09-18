@@ -12,6 +12,20 @@
 <meta property="og:description" content="Dictionnaire, chat, carte et culture du peuple Akposso (Ikposso) de Wawa, Togo.">
 <meta property="og:image" content="https://adomhub.github.io/ABUESA-IA-/og-image.jpg">
 <meta property="og:url" content="https://adomhub.github.io/ABUESA-IA-/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "ABUESA",
+  "description": "Le centre des informations culturelles du peuple Akposso (Ikposso) de Wawa, Togo : dictionnaire, carte, quiz, traditions et vie quotidienne.",
+  "url": "https://adomhub.github.io/ABUESA-IA-/",
+  "inLanguage": "fr",
+  "creator": {
+    "@type": "Person",
+    "name": "Adom K. Alexi"
+  }
+}
+</script>
 <meta property="og:locale" content="fr_FR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ABUESA — Culture Akposso">
@@ -408,7 +422,7 @@
   }
 
   /* ---- Settings modal ---- */
-  #settings-modal, #feedback-modal, #search-modal, #artist-modal, #gallery-modal{
+  #settings-modal, #feedback-modal, #search-modal, #artist-modal, #gallery-modal, #community-modal{
     position:absolute;
     inset:0;
     background:rgba(43,43,34,0.45);
@@ -416,7 +430,7 @@
     align-items:flex-end;
     z-index:50;
   }
-  #settings-modal.active, #feedback-modal.active, #search-modal.active, #artist-modal.active, #gallery-modal.active{ display:flex; }
+  #settings-modal.active, #feedback-modal.active, #search-modal.active, #artist-modal.active, #gallery-modal.active, #community-modal.active{ display:flex; }
   .modal-sheet{
     background:var(--white);
     width:100%;
@@ -622,6 +636,138 @@
     padding:6px 8px;
     line-height:1.35;
   }
+  .gi-badge{
+    display:inline-block;
+    background:var(--clay);
+    color:#fff;
+    font-size:10px;
+    font-weight:700;
+    padding:2px 7px;
+    border-radius:20px;
+    margin-right:6px;
+    margin-bottom:2px;
+  }
+  .gallery-filter-row{
+    display:flex;
+    gap:6px;
+    overflow-x:auto;
+    padding-bottom:4px;
+    margin-bottom:10px;
+  }
+  .gf-chip{
+    flex:0 0 auto;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:6px 12px;
+    font-size:13px;
+    color:var(--ink-soft);
+    white-space:nowrap;
+    cursor:pointer;
+  }
+  .gf-chip.active{
+    background:var(--clay);
+    border-color:var(--clay);
+    color:#fff;
+    font-weight:600;
+  }
+  .home-menu{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:18px;
+  }
+  .home-card{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px;
+    box-shadow:var(--shadow);
+  }
+  .home-card-text h3{
+    margin:0 0 4px;
+    font-size:19px;
+    color:var(--ink);
+  }
+  .home-card-text p{
+    margin:0;
+    font-size:13px;
+    color:var(--ink-soft);
+    line-height:1.35;
+  }
+  .home-visit{
+    flex:0 0 auto;
+    background:var(--clay);
+    color:#fff;
+    border:none;
+    border-radius:20px;
+    padding:9px 14px;
+    font-size:13.5px;
+    font-weight:600;
+    white-space:nowrap;
+    cursor:pointer;
+  }
+  #home-featured{ margin-top:16px; }
+  .home-calendar-card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:14px 16px;
+    box-shadow:var(--shadow);
+    margin-top:16px;
+  }
+  .home-calendar-card .hc-label{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    color:var(--gold);
+    font-weight:700;
+    margin-bottom:4px;
+  }
+  .home-calendar-card .hc-day{
+    font-family:'Fraunces',serif;
+    font-size:20px;
+    color:var(--clay);
+  }
+  .home-calendar-card .hc-note{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-top:4px;
+  }
+  .home-featured-card{
+    display:block;
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    cursor:pointer;
+  }
+  .home-featured-card img, .home-featured-card video{
+    width:100%;
+    max-height:220px;
+    object-fit:cover;
+    display:block;
+  }
+  .home-featured-card .hf-body{
+    padding:10px 14px;
+  }
+  .home-featured-card .hf-label{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    color:var(--gold);
+    font-weight:700;
+    margin-bottom:4px;
+  }
+  .home-featured-card .hf-caption{
+    font-size:14px;
+    color:var(--ink);
+  }
 
   /* ---- Recherche universelle ---- */
   .search-category{
@@ -678,8 +824,84 @@
     </div>
   </header>
 
+  <!-- ===== HOME VIEW ===== -->
+  <main class="view active" id="home-view">
+    <div class="section-pad">
+      <div class="welcome-block" style="position:static;">
+        <h2>YANASĒ-BA-ABUESA</h2>
+        <div class="fr-translation">Bienvenue à ABUESA</div>
+        <p>Le centre des informations culturelles Akposso : vie quotidienne, traditions et événements de Wawa, partagés par la communauté.</p>
+      </div>
+
+      <div id="home-calendar"></div>
+
+      <div id="home-proverb"></div>
+
+      <div id="home-featured"></div>
+
+      <div class="home-menu">
+        <div class="home-card">
+          <div class="home-card-text">
+            <h3 class="serif">💬 Chat</h3>
+            <p>Pose une question sur la culture, la langue ou les traditions Akposso.</p>
+          </div>
+          <button class="home-visit" data-view="chat-view">Visiter →</button>
+        </div>
+        <div class="home-card">
+          <div class="home-card-text">
+            <h3 class="serif">📖 Dictionnaire</h3>
+            <p>Traductions français ⇄ Akposso, avec favoris et prononciation.</p>
+          </div>
+          <button class="home-visit" data-view="dict-view">Visiter →</button>
+        </div>
+        <div class="home-card">
+          <div class="home-card-text">
+            <h3 class="serif">🗺️ Carte</h3>
+            <p>Les cantons et villages de Wawa, avec leurs villages.</p>
+          </div>
+          <button class="home-visit" data-view="map-view">Visiter →</button>
+        </div>
+        <div class="home-card">
+          <div class="home-card-text">
+            <h3 class="serif">📸 Galerie</h3>
+            <p>Photos et vidéos de la vie, des événements et des traditions Akposso, partagées par tous.</p>
+          </div>
+          <button class="home-visit" data-modal="gallery">Visiter →</button>
+        </div>
+        <div class="home-card">
+          <div class="home-card-text">
+            <h3 class="serif">👥 Communauté</h3>
+            <p>Discute en texte ou en vocal avec d'autres visiteurs pour apprendre l'Ikposso ensemble.</p>
+          </div>
+          <button class="home-visit" data-modal="community">Visiter →</button>
+        </div>
+        <div class="home-card">
+          <div class="home-card-text">
+            <h3 class="serif">🎯 Quiz</h3>
+            <p>Teste ce que tu connais du vocabulaire Akposso.</p>
+          </div>
+          <button class="home-visit" data-view="quiz-view">Visiter →</button>
+        </div>
+        <div class="home-card">
+          <div class="home-card-text">
+            <h3 class="serif">🌿 Culture</h3>
+            <p>Fêtes, calendrier, danses et rythmes traditionnels.</p>
+          </div>
+          <button class="home-visit" data-view="culture-view">Visiter →</button>
+        </div>
+        <div class="home-card">
+          <div class="home-card-text">
+            <h3 class="serif">🎤 Artistes</h3>
+            <p>Découvre les artistes Akposso, et fais-toi connaître si tu en es un.</p>
+          </div>
+          <button class="home-visit" data-view="artists-view">Visiter →</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
   <!-- ===== CHAT VIEW ===== -->
-  <main class="view active" id="chat-view">
+  <main class="view" id="chat-view">
     <div id="chat-messages">
       <div class="welcome-block" id="welcome-block">
         <h2>YANASĒ-BA-ABUESA</h2>
@@ -825,7 +1047,8 @@
   </div>
 
   <nav class="tabbar">
-    <button data-view="chat-view" class="active"><span class="emoji">💬</span>Chat</button>
+    <button data-view="home-view" class="active"><span class="emoji">🏠</span>Accueil</button>
+    <button data-view="chat-view"><span class="emoji">💬</span>Chat</button>
     <button data-view="dict-view"><span class="emoji">📖</span>Dico</button>
     <button data-view="map-view"><span class="emoji">🗺️</span>Carte</button>
     <button data-view="quiz-view"><span class="emoji">🎯</span>Quiz</button>
@@ -842,6 +1065,16 @@
       <h3 class="serif">📸 Galerie ABUESA</h3>
       <p class="section-desc" style="margin-top:-6px;">Partage une photo ou une vidéo de la culture, des lieux ou des moments Akposso. Visible par tous.</p>
 
+      <div class="gallery-filter-row" id="gallery-filter-row">
+        <button class="gf-chip active" data-cat="">Tout</button>
+        <button class="gf-chip" data-cat="Vie quotidienne">🌿 Quotidien</button>
+        <button class="gf-chip" data-cat="Événement">🎉 Événement</button>
+        <button class="gf-chip" data-cat="Tradition">🪘 Tradition</button>
+        <button class="gf-chip" data-cat="Musique & Danse">🎶 Musique</button>
+        <button class="gf-chip" data-cat="Cuisine">🍲 Cuisine</button>
+        <button class="gf-chip" data-cat="Autre">✨ Autre</button>
+      </div>
+
       <div id="gallery-upload-zone">
         <label for="gallery-file" style="display:block;text-align:center;background:var(--paper);border:2px dashed var(--line);border-radius:12px;padding:22px 14px;cursor:pointer;font-size:14.5px;color:var(--ink-soft);margin-bottom:10px;">
           📷 Touche ici pour choisir une photo ou une vidéo
@@ -851,6 +1084,17 @@
 
         <label for="gallery-caption">Légende (facultatif)</label>
         <input type="text" id="gallery-caption" placeholder="Ex : Marché de Badou, un dimanche matin">
+        <label for="gallery-category">Catégorie</label>
+        <select id="gallery-category">
+          <option value="Vie quotidienne">🌿 Vie quotidienne</option>
+          <option value="Événement">🎉 Événement / fête</option>
+          <option value="Tradition">🪘 Tradition / rite</option>
+          <option value="Musique & Danse">🎶 Musique & Danse</option>
+          <option value="Cuisine">🍲 Cuisine</option>
+          <option value="Autre">✨ Autre</option>
+        </select>
+        <label for="gallery-lieu">Lieu (canton, village — facultatif)</label>
+        <input type="text" id="gallery-lieu" placeholder="Ex : Badou, Tomégbé…">
         <label for="gallery-name">Ton prénom (facultatif)</label>
         <input type="text" id="gallery-name" placeholder="Ton prénom">
 
@@ -859,6 +1103,26 @@
       </div>
 
       <div id="gallery-grid" style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:8px;"></div>
+    </div>
+  </div>
+
+  <!-- ===== COMMUNITY CHAT MODAL ===== -->
+  <div id="community-modal">
+    <div class="modal-sheet" style="max-height:92vh;display:flex;flex-direction:column;">
+      <div class="close-row"><button id="close-community">×</button></div>
+      <h3 class="serif">👥 Communauté ABUESA</h3>
+      <p class="section-desc" style="margin-top:-6px;">Écris ou envoie un message vocal pour apprendre l'Ikposso avec d'autres visiteurs. Visible par tous.</p>
+
+      <input type="text" id="community-name" placeholder="Ton prénom (facultatif)" style="margin-bottom:8px;">
+
+      <div id="community-messages" style="flex:1;overflow-y:auto;min-height:200px;max-height:45vh;background:var(--paper);border-radius:12px;padding:10px;margin-bottom:10px;"></div>
+
+      <div id="community-input-row" style="display:flex;gap:8px;align-items:flex-end;">
+        <textarea id="community-text" rows="1" placeholder="Écris un message…" style="flex:1;resize:none;"></textarea>
+        <button id="community-record" type="button" aria-label="Message vocal" style="flex:0 0 auto;background:var(--paper);border:1px solid var(--line);border-radius:50%;width:44px;height:44px;font-size:18px;">🎤</button>
+        <button id="community-send" type="button" aria-label="Envoyer" style="flex:0 0 auto;background:var(--clay);color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:16px;">➤</button>
+      </div>
+      <div id="community-status" class="status-line"></div>
     </div>
   </div>
 
@@ -1905,6 +2169,14 @@ function renderAdminPanel(){
     </div>
     <div id="admin-personality-status" class="status-line"></div>
 
+    <label>Ajouter un proverbe akposso</label>
+    <div class="admin-row">
+      <input type="text" id="admin-proverb-ak" placeholder="Proverbe en Akposso">
+      <input type="text" id="admin-proverb-fr" placeholder="Traduction française">
+      <button id="admin-add-proverb">+</button>
+    </div>
+    <div id="admin-proverb-status" class="status-line"></div>
+
     <label>Ajouter un artiste</label>
     <div class="admin-row">
       <input type="text" id="admin-artist-name" placeholder="Nom de l'artiste">
@@ -1973,6 +2245,34 @@ function renderAdminPanel(){
       status.textContent = 'Enregistré sur cet appareil (branche Supabase pour que ça s\'applique à tous les visiteurs)';
       status.className = 'status-line status-ok';
     }
+  });
+
+  document.getElementById('admin-add-proverb').addEventListener('click', async ()=>{
+    const ak = document.getElementById('admin-proverb-ak').value.trim();
+    const fr = document.getElementById('admin-proverb-fr').value.trim();
+    const status = document.getElementById('admin-proverb-status');
+    if(!ak || !fr){
+      status.textContent = 'Remplis les deux champs.';
+      status.className = 'status-line status-bad';
+      return;
+    }
+    if(!supabaseClient){
+      status.textContent = 'Supabase non branché (Réglages) — le proverbe ne sera pas partagé.';
+      status.className = 'status-line status-bad';
+      return;
+    }
+    const { error } = await supabaseClient.from('proverbes').insert({ ak, fr });
+    if(error){
+      status.textContent = 'Erreur : ' + error.message;
+      status.className = 'status-line status-bad';
+      return;
+    }
+    document.getElementById('admin-proverb-ak').value = '';
+    document.getElementById('admin-proverb-fr').value = '';
+    status.textContent = 'Proverbe ajouté ✓';
+    status.className = 'status-line status-ok';
+    await fetchCloudProverbs();
+    renderHomeProverb();
   });
 
   document.getElementById('admin-add-artist').addEventListener('click', ()=>{
@@ -2107,6 +2407,35 @@ function compressImage(file, maxDim = 1600, quality = 0.8){
   });
 }
 
+let galleryData = [];
+let galleryActiveCat = '';
+function renderGalleryGrid(){
+  const grid = document.getElementById('gallery-grid');
+  const filtered = galleryActiveCat ? galleryData.filter(it=>it.category===galleryActiveCat) : galleryData;
+  if(filtered.length===0){
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">Rien dans cette catégorie pour l\'instant.</div>';
+    return;
+  }
+  grid.innerHTML = filtered.map(item=>{
+    const media = item.media_type === 'video'
+      ? `<video src="${item.media_url}" controls muted playsinline></video>`
+      : `<img src="${item.media_url}" alt="${item.caption || 'Photo ABUESA'}" loading="lazy">`;
+    const badge = item.category ? `<span class="gi-badge">${item.category}</span>` : '';
+    const lieuLine = item.lieu ? ` · 📍 ${item.lieu}` : '';
+    const caption = (item.caption || item.name || item.lieu)
+      ? `<div class="gi-caption">${badge}${item.caption || ''}${item.caption && item.name ? ' · ' : ''}${item.name || ''}${lieuLine}</div>`
+      : '';
+    return `<div class="gallery-item">${media}${caption}</div>`;
+  }).join('');
+}
+document.getElementById('gallery-filter-row').addEventListener('click', (e)=>{
+  const chip = e.target.closest('.gf-chip');
+  if(!chip) return;
+  document.querySelectorAll('.gf-chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  galleryActiveCat = chip.dataset.cat;
+  renderGalleryGrid();
+});
 async function renderGallery(){
   const grid = document.getElementById('gallery-grid');
   if(!supabaseClient){
@@ -2116,26 +2445,19 @@ async function renderGallery(){
   grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">Chargement…</div>';
   const { data, error } = await supabaseClient
     .from('gallery')
-    .select('name, caption, media_url, media_type, created_at')
+    .select('name, caption, category, lieu, media_url, media_type, created_at')
     .order('created_at', { ascending:false })
     .limit(40);
   if(error){
     grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">Erreur de chargement (${error.message}).</div>`;
     return;
   }
-  if(!data || data.length===0){
+  galleryData = data || [];
+  if(galleryData.length===0){
     grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">Aucune photo pour l\'instant — sois le premier 🌱</div>';
     return;
   }
-  grid.innerHTML = data.map(item=>{
-    const media = item.media_type === 'video'
-      ? `<video src="${item.media_url}" controls muted playsinline></video>`
-      : `<img src="${item.media_url}" alt="${item.caption || 'Photo ABUESA'}" loading="lazy">`;
-    const caption = (item.caption || item.name)
-      ? `<div class="gi-caption">${item.caption || ''}${item.caption && item.name ? ' · ' : ''}${item.name || ''}</div>`
-      : '';
-    return `<div class="gallery-item">${media}${caption}</div>`;
-  }).join('');
+  renderGalleryGrid();
 }
 
 document.getElementById('open-gallery').addEventListener('click', ()=>{
@@ -2174,6 +2496,8 @@ document.getElementById('gallery-submit').addEventListener('click', async ()=>{
   const btn = document.getElementById('gallery-submit');
   const caption = document.getElementById('gallery-caption').value.trim();
   const name = document.getElementById('gallery-name').value.trim();
+  const category = document.getElementById('gallery-category').value;
+  const lieu = document.getElementById('gallery-lieu').value.trim();
 
   if(!selectedGalleryFile){
     status.textContent = 'Choisis une photo ou une vidéo avant de publier.';
@@ -2215,6 +2539,8 @@ document.getElementById('gallery-submit').addEventListener('click', async ()=>{
   const { error: insertError } = await supabaseClient.from('gallery').insert({
     name: name || null,
     caption: caption || null,
+    category: category || null,
+    lieu: lieu || null,
     media_url: urlData.publicUrl,
     media_type: isVideo ? 'video' : 'image',
   });
@@ -2230,6 +2556,8 @@ document.getElementById('gallery-submit').addEventListener('click', async ()=>{
   status.className = 'status-line status-ok';
   document.getElementById('gallery-caption').value = '';
   document.getElementById('gallery-name').value = '';
+  document.getElementById('gallery-lieu').value = '';
+  document.getElementById('gallery-category').selectedIndex = 0;
   document.getElementById('gallery-file').value = '';
   document.getElementById('gallery-file-preview').innerHTML = '';
   selectedGalleryFile = null;
@@ -2241,6 +2569,27 @@ document.getElementById('gallery-submit').addEventListener('click', async ()=>{
 /* ================= RECHERCHE UNIVERSELLE ================= */
 const searchModal = document.getElementById('search-modal');
 
+/* Calendrier traditionnel de 5 jours : on calcule juste la position (1 à 5)
+   dans le cycle depuis une date de référence arbitraire (peu importe laquelle,
+   le cycle est régulier). Les vrais noms de chaque jour ne sont pas encore
+   connus/vérifiés — si Alexi les fournit un jour, remplacer CYCLE_DAY_NAMES. */
+const CYCLE_DAY_NAMES = null; // ex futur : ['Nom1','Nom2','Nom3','Nom4','Nom5']
+function renderHomeCalendar(){
+  const el = document.getElementById('home-calendar');
+  if(!el) return;
+  const epoch = new Date('2024-01-01T00:00:00Z');
+  const now = new Date();
+  const diffDays = Math.floor((now - epoch) / 86400000);
+  const pos = ((diffDays % 5) + 5) % 5; // 0..4
+  const dayLabel = CYCLE_DAY_NAMES ? CYCLE_DAY_NAMES[pos] : `Jour ${pos+1} sur 5`;
+  el.innerHTML = `<div class="home-calendar-card">
+    <div class="hc-label">📅 Calendrier traditionnel Akposso</div>
+    <div class="hc-day">${dayLabel}</div>
+    <div class="hc-note">Cycle traditionnel de 5 jours, encore utilisé pour rythmer les marchés locaux.</div>
+  </div>`;
+}
+renderHomeCalendar();
+
 function switchToView(viewId){
   document.querySelectorAll('nav.tabbar button').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('main.view').forEach(v=>v.classList.remove('active'));
@@ -2248,6 +2597,78 @@ function switchToView(viewId){
   if(navBtn) navBtn.classList.add('active');
   document.getElementById(viewId).classList.add('active');
 }
+
+let cloudProverbs = [];
+async function fetchCloudProverbs(){
+  if(!supabaseClient){ cloudProverbs = []; return; }
+  const { data, error } = await supabaseClient.from('proverbes').select('ak, fr');
+  if(!error && data) cloudProverbs = data;
+}
+function renderHomeProverb(){
+  const el = document.getElementById('home-proverb');
+  if(!el) return;
+  if(cloudProverbs.length === 0){
+    el.innerHTML = `<div class="home-calendar-card">
+      <div class="hc-label">💬 Proverbe du jour</div>
+      <div class="hc-note">Aucun proverbe ajouté pour l'instant. Ajoutes-en un depuis le panneau admin pour qu'il apparaisse ici.</div>
+    </div>`;
+    return;
+  }
+  const dayIdx = Math.floor(Date.now() / 86400000) % cloudProverbs.length;
+  const p = cloudProverbs[dayIdx];
+  el.innerHTML = `<div class="home-calendar-card">
+    <div class="hc-label">💬 Proverbe du jour</div>
+    <div class="hc-day" style="font-style:italic;">« ${p.ak} »</div>
+    <div class="hc-note">${p.fr}</div>
+  </div>`;
+}
+fetchCloudProverbs().then(renderHomeProverb);
+
+document.querySelectorAll('.home-visit').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    if(btn.dataset.modal === 'gallery'){
+      galleryModal.classList.add('active');
+      renderGallery();
+      return;
+    }
+    if(btn.dataset.modal === 'community'){
+      communityModal.classList.add('active');
+      loadCommunityMessages();
+      subscribeCommunityRealtime();
+      return;
+    }
+    switchToView(btn.dataset.view);
+    window.scrollTo(0,0);
+  });
+});
+
+async function loadHomeFeatured(){
+  const el = document.getElementById('home-featured');
+  if(!supabaseClient || !el) return;
+  const { data, error } = await supabaseClient
+    .from('gallery')
+    .select('name, caption, category, lieu, media_url, media_type, created_at')
+    .order('created_at', { ascending:false })
+    .limit(1);
+  if(error || !data || data.length===0) return;
+  const item = data[0];
+  const media = item.media_type === 'video'
+    ? `<video src="${item.media_url}" muted playsinline></video>`
+    : `<img src="${item.media_url}" alt="${item.caption || 'Activité récente'}" loading="lazy">`;
+  const lieuLine = item.lieu ? ` · 📍 ${item.lieu}` : '';
+  el.innerHTML = `<div class="home-featured-card" id="home-featured-click">
+    ${media}
+    <div class="hf-body">
+      <div class="hf-label">${item.category ? item.category + ' · ' : ''}Activité récente</div>
+      <div class="hf-caption">${item.caption || item.name || 'Voir dans la galerie'}${lieuLine}</div>
+    </div>
+  </div>`;
+  document.getElementById('home-featured-click').addEventListener('click', ()=>{
+    galleryModal.classList.add('active');
+    renderGallery();
+  });
+}
+loadHomeFeatured();
 
 function runGlobalSearch(q){
   const resultsEl = document.getElementById('global-search-results');
@@ -2327,6 +2748,173 @@ document.getElementById('open-search').addEventListener('click', ()=>{
 });
 document.getElementById('close-search').addEventListener('click', ()=> searchModal.classList.remove('active'));
 document.getElementById('global-search-input').addEventListener('input', (e)=> runGlobalSearch(e.target.value));
+
+/* ================= CHAT COMMUNAUTAIRE (texte + vocal) ================= */
+const communityModal = document.getElementById('community-modal');
+const communityMessagesEl = document.getElementById('community-messages');
+let communityChannel = null;
+
+function escapeHtmlSafe(s){
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function renderCommunityMessage(msg){
+  const div = document.createElement('div');
+  div.style.marginBottom = '10px';
+  const name = msg.name ? escapeHtmlSafe(msg.name) : 'Anonyme';
+  const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}) : '';
+  const body = msg.kind === 'audio'
+    ? `<audio controls src="${msg.audio_url}" style="width:100%;margin-top:3px;"></audio>`
+    : `<div style="font-size:14.5px;color:var(--ink);margin-top:2px;">${escapeHtmlSafe(msg.content)}</div>`;
+  div.innerHTML = `<div style="font-size:12px;color:var(--gold);font-weight:700;">${name} <span style="color:var(--ink-soft);font-weight:400;">· ${time}</span></div>${body}`;
+  communityMessagesEl.appendChild(div);
+}
+async function loadCommunityMessages(){
+  communityMessagesEl.innerHTML = '<div class="empty-state">Chargement…</div>';
+  if(!supabaseClient){
+    communityMessagesEl.innerHTML = '<div class="empty-state">Le chat communautaire nécessite Supabase (Réglages).</div>';
+    return;
+  }
+  const { data, error } = await supabaseClient
+    .from('community_messages')
+    .select('name, kind, content, audio_url, created_at')
+    .order('created_at', { ascending:true })
+    .limit(100);
+  communityMessagesEl.innerHTML = '';
+  if(error){
+    communityMessagesEl.innerHTML = `<div class="empty-state">Erreur : ${error.message}</div>`;
+    return;
+  }
+  if(!data || data.length===0){
+    communityMessagesEl.innerHTML = '<div class="empty-state">Aucun message pour l\'instant — lance la discussion 🌿</div>';
+    return;
+  }
+  data.forEach(renderCommunityMessage);
+  communityMessagesEl.scrollTop = communityMessagesEl.scrollHeight;
+}
+function subscribeCommunityRealtime(){
+  if(!supabaseClient || communityChannel) return;
+  communityChannel = supabaseClient
+    .channel('community_messages_feed')
+    .on('postgres_changes', { event:'INSERT', schema:'public', table:'community_messages' }, (payload)=>{
+      const empty = communityMessagesEl.querySelector('.empty-state');
+      if(empty) empty.remove();
+      renderCommunityMessage(payload.new);
+      communityMessagesEl.scrollTop = communityMessagesEl.scrollHeight;
+    })
+    .subscribe();
+}
+
+document.getElementById('close-community').addEventListener('click', ()=> communityModal.classList.remove('active'));
+
+document.getElementById('community-send').addEventListener('click', async ()=>{
+  const status = document.getElementById('community-status');
+  const textEl = document.getElementById('community-text');
+  const text = textEl.value.trim();
+  const name = document.getElementById('community-name').value.trim();
+  if(!text) return;
+  if(!supabaseClient){
+    status.textContent = 'Supabase non branché (Réglages).';
+    status.className = 'status-line status-bad';
+    return;
+  }
+  const throttle = checkThrottle('community', 8);
+  if(!throttle.ok){
+    status.textContent = `Attends encore ${throttle.remaining}s avant d'envoyer un autre message.`;
+    status.className = 'status-line status-bad';
+    return;
+  }
+  const { error } = await supabaseClient.from('community_messages').insert({
+    name: name || null, kind:'text', content: text,
+  });
+  if(error){
+    status.textContent = 'Erreur : ' + error.message;
+    status.className = 'status-line status-bad';
+    return;
+  }
+  textEl.value = '';
+  status.textContent = '';
+  markThrottled('community');
+});
+document.getElementById('community-text').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter' && !e.shiftKey){
+    e.preventDefault();
+    document.getElementById('community-send').click();
+  }
+});
+
+/* Enregistrement vocal */
+let mediaRecorder = null;
+let recordedChunks = [];
+let isRecording = false;
+document.getElementById('community-record').addEventListener('click', async ()=>{
+  const btn = document.getElementById('community-record');
+  const status = document.getElementById('community-status');
+  if(!supabaseClient){
+    status.textContent = 'Supabase non branché (Réglages).';
+    status.className = 'status-line status-bad';
+    return;
+  }
+  if(!isRecording){
+    try{
+      const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+      recordedChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = (e)=>{ if(e.data.size>0) recordedChunks.push(e.data); };
+      mediaRecorder.onstop = async ()=>{
+        stream.getTracks().forEach(t=>t.stop());
+        const blob = new Blob(recordedChunks, { type:'audio/webm' });
+        if(blob.size > 8*1024*1024){
+          status.textContent = 'Message vocal trop long (8 Mo max).';
+          status.className = 'status-line status-bad';
+          return;
+        }
+        const throttle = checkThrottle('community', 8);
+        if(!throttle.ok){
+          status.textContent = `Attends encore ${throttle.remaining}s avant d'envoyer un autre message.`;
+          status.className = 'status-line status-bad';
+          return;
+        }
+        status.textContent = 'Envoi du message vocal…';
+        status.className = 'status-line';
+        const path = `audio/${Date.now()}-${Math.random().toString(36).slice(2,8)}.webm`;
+        const { error: upErr } = await supabaseClient.storage.from('médias').upload(path, blob);
+        if(upErr){
+          status.textContent = 'Erreur d\'envoi : ' + upErr.message;
+          status.className = 'status-line status-bad';
+          return;
+        }
+        const { data: urlData } = supabaseClient.storage.from('médias').getPublicUrl(path);
+        const name = document.getElementById('community-name').value.trim();
+        const { error } = await supabaseClient.from('community_messages').insert({
+          name: name || null, kind:'audio', audio_url: urlData.publicUrl,
+        });
+        if(error){
+          status.textContent = 'Erreur : ' + error.message;
+          status.className = 'status-line status-bad';
+          return;
+        }
+        status.textContent = '';
+        markThrottled('community');
+      };
+      mediaRecorder.start();
+      isRecording = true;
+      btn.textContent = '⏹';
+      btn.style.background = 'var(--clay)';
+      btn.style.color = '#fff';
+      status.textContent = 'Enregistrement en cours… touche à nouveau pour arrêter.';
+      status.className = 'status-line';
+    }catch(err){
+      status.textContent = 'Micro non accessible : ' + err.message;
+      status.className = 'status-line status-bad';
+    }
+  } else {
+    mediaRecorder.stop();
+    isRecording = false;
+    btn.textContent = '🎤';
+    btn.style.background = 'var(--paper)';
+    btn.style.color = 'var(--ink)';
+  }
+});
 </script>
 </body>
 </html>
