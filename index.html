@@ -2527,7 +2527,7 @@ document.getElementById('gallery-submit').addEventListener('click', async ()=>{
   const ext = fileToUpload.name.split('.').pop();
   const path = `${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
 
-  const { error: uploadError } = await supabaseClient.storage.from('médias').upload(path, fileToUpload);
+  const { error: uploadError } = await supabaseClient.storage.from('medias').upload(path, fileToUpload);
   if(uploadError){
     btn.disabled = false;
     status.textContent = 'Erreur d\'envoi : ' + uploadError.message;
@@ -2535,7 +2535,7 @@ document.getElementById('gallery-submit').addEventListener('click', async ()=>{
     return;
   }
 
-  const { data: urlData } = supabaseClient.storage.from('médias').getPublicUrl(path);
+  const { data: urlData } = supabaseClient.storage.from('medias').getPublicUrl(path);
   const { error: insertError } = await supabaseClient.from('gallery').insert({
     name: name || null,
     caption: caption || null,
@@ -2877,13 +2877,13 @@ document.getElementById('community-record').addEventListener('click', async ()=>
         status.textContent = 'Envoi du message vocal…';
         status.className = 'status-line';
         const path = `audio/${Date.now()}-${Math.random().toString(36).slice(2,8)}.webm`;
-        const { error: upErr } = await supabaseClient.storage.from('médias').upload(path, blob);
+        const { error: upErr } = await supabaseClient.storage.from('medias').upload(path, blob);
         if(upErr){
           status.textContent = 'Erreur d\'envoi : ' + upErr.message;
           status.className = 'status-line status-bad';
           return;
         }
-        const { data: urlData } = supabaseClient.storage.from('médias').getPublicUrl(path);
+        const { data: urlData } = supabaseClient.storage.from('medias').getPublicUrl(path);
         const name = document.getElementById('community-name').value.trim();
         const { error } = await supabaseClient.from('community_messages').insert({
           name: name || null, kind:'audio', audio_url: urlData.publicUrl,
