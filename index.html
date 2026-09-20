@@ -820,7 +820,7 @@
       <button class="icon-btn" id="open-search" aria-label="Recherche">🔍</button>
       <button class="icon-btn" id="open-gallery" aria-label="Galerie photos et vidéos">📸</button>
       <button class="icon-btn" id="open-feedback" aria-label="Avis et suggestions">📝</button>
-      <button class="icon-btn" id="open-settings" aria-label="Réglages">⚙️</button><button class="icon-btn" id="open-share" aria-label="Partager" onclick="if(navigator.share){navigator.share({title:'ABUESA',text:'Découvre ABUESA, la culture Akposso',url:'https://adomhub.github.io/ABUESA-IA-/'})}else{navigator.clipboard.writeText('https://adomhub.github.io/ABUESA-IA-/');alert('Lien copié !')}">📤</button>
+      <button class="icon-btn" id="open-settings" aria-label="Réglages">⚙️</button><button class="icon-btn" id="open-share" aria-label="Partager" onclick="if(navigator.share){navigator.share({title:'ABUESA',text:'Découvre ABUESA, la culture Akposso',url:'https://adomhub.github.io/ABUESA-IA-/'})}else{navigator.clipboard.writeText('https://adomhub.github.io/ABUESA-IA-/');alert('Lien copié !')}">📤</butto<button class="icon-btn" id="install-app-btn" aria-label="Installer" style="display:none;" onclick="installABUESA()">📲</button>n>
     </div>
   </header>
 
@@ -2913,5 +2913,27 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   }
 });
 </script>
-</body>
+</body><script>
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const btn = document.getElementById('install-app-btn');
+  if(btn) btn.style.display = 'inline-block';
+});
+function installABUESA(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(()=>{ deferredPrompt = null; });
+  } else if(/iPhone|iPad|iPod/.test(navigator.userAgent)){
+    alert('Pour installer ABUESA sur iPhone :\n1. Touchez l\'icône de partage (carré avec flèche)\n2. Choisissez "Sur l\'écran d\'accueil"');
+  } else {
+    alert('Pour installer ABUESA : ouvrez le menu ⋮ de votre navigateur et choisissez "Ajouter à l\'écran d\'accueil" ou "Installer l\'application".');
+  }
+}
+window.addEventListener('appinstalled', ()=>{
+  const btn = document.getElementById('install-app-btn');
+  if(btn) btn.style.display = 'none';
+});
+</script>
 </html>
