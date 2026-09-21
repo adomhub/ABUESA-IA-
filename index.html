@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head><meta name="google-site-verification" content="rF9WrXOvQUuwultbP-wxGqIVHkLeLAlhP3YH3h3yJ7s" />
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 <title>ABUESA — Culture Akposso</title>
@@ -820,7 +820,7 @@
       <button class="icon-btn" id="open-search" aria-label="Recherche">🔍</button>
       <button class="icon-btn" id="open-gallery" aria-label="Galerie photos et vidéos">📸</button>
       <button class="icon-btn" id="open-feedback" aria-label="Avis et suggestions">📝</button>
-      <button class="icon-btn" id="open-settings" aria-label="Réglages">⚙️</button><button class="icon-btn" id="open-share" aria-label="Partager" onclick="if(navigator.share){navigator.share({title:'ABUESA',text:'Découvre ABUESA, la culture Akposso',url:'https://adomhub.github.io/ABUESA-IA-/'})}else{navigator.clipboard.writeText('https://adomhub.github.io/ABUESA-IA-/');alert('Lien copié !')}">📤</butto<button class="icon-btn" id="install-app-btn" aria-label="Installer" style="display:none;" onclick="installABUESA()">📲</button>n>
+      <button class="icon-btn" id="open-settings" aria-label="Réglages">⚙️</button>
     </div>
   </header>
 
@@ -1696,6 +1696,46 @@ const DICTIONARY = [
   { fr:'peuple Akposso', ak:'Kpɔsɔ wanɩ' }, { fr:'langue Akposso', ak:'ɩkpɔsɔ' },
   { fr:"aujourd'hui", ak:'emie' }, { fr:'hier', ak:'adza' }, { fr:'demain', ak:'ɛtsɛ' },
   { fr:'matin', ak:'ɩdɩkadɩ' }, { fr:'soir', ak:'idisenǝ' }, { fr:'alors', ak:'go' },
+  // Famille (lexique personnel d'Alexi)
+  { fr:'père', ak:'ILA' }, { fr:'grand-père', ak:'ALÉVLÉ' }, { fr:'grand-mère', ak:'INAKA / INÉVLÉ' },
+  { fr:'fils', ak:'ika' }, { fr:'fille', ak:'Ovi' }, { fr:'frère', ak:'IVLA' },
+  { fr:'sœur', ak:'INÉDJA' }, { fr:'oncle', ak:'GNÉGNÉ' }, { fr:'tante', ak:'TSITSI' },
+  { fr:'cousin', ak:'ILAVLA VI' }, { fr:'mari', ak:'UGNI' }, { fr:'enfants', ak:'UVI' },
+  { fr:'bébé', ak:'ÉVIDJÉ-FIÙ' }, { fr:'ancêtres (2)', ak:'ILÉVLÉ' }, { fr:'doyen de famille', ak:'ULU LUKA / UDUNU LUKA' },
+  { fr:'beau-père', ak:'Ihala' }, { fr:'belle-mère', ak:'Ikona' }, { fr:'beau-frère', ak:'Ihele' },
+  { fr:'belle-sœur', ak:'Iheletsi' },
+  // Salutations et politesse
+  { fr:'bonjour', ak:'Ivua adiɛ adiɛ avlɛɛɛɛ (pl. mia vlɛɛɛɛ)' }, { fr:'bonjour (après-midi)', ak:'Izua ɛfɛlɛɛɛ ɛfɛlɛdɛɛɛ ɛzaaa (pl. mi zaaa)' },
+  { fr:'bonsoir', ak:'Izua ɛzaa (pl. mi zaaa)' }, { fr:'bonne nuit', ak:'Zadɛ / ki zadɛɛ' },
+  { fr:'comment vas-tu', ak:'ɛza muani' }, { fr:'je vais bien', ak:'Niza ɔbɔɛ / nlza bubuɛ' },
+  { fr:'merci beaucoup', ak:'ewlesɛ' }, { fr:"je t'en prie", ak:'onesi aylakpɔ kpɔ' },
+  { fr:'pardon', ak:'Ɛyadu' }, { fr:'s\'il te plaît', ak:'Kʉkɔ' },
+  { fr:'bienvenue', ak:'ANASƐ / Yanu asɛ' }, { fr:'au revoir', ak:'kuna mu alɛ' },
+  { fr:'à bientôt', ak:'Ekualɛ' }, { fr:'bon courage', ak:'Dɔ kayɛ' },
+  // Nature et environnement
+  { fr:'soleil', ak:'ÔVÈ' }, { fr:'lune', ak:'UTSI' }, { fr:'étoile', ak:'ILÔ' },
+  { fr:'vent', ak:'ULÙ' }, { fr:'rivière', ak:'ÔBÈ' }, { fr:'forêt', ak:'ÔFU' },
+  { fr:'arbre', ak:'ITSU' }, { fr:'terre', ak:'UTI' }, { fr:'nuit', ak:'ÌYILI' },
+  { fr:'jour', ak:'ÈYI' }, { fr:'saison', ak:'Seazne' },
+  // Sagesse et spiritualité
+  { fr:'âme', ak:'ÔVƐ' }, { fr:'prière', ak:'AVITA' }, { fr:'bénédiction', ak:'ÈBUA' },
+  { fr:'sagesse', ak:'ASÈMÙ' }, { fr:'justice', ak:'ÈSÈ-ZADU' }, { fr:'respect', ak:'ƐLU ADU' },
+  { fr:'honneurs', ak:'UBÉ ADU' }, { fr:'force', ak:'IKPA' }, { fr:'courage', ak:'ƐTU-AZƐDU' },
+  { fr:'paix', ak:'ÈTU-LULUA' }, { fr:'amour', ak:'ƐFU ALUÈSÈ' }, { fr:'espoir', ak:'SU-UNE' },
+  { fr:'foi', ak:'ÈTÈNU' },
+  // Vie quotidienne
+  { fr:'dormir', ak:'Ɛ LƐ' }, { fr:'travailler', ak:'ƆLUNA' }, { fr:'marche', ak:'ASƐ' },
+  { fr:'parler', ak:'ƆSƐYA' }, { fr:'écouter', ak:'KATU' }, { fr:'pensée', ak:'ƆLƆ-NUHLU' },
+  { fr:'donner', ak:'ƐKU KA' }, { fr:'recevoir', ak:'TƐƐ' }, { fr:'construire', ak:'KPƆ' },
+  // Corps humain
+  { fr:'tête', ak:'ƐLU' }, { fr:'yeux', ak:'ÈMU' }, { fr:'oreilles', ak:'UTÛ' },
+  { fr:'nez', ak:'IYO' }, { fr:'mains', ak:'AHLÀ' }, { fr:'pieds', ak:'ÛVÛ' },
+  { fr:'cœur', ak:'ƆVÒ' }, { fr:'ventre', ak:'ÈMÈKU' }, { fr:'dos', ak:'IDÙ' },
+  // Nombres (lexique personnel)
+  { fr:'un', ak:'ÈDI' }, { fr:'trois', ak:'ÈLA' }, { fr:'quatre', ak:'ÈNA' }, { fr:'huit', ak:'ÈLÈ' },
+  // Couleurs
+  { fr:'rouge', ak:'ÔVÈ' }, { fr:'blanc', ak:'OFUÉ' }, { fr:'noir', ak:'OWÈ' },
+  { fr:'vert', ak:'UGBATAWLA' }, { fr:'bleu', ak:'BLÔ' },
 ];
 
 function getExtraWords(){
@@ -2913,27 +2953,5 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   }
 });
 </script>
-</body><script>
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  const btn = document.getElementById('install-app-btn');
-  if(btn) btn.style.display = 'inline-block';
-});
-function installABUESA(){
-  if(deferredPrompt){
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(()=>{ deferredPrompt = null; });
-  } else if(/iPhone|iPad|iPod/.test(navigator.userAgent)){
-    alert('Pour installer ABUESA sur iPhone :\n1. Touchez l\'icône de partage (carré avec flèche)\n2. Choisissez "Sur l\'écran d\'accueil"');
-  } else {
-    alert('Pour installer ABUESA : ouvrez le menu ⋮ de votre navigateur et choisissez "Ajouter à l\'écran d\'accueil" ou "Installer l\'application".');
-  }
-}
-window.addEventListener('appinstalled', ()=>{
-  const btn = document.getElementById('install-app-btn');
-  if(btn) btn.style.display = 'none';
-});
-</script>
+</body>
 </html>
