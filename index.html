@@ -820,7 +820,8 @@
   <header class="topbar">
     <div class="topbar-row1">
       <div class="brand-row">
-        <div class="logo-mark" id="logo-tap-trigger" style="cursor:pointer;">
+        <div class="logo-mark" id="logo-tap-trigger" style="cursor:pointer;" role="button" aria-label="Réglages ABUESA">
+          <button id="open-settings" style="display:none;" aria-hidden="true"></button>
           <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="Globe terrestre avec l'Afrique">
             <defs>
               <radialGradient id="oceanGrad" cx="35%" cy="30%" r="75%">
@@ -853,7 +854,6 @@
         <button class="icon-btn" id="open-feedback" aria-label="Avis et suggestions">📝</button>
         <button class="icon-btn" id="share-app" aria-label="Partager ABUESA">📤</button>
         <button class="icon-btn" id="install-app" aria-label="Installer ABUESA" style="display:none;">📲</button>
-        <button class="icon-btn" id="open-settings" aria-label="Réglages">⚙️</button>
       </div>
     </div>
   </header>
@@ -870,6 +870,8 @@
       <div id="home-calendar"></div>
 
       <div id="home-proverb"></div>
+
+      <div id="home-events"></div>
 
       <div id="home-featured"></div>
 
@@ -996,6 +998,14 @@
       <h2 class="section-title serif">Culture Akposso</h2>
       <p class="section-desc">Traditions et repères du peuple Kpɔsɔ wanɩ — sources vérifiées.</p>
       <div id="culture-list"></div>
+
+      <h2 class="section-title serif" style="margin-top:28px;">📜 Contes et récits</h2>
+      <p class="section-desc">Histoires transmises de génération en génération.</p>
+      <div id="contes-list"></div>
+
+      <h2 class="section-title serif" style="margin-top:28px;">🕯️ Hommage aux anciens</h2>
+      <p class="section-desc">En mémoire et en l'honneur de celles et ceux qui ont porté la culture Akposso.</p>
+      <div id="hommages-list"></div>
 
       <footer style="margin-top:26px;padding-top:20px;border-top:1px solid var(--line);">
         <div style="text-align:center;margin-bottom:12px;">
@@ -1351,6 +1361,10 @@ document.getElementById('logo-tap-trigger').addEventListener('click', async ()=>
   clearTimeout(logoTapTimer);
   logoTapTimer = setTimeout(()=>{ logoTapCount = 0; }, 3000);
 
+  if(logoTapCount === 1){
+    document.getElementById('open-settings').click();
+  }
+
   if(logoTapCount >= 5){
     logoTapCount = 0;
     clearTimeout(logoTapTimer);
@@ -1642,7 +1656,7 @@ const SYSTEM_PROMPT_BASE = `Tu es ABUESA, un assistant culturel bilingue qui con
 Faits vérifiés à ta disposition :
 - Les Akposso (Kpɔsɔ wanɩ) habitent la région des Plateaux au Togo, principalement les préfectures de Wawa, Amou et Ogou, avec une communauté aussi au Ghana voisin.
 - Leur langue, l'ikposso (ɩkpɔsɔ), est une langue kwa tonale à 10 voyelles et 24 consonnes (dont 5 digrammes : dz, ts, gb, kp, ny), standardisée sur le parler Uwi.
-- Ils suivent un calendrier traditionnel de 5 jours et célèbrent chaque année la fête des moissons OVAZU, centrée sur le fonio, rassemblant aussi les Akébou voisins.
+- Ils suivent un calendrier traditionnel de 5 jours et célèbrent chaque année, le 2e samedi de décembre, la fête des moissons OVAZU, centrée sur le fonio, en alternance à Amlamé (préfecture de l'Amou) et à Badou/Kougnohou (Wawa/Akébou), rassemblant aussi les Akébou voisins.
 - L'Assafou est un rythme guerrier traditionnel Akposso/Akébou/Ewé, repris par des artistes modernes (ex. le "Regsaf", fusion Assafou-reggae de l'artiste Zambé).
 - Les Akposso pratiquent aussi le Gadzo, danse frénétique partagée avec les Ewé.
 - La préfecture de Wawa (chef-lieu Badou) compte 11 cantons : Badou, Tomégbé, Kpété-Bena, Gobé, Klabè-Efoukpa, Okou, Ekéto, Ounabé, Késsibo, Gbadi-N'Kugna, Doumé.
@@ -2076,7 +2090,7 @@ renderQuiz();
 const CULTURE_FACTS = [
   {
     title:'La fête OVAZU',
-    text:"Chaque année, les Akposso célèbrent OVAZU, une fête des moissons centrée sur le fonio, une céréale culturellement essentielle. Elle rassemble aussi les Akébou voisins et se tient traditionnellement à Badou.",
+    text:"Chaque année, le 2e samedi de décembre, les Akposso célèbrent OVAZU, une fête des moissons centrée sur le fonio, une céréale culturellement essentielle. C'est une fête tournante, célébrée en alternance à Amlamé (préfecture de l'Amou) et à Badou/Kougnohou (Wawa/Akébou), et qui rassemble aussi les Akébou voisins. C'est la fête de l'abondance et des retrouvailles.",
   },
   {
     title:'Le calendrier de 5 jours',
@@ -2107,6 +2121,40 @@ CULTURE_FACTS.forEach(f=>{
   div.innerHTML = `<h3 style="color:var(--gold);">${f.title}</h3><p>${f.text}</p>`;
   cultureList.appendChild(div);
 });
+
+let cloudContes = [];
+async function fetchCloudContes(){
+  if(!supabaseClient){ cloudContes = []; return; }
+  const { data, error } = await supabaseClient.from('contes').select('titre, texte').order('created_at', { ascending:false });
+  if(!error && data) cloudContes = data;
+}
+function renderContes(){
+  const el = document.getElementById('contes-list');
+  if(!el) return;
+  if(cloudContes.length === 0){
+    el.innerHTML = `<div class="artist-card"><p class="hc-note" style="margin:0;">Aucun conte ajouté pour l'instant. Ajoutes-en un depuis le panneau admin pour qu'il apparaisse ici.</p></div>`;
+    return;
+  }
+  el.innerHTML = cloudContes.map(c => `<div class="artist-card"><h3 style="color:var(--gold);">${c.titre}</h3><p>${c.texte}</p></div>`).join('');
+}
+fetchCloudContes().then(renderContes);
+
+let cloudHommages = [];
+async function fetchCloudHommages(){
+  if(!supabaseClient){ cloudHommages = []; return; }
+  const { data, error } = await supabaseClient.from('hommages').select('nom, texte').order('created_at', { ascending:false });
+  if(!error && data) cloudHommages = data;
+}
+function renderHommages(){
+  const el = document.getElementById('hommages-list');
+  if(!el) return;
+  if(cloudHommages.length === 0){
+    el.innerHTML = `<div class="artist-card"><p class="hc-note" style="margin:0;">Aucun hommage ajouté pour l'instant. Ajoutes-en un depuis le panneau admin pour qu'il apparaisse ici.</p></div>`;
+    return;
+  }
+  el.innerHTML = cloudHommages.map(h => `<div class="artist-card"><h3 style="color:var(--gold);">${h.nom}</h3><p>${h.texte}</p></div>`).join('');
+}
+fetchCloudHommages().then(renderHommages);
 
 /* ---------- Artistes ---------- */
 /* Données vérifiées via recherche web (Music In Africa, TogoActualité, TikTok officiel).
@@ -2295,6 +2343,37 @@ function renderAdminPanel(){
     </div>
     <div id="admin-proverb-status" class="status-line"></div>
 
+    <label>Ajouter un événement à venir</label>
+    <div class="admin-row">
+      <input type="text" id="admin-event-titre" placeholder="Titre de l'événement">
+      <input type="date" id="admin-event-date" style="max-width:150px;">
+    </div>
+    <div class="admin-row">
+      <input type="text" id="admin-event-desc" placeholder="Description (facultatif)">
+      <button id="admin-add-event">+</button>
+    </div>
+    <div id="admin-event-status" class="status-line"></div>
+
+    <label>Ajouter un conte / récit</label>
+    <div class="admin-row">
+      <input type="text" id="admin-conte-titre" placeholder="Titre du conte">
+    </div>
+    <div class="admin-row">
+      <textarea id="admin-conte-texte" rows="3" placeholder="Texte du conte" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:14.5px;"></textarea>
+    </div>
+    <div class="admin-actions"><button id="admin-add-conte">+ Ajouter le conte</button></div>
+    <div id="admin-conte-status" class="status-line"></div>
+
+    <label>Ajouter un hommage aux anciens</label>
+    <div class="admin-row">
+      <input type="text" id="admin-hommage-nom" placeholder="Nom de la personne">
+    </div>
+    <div class="admin-row">
+      <textarea id="admin-hommage-texte" rows="3" placeholder="Texte d'hommage" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:14.5px;"></textarea>
+    </div>
+    <div class="admin-actions"><button id="admin-add-hommage">+ Ajouter l'hommage</button></div>
+    <div id="admin-hommage-status" class="status-line"></div>
+
     <label>Ajouter un artiste</label>
     <div class="admin-row">
       <input type="text" id="admin-artist-name" placeholder="Nom de l'artiste">
@@ -2391,6 +2470,92 @@ function renderAdminPanel(){
     status.className = 'status-line status-ok';
     await fetchCloudProverbs();
     renderHomeProverb();
+  });
+
+  document.getElementById('admin-add-event').addEventListener('click', async ()=>{
+    const titre = document.getElementById('admin-event-titre').value.trim();
+    const date_evenement = document.getElementById('admin-event-date').value;
+    const description = document.getElementById('admin-event-desc').value.trim();
+    const status = document.getElementById('admin-event-status');
+    if(!titre || !date_evenement){
+      status.textContent = 'Le titre et la date sont obligatoires.';
+      status.className = 'status-line status-bad';
+      return;
+    }
+    if(!supabaseClient){
+      status.textContent = 'Supabase non branché (Réglages) — l\'événement ne sera pas partagé.';
+      status.className = 'status-line status-bad';
+      return;
+    }
+    const { error } = await supabaseClient.from('evenements').insert({ titre, date_evenement, description });
+    if(error){
+      status.textContent = 'Erreur : ' + error.message;
+      status.className = 'status-line status-bad';
+      return;
+    }
+    document.getElementById('admin-event-titre').value = '';
+    document.getElementById('admin-event-date').value = '';
+    document.getElementById('admin-event-desc').value = '';
+    status.textContent = 'Événement ajouté ✓';
+    status.className = 'status-line status-ok';
+    await fetchCloudEvents();
+    renderHomeEvents();
+  });
+
+  document.getElementById('admin-add-conte').addEventListener('click', async ()=>{
+    const titre = document.getElementById('admin-conte-titre').value.trim();
+    const texte = document.getElementById('admin-conte-texte').value.trim();
+    const status = document.getElementById('admin-conte-status');
+    if(!titre || !texte){
+      status.textContent = 'Remplis le titre et le texte.';
+      status.className = 'status-line status-bad';
+      return;
+    }
+    if(!supabaseClient){
+      status.textContent = 'Supabase non branché (Réglages) — le conte ne sera pas partagé.';
+      status.className = 'status-line status-bad';
+      return;
+    }
+    const { error } = await supabaseClient.from('contes').insert({ titre, texte });
+    if(error){
+      status.textContent = 'Erreur : ' + error.message;
+      status.className = 'status-line status-bad';
+      return;
+    }
+    document.getElementById('admin-conte-titre').value = '';
+    document.getElementById('admin-conte-texte').value = '';
+    status.textContent = 'Conte ajouté ✓';
+    status.className = 'status-line status-ok';
+    await fetchCloudContes();
+    renderContes();
+  });
+
+  document.getElementById('admin-add-hommage').addEventListener('click', async ()=>{
+    const nom = document.getElementById('admin-hommage-nom').value.trim();
+    const texte = document.getElementById('admin-hommage-texte').value.trim();
+    const status = document.getElementById('admin-hommage-status');
+    if(!nom || !texte){
+      status.textContent = 'Remplis le nom et le texte.';
+      status.className = 'status-line status-bad';
+      return;
+    }
+    if(!supabaseClient){
+      status.textContent = 'Supabase non branché (Réglages) — l\'hommage ne sera pas partagé.';
+      status.className = 'status-line status-bad';
+      return;
+    }
+    const { error } = await supabaseClient.from('hommages').insert({ nom, texte });
+    if(error){
+      status.textContent = 'Erreur : ' + error.message;
+      status.className = 'status-line status-bad';
+      return;
+    }
+    document.getElementById('admin-hommage-nom').value = '';
+    document.getElementById('admin-hommage-texte').value = '';
+    status.textContent = 'Hommage ajouté ✓';
+    status.className = 'status-line status-ok';
+    await fetchCloudHommages();
+    renderHommages();
   });
 
   document.getElementById('admin-add-artist').addEventListener('click', ()=>{
@@ -2741,6 +2906,37 @@ function renderHomeProverb(){
   </div>`;
 }
 fetchCloudProverbs().then(renderHomeProverb);
+
+let cloudEvents = [];
+async function fetchCloudEvents(){
+  if(!supabaseClient){ cloudEvents = []; return; }
+  const { data, error } = await supabaseClient.from('evenements').select('titre, date_evenement, description').order('date_evenement', { ascending:true });
+  if(!error && data) cloudEvents = data;
+}
+function renderHomeEvents(){
+  const el = document.getElementById('home-events');
+  if(!el) return;
+  const todayStr = new Date().toISOString().slice(0,10);
+  const upcoming = cloudEvents.filter(e => e.date_evenement >= todayStr);
+  if(upcoming.length === 0){
+    el.innerHTML = `<div class="home-calendar-card">
+      <div class="hc-label">📅 Événements à venir</div>
+      <div class="hc-note">Aucun événement annoncé pour l'instant. Ajoutes-en un depuis le panneau admin pour qu'il apparaisse ici.</div>
+    </div>`;
+    return;
+  }
+  const next = upcoming[0];
+  const d = new Date(next.date_evenement + 'T00:00:00');
+  const dateStr = d.toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
+  const more = upcoming.length > 1 ? `<div class="hc-note" style="margin-top:6px;">+ ${upcoming.length - 1} autre${upcoming.length > 2 ? 's' : ''} événement${upcoming.length > 2 ? 's' : ''} à venir</div>` : '';
+  el.innerHTML = `<div class="home-calendar-card">
+    <div class="hc-label">📅 Événements à venir</div>
+    <div class="hc-day">${next.titre} — ${dateStr}</div>
+    ${next.description ? `<div class="hc-note">${next.description}</div>` : ''}
+    ${more}
+  </div>`;
+}
+fetchCloudEvents().then(renderHomeEvents);
 
 document.querySelectorAll('.home-visit').forEach(btn=>{
   btn.addEventListener('click', ()=>{
