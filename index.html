@@ -1831,6 +1831,17 @@ const DICTIONARY = [
   // Couleurs
   { fr:'rouge', ak:'ÔVÈ' }, { fr:'blanc', ak:'OFUÉ' }, { fr:'noir', ak:'OWÈ' },
   { fr:'vert', ak:'UGBATAWLA' }, { fr:'bleu', ak:'BLÔ' },
+  // Jours de la semaine (5 jours traditionnels du calendrier du marché + 2 jours modernes)
+  { fr:'lundi', ak:'Imle' }, { fr:'mardi', ak:'Ɛkpɛ / Ekpé' }, { fr:'mercredi', ak:'Ɛwlɛ / Ewlé' },
+  { fr:'jeudi', ak:'Ɛɣla / Eghla' }, { fr:'vendredi', ak:'Ɛva / Eva' },
+  { fr:'samedi', ak:'Ewleduyɩ (jour moderne, ajouté après)' }, { fr:'dimanche', ak:'Ɛzawlayɩ / Ezawlayi (jour moderne, ajouté après)' },
+  // Mois de l'année (les jeunes utilisent souvent les mois français en parlant Ikposso, mais voici les noms authentiques)
+  { fr:'janvier', ak:'Ɔlatʋ / Ulatu' }, { fr:'février', ak:'Ɔfʋtsɩ / Gbagblawawa' }, { fr:'mars', ak:'Zata' },
+  { fr:'avril', ak:'Ɛvlɩlʋɩa / Ulawlive' }, { fr:'mai', ak:'Ʋlawlɩvɛ / Ukuluia' }, { fr:'juin', ak:'Inaglo' },
+  { fr:'juillet', ak:'Nekuneku' }, { fr:'août', ak:'Ipuǝnǝ / Ipuatsyo' }, { fr:'septembre', ak:'Iwle / Ipuana' },
+  { fr:'octobre', ak:'Iwletsɔ' }, { fr:'novembre', ak:'Ɔtɩɩ' }, { fr:'décembre', ak:'Ɛyɛbuele (mois de OVAZU, l\'abondance)' },
+  // Tradition orale
+  { fr:'veillée au coin du feu (contes et proverbes)', ak:'Ɩkpa' }, { fr:'conte', ak:'UTÌ' }, { fr:'proverbe', ak:'Iyʋli' },
 ];
 
 function getExtraWords(){
@@ -2852,11 +2863,10 @@ document.getElementById('gallery-submit').addEventListener('click', async ()=>{
 /* ================= RECHERCHE UNIVERSELLE ================= */
 const searchModal = document.getElementById('search-modal');
 
-/* Calendrier traditionnel de 5 jours : on calcule juste la position (1 à 5)
-   dans le cycle depuis une date de référence arbitraire (peu importe laquelle,
-   le cycle est régulier). Les vrais noms de chaque jour ne sont pas encore
-   connus/vérifiés — si Alexi les fournit un jour, remplacer CYCLE_DAY_NAMES. */
-const CYCLE_DAY_NAMES = null; // ex futur : ['Nom1','Nom2','Nom3','Nom4','Nom5']
+/* Calendrier traditionnel de 5 jours (calendrier du marché) : on calcule juste
+   la position (1 à 5) dans le cycle depuis une date de référence arbitraire
+   (peu importe laquelle, le cycle est régulier). Noms confirmés par Alexi. */
+const CYCLE_DAY_NAMES = ['Imle', 'Ɛkpɛ', 'Ɛwlɛ', 'Ɛɣla', 'Ɛva'];
 function renderHomeCalendar(){
   const el = document.getElementById('home-calendar');
   if(!el) return;
@@ -2867,7 +2877,7 @@ function renderHomeCalendar(){
   const dayLabel = CYCLE_DAY_NAMES ? CYCLE_DAY_NAMES[pos] : `Jour ${pos+1} sur 5`;
   el.innerHTML = `<div class="home-calendar-card">
     <div class="hc-label">📅 Calendrier traditionnel Akposso</div>
-    <div class="hc-day">${dayLabel}</div>
+    <div class="hc-day">${dayLabel} <span style="font-weight:400;font-size:0.75em;color:var(--ink-soft);">(jour ${pos+1} sur 5)</span></div>
     <div class="hc-note">Cycle traditionnel de 5 jours, encore utilisé pour rythmer les marchés locaux.</div>
   </div>`;
 }
