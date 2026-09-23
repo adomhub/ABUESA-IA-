@@ -1353,17 +1353,17 @@ function refreshAdminVisibility(){
 }
 
 /* Geste secret : 5 taps rapides sur le logo pour faire apparaître l'accès admin.
-   Un visiteur normal ne voit jamais ce champ. */
+   Un visiteur normal ne voit jamais ce champ.
+   Un seul tap ouvre les Réglages, mais avec un petit délai : ça laisse le temps
+   aux taps suivants d'arriver AVANT que la fenêtre ne s'ouvre et ne bloque le logo. */
 let logoTapCount = 0;
 let logoTapTimer = null;
+let singleTapOpenTimer = null;
 document.getElementById('logo-tap-trigger').addEventListener('click', async ()=>{
   logoTapCount++;
   clearTimeout(logoTapTimer);
   logoTapTimer = setTimeout(()=>{ logoTapCount = 0; }, 3000);
-
-  if(logoTapCount === 1){
-    document.getElementById('open-settings').click();
-  }
+  clearTimeout(singleTapOpenTimer);
 
   if(logoTapCount >= 5){
     logoTapCount = 0;
@@ -1379,7 +1379,12 @@ document.getElementById('logo-tap-trigger').addEventListener('click', async ()=>
     } else {
       showToast('Code incorrect');
     }
+    return;
   }
+
+  singleTapOpenTimer = setTimeout(()=>{
+    document.getElementById('open-settings').click();
+  }, 350);
 });
 
 document.getElementById('open-settings').addEventListener('click', ()=>{
