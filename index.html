@@ -435,7 +435,7 @@
   }
 
   /* ---- Settings modal ---- */
-  #settings-modal, #feedback-modal, #search-modal, #artist-modal, #gallery-modal, #community-modal{
+  #settings-modal, #feedback-modal, #search-modal, #artist-modal, #gallery-modal, #community-modal, #practice-modal{
     position:absolute;
     inset:0;
     background:rgba(43,43,34,0.45);
@@ -443,7 +443,7 @@
     align-items:flex-end;
     z-index:50;
   }
-  #settings-modal.active, #feedback-modal.active, #search-modal.active, #artist-modal.active, #gallery-modal.active, #community-modal.active{ display:flex; }
+  #settings-modal.active, #feedback-modal.active, #search-modal.active, #artist-modal.active, #gallery-modal.active, #community-modal.active, #practice-modal.active{ display:flex; }
   .modal-sheet{
     background:var(--white);
     width:100%;
@@ -963,6 +963,7 @@
     <div class="section-pad">
       <h2 class="section-title serif">Dictionnaire</h2>
       <p class="section-desc">Français ⇄ Akposso (Ikposso). Tape un mot dans les deux langues.</p>
+      <button class="save-btn" id="open-practice" style="background:var(--forest);margin-bottom:14px;">🎙️ Répéter après moi — s'entraîner à l'oral</button>
       <input type="text" id="dict-search" placeholder="Chercher un mot…">
       <div class="dict-filter-row">
         <button id="dict-filter-all" class="active">Tous les mots</button>
@@ -971,6 +972,25 @@
       <div id="dict-results"></div>
     </div>
   </main>
+
+  <!-- ===== PRACTICE MODAL (Répéter après moi) ===== -->
+  <div id="practice-modal">
+    <div class="modal-sheet" style="max-height:88vh;">
+      <div class="close-row"><button id="close-practice">×</button></div>
+      <h3 class="serif">🎙️ Répéter après moi</h3>
+      <p class="section-desc" style="margin-top:-6px;">Lis le mot en Akposso à voix haute, enregistre-toi, puis réécoute-toi pour t'entraîner. Pas de voix robotique ici — juste toi qui progresses !</p>
+      <div id="practice-word-card" style="background:var(--paper-dim);border-radius:14px;padding:20px;text-align:center;margin:14px 0;">
+        <div id="practice-ak" style="font-family:'Fraunces',serif;font-weight:700;font-size:28px;color:var(--forest-deep);"></div>
+        <div id="practice-fr" style="font-size:15px;color:var(--ink-soft);margin-top:6px;"></div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;">
+        <button class="save-btn" id="practice-record" style="width:auto;padding:11px 20px;">🎤 Enregistrer</button>
+        <button class="save-btn" id="practice-play" style="width:auto;padding:11px 20px;background:var(--gold);" disabled>▶️ Réécouter</button>
+      </div>
+      <div id="practice-status" class="status-line" style="text-align:center;"></div>
+      <button class="save-btn" id="practice-next" style="margin-top:14px;">Mot suivant →</button>
+    </div>
+  </div>
 
   <!-- ===== CARTE VIEW ===== -->
   <main class="view" id="map-view">
@@ -3078,6 +3098,83 @@ document.getElementById('open-search').addEventListener('click', ()=>{
   setTimeout(()=> document.getElementById('global-search-input').focus(), 150);
 });
 document.getElementById('close-search').addEventListener('click', ()=> searchModal.classList.remove('active'));
+
+/* ---------- Répéter après moi (pratique orale par auto-enregistrement) ---------- */
+const practiceModal = document.getElementById('practice-modal');
+let practiceCurrentWord = null;
+let practiceMediaRecorder = null;
+let practiceChunks = [];
+let practiceAudioUrl = null;
+
+function pickPracticeWord(){
+  const dict = getFullDictionary();
+  if(dict.length === 0) return null;
+  return dict[Math.floor(Math.random() * dict.length)];
+}
+function showPracticeWord(){
+  practiceCurrentWord = pickPracticeWord();
+  const akEl = document.getElementById('practice-ak');
+  const frEl = document.getElementById('practice-fr');
+  if(!practiceCurrentWord){
+    akEl.textContent = '—';
+    frEl.textContent = "Le dictionnaire est vide pour l'instant.";
+    return;
+  }
+  akEl.textContent = practiceCurrentWord.ak;
+  frEl.textContent = practiceCurrentWord.fr;
+  document.getElementById('practice-play').disabled = true;
+  document.getElementById('practice-status').textContent = '';
+  if(practiceAudioUrl){ URL.revokeObjectURL(practiceAudioUrl); practiceAudioUrl = null; }
+}
+
+document.getElementById('open-practice').addEventListener('click', ()=>{
+  showPracticeWord();
+  practiceModal.classList.add('active');
+});
+document.getElementById('close-practice').addEventListener('click', ()=>{
+  practiceModal.classList.remove('active');
+  if(practiceMediaRecorder && practiceMediaRecorder.state !== 'inactive') practiceMediaRecorder.stop();
+});
+document.getElementById('practice-next').addEventListener('click', showPracticeWord);
+
+document.getElementById('practice-record').addEventListener('click', async ()=>{
+  const status = document.getElementById('practice-status');
+  const recordBtn = document.getElementById('practice-record');
+  if(practiceMediaRecorder && practiceMediaRecorder.state === 'recording'){
+    practiceMediaRecorder.stop();
+    return;
+  }
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    status.textContent = "Ton navigateur ne permet pas l'enregistrement audio.";
+    return;
+  }
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+    practiceChunks = [];
+    practiceMediaRecorder = new MediaRecorder(stream);
+    practiceMediaRecorder.ondataavailable = (e)=>{ if(e.data.size > 0) practiceChunks.push(e.data); };
+    practiceMediaRecorder.onstop = ()=>{
+      const blob = new Blob(practiceChunks, { type:'audio/webm' });
+      if(practiceAudioUrl) URL.revokeObjectURL(practiceAudioUrl);
+      practiceAudioUrl = URL.createObjectURL(blob);
+      document.getElementById('practice-play').disabled = false;
+      status.textContent = 'Enregistré ✓ — écoute-toi !';
+      recordBtn.textContent = '🎤 Enregistrer';
+      stream.getTracks().forEach(t=>t.stop());
+    };
+    practiceMediaRecorder.start();
+    recordBtn.textContent = '⏹️ Arrêter';
+    status.textContent = 'Enregistrement en cours…';
+  } catch(e){
+    status.textContent = "Micro refusé ou indisponible. Autorise l'accès au micro pour t'entraîner.";
+  }
+});
+
+document.getElementById('practice-play').addEventListener('click', ()=>{
+  if(!practiceAudioUrl) return;
+  new Audio(practiceAudioUrl).play();
+});
+
 document.getElementById('global-search-input').addEventListener('input', (e)=> runGlobalSearch(e.target.value));
 
 /* ================= CHAT COMMUNAUTAIRE (texte + vocal) ================= */
