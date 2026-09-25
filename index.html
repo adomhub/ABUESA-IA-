@@ -932,6 +932,33 @@
           </div>
           <button class="home-visit" data-view="artists-view">Visiter →</button>
         </div>
+        <div class="home-card">
+          <div class="home-card-text">
+            <h3 class="serif">🎙️ Répéter après moi</h3>
+            <p>Entraîne-toi à l'oral : un mot au hasard, tu t'enregistres, tu te réécoutes.</p>
+          </div>
+          <button class="home-visit" data-modal="practice">Visiter →</button>
+        </div>
+      </div>
+
+      <div style="margin-top:30px;padding-top:24px;border-top:2px solid var(--forest);">
+        <h2 class="serif" style="font-size:22px;color:var(--forest-deep);text-align:center;margin-bottom:14px;">À propos de ABUESA</h2>
+        <p style="font-size:17px;line-height:1.7;color:var(--ink);text-align:center;">
+          ABUESA est né pour combler cet espace : un lieu où la langue akposso peut être écoutée, apprise et célébrée, par celles et ceux qui la parlent déjà comme par celles et ceux qui la découvrent.
+        </p>
+        <p style="font-size:17px;line-height:1.7;color:var(--ink);text-align:center;">
+          Créé par <b>Adom K. Alexi</b>, auteur et entrepreneur togolais basé à Badou, également fondateur du projet ADOM ALEXI.
+        </p>
+        <p style="font-size:17px;line-height:1.7;color:var(--ink);text-align:center;">
+          <b>Notre mission :</b> rendre les langues africaines visibles et accessibles dans le monde numérique, en commençant par l'akposso — une langue, une voix, un mot à la fois.
+        </p>
+        <p style="font-size:16px;line-height:1.7;color:var(--ink-soft);text-align:center;margin-top:16px;">
+          Envie d'aller plus loin ? Discute avec ABUESA, génère des images et vidéos inspirées de la culture akposso dans l'espace membre.
+        </p>
+        <p style="font-size:15px;line-height:1.8;color:var(--ink-soft);text-align:center;margin-top:14px;">
+          <b style="color:var(--ink);">Créateur et promoteur</b> — Alexi K. Adom<br>
+          <b style="color:var(--ink);">Soutenir ABUESA</b> — Yas +228 91 04 03 46 · Moov +228 99 61 99 69
+        </p>
       </div>
     </div>
   </main>
@@ -2986,6 +3013,10 @@ document.querySelectorAll('.home-visit').forEach(btn=>{
       communityModal.classList.add('active');
       loadCommunityMessages();
       subscribeCommunityRealtime();
+      return;
+    }
+    if(btn.dataset.modal === 'practice'){
+      document.getElementById('open-practice').click();
       return;
     }
     switchToView(btn.dataset.view);
