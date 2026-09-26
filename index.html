@@ -1015,6 +1015,7 @@
         <button class="save-btn" id="practice-play" style="width:auto;padding:11px 20px;background:var(--gold);" disabled>▶️ Réécouter</button>
       </div>
       <div id="practice-status" class="status-line" style="text-align:center;"></div>
+      <div id="practice-existing" style="text-align:center;margin-top:6px;"></div>
       <button class="save-btn" id="practice-next" style="margin-top:14px;">Mot suivant →</button>
     </div>
   </div>
@@ -3142,6 +3143,21 @@ function pickPracticeWord(){
   if(dict.length === 0) return null;
   return dict[Math.floor(Math.random() * dict.length)];
 }
+async function loadExistingPronunciations(){
+  const el = document.getElementById('practice-existing');
+  el.innerHTML = '';
+  if(!supabaseClient || !practiceCurrentWord) return;
+  const { data, error } = await supabaseClient
+    .from('pronunciations')
+    .select('audio_url')
+    .eq('word_ak', practiceCurrentWord.ak)
+    .order('created_at', { ascending:false })
+    .limit(1);
+  if(error || !data || data.length === 0) return;
+  const url = data[0].audio_url;
+  el.innerHTML = `<button class="save-btn" style="width:auto;padding:8px 16px;background:var(--ink-soft);font-size:13.5px;" id="practice-play-existing">🔊 Écouter un exemple déjà enregistré</button>`;
+  document.getElementById('practice-play-existing').addEventListener('click', ()=> new Audio(url).play());
+}
 function showPracticeWord(){
   practiceCurrentWord = pickPracticeWord();
   const akEl = document.getElementById('practice-ak');
@@ -3156,6 +3172,7 @@ function showPracticeWord(){
   document.getElementById('practice-play').disabled = true;
   document.getElementById('practice-status').textContent = '';
   if(practiceAudioUrl){ URL.revokeObjectURL(practiceAudioUrl); practiceAudioUrl = null; }
+  loadExistingPronunciations();
 }
 
 document.getElementById('open-practice').addEventListener('click', ()=>{
@@ -3184,14 +3201,34 @@ document.getElementById('practice-record').addEventListener('click', async ()=>{
     practiceChunks = [];
     practiceMediaRecorder = new MediaRecorder(stream);
     practiceMediaRecorder.ondataavailable = (e)=>{ if(e.data.size > 0) practiceChunks.push(e.data); };
-    practiceMediaRecorder.onstop = ()=>{
+    practiceMediaRecorder.onstop = async ()=>{
       const blob = new Blob(practiceChunks, { type:'audio/webm' });
       if(practiceAudioUrl) URL.revokeObjectURL(practiceAudioUrl);
       practiceAudioUrl = URL.createObjectURL(blob);
       document.getElementById('practice-play').disabled = false;
-      status.textContent = 'Enregistré ✓ — écoute-toi !';
       recordBtn.textContent = '🎤 Enregistrer';
       stream.getTracks().forEach(t=>t.stop());
+
+      if(!supabaseClient || !practiceCurrentWord){
+        status.textContent = 'Enregistré ✓ — écoute-toi ! (non partagé : Supabase non branché)';
+        return;
+      }
+      status.textContent = 'Enregistré ✓ — sauvegarde en cours…';
+      try{
+        const safeSlug = practiceCurrentWord.ak.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40);
+        const path = `${Date.now()}-${safeSlug}.webm`;
+        const { error: uploadError } = await supabaseClient.storage.from('pronunciations').upload(path, blob);
+        if(uploadError) throw uploadError;
+        const { data: urlData } = supabaseClient.storage.from('pronunciations').getPublicUrl(path);
+        await supabaseClient.from('pronunciations').insert({
+          word_fr: practiceCurrentWord.fr,
+          word_ak: practiceCurrentWord.ak,
+          audio_url: urlData.publicUrl,
+        });
+        status.textContent = 'Enregistré et partagé ✓ — ta prononciation aide à préserver la langue !';
+      } catch(e){
+        status.textContent = 'Enregistré ✓ — écoute-toi ! (partage impossible : ' + (e.message || 'erreur Supabase') + ')';
+      }
     };
     practiceMediaRecorder.start();
     recordBtn.textContent = '⏹️ Arrêter';
