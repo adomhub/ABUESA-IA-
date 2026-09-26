@@ -1346,9 +1346,11 @@ if('serviceWorker' in navigator){
 /* Déclaré tôt car plusieurs sections (Artistes, Avis) l'utilisent dès leur premier rendu. */
 let supabaseClient = null;
 
+const DEFAULT_SUPABASE_URL = 'https://wyssiljzdvsxlnylqcia.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'sb_publishable_-W5Kvecx25W0QmjMG3wcTg_YsSWb4Gx';
 function initSupabase(){
-  const url = localStorage.getItem(STORE_KEYS.supabaseUrl);
-  const key = localStorage.getItem(STORE_KEYS.supabaseKey);
+  const url = localStorage.getItem(STORE_KEYS.supabaseUrl) || DEFAULT_SUPABASE_URL;
+  const key = localStorage.getItem(STORE_KEYS.supabaseKey) || DEFAULT_SUPABASE_KEY;
   if(url && key && window.supabase){
     try{
       supabaseClient = window.supabase.createClient(url, key);
@@ -1437,8 +1439,8 @@ document.getElementById('logo-tap-trigger').addEventListener('click', async ()=>
 
 document.getElementById('open-settings').addEventListener('click', ()=>{
   document.getElementById('groq-key').value = localStorage.getItem(STORE_KEYS.groqKey) || '';
-  document.getElementById('supabase-url').value = localStorage.getItem(STORE_KEYS.supabaseUrl) || '';
-  document.getElementById('supabase-key').value = localStorage.getItem(STORE_KEYS.supabaseKey) || '';
+  document.getElementById('supabase-url').value = localStorage.getItem(STORE_KEYS.supabaseUrl) || DEFAULT_SUPABASE_URL;
+  document.getElementById('supabase-key').value = localStorage.getItem(STORE_KEYS.supabaseKey) || DEFAULT_SUPABASE_KEY;
   refreshAdminVisibility();
   settingsModal.classList.add('active');
 });
@@ -2735,7 +2737,7 @@ function renderAdminAddedList(){
 /* ================= GALERIE PHOTOS / VIDÉOS ================= */
 const galleryModal = document.getElementById('gallery-modal');
 let selectedGalleryFile = null;
-const GALLERY_MAX_SIZE = 25 * 1024 * 1024; // 25 Mo, avant compression
+const GALLERY_MAX_SIZE = 150 * 1024 * 1024; // 150 Mo, avant compression (limité en pratique par le plan Supabase)
 
 /* Redimensionne et compresse une image côté téléphone avant l'envoi.
    Une photo de smartphone moderne (4000×3000px, 5-10 Mo) devient une image
@@ -2835,7 +2837,7 @@ document.getElementById('gallery-file').addEventListener('change', (e)=>{
   if(!file){ selectedGalleryFile = null; preview.innerHTML = ''; return; }
   if(file.size > GALLERY_MAX_SIZE){
     const sizeMo = (file.size / (1024*1024)).toFixed(1);
-    status.textContent = `Ce fichier fait ${sizeMo} Mo, la limite est de 25 Mo. Choisis un fichier plus léger.`;
+    status.textContent = `Ce fichier fait ${sizeMo} Mo, la limite est de 150 Mo. Choisis un fichier plus léger.`;
     status.className = 'status-line status-bad';
     selectedGalleryFile = null;
     preview.innerHTML = '';
