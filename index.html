@@ -1932,15 +1932,25 @@ function wordKey(entry){ return entry.fr+'::'+entry.ak; }
 
 /* Prononciation : lit le mot français à voix haute (le moteur du téléphone
    ne connaît pas l'ikposso). Utile en attendant de vrais enregistrements audio. */
+let pronunciationsMap = {};
+async function loadPronunciationsMap(){
+  if(!supabaseClient) return;
+  const { data, error } = await supabaseClient
+    .from('pronunciations')
+    .select('word_ak, audio_url, created_at')
+    .order('created_at', { ascending:true });
+  if(error || !data) return;
+  data.forEach(row => { pronunciationsMap[row.word_ak] = row.audio_url; }); // la plus récente écrase les précédentes
+  renderDictionary(getFullDictionary());
+}
+
 function speakWord(entry){
-  if(entry.audio){ new Audio(entry.audio).play(); return; }
-  if('speechSynthesis' in window){
-    const utter = new SpeechSynthesisUtterance(entry.fr);
-    utter.lang = 'fr-FR';
-    utter.rate = 0.9;
-    speechSynthesis.cancel();
-    speechSynthesis.speak(utter);
+  if(pronunciationsMap[entry.ak]){
+    new Audio(pronunciationsMap[entry.ak]).play();
+    return;
   }
+  if(entry.audio){ new Audio(entry.audio).play(); return; }
+  openPracticeOnWord(entry);
 }
 
 let dictShowFavoritesOnly = false;
@@ -1959,6 +1969,7 @@ function renderDictionary(list){
   filtered.forEach(entry=>{
     const key = wordKey(entry);
     const isFav = favs.includes(key);
+    const hasAudio = !!pronunciationsMap[entry.ak];
     const card = document.createElement('div');
     card.className='word-card';
     card.innerHTML = `
@@ -1968,7 +1979,7 @@ function renderDictionary(list){
       </div>
       <div class="word-actions">
         <button class="fav-btn" aria-label="Favori">${isFav ? '★' : '☆'}</button>
-        <button class="play" aria-label="Écouter">▶</button>
+        <button class="play" aria-label="${hasAudio ? 'Écouter la prononciation' : 'Aucun enregistrement — appuie pour enregistrer'}" title="${hasAudio ? 'Écouter la prononciation' : "Pas encore de prononciation — appuie pour l'enregistrer"}">${hasAudio ? '🔊' : '🎙️'}</button>
       </div>`;
     card.querySelector('.play').addEventListener('click', ()=> speakWord(entry));
     card.querySelector('.fav-btn').addEventListener('click', (e)=>{
@@ -1986,6 +1997,7 @@ fetchCloudWords().then(()=>{
   renderDictionary(getFullDictionary());
   renderWordOfDay();
 });
+loadPronunciationsMap();
 fetchCloudPersonality();
 
 function renderWordOfDay(){
@@ -3158,8 +3170,8 @@ async function loadExistingPronunciations(){
   el.innerHTML = `<button class="save-btn" style="width:auto;padding:8px 16px;background:var(--ink-soft);font-size:13.5px;" id="practice-play-existing">🔊 Écouter un exemple déjà enregistré</button>`;
   document.getElementById('practice-play-existing').addEventListener('click', ()=> new Audio(url).play());
 }
-function showPracticeWord(){
-  practiceCurrentWord = pickPracticeWord();
+function showPracticeWord(forcedWord){
+  practiceCurrentWord = forcedWord || pickPracticeWord();
   const akEl = document.getElementById('practice-ak');
   const frEl = document.getElementById('practice-fr');
   if(!practiceCurrentWord){
@@ -3173,6 +3185,11 @@ function showPracticeWord(){
   document.getElementById('practice-status').textContent = '';
   if(practiceAudioUrl){ URL.revokeObjectURL(practiceAudioUrl); practiceAudioUrl = null; }
   loadExistingPronunciations();
+}
+function openPracticeOnWord(entry){
+  showPracticeWord(entry);
+  practiceModal.classList.add('active');
+  document.getElementById('practice-status').textContent = "Personne n'a encore enregistré ce mot — sois le premier !";
 }
 
 document.getElementById('open-practice').addEventListener('click', ()=>{
@@ -3225,6 +3242,8 @@ document.getElementById('practice-record').addEventListener('click', async ()=>{
           word_ak: practiceCurrentWord.ak,
           audio_url: urlData.publicUrl,
         });
+        pronunciationsMap[practiceCurrentWord.ak] = urlData.publicUrl;
+        renderDictionary(getFullDictionary());
         status.textContent = 'Enregistré et partagé ✓ — ta prononciation aide à préserver la langue !';
       } catch(e){
         status.textContent = 'Enregistré ✓ — écoute-toi ! (partage impossible : ' + (e.message || 'erreur Supabase') + ')';
