@@ -873,6 +873,8 @@
 
       <div id="home-events"></div>
 
+      <div id="home-carnet"></div>
+
       <div id="home-featured"></div>
 
       <div class="home-menu">
@@ -2466,6 +2468,23 @@ function renderAdminPanel(){
     <div class="admin-actions"><button id="admin-add-hommage">+ Ajouter l'hommage</button></div>
     <div id="admin-hommage-status" class="status-line"></div>
 
+    <label>Ajouter au carnet du village</label>
+    <div class="admin-row">
+      <select id="admin-carnet-type" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:14.5px;">
+        <option value="Naissance">👶 Naissance</option>
+        <option value="Décès">🕊️ Décès</option>
+        <option value="Dot / Mariage">💍 Dot / Mariage</option>
+      </select>
+    </div>
+    <div class="admin-row">
+      <input type="text" id="admin-carnet-nom" placeholder="Nom de la personne / de la famille">
+    </div>
+    <div class="admin-row">
+      <textarea id="admin-carnet-message" rows="2" placeholder="Message (optionnel)" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:14.5px;"></textarea>
+    </div>
+    <div class="admin-actions"><button id="admin-add-carnet">+ Ajouter au carnet</button></div>
+    <div id="admin-carnet-status" class="status-line"></div>
+
     <label>Ajouter un artiste</label>
     <div class="admin-row">
       <input type="text" id="admin-artist-name" placeholder="Nom de l'artiste">
@@ -2648,6 +2667,35 @@ function renderAdminPanel(){
     status.className = 'status-line status-ok';
     await fetchCloudHommages();
     renderHommages();
+  });
+
+  document.getElementById('admin-add-carnet').addEventListener('click', async ()=>{
+    const type = document.getElementById('admin-carnet-type').value;
+    const nom = document.getElementById('admin-carnet-nom').value.trim();
+    const message = document.getElementById('admin-carnet-message').value.trim();
+    const status = document.getElementById('admin-carnet-status');
+    if(!nom){
+      status.textContent = 'Indique un nom.';
+      status.className = 'status-line status-bad';
+      return;
+    }
+    if(!supabaseClient){
+      status.textContent = 'Supabase non branché (Réglages) — l\'annonce ne sera pas partagée.';
+      status.className = 'status-line status-bad';
+      return;
+    }
+    const { error } = await supabaseClient.from('carnet_village').insert({ type, nom, message });
+    if(error){
+      status.textContent = 'Erreur : ' + error.message;
+      status.className = 'status-line status-bad';
+      return;
+    }
+    document.getElementById('admin-carnet-nom').value = '';
+    document.getElementById('admin-carnet-message').value = '';
+    status.textContent = 'Ajouté au carnet ✓';
+    status.className = 'status-line status-ok';
+    await fetchCloudCarnet();
+    renderHomeCarnet();
   });
 
   document.getElementById('admin-add-artist').addEventListener('click', ()=>{
@@ -3028,6 +3076,36 @@ function renderHomeEvents(){
   </div>`;
 }
 fetchCloudEvents().then(renderHomeEvents);
+
+let cloudCarnet = [];
+async function fetchCloudCarnet(){
+  if(!supabaseClient){ cloudCarnet = []; return; }
+  const { data, error } = await supabaseClient.from('carnet_village').select('type, nom, message, created_at').order('created_at', { ascending:false }).limit(6);
+  if(!error && data) cloudCarnet = data;
+}
+function carnetIcon(type){
+  if(type === 'Naissance') return '👶';
+  if(type === 'Décès') return '🕊️';
+  if(type === 'Dot / Mariage') return '💍';
+  return '📣';
+}
+function renderHomeCarnet(){
+  const el = document.getElementById('home-carnet');
+  if(!el) return;
+  if(cloudCarnet.length === 0){
+    el.innerHTML = `<div class="home-calendar-card">
+      <div class="hc-label">📖 Carnet du village</div>
+      <div class="hc-note">Aucune annonce pour l'instant. Le carnet du village (naissances, décès, dots) apparaîtra ici.</div>
+    </div>`;
+    return;
+  }
+  const items = cloudCarnet.map(c => `<div class="hc-day" style="margin-top:8px;">${carnetIcon(c.type)} <strong>${c.type}</strong> — ${c.nom}${c.message ? `<div class="hc-note" style="margin-top:2px;">${c.message}</div>` : ''}</div>`).join('');
+  el.innerHTML = `<div class="home-calendar-card">
+    <div class="hc-label">📖 Carnet du village</div>
+    ${items}
+  </div>`;
+}
+fetchCloudCarnet().then(renderHomeCarnet);
 
 document.querySelectorAll('.home-visit').forEach(btn=>{
   btn.addEventListener('click', ()=>{
