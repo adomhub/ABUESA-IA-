@@ -1256,9 +1256,6 @@
       <div class="close-row"><button id="close-settings">×</button></div>
       <h3 class="serif">Réglages</h3>
 
-      <label for="groq-key">Clé API Groq (pour le chat IA)</label>
-      <input type="password" id="groq-key" placeholder="gsk_...">
-
       <label for="supabase-url">URL Supabase (mémoire partagée)</label>
       <input type="text" id="supabase-url" placeholder="https://xxxx.supabase.co">
 
@@ -1438,7 +1435,6 @@ document.getElementById('logo-tap-trigger').addEventListener('click', async ()=>
 });
 
 document.getElementById('open-settings').addEventListener('click', ()=>{
-  document.getElementById('groq-key').value = localStorage.getItem(STORE_KEYS.groqKey) || '';
   document.getElementById('supabase-url').value = localStorage.getItem(STORE_KEYS.supabaseUrl) || DEFAULT_SUPABASE_URL;
   document.getElementById('supabase-key').value = localStorage.getItem(STORE_KEYS.supabaseKey) || DEFAULT_SUPABASE_KEY;
   refreshAdminVisibility();
@@ -1492,10 +1488,8 @@ window.addEventListener('appinstalled', ()=>{
 
 document.getElementById('close-settings').addEventListener('click', ()=> settingsModal.classList.remove('active'));
 document.getElementById('save-settings').addEventListener('click', async ()=>{
-  const key = document.getElementById('groq-key').value.trim();
   const sbUrl = document.getElementById('supabase-url').value.trim();
   const sbKey = document.getElementById('supabase-key').value.trim();
-  if(key) localStorage.setItem(STORE_KEYS.groqKey, key);
   if(sbUrl) localStorage.setItem(STORE_KEYS.supabaseUrl, sbUrl);
   if(sbKey) localStorage.setItem(STORE_KEYS.supabaseKey, sbKey);
   initSupabase();
@@ -1750,24 +1744,43 @@ ${dictLines}`;
 }
 
 async function callGroq(userText){
-  const apiKey = localStorage.getItem(STORE_KEYS.groqKey);
-  if(!apiKey){
-    return "⚠️ Aucune clé API n'est configurée. Ouvre les réglages (⚙️ en haut) pour ajouter ta clé Groq.";
+  // Anti-abus : au moins 12 secondes entre deux messages par visiteur
+  const throttle = checkThrottle('chat', 12);
+  if(!throttle.ok){
+    return `⏳ Merci de patienter encore ${throttle.remaining}s avant d'envoyer un nouveau message — beaucoup de monde utilise ABUESA en ce moment.`;
   }
+  markThrottled('chat');
+
   const history = JSON.parse(localStorage.getItem(STORE_KEYS.history) || '[]');
   const messages = [{role:'system', content:buildSystemPrompt()}, ...history.slice(-10), {role:'user', content:userText}];
 
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method:'POST',
-    headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+apiKey },
-    body: JSON.stringify({ model:'openai/gpt-oss-120b', messages, temperature:0.7, max_tokens:800 })
-  });
+  // La clé Groq n'est jamais présente ici : l'appel passe par une Edge Function Supabase
+  // qui garde la clé côté serveur. Voir supabase_groq_chat_edge_function.ts
+  const url = localStorage.getItem(STORE_KEYS.supabaseUrl) || DEFAULT_SUPABASE_URL;
+  const key = localStorage.getItem(STORE_KEYS.supabaseKey) || DEFAULT_SUPABASE_KEY;
+
+  let res;
+  try{
+    res = await fetch(url + '/functions/v1/groq-chat', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'apikey': key, 'Authorization':'Bearer '+key },
+      body: JSON.stringify({ messages })
+    });
+  }catch(networkErr){
+    throw new Error("Impossible de joindre le serveur d'ABUESA. Vérifie ta connexion et réessaie.");
+  }
+
   if(!res.ok){
-    const errText = await res.text().catch(()=> '');
-    throw new Error('Groq API '+res.status+': '+errText.slice(0,200));
+    if(res.status === 429){
+      throw new Error("Beaucoup de monde utilise ABUESA en ce moment 🙏 Réessaie dans une minute.");
+    }
+    throw new Error("Le service de discussion est momentanément indisponible. Réessaie un peu plus tard.");
   }
   const data = await res.json();
-  return data.choices?.[0]?.message?.content || "Je n'ai pas pu générer de réponse.";
+  if(data.error){
+    throw new Error("Le service de discussion est momentanément indisponible. Réessaie un peu plus tard.");
+  }
+  return data.reply || "Je n'ai pas pu générer de réponse.";
 }
 
 chatForm.addEventListener('submit', async (e)=>{
