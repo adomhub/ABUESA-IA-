@@ -754,6 +754,19 @@
     color:var(--ink-soft);
     margin-top:4px;
   }
+  .share-card-btn{
+    margin-top:10px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid var(--forest);
+    background:var(--white);
+    color:var(--forest-deep);
+    font-family:inherit;
+    font-size:13.5px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .share-card-btn:active{ background:var(--paper-dim); }
   .home-featured-card{
     display:block;
     background:var(--white);
@@ -3043,13 +3056,100 @@ function renderHomeProverb(){
   }
   const dayIdx = Math.floor(Date.now() / 86400000) % cloudProverbs.length;
   const p = cloudProverbs[dayIdx];
+  currentProverb = p;
   el.innerHTML = `<div class="home-calendar-card">
     <div class="hc-label">💬 Proverbe du jour</div>
     <div class="hc-day" style="font-style:italic;">« ${p.ak} »</div>
     <div class="hc-note">${p.fr}</div>
+    <button class="share-card-btn" onclick="shareProverbCard()">📲 Partager en statut</button>
   </div>`;
 }
 fetchCloudProverbs().then(renderHomeProverb);
+
+/* Carte à partager (statut WhatsApp) : l'image est dessinée sur le téléphone, sans serveur */
+let currentProverb = null;
+function wrapCanvasText(ctx, text, maxWidth){
+  const words = String(text).split(/\s+/);
+  const lines = [];
+  let line = '';
+  words.forEach(w => {
+    const test = line ? line + ' ' + w : w;
+    if(ctx.measureText(test).width > maxWidth && line){ lines.push(line); line = w; }
+    else line = test;
+  });
+  if(line) lines.push(line);
+  return lines;
+}
+async function shareCard({ label, title, body }){
+  try{ if(document.fonts && document.fonts.ready) await document.fonts.ready; }catch(_){}
+  const W = 1080, H = 1920;
+  const c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const ctx = c.getContext('2d');
+  ctx.textAlign = 'center';
+
+  ctx.fillStyle = '#F7F3E8'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#C7D92E'; ctx.fillRect(0, 0, W, 300);
+  ctx.fillStyle = '#1E3A22';
+  ctx.font = '700 88px "Fraunces", Georgia, serif';
+  ctx.fillText('ABUESA-IA', W / 2, 150);
+  ctx.font = '400 38px "Inter", Arial, sans-serif';
+  ctx.fillText('Culture Akposso · Wawa, Togo', W / 2, 220);
+
+  ctx.fillStyle = '#B8860B';
+  ctx.font = '700 44px "Inter", Arial, sans-serif';
+  ctx.fillText(String(label).toUpperCase(), W / 2, 470);
+
+  ctx.fillStyle = '#8A3D24';
+  let fs = 84, lines = [];
+  for(; fs >= 40; fs -= 4){
+    ctx.font = `italic 700 ${fs}px "Fraunces", Georgia, serif`;
+    lines = wrapCanvasText(ctx, title, W - 200);
+    if(lines.length <= 6) break;
+  }
+  let y = 600;
+  lines.slice(0, 8).forEach(l => { ctx.fillText(l, W / 2, y); y += fs * 1.25; });
+
+  if(body){
+    y += 50;
+    ctx.fillStyle = '#3A3830';
+    let bs = 48, bl = [];
+    for(; bs >= 30; bs -= 2){
+      ctx.font = `400 ${bs}px "Inter", Arial, sans-serif`;
+      bl = wrapCanvasText(ctx, body, W - 200);
+      if(bl.length <= 8) break;
+    }
+    bl.slice(0, 10).forEach(l => { ctx.fillText(l, W / 2, y); y += bs * 1.4; });
+  }
+
+  ctx.fillStyle = '#1E3A22'; ctx.fillRect(0, H - 240, W, 240);
+  ctx.fillStyle = '#F7F3E8';
+  ctx.font = '700 46px "Inter", Arial, sans-serif';
+  ctx.fillText('Découvre ABUESA-IA', W / 2, H - 140);
+  ctx.font = '400 34px "Inter", Arial, sans-serif';
+  ctx.fillText('adomhub.github.io/ABUESA-IA-', W / 2, H - 80);
+
+  const blob = await new Promise(res => c.toBlob(res, 'image/png'));
+  if(!blob){ showToast("Impossible de créer l'image"); return; }
+  const file = new File([blob], 'abuesa-ia.png', { type:'image/png' });
+  const shareText = 'ABUESA-IA — culture Akposso 👉 https://adomhub.github.io/ABUESA-IA-/';
+  if(navigator.canShare && navigator.canShare({ files:[file] })){
+    try{ await navigator.share({ files:[file], text: shareText }); return; }
+    catch(e){ if(e && e.name === 'AbortError') return; }
+  }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'abuesa-ia.png';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  showToast("Image enregistrée — ajoute-la à ton statut WhatsApp 📲");
+}
+function shareProverbCard(){
+  if(!currentProverb) return;
+  shareCard({ label:'Proverbe du jour', title:'« ' + currentProverb.ak + ' »', body: currentProverb.fr });
+}
 
 let cloudEvents = [];
 async function fetchCloudEvents(){
@@ -3104,11 +3204,16 @@ function renderHomeCarnet(){
     </div>`;
     return;
   }
-  const items = cloudCarnet.map(c => `<div class="hc-day" style="margin-top:8px;">${carnetIcon(c.type)} <strong>${c.type}</strong> — ${c.nom}${c.message ? `<div class="hc-note" style="margin-top:2px;">${c.message}</div>` : ''}</div>`).join('');
+  const items = cloudCarnet.map((c, i) => `<div class="hc-day" style="margin-top:8px;">${carnetIcon(c.type)} <strong>${c.type}</strong> — ${c.nom}${c.message ? `<div class="hc-note" style="margin-top:2px;">${c.message}</div>` : ''}<button class="share-card-btn" onclick="shareCarnetCard(${i})">📲 Partager en statut</button></div>`).join('');
   el.innerHTML = `<div class="home-calendar-card">
     <div class="hc-label">📖 Carnet du village</div>
     ${items}
   </div>`;
+}
+function shareCarnetCard(i){
+  const c = cloudCarnet[i];
+  if(!c) return;
+  shareCard({ label:'Carnet du village', title: carnetIcon(c.type) + ' ' + c.type + ' — ' + c.nom, body: c.message || '' });
 }
 fetchCloudCarnet().then(renderHomeCarnet);
 
