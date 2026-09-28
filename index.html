@@ -3122,12 +3122,12 @@ async function shareCard({ label, title, body }){
     bl.slice(0, 10).forEach(l => { ctx.fillText(l, W / 2, y); y += bs * 1.4; });
   }
 
-  ctx.fillStyle = '#1E3A22'; ctx.fillRect(0, H - 240, W, 240);
+  ctx.fillStyle = '#1E3A22'; ctx.fillRect(0, H - 420, W, 420);
   ctx.fillStyle = '#F7F3E8';
   ctx.font = '700 46px "Inter", Arial, sans-serif';
-  ctx.fillText('Découvre ABUESA-IA', W / 2, H - 140);
+  ctx.fillText('Découvre ABUESA-IA', W / 2, H - 340);
   ctx.font = '400 34px "Inter", Arial, sans-serif';
-  ctx.fillText('adomhub.github.io/ABUESA-IA-', W / 2, H - 80);
+  ctx.fillText('adomhub.github.io/ABUESA-IA-', W / 2, H - 285);
 
   const blob = await new Promise(res => c.toBlob(res, 'image/png'));
   if(!blob){ showToast("Impossible de créer l'image"); return; }
