@@ -872,6 +872,8 @@
 
       <div id="home-calendar"></div>
 
+      <div id="home-weather"></div>
+
       <div id="home-proverb"></div>
 
       <div id="home-events"></div>
@@ -3109,6 +3111,57 @@ function renderHomeCarnet(){
   </div>`;
 }
 fetchCloudCarnet().then(renderHomeCarnet);
+
+/* Météo à Badou (Open-Meteo : gratuit, sans clé). Dernière valeur gardée pour le hors-ligne. */
+const WEATHER_STORE = 'abuesa_weather_cache';
+function weatherInfo(code){
+  if(code === 0) return ['☀️','Ciel dégagé'];
+  if(code <= 2) return ['🌤️','Peu nuageux'];
+  if(code === 3) return ['☁️','Couvert'];
+  if(code === 45 || code === 48) return ['🌫️','Brouillard'];
+  if(code >= 51 && code <= 57) return ['🌦️','Bruine'];
+  if(code >= 61 && code <= 67) return ['🌧️','Pluie'];
+  if(code >= 80 && code <= 82) return ['🌧️','Averses'];
+  if(code >= 95) return ['⛈️','Orage'];
+  return ['🌡️','Variable'];
+}
+function readWeatherCache(){
+  try{ return JSON.parse(localStorage.getItem(WEATHER_STORE) || 'null'); }catch(_){ return null; }
+}
+async function fetchWeather(){
+  try{
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=7.62&longitude=0.60&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Africa%2FLome&forecast_days=1';
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('http ' + res.status);
+    const d = await res.json();
+    const data = {
+      temp: Math.round(d.current.temperature_2m),
+      code: d.current.weather_code,
+      max: Math.round(d.daily.temperature_2m_max[0]),
+      min: Math.round(d.daily.temperature_2m_min[0]),
+      rain: d.daily.precipitation_probability_max[0],
+      ts: Date.now()
+    };
+    localStorage.setItem(WEATHER_STORE, JSON.stringify(data));
+    return data;
+  }catch(e){
+    return readWeatherCache();
+  }
+}
+function renderHomeWeather(w){
+  const el = document.getElementById('home-weather');
+  if(!el) return;
+  if(!w){ el.innerHTML = ''; return; }
+  const [icon, label] = weatherInfo(w.code);
+  const stale = (Date.now() - w.ts) > 3 * 3600 * 1000;
+  el.innerHTML = `<div class="home-calendar-card">
+    <div class="hc-label">🌍 Météo à Badou</div>
+    <div class="hc-day">${icon} <strong>${w.temp}°C</strong> — ${label}</div>
+    <div class="hc-note">Aujourd'hui : ${w.min}° à ${w.max}° · Pluie probable : ${w.rain ?? 0} %${stale ? ' · (dernière mise à jour connue)' : ''}</div>
+  </div>`;
+}
+renderHomeWeather(readWeatherCache());
+fetchWeather().then(renderHomeWeather);
 
 document.querySelectorAll('.home-visit').forEach(btn=>{
   btn.addEventListener('click', ()=>{
