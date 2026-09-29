@@ -898,6 +898,18 @@
 
       <div id="home-carnet"></div>
 
+      <div id="home-partners"></div>
+
+      <div id="home-support">
+        <div class="home-calendar-card">
+          <div class="hc-label">💚 Soutenir ABUESA</div>
+          <div class="hc-note">ABUESA est gratuit et le restera. Le faire vivre a un coût réel (hébergement, IA, temps de recherche). Chaque geste compte, même petit.</div>
+          <div class="hc-day" style="margin-top:8px;">📱 <strong>Flooz / Moov :</strong> +228 99 61 99 69<br>📱 <strong>Yas :</strong> +228 91 04 03 46</div>
+          <button class="share-card-btn" id="copy-support-number">📋 Copier le numéro Flooz</button>
+          <a class="share-card-btn" style="display:inline-block;text-decoration:none;" target="_blank" rel="noopener" href="https://wa.me/22899619969?text=Bonjour%20Alexi%2C%20je%20souhaite%20soutenir%20ABUESA.">💬 Écrire à Alexi</a>
+        </div>
+      </div>
+
       <div id="home-featured"></div>
 
       <div class="home-menu">
@@ -3408,6 +3420,67 @@ function shareCarnetCard(i){
   shareCard({ label:'Carnet du village', title: carnetIcon(c.type) + ' ' + c.type + ' — ' + c.nom, body: c.message || '' });
 }
 fetchCloudCarnet().then(renderHomeCarnet);
+
+/* Espace Partenaires : annonces de commerces / artistes / événements qui soutiennent ABUESA.
+   Alexi les ajoute dans Supabase > Table Editor > partenaires (personne d'autre ne peut en ajouter). */
+let cloudPartners = [];
+async function fetchCloudPartners(){
+  if(!supabaseClient){ cloudPartners = []; return; }
+  const { data, error } = await supabaseClient
+    .from('partenaires')
+    .select('nom, description, lien, categorie, fin')
+    .eq('actif', true)
+    .order('id', { ascending:false })
+    .limit(8);
+  if(!error && data){
+    const today = new Date().toISOString().slice(0, 10);
+    cloudPartners = data.filter(p=> p && p.nom && (!p.fin || p.fin >= today));
+  }
+}
+function escAll(s){
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function partnerLink(lien){
+  const l = String(lien || '').trim();
+  if(/^https?:\/\//i.test(l)) return l;
+  const digits = l.replace(/[^\d]/g, '');
+  if(digits.length >= 8) return 'https://wa.me/' + digits;
+  return '';
+}
+function renderHomePartners(){
+  const el = document.getElementById('home-partners');
+  if(!el) return;
+  const pitchMsg = encodeURIComponent("Bonjour Alexi, je voudrais présenter mon activité dans l'espace Partenaires d'ABUESA.");
+  const pitch = `<a class="share-card-btn" style="display:inline-block;text-decoration:none;margin-top:10px;" target="_blank" rel="noopener" href="https://wa.me/22899619969?text=${pitchMsg}">💬 Faire apparaître mon activité ici</a>`;
+  const items = cloudPartners.map(p=>{
+    const href = partnerLink(p.lien);
+    return `<div class="hc-day" style="margin-top:10px;">
+      <strong>${escAll(p.nom)}</strong>${p.categorie ? ` <span class="hc-note">· ${escAll(p.categorie)}</span>` : ''}
+      ${p.description ? `<div class="hc-note" style="margin-top:2px;">${escAll(p.description)}</div>` : ''}
+      ${href ? `<a class="share-card-btn" style="display:inline-block;text-decoration:none;" target="_blank" rel="noopener sponsored" href="${escAll(href)}">Découvrir →</a>` : ''}
+    </div>`;
+  }).join('');
+  const intro = cloudPartners.length
+    ? `<div class="hc-note">Annonces de partenaires qui soutiennent ABUESA.</div>`
+    : `<div class="hc-note">Cet espace est réservé aux commerces, artistes et événements de chez nous. Ton activité peut apparaître ici, devant toute la communauté Akposso.</div>`;
+  el.innerHTML = `<div class="home-calendar-card">
+    <div class="hc-label">🤝 Partenaires d'ABUESA</div>
+    ${intro}
+    ${items}
+    ${pitch}
+  </div>`;
+}
+renderHomePartners();
+fetchCloudPartners().then(renderHomePartners);
+
+document.getElementById('copy-support-number').addEventListener('click', async ()=>{
+  try{
+    await navigator.clipboard.writeText('+22899619969');
+    showToast('Numéro copié 💚');
+  }catch(_){
+    showToast('Numéro Flooz : +228 99 61 99 69');
+  }
+});
 
 /* Météo à Badou (Open-Meteo : gratuit, sans clé). Dernière valeur gardée pour le hors-ligne. */
 const WEATHER_STORE = 'abuesa_weather_cache';
