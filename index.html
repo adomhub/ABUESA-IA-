@@ -3482,8 +3482,10 @@ document.getElementById('copy-support-number').addEventListener('click', async (
   }
 });
 
-/* Météo à Badou (Open-Meteo : gratuit, sans clé). Dernière valeur gardée pour le hors-ligne. */
-const WEATHER_STORE = 'abuesa_weather_cache';
+/* Météo de la préfecture de Wawa (Open-Meteo : gratuit, sans clé), calculée sur 6 cantons
+   dont les coordonnées sont confirmées (WAWA_CANTONS). Dernière valeur gardée pour le hors-ligne. */
+const WEATHER_STORE = 'abuesa_weather_wawa';
+const WEATHER_PLACES = ['Badou','Tomégbé','Kpété-Bena','Okou','Gobé','Ekéto'];
 function weatherInfo(code){
   if(code === 0) return ['☀️','Ciel dégagé'];
   if(code <= 2) return ['🌤️','Peu nuageux'];
@@ -3500,34 +3502,62 @@ function readWeatherCache(){
 }
 async function fetchWeather(){
   try{
-    const url = 'https://api.open-meteo.com/v1/forecast?latitude=7.62&longitude=0.60&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Africa%2FLome&forecast_days=1';
+    const places = WAWA_CANTONS.filter(c=> WEATHER_PLACES.includes(c.name));
+    const lat = places.map(p=> p.lat).join(',');
+    const lng = places.map(p=> p.lng).join(',');
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Africa%2FLome&forecast_days=1`;
     const res = await fetch(url);
     if(!res.ok) throw new Error('http ' + res.status);
-    const d = await res.json();
-    const data = {
-      temp: Math.round(d.current.temperature_2m),
-      code: d.current.weather_code,
-      max: Math.round(d.daily.temperature_2m_max[0]),
-      min: Math.round(d.daily.temperature_2m_min[0]),
-      rain: d.daily.precipitation_probability_max[0],
-      ts: Date.now()
-    };
+    let d = await res.json();
+    if(!Array.isArray(d)) d = [d];
+    if(d.length !== places.length) throw new Error('reponse incomplete');
+    const spots = d.map((x, i)=>({
+      name: places[i].name,
+      temp: Math.round(x.current.temperature_2m),
+      code: x.current.weather_code,
+      min: Math.round(x.daily.temperature_2m_min[0]),
+      max: Math.round(x.daily.temperature_2m_max[0]),
+      rain: x.daily.precipitation_probability_max[0] ?? 0
+    }));
+    const data = { spots, ts: Date.now() };
     localStorage.setItem(WEATHER_STORE, JSON.stringify(data));
     return data;
   }catch(e){
     return readWeatherCache();
   }
 }
+function summarizeWeather(spots){
+  const avg = arr=> Math.round(arr.reduce((t, x)=> t + x, 0) / arr.length);
+  const counts = {};
+  spots.forEach(s=>{ counts[s.code] = (counts[s.code] || 0) + 1; });
+  const code = Number(Object.keys(counts).sort((x, y)=> counts[y] - counts[x] || y - x)[0]);
+  return {
+    temp: avg(spots.map(s=> s.temp)),
+    code,
+    min: Math.min(...spots.map(s=> s.min)),
+    max: Math.max(...spots.map(s=> s.max)),
+    rain: Math.max(...spots.map(s=> s.rain))
+  };
+}
 function renderHomeWeather(w){
   const el = document.getElementById('home-weather');
   if(!el) return;
-  if(!w){ el.innerHTML = ''; return; }
-  const [icon, label] = weatherInfo(w.code);
+  if(!w || !Array.isArray(w.spots) || !w.spots.length){ el.innerHTML = ''; return; }
+  const sum = summarizeWeather(w.spots);
+  const [icon, label] = weatherInfo(sum.code);
   const stale = (Date.now() - w.ts) > 3 * 3600 * 1000;
+  const rows = w.spots.map(s=>{
+    const [ic] = weatherInfo(s.code);
+    return `<div class="hc-note" style="margin-top:4px;">${ic} <strong>${s.name}</strong> · ${s.temp}°C · pluie ${s.rain} %</div>`;
+  }).join('');
   el.innerHTML = `<div class="home-calendar-card">
-    <div class="hc-label">🌍 Météo à Badou</div>
-    <div class="hc-day">${icon} <strong>${w.temp}°C</strong> — ${label}</div>
-    <div class="hc-note">Aujourd'hui : ${w.min}° à ${w.max}° · Pluie probable : ${w.rain ?? 0} %${stale ? ' · (dernière mise à jour connue)' : ''}</div>
+    <div class="hc-label">🌍 Météo à Wawa</div>
+    <div class="hc-day">${icon} <strong>${sum.temp}°C</strong> — ${label}</div>
+    <div class="hc-note">Aujourd'hui : ${sum.min}° à ${sum.max}° · Pluie probable jusqu'à ${sum.rain} %${stale ? ' · (dernière mise à jour connue)' : ''}</div>
+    <details style="margin-top:8px;">
+      <summary class="hc-note" style="cursor:pointer;">Voir par canton</summary>
+      ${rows}
+    </details>
   </div>`;
 }
 renderHomeWeather(readWeatherCache());
