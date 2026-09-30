@@ -383,11 +383,16 @@
   /* ---- Carte ---- */
   #map{
     width:100%;
-    height:280px;
+    height:60vh;
+    min-height:320px;
+    max-height:480px;
     border-radius:var(--radius);
     border:1px solid var(--line);
     margin-bottom:12px;
   }
+
+  #map .leaflet-popup-content{ font-size:15px; line-height:1.35; margin:10px 12px; }
+  #map .leaflet-popup-content ul{ margin:4px 0 0 16px; padding:0; font-size:15px; }
 
   /* ---- Quiz ---- */
   .quiz-card{
@@ -1064,8 +1069,9 @@
       <h2 class="section-title serif">Carte de Wawa</h2>
       <p class="section-desc">Les 11 cantons de la préfecture de Wawa et leurs villages, terre du peuple Akposso.</p>
       <div id="map"></div>
-      <p class="section-desc" style="margin-top:6px;">Touche un repère pour voir les villages du canton.</p>
+      <p class="section-desc" style="margin-top:6px;">Touche un point pour voir le village. ● position précise · ○ position approximative.</p>
       <div id="map-count" style="margin:8px 0 10px;font-weight:700;color:var(--clay);"></div>
+      <div id="map-list"></div>
     </div>
   </main>
 
@@ -2316,52 +2322,110 @@ function renderMapCount(placed){
   const el = document.getElementById('map-count');
   if(!el) return;
   el.textContent = '🏘️ ' + countWawaVillages() + ' villages et quartiers dans ' + WAWA_CANTONS.length + ' cantons'
-    + (placed ? ' · ' + placed + ' placés sur la carte' : '');
+    + (placed ? ' · ' + placed : '');
 }
 renderMapCount();
 
-/* Contour de Wawa + villages placés : lus dans le fichier wawa-geo.json (à côté de index.html).
-   S'il est absent, la carte reste comme avant (un repère par canton). */
-async function loadWawaGeo(map){
+/* Carte de Wawa : TOUS les villages sont affichés.
+   Positions, par priorité : 1) wawa-geo.json (placés à la main) 2) OpenStreetMap en direct 3) approximatif autour du canton. */
+const OSM_KEY = 'abuesa_wawa_osm_v1';
+const vNorm = s => String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');
+function kmBetween(a, b){
+  const r = x => x*Math.PI/180, dLa = r(b[0]-a[0]), dLo = r(b[1]-a[1]);
+  const h = Math.sin(dLa/2)**2 + Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dLo/2)**2;
+  return 12742*Math.asin(Math.sqrt(h));
+}
+async function overpassQuery(q){
+  const eps = ['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
+  for(const ep of eps){
+    try{
+      const ctl = new AbortController(), t = setTimeout(()=>ctl.abort(), 30000);
+      const res = await fetch(ep, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'data='+encodeURIComponent(q), signal:ctl.signal });
+      clearTimeout(t);
+      if(res.ok) return await res.json();
+    }catch(_){}
+  }
+  throw new Error('overpass');
+}
+async function getOsmPlaces(){
+  try{ const c = JSON.parse(localStorage.getItem(OSM_KEY)||'null'); if(c && Date.now()-c.t < 30*86400000) return c.d; }catch(_){}
+  const data = await overpassQuery('[out:json][timeout:40];node["place"](7.25,0.40,7.85,1.05);out body;');
+  const nodes = (data.elements||[]).filter(e=>e.tags);
+  const out = {};
+  WAWA_CANTONS.forEach(c=>{
+    c.villages.forEach(v=>{
+      const k = vNorm(v); let best = null, bd = 1e9;
+      nodes.forEach(n=>{
+        const names = ['name','name:fr','alt_name','old_name','short_name'].flatMap(t => n.tags[t] ? String(n.tags[t]).split(';') : []);
+        if(!names.some(x => vNorm(x) === k)) return;
+        const d = kmBetween([c.lat,c.lng],[n.lat,n.lon]);
+        if(d < bd){ bd = d; best = n; }
+      });
+      if(best && bd <= 20) out[c.name+'|'+v] = { c:c.name, n:v, lat:+best.lat.toFixed(5), lng:+best.lon.toFixed(5) };
+    });
+  });
+  if(nodes.length) try{ localStorage.setItem(OSM_KEY, JSON.stringify({ t:Date.now(), d:out })); }catch(_){}
+  return out;
+}
+async function loadWawaMap(map){
+  const layer = L.layerGroup().addTo(map), markers = {}, pts = {}, color = {};
+  WAWA_CANTONS.forEach((c,ci)=>{
+    color[c.name] = 'hsl(' + Math.round(ci*360/WAWA_CANTONS.length) + ',65%,42%)';
+    c.villages.forEach((v,i)=>{
+      const a = 2*Math.PI*i/c.villages.length;
+      pts[c.name+'|'+v] = { c:c.name, n:v, lat:c.lat+0.012*Math.sin(a), lng:c.lng+0.012*Math.cos(a), kind:'approx' };
+    });
+  });
+  function draw(){
+    layer.clearLayers();
+    let exact = 0;
+    Object.entries(pts).forEach(([k,p])=>{
+      const ok = p.kind !== 'approx'; if(ok) exact++;
+      const m = L.circleMarker([p.lat,p.lng], { radius: ok?8:7, weight:2, color: ok?'#ffffff':color[p.c], dashArray: ok?null:'3 3', fillColor:color[p.c], fillOpacity: ok?0.95:0.25 }).addTo(layer);
+      m.bindPopup('<b>' + escAll(p.n) + '</b><br>Canton : ' + escAll(p.c) + (ok ? '' : '<br><span style="color:var(--clay)">Position approximative</span>'), { maxWidth:200, autoPanPadding:[20,20] });
+      markers[k] = m;
+    });
+    renderMapCount(exact + ' précis · ' + (Object.keys(pts).length - exact) + ' approximatifs');
+  }
+  draw();
+  const box = document.getElementById('map-list');
+  if(box){
+    box.innerHTML = WAWA_CANTONS.map(c =>
+      '<details style="margin:6px 0;"><summary style="font-weight:700;cursor:pointer;">' + escAll(c.name) + ' (' + c.villages.length + ')</summary><div style="margin-top:6px;">'
+      + c.villages.map(v => '<button type="button" class="map-v" data-k="' + escAll(c.name+'|'+v) + '" style="margin:3px 4px 3px 0;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--white);font-size:17.5px;">' + escAll(v) + '</button>').join('')
+      + '</div></details>').join('');
+    box.onclick = e=>{
+      const b = e.target.closest('.map-v'); if(!b) return;
+      const m = markers[b.dataset.k]; if(!m) return;
+      document.getElementById('map').scrollIntoView({ behavior:'smooth', block:'center' });
+      map.setView(m.getLatLng(), 13); m.openPopup();
+    };
+  }
+  try{ const osm = await getOsmPlaces(); Object.entries(osm).forEach(([k,p])=>{ if(pts[k]) pts[k] = { c:p.c, n:p.n, lat:p.lat, lng:p.lng, kind:'osm' }; }); draw(); }catch(_){}
   try{
     const res = await fetch('wawa-geo.json?v=1');
-    if(!res.ok) return;
-    const geo = await res.json();
-    if(Array.isArray(geo.outline) && geo.outline.length > 10){
-      const poly = L.polygon(geo.outline, { color:'#9a3d22', weight:3, dashArray:'6 6', fillColor:'#9a3d22', fillOpacity:0.05 }).addTo(map);
-      map.fitBounds(poly.getBounds(), { padding:[10, 10] });
+    if(res.ok){
+      const geo = await res.json();
+      (geo.villages || []).forEach(v=>{
+        const k = v.c + '|' + v.n;
+        if(pts[k] && typeof v.lat === 'number' && typeof v.lng === 'number') pts[k] = { c:v.c, n:v.n, lat:v.lat, lng:v.lng, kind:'geo' };
+      });
+      if(Array.isArray(geo.outline) && geo.outline.length > 10){
+        const poly = L.polygon(geo.outline, { color:'#9a3d22', weight:3, dashArray:'6 6', fillColor:'#9a3d22', fillOpacity:0.05 }).addTo(map);
+        map.fitBounds(poly.getBounds(), { padding:[10,10] });
+      }
+      draw();
     }
-    const colorOf = {};
-    WAWA_CANTONS.forEach((c, i)=>{ colorOf[c.name] = 'hsl(' + Math.round(i * 360 / WAWA_CANTONS.length) + ',65%,42%)'; });
-    let placed = 0;
-    (geo.villages || []).forEach(v=>{
-      if(typeof v.lat !== 'number' || typeof v.lng !== 'number') return;
-      placed++;
-      const m = L.circleMarker([v.lat, v.lng], { radius:7, weight:2, color:'#ffffff', fillColor: colorOf[v.c] || '#555555', fillOpacity:0.95 }).addTo(map);
-      m.bindPopup('<b>' + escAll(v.n) + '</b><br>Canton : ' + escAll(v.c));
-    });
-    renderMapCount(placed);
-  }catch(_){ /* silencieux : la carte reste utilisable */ }
+  }catch(_){}
 }
 document.querySelector('[data-view="map-view"]').addEventListener('click', ()=>{
   if(mapInitialized) return;
   mapInitialized = true;
   setTimeout(()=>{
-    const map = L.map('map').setView([7.53, 0.72], 10.3);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution:'&copy; OpenStreetMap'
-    }).addTo(map);
-
-    WAWA_CANTONS.forEach(c=>{
-      const marker = L.marker([c.lat, c.lng]).addTo(map);
-      const villagesList = c.villages.map(v=>`<li>${v}</li>`).join('');
-      const note = c.confirmed ? '' : '<div style="font-size:17.5px;color:var(--clay);margin-top:4px;">Position approximative — à confirmer</div>';
-      marker.bindPopup(
-        `<b>${c.name}</b>${c.chef ? ' (chef-lieu de la préfecture)' : ''}<br>
-         <ul style="margin:6px 0 0 16px;padding:0;font-size:17.5px;">${villagesList}</ul>${note}`
-      );
-    });
-    loadWawaGeo(map);
+    const map = L.map('map', { zoomControl:false }).setView([7.53, 0.72], 10.3);
+    L.control.zoom({ position:'bottomright' }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'&copy; OpenStreetMap' }).addTo(map);
+    loadWawaMap(map);
   }, 150);
 });
 
