@@ -1065,6 +1065,7 @@
       <p class="section-desc">Les 11 cantons de la préfecture de Wawa et leurs villages, terre du peuple Akposso.</p>
       <div id="map"></div>
       <p class="section-desc" style="margin-top:6px;">Touche un repère pour voir les villages du canton.</p>
+      <div id="map-count" style="margin:8px 0 10px;font-weight:700;color:var(--clay);"></div>
     </div>
   </main>
 
@@ -2306,6 +2307,42 @@ const WAWA_CANTONS = [
 ];
 
 let mapInitialized = false;
+
+/* Nombre de villages et quartiers : calculé automatiquement depuis la liste des cantons */
+function countWawaVillages(){
+  return WAWA_CANTONS.reduce((t, c)=> t + c.villages.length, 0);
+}
+function renderMapCount(placed){
+  const el = document.getElementById('map-count');
+  if(!el) return;
+  el.textContent = '🏘️ ' + countWawaVillages() + ' villages et quartiers dans ' + WAWA_CANTONS.length + ' cantons'
+    + (placed ? ' · ' + placed + ' placés sur la carte' : '');
+}
+renderMapCount();
+
+/* Contour de Wawa + villages placés : lus dans le fichier wawa-geo.json (à côté de index.html).
+   S'il est absent, la carte reste comme avant (un repère par canton). */
+async function loadWawaGeo(map){
+  try{
+    const res = await fetch('wawa-geo.json?v=1');
+    if(!res.ok) return;
+    const geo = await res.json();
+    if(Array.isArray(geo.outline) && geo.outline.length > 10){
+      const poly = L.polygon(geo.outline, { color:'#9a3d22', weight:3, dashArray:'6 6', fillColor:'#9a3d22', fillOpacity:0.05 }).addTo(map);
+      map.fitBounds(poly.getBounds(), { padding:[10, 10] });
+    }
+    const colorOf = {};
+    WAWA_CANTONS.forEach((c, i)=>{ colorOf[c.name] = 'hsl(' + Math.round(i * 360 / WAWA_CANTONS.length) + ',65%,42%)'; });
+    let placed = 0;
+    (geo.villages || []).forEach(v=>{
+      if(typeof v.lat !== 'number' || typeof v.lng !== 'number') return;
+      placed++;
+      const m = L.circleMarker([v.lat, v.lng], { radius:7, weight:2, color:'#ffffff', fillColor: colorOf[v.c] || '#555555', fillOpacity:0.95 }).addTo(map);
+      m.bindPopup('<b>' + escAll(v.n) + '</b><br>Canton : ' + escAll(v.c));
+    });
+    renderMapCount(placed);
+  }catch(_){ /* silencieux : la carte reste utilisable */ }
+}
 document.querySelector('[data-view="map-view"]').addEventListener('click', ()=>{
   if(mapInitialized) return;
   mapInitialized = true;
@@ -2324,6 +2361,7 @@ document.querySelector('[data-view="map-view"]').addEventListener('click', ()=>{
          <ul style="margin:6px 0 0 16px;padding:0;font-size:17.5px;">${villagesList}</ul>${note}`
       );
     });
+    loadWawaGeo(map);
   }, 150);
 });
 
