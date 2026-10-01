@@ -2012,6 +2012,17 @@ async function fetchCloudPersonality(){
     .limit(1);
   if(!error && data && data[0]) cloudPersonality = data[0].content;
 }
+/* Les listes de la page Culture et les villages de la carte sont injectés ici :
+   le chat connaît ainsi automatiquement tout ce qui est ajouté dans l'application. */
+function buildCultureKnowledge(){
+  let t = "\n\nListes de noms akposso fournies par Alexi, le créateur d'ABUESA. Ce sont uniquement des NOMS : tu n'en connais pas la description. Si on te demande en quoi consiste l'un d'eux, dis honnêtement que sa description n'a pas encore été ajoutée, sans inventer :";
+  try{ CULTURE_NAMES.forEach(g=>{ t += '\n- ' + g.title + ' : ' + g.items.join(' ; '); }); }catch(_){}
+  try{
+    t += '\n\nVillages de la préfecture de Wawa, par canton :';
+    WAWA_CANTONS.forEach(c=>{ t += '\n- ' + c.name + ' : ' + c.villages.join(', '); });
+  }catch(_){}
+  return t;
+}
 function buildSystemPrompt(){
   const dict = getFullDictionary();
   const personality = (cloudPersonality || getLocalPersonality()).trim();
@@ -2019,6 +2030,7 @@ function buildSystemPrompt(){
   if(personality){
     prompt += `\n\nTraits de personnalité supplémentaires à respecter en plus de ce qui précède :\n${personality}`;
   }
+  prompt += buildCultureKnowledge();
   prompt += buildMemoryPrompt();
   if(dict.length === 0) return prompt;
   const dictLines = dict.map(w=> `${w.ak} = ${w.fr}`).join(' ; ');
