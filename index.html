@@ -1103,6 +1103,8 @@
       <p class="section-desc">Traditions et repères du peuple Kpɔsɔ wanɩ — sources vérifiées.</p>
       <div id="culture-list"></div>
 
+      <div id="culture-names"></div>
+
       <h2 class="section-title serif" style="margin-top:28px;">📜 Contes et récits</h2>
       <p class="section-desc">Histoires transmises de génération en génération.</p>
       <div id="contes-list"></div>
@@ -2559,6 +2561,24 @@ const CULTURE_FACTS = [
     text:"Les Akposso vivent principalement dans les préfectures de Wawa, Amou et Ogou, dans la région des Plateaux au Togo, une zone vallonnée dont le point culminant est le mont Djogbé.",
   },
 ];
+
+/* Noms transmis par Alexi (orthographe conservée telle quelle) */
+const CULTURE_NAMES = [
+  { icon:'💃', title:'Danses traditionnelles', items:['IGBELÉ','AWUMĒTSĒ','GBĒKÔ','ADJOGBO','DJAÏSSA','ADEKPETÍ','ĒHĒ','ISIVITSĒ','UMAVIDU','GAKPA','ADOBOLOTÒ','ATRIKPÉ'] },
+  { icon:'🎲', title:'Jeux traditionnels', items:['OKPO','ÊKLÔ','KPOKPO-DJIDÓ','YANUTINA','ÉVÉ','AKITIWA-SÔKÔ','ÈWU','SIKPLÈSIKPLÈ','PIPLA- NANA','ATÉ-ATŌ','IVUAOOO- AGBAKULÉLÉ'] },
+  { icon:'🍲', title:'Vivres (nourriture)', items:['AYÊ','AKPOGBO','AKIKAZU','UJUA','UBÈ','APUSSA','ALAZU','KPANABO','APISSIÉ','AGBAGNA-KOKI','DABLU','AKALA','KOKI'] },
+  { icon:'🎨', title:'Couleurs', items:['BLANC = ÖFUÉ','ROUGE = ÖVÈ','NOIR = ÖWÈ','VERT = UGBATAWLA','BLEU = BLÔ','DIFFÉRENTES COULEURS = GNUATA-GNUATA'] }
+];
+const cultureNames = document.getElementById('culture-names');
+CULTURE_NAMES.forEach(g=>{
+  const d = document.createElement('details');
+  d.className = 'artist-card';
+  d.innerHTML = '<summary style="font-weight:700;cursor:pointer;color:var(--gold);">' + g.icon + ' ' + escAll(g.title) + ' (' + g.items.length + ')</summary>'
+    + '<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;">'
+    + g.items.map(n => '<span style="padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--white);font-size:17.5px;font-weight:700;">' + escAll(n) + '</span>').join('')
+    + '</div>';
+  cultureNames.appendChild(d);
+});
 
 const cultureList = document.getElementById('culture-list');
 CULTURE_FACTS.forEach(f=>{
