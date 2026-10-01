@@ -1505,6 +1505,7 @@ document.getElementById('logo-tap-trigger').addEventListener('click', async ()=>
     const hash = await sha256Hex(entered.trim());
     if(hash === ADMIN_CODE_HASH){
       localStorage.setItem(STORE_KEYS.adminUnlocked, 'true');
+      try{ sessionStorage.setItem('abuesa_admin_code', entered.trim()); }catch(_){}
       showToast('Mode admin activé ✓');
       refreshAdminVisibility();
       document.getElementById('open-settings').click();
@@ -3108,6 +3109,7 @@ function renderAdminPanel(){
 
   document.getElementById('admin-lock').addEventListener('click', ()=>{
     localStorage.removeItem(STORE_KEYS.adminUnlocked);
+    try{ sessionStorage.removeItem('abuesa_admin_code'); }catch(_){}
     refreshAdminVisibility();
     showToast('Mode admin désactivé');
   });
@@ -3192,7 +3194,8 @@ function renderGalleryGrid(){
     grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">Rien dans cette catégorie pour l\'instant.</div>';
     return;
   }
-  grid.innerHTML = filtered.map(item=>{
+  const adminHint = isAdminUnlocked() ? '<div style="grid-column:1/-1;font-size:17.5px;color:var(--clay);">🗑️ Admin : appui long sur une photo ou une vidéo pour la supprimer.</div>' : '';
+  grid.innerHTML = adminHint + filtered.map(item=>{
     const media = item.media_type === 'video'
       ? `<video src="${item.media_url}" controls muted playsinline></video>`
       : `<img src="${item.media_url}" alt="${item.caption || 'Photo ABUESA'}" loading="lazy">`;
@@ -3201,9 +3204,34 @@ function renderGalleryGrid(){
     const caption = (item.caption || item.name || item.lieu)
       ? `<div class="gi-caption">${badge}${item.caption || ''}${item.caption && item.name ? ' · ' : ''}${item.name || ''}${lieuLine}</div>`
       : '';
-    return `<div class="gallery-item">${media}${caption}</div>`;
+    return `<div class="gallery-item" data-url="${item.media_url}">${media}${caption}</div>`;
   }).join('');
 }
+document.getElementById('gallery-grid').addEventListener('contextmenu', async (e)=>{
+  if(!isAdminUnlocked()) return;            // visiteurs : menu normal du navigateur
+  const card = e.target.closest('.gallery-item'); if(!card) return;
+  e.preventDefault();
+  const url = card.dataset.url;
+  if(!url || !confirm('Supprimer définitivement cette photo ou vidéo de la galerie ?')) return;
+  let code = null; try{ code = sessionStorage.getItem('abuesa_admin_code'); }catch(_){}
+  if(!code){ code = (prompt('Code admin pour confirmer :') || '').trim(); if(!code) return; }
+  const base = localStorage.getItem(STORE_KEYS.supabaseUrl) || DEFAULT_SUPABASE_URL;
+  try{
+    const res = await fetch(base + '/functions/v1/swift-responder', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ media_url:url, code })
+    });
+    const out = await res.json().catch(()=>({}));
+    if(!res.ok){
+      if(res.status === 403){ try{ sessionStorage.removeItem('abuesa_admin_code'); }catch(_){} }
+      showToast(out.error || 'Suppression impossible');
+      return;
+    }
+    try{ sessionStorage.setItem('abuesa_admin_code', code); }catch(_){}
+    galleryData = galleryData.filter(it => it.media_url !== url);
+    renderGalleryGrid();
+    showToast('Supprimé ✓');
+  }catch(_){ showToast('Erreur réseau, réessaie'); }
+});
 document.getElementById('gallery-filter-row').addEventListener('click', (e)=>{
   const chip = e.target.closest('.gf-chip');
   if(!chip) return;
