@@ -150,6 +150,9 @@
     color:var(--ink);
   }
 
+  .more-item{display:block;width:100%;text-align:left;padding:12px 14px;border:none;background:none;font:inherit;font-size:17.5px;color:var(--ink);text-decoration:none;border-radius:10px;cursor:pointer;}
+  .more-item:active{background:rgba(0,0,0,.07);}
+
   main.view{
     flex:1;
     overflow-y:auto;
@@ -880,9 +883,17 @@
         <button class="icon-btn" id="open-feedback" aria-label="Avis et suggestions">📝</button>
         <button class="icon-btn" id="share-app" aria-label="Partager ABUESA">📤</button>
         <button class="icon-btn" id="install-app" aria-label="Installer ABUESA" style="display:none;">📲</button>
+        <button class="icon-btn" id="open-menu" aria-label="Plus d'options" style="font-weight:900;">⋮</button>
       </div>
     </div>
   </header>
+
+  <div id="more-menu" style="display:none;position:fixed;right:10px;z-index:9999;background:var(--white,#fff);border:1px solid var(--line,#ddd);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.2);padding:6px;min-width:240px;">
+    <button type="button" class="more-item" data-act="settings">⚙️ Réglages</button>
+    <button type="button" class="more-item" data-act="install">📲 Installer l'application</button>
+    <button type="button" class="more-item" data-act="share">📤 Partager ABUESA</button>
+    <a class="more-item" href="https://wa.me/22899619969?text=Bonjour%20Alexi%2C%20je%20t%27%C3%A9cris%20depuis%20ABUESA-IA" target="_blank" rel="noopener">💬 Écrire à Alexi (WhatsApp)</a>
+  </div>
 
   <!-- ===== HOME VIEW ===== -->
   <main class="view active" id="home-view">
@@ -1558,6 +1569,24 @@ installBtn.addEventListener('click', async ()=>{
 });
 window.addEventListener('appinstalled', ()=>{
   installBtn.style.display = 'none';
+});
+
+// Menu ⋮ (en haut à droite)
+const moreBtn = document.getElementById('open-menu'), moreMenu = document.getElementById('more-menu');
+moreBtn.addEventListener('click', e=>{
+  e.stopPropagation();
+  if(moreMenu.style.display === 'block'){ moreMenu.style.display = 'none'; return; }
+  moreMenu.style.top = (document.querySelector('header.topbar').getBoundingClientRect().bottom + 4) + 'px';
+  moreMenu.style.display = 'block';
+});
+document.addEventListener('click', e=>{ if(!moreMenu.contains(e.target)) moreMenu.style.display = 'none'; });
+moreMenu.addEventListener('click', e=>{
+  const b = e.target.closest('[data-act]'); if(!b) return;
+  moreMenu.style.display = 'none';
+  const a = b.dataset.act;
+  if(a === 'settings') document.getElementById('open-settings').click();
+  else if(a === 'share') document.getElementById('share-app').click();
+  else if(a === 'install') installBtn.click();
 });
 
 document.getElementById('close-settings').addEventListener('click', ()=> settingsModal.classList.remove('active'));
