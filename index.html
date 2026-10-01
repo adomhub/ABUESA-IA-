@@ -698,6 +698,23 @@
     color:#fff;
     font-weight:600;
   }
+  .cs-chip{
+    flex:0 0 auto;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:6px 12px;
+    font-size:17.5px;
+    color:var(--ink-soft);
+    white-space:nowrap;
+    cursor:pointer;
+  }
+  .cs-chip.active{
+    background:var(--clay);
+    border-color:var(--clay);
+    color:#fff;
+    font-weight:600;
+  }
   .home-menu{
     display:flex;
     flex-direction:column;
@@ -1101,17 +1118,31 @@
     <div class="section-pad">
       <h2 class="section-title serif">Culture Akposso</h2>
       <p class="section-desc">Traditions et repères du peuple Kpɔsɔ wanɩ — sources vérifiées.</p>
-      <div id="culture-list"></div>
+      <div id="culture-filter" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;">
+        <button type="button" class="cs-chip active" data-cs="tout">Tout</button>
+        <button type="button" class="cs-chip" data-cs="reperes">🌿 Repères</button>
+        <button type="button" class="cs-chip" data-cs="danses">💃 Danses</button>
+        <button type="button" class="cs-chip" data-cs="jeux">🎲 Jeux</button>
+        <button type="button" class="cs-chip" data-cs="vivres">🍲 Vivres</button>
+        <button type="button" class="cs-chip" data-cs="couleurs">🎨 Couleurs</button>
+        <button type="button" class="cs-chip" data-cs="contes">📜 Contes</button>
+        <button type="button" class="cs-chip" data-cs="hommage">🕯️ Hommage</button>
+      </div>
+      <div id="culture-list" data-cs="reperes"></div>
 
       <div id="culture-names"></div>
 
+      <div data-cs="contes">
       <h2 class="section-title serif" style="margin-top:28px;">📜 Contes et récits</h2>
       <p class="section-desc">Histoires transmises de génération en génération.</p>
       <div id="contes-list"></div>
+      </div>
 
+      <div data-cs="hommage">
       <h2 class="section-title serif" style="margin-top:28px;">🕯️ Hommage aux anciens</h2>
       <p class="section-desc">En mémoire et en l'honneur de celles et ceux qui ont porté la culture Akposso.</p>
       <div id="hommages-list"></div>
+      </div>
 
       <footer style="margin-top:26px;padding-top:20px;border-top:1px solid var(--line);">
         <div style="text-align:center;margin-bottom:12px;">
@@ -2570,14 +2601,25 @@ const CULTURE_NAMES = [
   { icon:'🎨', title:'Couleurs', items:['BLANC = ÖFUÉ','ROUGE = ÖVÈ','NOIR = ÖWÈ','VERT = UGBATAWLA','BLEU = BLÔ','DIFFÉRENTES COULEURS = GNUATA-GNUATA'] }
 ];
 const cultureNames = document.getElementById('culture-names');
-CULTURE_NAMES.forEach(g=>{
+CULTURE_NAMES.forEach((g, gi)=>{
   const d = document.createElement('details');
   d.className = 'artist-card';
+  d.dataset.cs = ['danses','jeux','vivres','couleurs'][gi];
   d.innerHTML = '<summary style="font-weight:700;cursor:pointer;color:var(--gold);">' + g.icon + ' ' + escAll(g.title) + ' (' + g.items.length + ')</summary>'
     + '<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;">'
     + g.items.map(n => '<span style="padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--white);font-size:17.5px;font-weight:700;">' + escAll(n) + '</span>').join('')
     + '</div>';
   cultureNames.appendChild(d);
+});
+document.getElementById('culture-filter').addEventListener('click', e=>{
+  const b = e.target.closest('.cs-chip'); if(!b) return;
+  const k = b.dataset.cs;
+  document.querySelectorAll('.cs-chip').forEach(c=>c.classList.toggle('active', c === b));
+  document.querySelectorAll('#culture-view [data-cs]').forEach(el=>{
+    if(el.classList.contains('cs-chip')) return;
+    el.style.display = (k === 'tout' || el.dataset.cs === k) ? '' : 'none';
+    if(el.tagName === 'DETAILS') el.open = (k !== 'tout' && el.dataset.cs === k);
+  });
 });
 
 const cultureList = document.getElementById('culture-list');
