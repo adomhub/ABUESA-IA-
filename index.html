@@ -2018,6 +2018,10 @@ function buildCultureKnowledge(){
   let t = "\n\nListes de noms akposso fournies par Alexi, le créateur d'ABUESA. Ce sont uniquement des NOMS : tu n'en connais pas la description. Si on te demande en quoi consiste l'un d'eux, dis honnêtement que sa description n'a pas encore été ajoutée, sans inventer :";
   try{ CULTURE_NAMES.forEach(g=>{ t += '\n- ' + g.title + ' : ' + g.items.join(' ; '); }); }catch(_){}
   try{
+    const ds = Object.keys(CULTURE_DESC);
+    if(ds.length){ t += '\n\nDescriptions fournies par Alexi (fiables, tu peux les citer ; ne les complète pas avec des détails inventés) :'; ds.forEach(k=>{ t += '\n- ' + k + ' : ' + CULTURE_DESC[k]; }); }
+  }catch(_){}
+  try{
     t += '\n\nVillages de la préfecture de Wawa, par canton :';
     WAWA_CANTONS.forEach(c=>{ t += '\n- ' + c.name + ' : ' + c.villages.join(', '); });
   }catch(_){}
@@ -2612,6 +2616,10 @@ const CULTURE_NAMES = [
   { icon:'🍲', title:'Vivres (nourriture)', items:['AYÊ','AKPOGBO','AKIKAZU','UJUA','UBÈ','APUSSA','ALAZU','KPANABO','APISSIÉ','AGBAGNA-KOKI','DABLU','AKALA','KOKI'] },
   { icon:'🎨', title:'Couleurs', items:['BLANC = ÖFUÉ','ROUGE = ÖVÈ','NOIR = ÖWÈ','VERT = UGBATAWLA','BLEU = BLÔ','DIFFÉRENTES COULEURS = GNUATA-GNUATA'] }
 ];
+/* Descriptions transmises par Alexi (à compléter au fur et à mesure) */
+const CULTURE_DESC = {
+  'ADJOGBO': "Danse traditionnelle des vieilles mamans et des femmes, exécutée avec des jeux de regards, des « yeux d'amour ». Elle se danse lors des mariages et des deuils."
+};
 const cultureNames = document.getElementById('culture-names');
 CULTURE_NAMES.forEach((g, gi)=>{
   const d = document.createElement('details');
@@ -2619,8 +2627,14 @@ CULTURE_NAMES.forEach((g, gi)=>{
   d.dataset.cs = ['danses','jeux','vivres','couleurs'][gi];
   d.innerHTML = '<summary style="font-weight:700;cursor:pointer;color:var(--gold);">' + g.icon + ' ' + escAll(g.title) + ' (' + g.items.length + ')</summary>'
     + '<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;">'
-    + g.items.map(n => '<span style="padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--white);font-size:17.5px;font-weight:700;">' + escAll(n) + '</span>').join('')
-    + '</div>';
+    + g.items.map(n => '<span class="cn-chip" data-n="' + escAll(n) + '" style="padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--white);font-size:17.5px;font-weight:700;' + (CULTURE_DESC[n] ? 'cursor:pointer;border-color:var(--clay);' : '') + '">' + escAll(n) + (CULTURE_DESC[n] ? ' ℹ️' : '') + '</span>').join('')
+    + '</div><div class="cn-desc" style="display:none;margin-top:12px;padding:12px 14px;border-left:4px solid var(--clay);background:var(--white);border-radius:8px;font-size:17.5px;line-height:1.5;"></div>';
+  d.addEventListener('click', e=>{
+    const c = e.target.closest('.cn-chip'); if(!c) return;
+    const box = d.querySelector('.cn-desc'), n = c.dataset.n;
+    if(CULTURE_DESC[n]){ box.innerHTML = '<b>' + escAll(n) + '</b><br>' + escAll(CULTURE_DESC[n]); box.style.display = 'block'; }
+    else { box.innerHTML = '<b>' + escAll(n) + '</b><br><i>La description sera ajoutée bientôt.</i>'; box.style.display = 'block'; }
+  });
   cultureNames.appendChild(d);
 });
 document.getElementById('culture-filter').addEventListener('click', e=>{
