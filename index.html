@@ -1395,7 +1395,7 @@
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 2.2 · 2 oct. 2026 (FR/EN)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 2.5 · 2 oct. 2026 (FR/EN + internet)</span>
       </div>
     </div>
   </div>
@@ -1415,6 +1415,7 @@
   EN["Annonces de partenaires qui soutiennent ABUESA."] = "Announcements from partners who support ABUESA.";
   EN["💬 Faire apparaître mon activité ici"] = "💬 Show my activity here";
   EN["Découvrir →"] = "Discover →";
+  EN["🔎 Recherche en cours…"] = "🔎 Searching…";
   var GLOSS = {"Dieu": "God", "acheter": "to buy", "aller": "to go", "alors": "so / then", "amour": "love", "ancêtres (2)": "ancestors (2)", "août": "August", "arbre": "tree", "au revoir": "goodbye", "aujourd'hui": "today", "avril": "April", "beau-frère": "brother-in-law", "beau-père": "father-in-law", "belle-mère": "mother-in-law", "belle-sœur": "sister-in-law", "bienvenue": "welcome", "blanc": "white", "bleu": "blue", "boire": "to drink", "bois (matière)": "wood (material)", "boisson": "drink", "bon courage": "keep going (encouragement)", "bonheur": "happiness", "bonjour": "hello / good morning", "bonjour (après-midi)": "good afternoon", "bonne nuit": "good night", "bonsoir": "good evening", "bouche": "mouth", "bébé": "baby", "bénédiction": "blessing", "bœuf": "ox", "cent": "one hundred", "chaise": "chair", "champ": "field", "chemin": "path", "chien": "dog", "ciel": "sky", "cinq": "five", "comment vas-tu": "how are you", "construire": "to build", "conte": "tale", "coudre": "to sew", "courage": "courage", "cousin": "cousin", "couteau": "knife", "crabe": "crab", "creuser": "to dig", "cœur": "heart", "demain": "tomorrow", "descendre": "to go down", "deux": "two", "dimanche": "Sunday", "dix": "ten", "donner": "to give", "dormir": "to sleep", "dos": "back", "doyen de famille": "head of the family (eldest)", "décembre": "December", "eau": "water", "enfant": "child", "enfants": "children", "espoir": "hope", "faire / créer": "to do / to create", "femme": "woman / wife", "feu": "fire", "fille": "daughter / girl", "fils": "son", "foi": "faith", "force": "strength", "forêt": "forest", "fourmi": "ant", "frère": "brother", "février": "February", "gombo": "okra", "grand-mère": "grandmother", "grand-père": "grandfather", "grenier": "granary", "habit": "clothing", "hier": "yesterday", "honneurs": "honours", "houe": "hoe", "huit": "eight", "igname": "yam", "janvier": "January", "je t'en prie": "you're welcome", "je vais bien": "I am fine", "jeudi": "Thursday", "jeune fille": "young woman", "jeune garçon": "young boy", "joie": "joy", "jour": "day", "juillet": "July", "juin": "June", "justice": "justice", "langue Akposso": "Akposso language", "laver": "to wash", "les enfants": "the children", "lièvre": "hare", "lundi": "Monday", "lune": "moon", "ma mère": "my mother", "ma sœur": "my sister", "mai": "May", "main": "hand", "mains": "hands", "maison": "house", "manger": "to eat", "manioc": "cassava", "marche": "walk", "marcher": "to walk", "mardi": "Tuesday", "mari": "husband", "marigot": "creek", "marmite": "cooking pot", "mars": "March", "matin": "morning", "merci beaucoup": "thank you very much", "mercredi": "Wednesday", "mon père": "my father", "montagne": "mountain", "mère": "mother", "neuf": "nine", "nez": "nose", "noir": "black", "nourriture": "food", "novembre": "November", "nuit": "night", "octobre": "October", "oiseau": "bird", "oncle": "uncle", "oreilles": "ears", "paix": "peace", "pardon": "sorry / pardon", "parler": "to speak", "pauvreté": "poverty", "pensée": "thought", "peuple Akposso": "Akposso people", "pieds": "feet", "pluie": "rain", "poitrine": "chest", "poule": "hen", "prendre": "to take", "prière": "prayer", "proverbe": "proverb", "père": "father", "quatre": "four", "rat": "rat", "recevoir": "to receive", "respect": "respect", "rester": "to stay", "rivière": "river", "riz": "rice", "rouge": "red", "s'il te plaît": "please", "sac": "bag", "sagesse": "wisdom", "saison": "season", "samedi": "Saturday", "savane": "savanna", "savoir": "to know", "scorpion": "scorpion", "se lever": "to get up", "sept": "seven", "septembre": "September", "serpent": "snake", "six": "six", "soir": "evening", "soleil": "sun", "son frère": "his/her brother", "sœur": "sister", "tante": "aunt", "terre": "earth / land", "terre (matière)": "earth (material)", "ton fils": "your son", "tortue": "tortoise", "travailler": "to work", "trois": "three", "trou": "hole", "tête": "head", "un": "one", "veillée au coin du feu (contes et proverbes)": "fireside gathering (tales and proverbs)", "vendre": "to sell", "vendredi": "Friday", "venir": "to come", "vent": "wind", "ventre": "belly", "vert": "green", "vie": "life", "village": "village", "visage": "face", "voir": "to see", "vérité": "truth", "yeux": "eyes", "à bientôt": "see you soon", "âme": "soul", "écouter": "to listen", "écrire": "to write", "éléphant": "elephant", "épaule": "shoulder", "étoile": "star", "œil": "eye"};
   var KEY = 'abuesa_lang';
   var LANG = 'fr';
@@ -1529,12 +1530,14 @@
     attrRec.set(el, rec);
   }
   function walk(root){
+    if(root && root.nodeType === 1 && root.tagName === 'TEXTAREA'){ if(!root.hasAttribute('data-no-i18n')) doAttrs(root); return; }
     if(!root || skipped(root.nodeType === 1 ? root : root.parentNode)) return;
     if(root.nodeType === 3){ doText(root); return; }
     if(root.nodeType !== 1) return;
     doAttrs(root);
     for(var c = root.firstChild; c; c = c.nextSibling){
       if(c.nodeType === 3) doText(c);
+      else if(c.nodeType === 1 && c.tagName === 'TEXTAREA'){ if(!c.hasAttribute('data-no-i18n')) doAttrs(c); }
       else if(c.nodeType === 1 && !SKIP[c.tagName] && !c.hasAttribute('data-no-i18n')) walk(c);
     }
   }
@@ -2098,6 +2101,17 @@ function addMessage(text, role){
   return div;
 }
 
+/* Recherche internet : fonction Supabase "groq-search" (Groq Compound). Si elle échoue, l'app retombe sur "groq-chat". */
+const SEARCH_FUNCTION_NAME = 'super-api';
+const SEARCH_RULES = `
+
+ACCÈS À INTERNET : tu disposes d'une recherche web en direct (et tu peux ouvrir des sites). Cela remplace la phrase « tu ne connais que ce qui t'a été enseigné » pour toutes les questions générales. Utilise la recherche chaque fois que la question dépasse ce qui est écrit plus haut (actualité, faits, géographie, histoire, sciences, santé, droit, pratique, etc.) et pour vérifier un doute. Règles :
+1) Ce qui est écrit plus haut (listes, descriptions, dictionnaire, faits fournis par Alexi) prévaut toujours sur le web.
+2) Sur la culture et la langue Akposso/Ikposso, le web contient peu de sources fiables et parfois des erreurs : dis d'où vient l'information, signale quand les sources sont rares ou se contredisent, et ne présente jamais une information trouvée sur le web comme « vérifiée par ABUESA ». N'invente jamais un mot akposso ni une description.
+3) Quand tu t'appuies sur le web, cite le nom des sites consultés.
+4) Si tu ne trouves pas de réponse fiable, dis-le honnêtement et propose des pistes plutôt que d'inventer.
+5) Pour la santé, le droit ou l'argent, donne l'information et conseille de consulter un professionnel.`;
+
 const SYSTEM_PROMPT_BASE = `Tu es ABUESA, un assistant culturel bilingue qui connaît en profondeur la culture, la langue et les traditions du peuple Akposso (Ikposso) du canton de Wawa, au Togo. Tu réponds toujours en français, de façon chaleureuse, précise et respectueuse, en intégrant des mots Akposso quand c'est pertinent (avec leur traduction). Tu ne connais que ce qui t'a été enseigné sur cette culture ; si tu n'es pas sûr d'un détail, dis-le honnêtement plutôt que d'inventer.
 
 Faits vérifiés à ta disposition :
@@ -2326,7 +2340,21 @@ async function callGroq(userText){
   const url = localStorage.getItem(STORE_KEYS.supabaseUrl) || DEFAULT_SUPABASE_URL;
   const key = localStorage.getItem(STORE_KEYS.supabaseKey) || DEFAULT_SUPABASE_KEY;
 
-  let res;
+  let res = null, viaSearch = false;
+  try{
+    const ctl = new AbortController();
+    const tm = setTimeout(()=> ctl.abort(), 70000);
+    const searchMessages = [{role:'system', content: buildSystemPrompt() + SEARCH_RULES}, ...history.slice(-10), {role:'user', content:userText}];
+    const sr = await fetch(url + '/functions/v1/' + SEARCH_FUNCTION_NAME, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'apikey': key, 'Authorization':'Bearer '+key },
+      body: JSON.stringify({ messages: searchMessages }),
+      signal: ctl.signal
+    });
+    clearTimeout(tm);
+    if(sr.ok){ res = sr; viaSearch = true; }
+  }catch(_){ /* recherche indisponible : on utilise le chat habituel */ }
+  if(!res){
   try{
     res = await fetch(url + '/functions/v1/groq-chat', {
       method:'POST',
@@ -2335,6 +2363,7 @@ async function callGroq(userText){
     });
   }catch(networkErr){
     throw new Error("Impossible de joindre le serveur d'ABUESA. Vérifie ta connexion et réessaie.");
+  }
   }
 
   if(!res.ok){
@@ -2351,6 +2380,10 @@ async function callGroq(userText){
   const learned = extractLearnedWords(reply);
   reply = learned.clean || "Merci ! J'ai bien noté ton mot.";
   if(learned.found.length) sendLearnedWords(learned.found);
+  if(viaSearch && Array.isArray(data.sources) && data.sources.length){
+    const names = [...new Set(data.sources.map(x=>{ try{ return new URL(x.url).hostname.replace(/^www\./,''); }catch(_){ return ''; } }).filter(Boolean))];
+    if(names.length) reply += '\n\n🔎 Sources : ' + names.join(', ');
+  }
   return reply;
 }
 
@@ -2366,7 +2399,7 @@ chatForm.addEventListener('submit', async (e)=>{
 
   const sendBtn = document.getElementById('chat-send');
   sendBtn.disabled = true;
-  const typingEl = addMessage('…', 'bot typing');
+  const typingEl = addMessage('🔎 Recherche en cours…', 'bot typing');
 
   try{
     const reply = await callGroq(text);
