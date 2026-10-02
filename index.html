@@ -2818,6 +2818,14 @@ const CULTURE_NAMES = [
 const CULTURE_DESC = {
   'ADJOGBO': "Danse traditionnelle des vieilles mamans et des femmes, exécutée avec des jeux de regards, des « yeux d'amour ». Elle se danse lors des mariages et des deuils."
 };
+/* Versions anglaises des descriptions (validées par Alexi) */
+const CULTURE_DESC_EN = {
+  'ADJOGBO': "A traditional dance of elderly mothers and women, performed with playful glances, \"eyes of love\". It is danced at weddings and funerals."
+};
+function cultureDescFor(n){
+  const en = window.ABUESA_I18N && ABUESA_I18N.lang() === 'en';
+  return (en && CULTURE_DESC_EN[n]) || CULTURE_DESC[n];
+}
 const cultureNames = document.getElementById('culture-names');
 CULTURE_NAMES.forEach((g, gi)=>{
   const d = document.createElement('details');
@@ -2830,7 +2838,7 @@ CULTURE_NAMES.forEach((g, gi)=>{
   d.addEventListener('click', e=>{
     const c = e.target.closest('.cn-chip'); if(!c) return;
     const box = d.querySelector('.cn-desc'), n = c.dataset.n;
-    if(CULTURE_DESC[n]){ box.innerHTML = '<b>' + escAll(n) + '</b><br>' + escAll(CULTURE_DESC[n]); box.style.display = 'block'; }
+    if(CULTURE_DESC[n]){ box.innerHTML = '<b>' + escAll(n) + '</b><br>' + escAll(cultureDescFor(n)); box.style.display = 'block'; }
     else { box.innerHTML = '<b>' + escAll(n) + '</b><br><i>La description sera ajoutée bientôt.</i>'; box.style.display = 'block'; }
   });
   cultureNames.appendChild(d);
