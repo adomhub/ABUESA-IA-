@@ -891,6 +891,7 @@
           <div class="wordmark">ABUESA<span>-IA</span></div>
         </div>
       </div>
+      <button type="button" class="icon-btn" id="lang-quick" data-no-i18n aria-label="Language" style="margin-left:auto;font-weight:800;font-size:15px;border:1px solid var(--line);border-radius:999px;padding:5px 11px;">EN</button>
     </div>
     <div class="topbar-row2">
       <div class="subtitle">Culture Akposso · Wawa, Togo</div>
@@ -909,6 +910,7 @@
     <button type="button" class="more-item" data-act="settings">⚙️ Réglages</button>
     <button type="button" class="more-item" data-act="install">📲 Installer l'application</button>
     <button type="button" class="more-item" data-act="share">📤 Partager ABUESA</button>
+    <button type="button" class="more-item" id="lang-toggle" data-no-i18n>🌐 English</button>
     <a class="more-item" href="https://wa.me/22899619969?text=Bonjour%20Alexi%2C%20je%20t%27%C3%A9cris%20depuis%20ABUESA-IA" target="_blank" rel="noopener">💬 Écrire à Alexi (WhatsApp)</a>
   </div>
 
@@ -1402,6 +1404,198 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
+/* ===== ABUESA — Langues FR / EN (traduction de l'interface) ===== */
+(function(){
+  var EN = {"Culture Akposso · Wawa, Togo": "Akposso Culture · Wawa, Togo", "⚙️ Réglages": "⚙️ Settings", "📲 Installer l'application": "📲 Install the app", "📤 Partager ABUESA": "📤 Share ABUESA", "💬 Écrire à Alexi (WhatsApp)": "💬 Write to Alexi (WhatsApp)", "Recherche": "Search", "Galerie photos et vidéos": "Photo and video gallery", "Avis et suggestions": "Feedback and suggestions", "Partager ABUESA": "Share ABUESA", "Installer ABUESA": "Install ABUESA", "Plus d'options": "More options", "Réglages ABUESA": "ABUESA settings", "Bienvenue à ABUESA": "Welcome to ABUESA", "Le centre des informations culturelles Akposso : vie quotidienne, traditions et événements de Wawa, partagés par la communauté.": "The hub for Akposso cultural information: daily life, traditions and events of Wawa, shared by the community.", "💚 Soutenir ABUESA": "💚 Support ABUESA", "ABUESA est gratuit et le restera. Le faire vivre a un coût réel (hébergement, IA, temps de recherche). Chaque geste compte, même petit.": "ABUESA is free and will stay free. Keeping it alive has a real cost (hosting, AI, research time). Every gesture counts, even a small one.", "📋 Copier le numéro Flooz": "📋 Copy the Flooz number", "💬 Écrire à Alexi": "💬 Write to Alexi", "💬 Chat": "💬 Chat", "Pose une question sur la culture, la langue ou les traditions Akposso.": "Ask a question about Akposso culture, language or traditions.", "Visiter →": "Visit →", "📖 Dictionnaire": "📖 Dictionary", "Traductions français ⇄ Akposso, avec favoris et prononciation.": "Translations English ⇄ Akposso, with favourites and pronunciation.", "🗺️ Carte": "🗺️ Map", "Les cantons et villages de Wawa, avec leurs villages.": "The cantons and villages of Wawa.", "📸 Galerie": "📸 Gallery", "Photos et vidéos de la vie, des événements et des traditions Akposso, partagées par tous.": "Photos and videos of Akposso life, events and traditions, shared by everyone.", "👥 Communauté": "👥 Community", "Discute en texte ou en vocal avec d'autres visiteurs pour apprendre l'Ikposso ensemble.": "Chat by text or voice with other visitors to learn Ikposso together.", "🎯 Quiz": "🎯 Quiz", "Teste ce que tu connais du vocabulaire Akposso.": "Test what you know of Akposso vocabulary.", "🌿 Culture": "🌿 Culture", "Fêtes, calendrier, danses et rythmes traditionnels.": "Festivals, calendar, dances and traditional rhythms.", "🎤 Artistes": "🎤 Artists", "Découvre les artistes Akposso, et fais-toi connaître si tu en es un.": "Discover Akposso artists, and make yourself known if you are one.", "🎙️ Répéter après moi": "🎙️ Repeat after me", "Entraîne-toi à l'oral : un mot au hasard, tu t'enregistres, tu te réécoutes.": "Practise speaking: a random word, you record yourself and listen back.", "À propos de ABUESA": "About ABUESA", "ABUESA est né pour combler cet espace : un lieu où la langue akposso peut être écoutée, apprise et célébrée, par celles et ceux qui la parlent déjà comme par celles et ceux qui la découvrent.": "ABUESA was born to fill this gap: a place where the Akposso language can be heard, learned and celebrated, by those who already speak it as well as those who are discovering it.", "Créé par": "Created by", ", auteur et entrepreneur togolais basé à Badou, également fondateur du projet ADOM ALEXI.": ", a Togolese author and entrepreneur based in Badou, also founder of the ADOM ALEXI project.", "Notre mission :": "Our mission:", "rendre les langues africaines visibles et accessibles dans le monde numérique, en commençant par l'akposso — une langue, une voix, un mot à la fois.": "to make African languages visible and accessible in the digital world, starting with Akposso — one language, one voice, one word at a time.", "Envie d'aller plus loin ? Discute avec ABUESA, génère des images et vidéos inspirées de la culture akposso dans l'espace membre.": "Want to go further? Chat with ABUESA, and generate images and videos inspired by Akposso culture in the member area.", "Créateur et promoteur": "Creator and promoter", "Soutenir ABUESA": "Support ABUESA", "Flooz / Mobile Money :": "Flooz / Mobile Money:", "Pose une question sur la culture, la langue ou les traditions Akposso. Je réponds en français, avec le cœur de Wawa.": "Ask a question about Akposso culture, language or traditions. I answer in English, with the heart of Wawa.", "Comment dit-on « merci » ?": "How do you say “thank you”?", "Comment dit-on merci en Akposso ?": "How do you say thank you in Akposso?", "Une tradition de Wawa": "A tradition of Wawa", "Raconte-moi une tradition de Wawa": "Tell me about a tradition of Wawa", "Le rôle du chef": "The role of the chief", "Qui est le chef traditionnel à Wawa ?": "Who is the traditional chief in Wawa?", "Les danses Akposso": "Akposso dances", "Parle-moi des danses Akposso": "Tell me about Akposso dances", "Écris ton message...": "Write your message...", "Envoyer": "Send", "Mot du jour": "Word of the day", "⏳ Merci de patienter encore": "⏳ Please wait another", "Dictionnaire": "Dictionary", "Français ⇄ Akposso (Ikposso). Tape un mot dans les deux langues.": "English ⇄ Akposso (Ikposso). Type a word in either language.", "🎙️ Répéter après moi — s'entraîner à l'oral": "🎙️ Repeat after me — practise speaking", "➕ Proposer un mot que tu connais": "➕ Suggest a word you know", "Chercher un mot…": "Search for a word…", "Tous les mots": "All words", "★ Mes favoris": "★ My favourites", "Lis le mot en Akposso à voix haute, enregistre-toi, puis réécoute-toi pour t'entraîner. Pas de voix robotique ici — juste toi qui progresses !": "Read the Akposso word aloud, record yourself, then listen back to practise. No robot voice here — just you making progress!", "🎤 Enregistrer": "🎤 Record", "▶️ Réécouter": "▶️ Listen again", "Mot suivant →": "Next word →", "Pas encore de favoris. Touche ★ sur un mot pour le garder ici.": "No favourites yet. Tap ★ on a word to keep it here.", "Aucun mot trouvé. Le dictionnaire est encore en construction 🌱": "No word found. The dictionary is still being built 🌱", "Favori": "Favourite", "Écouter la prononciation": "Listen to the pronunciation", "Aucun enregistrement — appuie pour enregistrer": "No recording — tap to record", "Pas encore de prononciation — appuie pour l'enregistrer": "No pronunciation yet — tap to record it", "Carte de Wawa": "Map of Wawa", "Les 11 cantons de la préfecture de Wawa et leurs villages, terre du peuple Akposso.": "The 11 cantons of the Wawa prefecture and their villages, homeland of the Akposso people.", "Touche un point pour voir le village. ● position précise · ○ position approximative.": "Tap a point to see the village. ● exact position · ○ approximate position.", "Quiz Akposso": "Akposso Quiz", "Teste ce que tu sais de la langue et de la culture.": "Test what you know about the language and culture.", "Quiz terminé 🎉": "Quiz finished 🎉", "🔁 Rejouer": "🔁 Play again", "Nouveau record ! 🎉": "New record! 🎉", "Culture Akposso": "Akposso Culture", "Traditions et repères du peuple Kpɔsɔ wanɩ — sources vérifiées.": "Traditions and landmarks of the Kpɔsɔ wanɩ people — verified sources.", "Tout": "All", "🌿 Repères": "🌿 Landmarks", "💃 Danses": "💃 Dances", "🎲 Jeux": "🎲 Games", "🍲 Vivres": "🍲 Foods", "🎨 Couleurs": "🎨 Colours", "📜 Contes": "📜 Tales", "🕯️ Hommage": "🕯️ Tribute", "📜 Contes et récits": "📜 Tales and stories", "Histoires transmises de génération en génération.": "Stories passed down from generation to generation.", "🕯️ Hommage aux anciens": "🕯️ Tribute to the elders", "En mémoire et en l'honneur de celles et ceux qui ont porté la culture Akposso.": "In memory and in honour of those who have carried Akposso culture.", "Danses traditionnelles": "Traditional dances", "Jeux traditionnels": "Traditional games", "Vivres (nourriture)": "Foods (provisions)", "Couleurs": "Colours", "La description sera ajoutée bientôt.": "The description will be added soon.", "BLANC = ÖFUÉ": "WHITE = ÖFUÉ", "ROUGE = ÖVÈ": "RED = ÖVÈ", "NOIR = ÖWÈ": "BLACK = ÖWÈ", "VERT = UGBATAWLA": "GREEN = UGBATAWLA", "BLEU = BLÔ": "BLUE = BLÔ", "DIFFÉRENTES COULEURS = GNUATA-GNUATA": "DIFFERENT COLOURS = GNUATA-GNUATA", "La fête OVAZU": "The OVAZU festival", "Chaque année, le 2e samedi de décembre, les Akposso célèbrent OVAZU, une fête des moissons centrée sur le fonio, une céréale culturellement essentielle. C'est une fête tournante, célébrée en alternance à Amlamé (préfecture de l'Amou) et à Badou/Kougnohou (Wawa/Akébou), et qui rassemble aussi les Akébou voisins. C'est la fête de l'abondance et des retrouvailles.": "Every year, on the second Saturday of December, the Akposso celebrate OVAZU, a harvest festival centred on fonio, a culturally essential grain. It is a rotating festival, held alternately in Amlamé (Amou prefecture) and in Badou/Kougnohou (Wawa/Akébou), and it also brings together the neighbouring Akébou. It is the festival of abundance and reunion.", "Le calendrier de 5 jours": "The 5-day calendar", "Les Akposso suivent un calendrier traditionnel rythmé par des semaines de 5 jours, une spécificité qui structure encore aujourd'hui la vie sociale et les marchés locaux.": "The Akposso follow a traditional calendar organised in 5-day weeks, a distinctive feature that still structures social life and local markets today.", "L'Assafou, rythme guerrier": "The Assafou, a warrior rhythm", "L'Assafou est un rythme traditionnel exécuté autrefois par les guerriers Akposso, Akébou et Ewé. Il inspire encore la musique actuelle : l'artiste Zambé l'a fusionné avec le reggae pour créer le « Regsaf ».": "The Assafou is a traditional rhythm once performed by Akposso, Akébou and Ewe warriors. It still inspires today's music: the artist Zambé fused it with reggae to create the “Regsaf”.", "Le Gadzo": "The Gadzo", "Danse frénétique partagée par les Akposso et les Ewé du Togo, exécutée lors des grandes occasions festives.": "A frenetic dance shared by the Akposso and the Ewe of Togo, performed on major festive occasions.", "La langue Ikposso": "The Ikposso language", "L'ɩkpɔsɔ est une langue kwa tonale à 10 voyelles et 24 consonnes, standardisée sur le parler Uwi. Un guide de transition a été publié par la SIL Togo en 2015 pour aider les locuteurs à apprendre à la lire et l'écrire.": "Ɩkpɔsɔ is a tonal Kwa language with 10 vowels and 24 consonants, standardised on the Uwi dialect. A transition guide was published by SIL Togo in 2015 to help speakers learn to read and write it.", "Terre et géographie": "Land and geography", "Les Akposso vivent principalement dans les préfectures de Wawa, Amou et Ogou, dans la région des Plateaux au Togo, une zone vallonnée dont le point culminant est le mont Djogbé.": "The Akposso live mainly in the prefectures of Wawa, Amou and Ogou, in the Plateaux region of Togo, a hilly area whose highest point is Mount Djogbé.", "ABUESA est un espace numérique dédié à la culture, à la langue et aux traditions du peuple": "ABUESA is a digital space dedicated to the culture, language and traditions of the", ", originaire du canton de Wawa, dans la région des Plateaux au Togo.": " people, originally from the canton of Wawa, in the Plateaux region of Togo.", "L'application rassemble un dictionnaire français–akposso, une carte des villages, des repères culturels, un espace pour les artistes, et un chat pour poser des questions — pensée pour que cette culture continue de se transmettre, se documenter et se faire connaître, ici et dans la diaspora.": "The app brings together a French–Akposso dictionary, a map of the villages, cultural landmarks, a space for artists, and a chat for asking questions — designed so that this culture continues to be passed on, documented and made known, here and in the diaspora.", "ABUESA est vivant : il grandit avec les contributions de chacun — mots ajoutés, artistes inscrits, avis laissés par les visiteurs.": "ABUESA is alive: it grows with everyone's contributions — added words, registered artists, feedback left by visitors.", "🌱 Construis ABUESA avec nous": "🌱 Build ABUESA with us", "Un mot que tu connais et qui manque ? Une tradition à raconter ? Tu es artiste et tu veux te faire connaître ? ABUESA n'est pas figé — c'est un espace vivant que la communauté Akposso construit ensemble. Laisse ton avis dans": "Do you know a word that is missing? A tradition to share? Are you an artist who wants to be known? ABUESA is not fixed — it is a living space that the Akposso community builds together. Leave your feedback in", "📝 Avis": "📝 Feedback", "ou inscris-toi dans": "or sign up in", ": chaque contribution compte.": ": every contribution counts.", "ABUESA est gratuit et le restera. Mais le faire vivre a un coût réel (hébergement, IA, temps de recherche). Si ce projet te touche, tu peux contribuer :": "ABUESA is free and will stay free. But keeping it alive has a real cost (hosting, AI, research time). If this project moves you, you can contribute:", "Contacter Alexi pour contribuer": "Contact Alexi to contribute", "🧠 La mémoire d'ABUESA": "🧠 ABUESA's memory", "🧹 Oublier ma conversation": "🧹 Forget my conversation", "Créateur": "Creator", "— Adom K. Alexi, fils de Wawa, auteur et développeur.": "— Adom K. Alexi, son of Wawa, author and developer.", "Adresse": "Address", "Contact": "Contact", "Sources & crédits": "Sources & credits", "Langue & dictionnaire :": "Language & dictionary:", "Guide de transition Français–Ikposso, Louise Dozeman & Julien Koufedji, SIL Togo (2015) — akpossowadza.net.": "French–Ikposso transition guide, Louise Dozeman & Julien Koufedji, SIL Togo (2015) — akpossowadza.net.", "Culture & traditions :": "Culture & traditions:", "Joshua Project, togocultures.com, Wikipédia (Musique du Togo, Préfecture de Wawa).": "Joshua Project, togocultures.com, Wikipedia (Music of Togo, Wawa Prefecture).", "Artistes :": "Artists:", "Carte :": "Map:", "OpenStreetMap & GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.": "OpenStreetMap & GeoNames (open data, ODbL), administrative divisions MATDCL Togo.", "Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).": "App designed and developed by Adom K. Alexi, with Claude (Anthropic).", "Réglages": "Settings", "URL Supabase (mémoire partagée)": "Supabase URL (shared memory)", "Clé publique (anon) Supabase": "Supabase public (anon) key", "Enregistrer": "Save", "Réglages enregistrés ✓": "Settings saved ✓", "Artistes": "Artists", "Voix et créateurs qui portent la culture Akposso aujourd'hui.": "Voices and creators who carry Akposso culture today.", "🎤 Fais-toi connaître comme artiste": "🎤 Make yourself known as an artist", "🎤 Fais-toi connaître": "🎤 Make yourself known", "Artiste Akposso ? Présente-toi et partage ta chanson d'actualité — elle apparaîtra dans l'onglet Artistes.": "Akposso artist? Introduce yourself and share your latest song — it will appear in the Artists tab.", "Ton nom d'artiste *": "Your artist name *", "Titres de tes musiques (séparés par des virgules)": "Titles of your songs (separated by commas)", "Ta chanson d'actualité": "Your latest song", "Titre de ta dernière sortie": "Title of your latest release", "Lien vers cette chanson (YouTube, Spotify, TikTok…)": "Link to this song (YouTube, Spotify, TikTok…)", "Ton contact (facultatif, pour qu'Alexi te recontacte)": "Your contact (optional, so Alexi can get back to you)", "Téléphone ou email": "Phone or email", "Ex : Zambé": "E.g. Zambé", "Ex : Fatinimè, Ivlo, Sens-toi chez toi": "E.g. Fatinimè, Ivlo, Sens-toi chez toi", "Publier mon profil 📣": "Publish my profile 📣", "Le nom d'artiste est obligatoire.": "The artist name is required.", "Profil publié sur le mur public ✓": "Profile published on the public wall ✓", "Profil ajouté sur cet appareil + email envoyé à Alexi ✓": "Profile added on this device + email sent to Alexi ✓", "Merci, bienvenue sur ABUESA 🎤": "Thank you, welcome to ABUESA 🎤", "Fils Akposso né en 1989, Zambé est auteur-compositeur, guitariste, pianiste et percussionniste. Il est le créateur du « Regsaf », fusion entre le reggae et l'Assafou (rythme guerrier traditionnel Akposso, Akébou et Ewé). Maître du tam-tam parlant (Atoupani), il préside l'association AASECAA qui rassemble les artistes Akposso-Akébou. Il a représenté le Togo aux Jeux de la Francophonie (2017) et au MASA d'Abidjan (2018).": "An Akposso son born in 1989, Zambé is a singer-songwriter, guitarist, pianist and percussionist. He is the creator of the “Regsaf”, a fusion of reggae and Assafou (the traditional Akposso, Akébou and Ewe warrior rhythm). A master of the talking drum (Atoupani), he chairs the AASECAA association, which brings together Akposso-Akébou artists. He represented Togo at the Jeux de la Francophonie (2017) and at MASA in Abidjan (2018).", "Artiste attaché à la promotion de la musique et de la langue Akposso, très présent sur les scènes culturelles togolaises (notamment le festival FESPIAA). Sa musique porte des messages de paix et de fierté identitaire chantés en Ikposso.": "An artist committed to promoting Akposso music and language, very present on Togolese cultural stages (notably the FESPIAA festival). His music carries messages of peace and cultural pride sung in Ikposso.", "Chanteur Akposso disparu, pionnier ayant fait carrière aux États-Unis (Washington D.C.) dans le Folk, la World Music, la Country et le Reggae, tout en restant fidèle à ses racines togolaises.": "A late Akposso singer, a pioneer who built a career in the United States (Washington D.C.) in Folk, World Music, Country and Reggae, while staying true to his Togolese roots.", "Artiste mentionné dans la mémoire du projet ABUESA, mais non retrouvé de façon indépendante lors de la recherche en ligne. À confirmer avec Alexi (nom exact, orthographe, plateforme où l'écouter).": "An artist mentioned in the ABUESA project's records, but not independently found during online research. To be confirmed with Alexi (exact name, spelling, platform to listen on).", "Accueil": "Home", "Dico": "Dict.", "📸 Galerie ABUESA": "📸 ABUESA Gallery", "Partage une photo ou une vidéo de la culture, des lieux ou des moments Akposso. Visible par tous.": "Share a photo or video of Akposso culture, places or moments. Visible to everyone.", "🌿 Quotidien": "🌿 Daily life", "🎉 Événement": "🎉 Event", "🪘 Tradition": "🪘 Tradition", "🎶 Musique": "🎶 Music", "🍲 Cuisine": "🍲 Food", "✨ Autre": "✨ Other", "Légende (facultatif)": "Caption (optional)", "Ex : Marché de Badou, un dimanche matin": "E.g. Badou market, on a Sunday morning", "Catégorie": "Category", "🌿 Vie quotidienne": "🌿 Daily life", "🎉 Événement / fête": "🎉 Event / festival", "🪘 Tradition / rite": "🪘 Tradition / rite", "🎶 Musique & Danse": "🎶 Music & Dance", "Lieu (canton, village — facultatif)": "Place (canton, village — optional)", "Ex : Badou, Tomégbé…": "E.g. Badou, Tomégbé…", "Ton prénom (facultatif)": "Your first name (optional)", "Ton prénom": "Your first name", "Publier dans la galerie 📤": "Publish to the gallery 📤", "Rien dans cette catégorie pour l'instant.": "Nothing in this category yet.", "La galerie nécessite Supabase (branche-le dans ⚙️ Réglages) pour être visible par tous.": "The gallery needs Supabase (connect it in ⚙️ Settings) to be visible to everyone.", "Chargement…": "Loading…", "Aucune photo pour l'instant — sois le premier 🌱": "No photos yet — be the first 🌱", "Choisis une photo ou une vidéo avant de publier.": "Choose a photo or video before publishing.", "La galerie n'est pas encore branchée (Supabase manquant dans Réglages).": "The gallery is not connected yet (Supabase missing in Settings).", "Compression de la photo…": "Compressing the photo…", "Envoi en cours…": "Uploading…", "Publié dans la galerie ✓": "Published to the gallery ✓", "Merci pour ta contribution 📸": "Thank you for your contribution 📸", "Activité récente": "Recent activity", "Voir dans la galerie": "View in the gallery", "👥 Communauté ABUESA": "👥 ABUESA Community", "Écris ou envoie un message vocal pour apprendre l'Ikposso avec d'autres visiteurs. Visible par tous.": "Write or send a voice message to learn Ikposso with other visitors. Visible to everyone.", "Écris un message…": "Write a message…", "Message vocal": "Voice message", "Le chat communautaire nécessite Supabase (Réglages).": "The community chat needs Supabase (Settings).", "Aucun message pour l'instant — lance la discussion 🌿": "No messages yet — start the conversation 🌿", "Supabase non branché (Réglages).": "Supabase not connected (Settings).", "Message vocal trop long (8 Mo max).": "Voice message too long (8 MB max).", "Envoi du message vocal…": "Sending the voice message…", "Enregistrement en cours… touche à nouveau pour arrêter.": "Recording… tap again to stop.", "🔍 Rechercher sur ABUESA": "🔍 Search ABUESA", "Un mot, un village, un artiste, une tradition…": "A word, a village, an artist, a tradition…", "Tape un mot français, akposso, un nom de village ou d'artiste…": "Type an English or Akposso word, or the name of a village or artist…", "Carte": "Map", "Tu peux le proposer dans 📝 Avis !": "You can suggest it in 📝 Feedback!", "💬 Avis & suggestions": "💬 Feedback & suggestions", "Une idée pour enrichir ABUESA ? Un mot manquant, une tradition à ajouter, un bug ? Écris-le ici — ton avis rejoint le mur public ci-dessous (ou part par email à Alexi si le mur n'est pas encore branché).": "An idea to enrich ABUESA? A missing word, a tradition to add, a bug? Write it here — your feedback joins the public wall below (or goes by email to Alexi if the wall is not connected yet).", "Ton message": "Your message", "Ex : Il manque le mot pour « famille »...": "E.g. The word for “family” is missing...", "Envoyer 📩": "Send 📩", "🌍 Mur des avis (visible par tous)": "🌍 Feedback wall (visible to everyone)", "Merci pour ton avis 🙏": "Thank you for your feedback 🙏", "Écris un message avant d'envoyer.": "Write a message before sending.", "Avis publié sur le mur ✓": "Feedback published on the wall ✓", "Ta messagerie va s'ouvrir pour envoyer le message ✓": "Your email app will open to send the message ✓", "Le mur partagé n'est pas encore branché. En attendant, ton avis part par email directement à Alexi.": "The shared wall is not connected yet. In the meantime, your feedback goes by email directly to Alexi.", "Aucun avis pour l'instant — sois le premier 🌱": "No feedback yet — be the first 🌱", "Envoyés par email depuis cet appareil": "Sent by email from this device", "➕ Proposer un mot": "➕ Suggest a word", "Tu connais un mot akposso qui manque ? Écris-le ici. Il est gardé en attente : ABUESA peut s'en souvenir, et Alexi le vérifiera avant de le confirmer.": "Do you know an Akposso word that is missing? Write it here. It is kept pending: ABUESA can remember it, and Alexi will check it before confirming it.", "Le mot en akposso": "The word in Akposso", "Son sens en français": "Its meaning (in French or English)", "Ce que le mot veut dire": "What the word means (French or English)", "Un exemple (facultatif)": "An example (optional)", "Une phrase où on l'utilise": "A sentence where it is used", "Envoyer le mot 🌱": "Send the word 🌱", "Écris le mot akposso et son sens en français.": "Write the Akposso word and its meaning.", "Mot envoyé, en attente de vérification ✓": "Word sent, awaiting verification ✓", "Impossible d'envoyer le mot pour l'instant. Réessaie plus tard.": "Unable to send the word right now. Try again later.", "Merci pour ce mot 🌱": "Thank you for this word 🌱", "🧹 ABUESA a oublié ta conversation": "🧹 ABUESA has forgotten your conversation", "Effacé sur cet appareil. Le serveur n'a pas répondu : réessaie plus tard.": "Erased on this device. The server did not respond: try again later.", "Lien copié ! Tu peux le coller dans WhatsApp ou ailleurs.": "Link copied! You can paste it into WhatsApp or elsewhere.", "Numéro copié 💚": "Number copied 💚", "Image enregistrée — ajoute-la à ton statut WhatsApp 📲": "Image saved — add it to your WhatsApp status 📲", "Impossible de créer l'image": "Could not create the image", "Code incorrect": "Incorrect code", "Erreur réseau, réessaie": "Network error, try again", "Le dictionnaire est vide pour l'instant.": "The dictionary is empty for now.", "Personne n'a encore enregistré ce mot — sois le premier !": "Nobody has recorded this word yet — be the first!", "🔊 Écouter un exemple déjà enregistré": "🔊 Listen to an existing recording", "Ton navigateur ne permet pas l'enregistrement audio.": "Your browser does not support audio recording.", "Enregistré ✓ — écoute-toi ! (non partagé : Supabase non branché)": "Recorded ✓ — listen to yourself! (not shared: Supabase not connected)", "Enregistré ✓ — sauvegarde en cours…": "Recorded ✓ — saving…", "Enregistré et partagé ✓ — ta prononciation aide à préserver la langue !": "Recorded and shared ✓ — your pronunciation helps preserve the language!", "Enregistrement en cours…": "Recording…", "Micro refusé ou indisponible. Autorise l'accès au micro pour t'entraîner.": "Microphone denied or unavailable. Allow microphone access to practise.", "📅 Calendrier traditionnel Akposso": "📅 Traditional Akposso calendar", "Cycle traditionnel de 5 jours, encore utilisé pour rythmer les marchés locaux.": "Traditional 5-day cycle, still used to set the rhythm of local markets.", "💬 Proverbe du jour": "💬 Proverb of the day", "📲 Partager en statut": "📲 Share as status", "Aucun proverbe ajouté pour l'instant. Ajoutes-en un depuis le panneau admin pour qu'il apparaisse ici.": "No proverb added yet.", "📅 Événements à venir": "📅 Upcoming events", "Aucun événement annoncé pour l'instant. Ajoutes-en un depuis le panneau admin pour qu'il apparaisse ici.": "No event announced yet.", "📖 Carnet du village": "📖 Village notebook", "Aucune annonce pour l'instant. Le carnet du village (naissances, décès, dots) apparaîtra ici.": "No announcements yet. The village notebook (births, deaths, dowries) will appear here.", "🤝 Partenaires d'ABUESA": "🤝 ABUESA partners", "🌍 Météo à Wawa": "🌍 Weather in Wawa", "Voir par canton": "See by canton", "Ciel dégagé": "Clear sky", "Peu nuageux": "Partly cloudy", "Couvert": "Overcast", "Brouillard": "Fog", "Bruine": "Drizzle", "Pluie": "Rain", "Averses": "Showers", "Orage": "Thunderstorm", "Variable": "Variable", "· (dernière mise à jour connue)": "· (last known update)"};
+  EN["Pour installer ABUESA sur iPhone : appuie sur l'icône Partager de Safari, puis \"Sur l'écran d'accueil\".\n\nSur Android/Chrome, si le bouton n'apparaît pas automatiquement, ouvre le menu ⋮ du navigateur puis \"Ajouter à l'écran d'accueil\"."] = "To install ABUESA on iPhone: tap Safari's Share icon, then \"Add to Home Screen\".\n\nOn Android/Chrome, if the button does not appear automatically, open the browser's ⋮ menu then \"Add to Home screen\".";
+  var GLOSS = {"Dieu": "God", "acheter": "to buy", "aller": "to go", "alors": "so / then", "amour": "love", "ancêtres (2)": "ancestors (2)", "août": "August", "arbre": "tree", "au revoir": "goodbye", "aujourd'hui": "today", "avril": "April", "beau-frère": "brother-in-law", "beau-père": "father-in-law", "belle-mère": "mother-in-law", "belle-sœur": "sister-in-law", "bienvenue": "welcome", "blanc": "white", "bleu": "blue", "boire": "to drink", "bois (matière)": "wood (material)", "boisson": "drink", "bon courage": "keep going (encouragement)", "bonheur": "happiness", "bonjour": "hello / good morning", "bonjour (après-midi)": "good afternoon", "bonne nuit": "good night", "bonsoir": "good evening", "bouche": "mouth", "bébé": "baby", "bénédiction": "blessing", "bœuf": "ox", "cent": "one hundred", "chaise": "chair", "champ": "field", "chemin": "path", "chien": "dog", "ciel": "sky", "cinq": "five", "comment vas-tu": "how are you", "construire": "to build", "conte": "tale", "coudre": "to sew", "courage": "courage", "cousin": "cousin", "couteau": "knife", "crabe": "crab", "creuser": "to dig", "cœur": "heart", "demain": "tomorrow", "descendre": "to go down", "deux": "two", "dimanche": "Sunday", "dix": "ten", "donner": "to give", "dormir": "to sleep", "dos": "back", "doyen de famille": "head of the family (eldest)", "décembre": "December", "eau": "water", "enfant": "child", "enfants": "children", "espoir": "hope", "faire / créer": "to do / to create", "femme": "woman / wife", "feu": "fire", "fille": "daughter / girl", "fils": "son", "foi": "faith", "force": "strength", "forêt": "forest", "fourmi": "ant", "frère": "brother", "février": "February", "gombo": "okra", "grand-mère": "grandmother", "grand-père": "grandfather", "grenier": "granary", "habit": "clothing", "hier": "yesterday", "honneurs": "honours", "houe": "hoe", "huit": "eight", "igname": "yam", "janvier": "January", "je t'en prie": "you're welcome", "je vais bien": "I am fine", "jeudi": "Thursday", "jeune fille": "young woman", "jeune garçon": "young boy", "joie": "joy", "jour": "day", "juillet": "July", "juin": "June", "justice": "justice", "langue Akposso": "Akposso language", "laver": "to wash", "les enfants": "the children", "lièvre": "hare", "lundi": "Monday", "lune": "moon", "ma mère": "my mother", "ma sœur": "my sister", "mai": "May", "main": "hand", "mains": "hands", "maison": "house", "manger": "to eat", "manioc": "cassava", "marche": "walk", "marcher": "to walk", "mardi": "Tuesday", "mari": "husband", "marigot": "creek", "marmite": "cooking pot", "mars": "March", "matin": "morning", "merci beaucoup": "thank you very much", "mercredi": "Wednesday", "mon père": "my father", "montagne": "mountain", "mère": "mother", "neuf": "nine", "nez": "nose", "noir": "black", "nourriture": "food", "novembre": "November", "nuit": "night", "octobre": "October", "oiseau": "bird", "oncle": "uncle", "oreilles": "ears", "paix": "peace", "pardon": "sorry / pardon", "parler": "to speak", "pauvreté": "poverty", "pensée": "thought", "peuple Akposso": "Akposso people", "pieds": "feet", "pluie": "rain", "poitrine": "chest", "poule": "hen", "prendre": "to take", "prière": "prayer", "proverbe": "proverb", "père": "father", "quatre": "four", "rat": "rat", "recevoir": "to receive", "respect": "respect", "rester": "to stay", "rivière": "river", "riz": "rice", "rouge": "red", "s'il te plaît": "please", "sac": "bag", "sagesse": "wisdom", "saison": "season", "samedi": "Saturday", "savane": "savanna", "savoir": "to know", "scorpion": "scorpion", "se lever": "to get up", "sept": "seven", "septembre": "September", "serpent": "snake", "six": "six", "soir": "evening", "soleil": "sun", "son frère": "his/her brother", "sœur": "sister", "tante": "aunt", "terre": "earth / land", "terre (matière)": "earth (material)", "ton fils": "your son", "tortue": "tortoise", "travailler": "to work", "trois": "three", "trou": "hole", "tête": "head", "un": "one", "veillée au coin du feu (contes et proverbes)": "fireside gathering (tales and proverbs)", "vendre": "to sell", "vendredi": "Friday", "venir": "to come", "vent": "wind", "ventre": "belly", "vert": "green", "vie": "life", "village": "village", "visage": "face", "voir": "to see", "vérité": "truth", "yeux": "eyes", "à bientôt": "see you soon", "âme": "soul", "écouter": "to listen", "écrire": "to write", "éléphant": "elephant", "épaule": "shoulder", "étoile": "star", "œil": "eye"};
+  var KEY = 'abuesa_lang';
+  var LANG = 'fr';
+  try{
+    var saved = localStorage.getItem(KEY);
+    if(saved === 'en' || saved === 'fr') LANG = saved;
+    else if((navigator.language || '').toLowerCase().indexOf('en') === 0) LANG = 'en';
+  }catch(_){}
+
+  function norm(s){ return s.replace(/[\u2019\u2018]/g, "'").replace(/\s+/g, ' ').trim(); }
+  var GL_EN = {}; Object.keys(GLOSS).forEach(function(k){ GL_EN[norm(k)] = GLOSS[k]; });
+  var EN_N = {}; Object.keys(EN).forEach(function(k){ EN_N[norm(k)] = EN[k]; });
+  Object.keys(GL_EN).forEach(function(k){ if(!(k in EN_N)) EN_N[k] = GL_EN[k]; });
+
+  function gloss(fr){ var g = GL_EN[norm(fr || '')]; return (LANG === 'en' && g) ? g : fr; }
+  function glossAlways(fr){ return GL_EN[norm(fr || '')] || fr; }
+
+  /* motifs pour les phrases avec chiffres ou mots variables */
+  var PATTERNS = [
+    [/^Que signifie « (.+) » en français \?$/, function(m){ return 'What does « ' + m[1] + ' » mean in English?'; }],
+    [/^Comment dit-on « (.+) » en Ikposso \?$/, function(m){ return 'How do you say « ' + glossAlways(m[1]) + ' » in Ikposso?'; }],
+    [/^Meilleur score : (\d+) \/ (\d+)$/, function(m){ return 'Best score: ' + m[1] + ' / ' + m[2]; }],
+    [/^Question (\d+) \/ (\d+) · Meilleur score : (\d+) \/ (\d+)$/, function(m){ return 'Question ' + m[1] + ' / ' + m[2] + ' · Best score: ' + m[3] + ' / ' + m[4]; }],
+    [/^Score final : (\d+) \/ (\d+)$/, function(m){ return 'Final score: ' + m[1] + ' / ' + m[2]; }],
+    [/^🏘️ (\d+) villages et quartiers dans (\d+) cantons(.*)$/, function(m){ return '🏘️ ' + m[1] + ' villages and neighbourhoods in ' + m[2] + ' cantons' + m[3].replace('précis','exact').replace('approximatifs','approximate'); }],
+    [/^\(jour (\d+) sur (\d+)\)$/, function(m){ return '(day ' + m[1] + ' of ' + m[2] + ')'; }],
+    [/^\+ (\d+) autres? événements? à venir$/, function(m){ var n = +m[1]; return '+ ' + n + ' more upcoming event' + (n > 1 ? 's' : ''); }],
+    [/^Aujourd'hui : (-?\d+)° à (-?\d+)° · Pluie probable jusqu'à (\d+) %(.*)$/, function(m){ return 'Today: ' + m[1] + '° to ' + m[2] + '° · Chance of rain up to ' + m[3] + '%' + m[4].replace('(dernière mise à jour connue)','(last known update)'); }],
+    [/^(.*)pluie (\d+) %$/, function(m){ return m[1] + 'rain ' + m[2] + '%'; }],
+    [/^⏳ Merci de patienter encore (\d+)s avant d'envoyer un nouveau message.*$/, function(m){ return '⏳ Please wait another ' + m[1] + 's before sending a new message — a lot of people are using ABUESA right now.'; }],
+    [/^(?:Merci ! )?Attends encore (\d+)s avant (?:un nouvel envoi|un nouveau mot|d'envoyer un autre message)\.$/, function(m){ return 'Please wait another ' + m[1] + 's before sending again.'; }],
+    [/^Ce fichier fait ([\d.,]+) Mo, la limite est de 150 Mo\. Choisis un fichier plus léger\.$/, function(m){ return 'This file is ' + m[1] + ' MB, the limit is 150 MB. Choose a lighter file.'; }],
+    [/^Fichier prêt : (.+) \(([\d.,]+) Mo\)$/, function(m){ return 'File ready: ' + m[1] + ' (' + m[2] + ' MB)'; }],
+    [/^🌱 Merci ! Le mot « (.+) » est gardé, en attente de vérification\.$/, function(m){ return '🌱 Thank you! The word « ' + m[1] + ' » is kept, awaiting verification.'; }],
+    [/^Rien trouvé pour « (.+) »\. Tu peux le proposer dans 📝 Avis !$/, function(m){ return 'Nothing found for « ' + m[1] + ' ». You can suggest it in 📝 Feedback!'; }],
+    [/^Erreur : (.+)$/, function(m){ return 'Error: ' + m[1]; }],
+    [/^Impossible de charger le mur \((.+)\)\.$/, function(m){ return 'Unable to load the wall (' + m[1] + ').'; }],
+    [/^Erreur de chargement \((.+)\)\.$/, function(m){ return 'Loading error (' + m[1] + ').'; }],
+    [/^Micro non accessible : (.+)$/, function(m){ return 'Microphone not accessible: ' + m[1]; }]
+  ];
+
+  function lookup(core){
+    if(EN_N[core] !== undefined) return EN_N[core];
+    for(var i = 0; i < PATTERNS.length; i++){
+      var m = PATTERNS[i][0].exec(core);
+      if(m) return PATTERNS[i][1](m);
+    }
+    return null;
+  }
+  /* renvoie la traduction (ou null) en gardant espaces de début/fin d'origine */
+  function trText(s){
+    if(!s || !/\S/.test(s)) return null;
+    var lead = s.match(/^\s*/)[0], trail = s.match(/\s*$/)[0];
+    var core = norm(s);
+    var out = lookup(core);
+    if(out === null){
+      /* emoji/symboles devant et compteur « (12) » derrière */
+      var m = /^([^\p{L}\p{N}«]*?\s)?(.*?)(\s\(\d+\))?$/u.exec(core);
+      if(m && m[2] && (m[1] || m[3])){
+        var inner = lookup(m[2]);
+        if(inner !== null) out = (m[1] || '') + inner + (m[3] || '');
+      }
+    }
+    if(out === null){
+      /* « — Ciel dégagé », « · pluie 20 % » : séparateurs au début */
+      var m2 = /^(\s*[—·\-–]\s*)(.+)$/.exec(core);
+      if(m2){ var i2 = lookup(m2[2]); if(i2 !== null) out = m2[1] + i2; }
+    }
+    if(out === null) return null;
+    /* si la traduction commence par un espace voulu (ex. « people ») on le garde */
+    return lead + out + trail;
+  }
+  function t(fr){ if(LANG !== 'en') return fr; var r = trText(fr); return r === null ? fr : r; }
+
+  /* ---------- Traduction du DOM ---------- */
+  var SKIP = {SCRIPT:1, STYLE:1, TEXTAREA:1, NOSCRIPT:1, SVG:1, CODE:1};
+  var textRec = new WeakMap();   /* nœud -> {fr, en} */
+  var attrRec = new WeakMap();   /* élément -> {attr:{fr,en}} */
+  var ATTRS = ['placeholder', 'aria-label', 'title', 'data-q', 'alt'];
+  var busy = false;
+
+  function skipped(el){
+    while(el && el.nodeType === 1){
+      if(SKIP[el.tagName] || (el.hasAttribute && el.hasAttribute('data-no-i18n'))) return true;
+      el = el.parentNode;
+    }
+    return false;
+  }
+  function doText(node){
+    var rec = textRec.get(node), cur = node.nodeValue;
+    if(rec && cur === rec.en){
+      if(LANG === 'fr'){ node.nodeValue = rec.fr; textRec.delete(node); }
+      return;
+    }
+    if(LANG !== 'en') return;
+    var en = trText(cur);
+    if(en !== null && en !== cur){ textRec.set(node, {fr: cur, en: en}); node.nodeValue = en; }
+  }
+  function doAttrs(el){
+    var rec = attrRec.get(el) || {};
+    ATTRS.forEach(function(a){
+      if(!el.hasAttribute(a)) return;
+      var cur = el.getAttribute(a), r = rec[a];
+      if(r && cur === r.en){
+        if(LANG === 'fr'){ el.setAttribute(a, r.fr); delete rec[a]; }
+        return;
+      }
+      if(LANG !== 'en') return;
+      var en = trText(cur);
+      if(en !== null && en !== cur){ rec[a] = {fr: cur, en: en}; el.setAttribute(a, en); }
+    });
+    attrRec.set(el, rec);
+  }
+  function walk(root){
+    if(!root || skipped(root.nodeType === 1 ? root : root.parentNode)) return;
+    if(root.nodeType === 3){ doText(root); return; }
+    if(root.nodeType !== 1) return;
+    doAttrs(root);
+    for(var c = root.firstChild; c; c = c.nextSibling){
+      if(c.nodeType === 3) doText(c);
+      else if(c.nodeType === 1 && !SKIP[c.tagName] && !c.hasAttribute('data-no-i18n')) walk(c);
+    }
+  }
+  function run(root){ busy = true; try{ walk(root || document.body); }catch(e){ console.warn('i18n', e); } busy = false; }
+
+  var pending = [], timer = null;
+  var obs = new MutationObserver(function(muts){
+    if(busy) return;
+    muts.forEach(function(m){
+      if(m.type === 'childList') m.addedNodes.forEach(function(n){ pending.push(n); });
+      else if(m.type === 'characterData') pending.push(m.target);
+      else if(m.type === 'attributes') pending.push(m.target);
+    });
+    if(timer) return;
+    timer = setTimeout(function(){
+      timer = null;
+      var list = pending; pending = [];
+      busy = true;
+      try{ list.forEach(function(n){ if(n.isConnected !== false) walk(n); }); }catch(e){ console.warn('i18n', e); }
+      busy = false;
+    }, 30);
+  });
+
+  function updateButtons(){
+    var other = LANG === 'en' ? 'Français' : 'English';
+    var q = document.getElementById('lang-quick'); if(q){ q.textContent = LANG === 'en' ? 'FR' : 'EN'; q.setAttribute('aria-label', 'Language: ' + other); }
+    var tgl = document.getElementById('lang-toggle'); if(tgl) tgl.textContent = '🌐 ' + other;
+  }
+  function setLang(l, silent){
+    if(l !== 'fr' && l !== 'en') return;
+    LANG = l;
+    try{ localStorage.setItem(KEY, l); }catch(_){}
+    document.documentElement.lang = l;
+    run(document.body);
+    updateButtons();
+    /* les rubriques qui se dessinent avec du JS reprennent la bonne langue */
+    try{ if(typeof renderHomeCalendar === 'function') renderHomeCalendar(); }catch(_){}
+    try{ if(typeof renderWordOfDay === 'function') renderWordOfDay(); }catch(_){}
+    try{ if(typeof renderDictionary === 'function') renderDictionary(getFullDictionary()); }catch(_){}
+    try{ if(typeof buildQuiz === 'function'){ quizIndex = 0; quizScore = 0; buildQuiz(); renderQuiz(); } }catch(_){}
+    try{ if(typeof renderMapCount === 'function') renderMapCount(); }catch(_){}
+    if(!silent && typeof showToast === 'function') showToast(l === 'en' ? 'Language: English' : 'Langue : Français');
+  }
+
+  var _alert = window.alert; window.alert = function(m){ try{ _alert.call(window, t(String(m))); }catch(_){ _alert.call(window, m); } };
+  window.ABUESA_I18N = {
+    lang: function(){ return LANG; },
+    set: setLang,
+    t: t,
+    gloss: gloss,
+    locale: function(){ return LANG === 'en' ? 'en-GB' : 'fr-FR'; }
+  };
+
+  function start(){
+    document.documentElement.lang = LANG;
+    updateButtons();
+    run(document.body);
+    obs.observe(document.body, {childList:true, subtree:true, characterData:true, attributes:true, attributeFilter:ATTRS});
+    ['lang-quick', 'lang-toggle'].forEach(function(id){
+      var b = document.getElementById(id);
+      if(b) b.addEventListener('click', function(e){ e.stopPropagation(); setLang(LANG === 'en' ? 'fr' : 'en'); var mm = document.getElementById('more-menu'); if(mm) mm.style.display = 'none'; });
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+
+</script>
+<script>
 /* =========================================================
    ABUESA — script principal
    Toute la config (clé Groq, code admin) est stockée en local
@@ -1686,7 +1880,7 @@ async function renderFeedbackWall(){
     return;
   }
   wallEl.innerHTML = data.map(f=>{
-    const d = new Date(f.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric' });
+    const d = new Date(f.created_at).toLocaleDateString(window.ABUESA_I18N ? ABUESA_I18N.locale() : 'fr-FR', { day:'2-digit', month:'2-digit', year:'numeric' });
     return `<div class="word-card" style="display:block;">
       <div style="font-size:17.5px;color:var(--ink-soft);margin-bottom:3px;">${d}${f.name ? ' · '+f.name : ''}</div>
       <div style="font-size:17.5px;">${f.message}</div>
@@ -1742,7 +1936,7 @@ document.getElementById('fb-send').addEventListener('click', async ()=>{
   const mailto = `mailto:${ALEXI_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
   const list = getSentFeedback();
-  list.push({ name, message, date: new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric' }) });
+  list.push({ name, message, date: new Date().toLocaleDateString(window.ABUESA_I18N ? ABUESA_I18N.locale() : 'fr-FR', { day:'2-digit', month:'2-digit', year:'numeric' }) });
   localStorage.setItem(STORE_KEYS.feedbackSent, JSON.stringify(list.slice(-20)));
   markThrottled('feedback');
 
@@ -2030,14 +2224,18 @@ function buildCultureKnowledge(){
 function buildSystemPrompt(){
   const dict = getFullDictionary();
   const personality = (cloudPersonality || getLocalPersonality()).trim();
+  const __en = !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en');
   let prompt = SYSTEM_PROMPT_BASE;
+  if(__en){
+    prompt = "INSTRUCTION DE LANGUE (prioritaire sur tout le reste) : le visiteur utilise ABUESA en anglais (par exemple un Akposso du Ghana ou de la diaspora anglophone). Réponds TOUJOURS en anglais, même si le message est écrit en français, sauf si la personne demande explicitement une autre langue. Garde les mots akposso, les noms de danses, de jeux, de plats et de villages exactement tels quels, et donne leur sens en anglais. Les définitions du dictionnaire et les descriptions ci-dessous sont en français : traduis-les fidèlement en anglais dans ta réponse, sans rien ajouter.\n\n" + prompt;
+  }
   if(personality){
     prompt += `\n\nTraits de personnalité supplémentaires à respecter en plus de ce qui précède :\n${personality}`;
   }
   prompt += buildCultureKnowledge();
   prompt += buildMemoryPrompt();
   if(dict.length === 0) return prompt;
-  const dictLines = dict.map(w=> `${w.ak} = ${w.fr}`).join(' ; ');
+  const dictLines = dict.map(w=> `${w.ak} = ${__en ? ABUESA_I18N.gloss(w.fr) : w.fr}`).join(' ; ');
   return `${prompt}
 
 Dictionnaire français–akposso à ta disposition (utilise-le en priorité si la question porte sur la traduction d'un mot ; s'il n'y est pas, dis que tu ne le sais pas encore plutôt que d'inventer) :
@@ -2345,7 +2543,7 @@ renderWordOfDay();
 
 document.getElementById('dict-search').addEventListener('input', (e)=>{
   const q = e.target.value.toLowerCase().trim();
-  renderDictionary(getFullDictionary().filter(d=> d.fr.toLowerCase().includes(q) || d.ak.toLowerCase().includes(q)));
+  renderDictionary(getFullDictionary().filter(d=> d.fr.toLowerCase().includes(q) || d.ak.toLowerCase().includes(q) || ABUESA_I18N.gloss(d.fr).toLowerCase().includes(q)));
 });
 document.getElementById('dict-filter-all').addEventListener('click', function(){
   dictShowFavoritesOnly = false;
@@ -3622,7 +3820,7 @@ function renderHomeEvents(){
   }
   const next = upcoming[0];
   const d = new Date(next.date_evenement + 'T00:00:00');
-  const dateStr = d.toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
+  const dateStr = d.toLocaleDateString(window.ABUESA_I18N ? ABUESA_I18N.locale() : 'fr-FR', { day:'numeric', month:'long', year:'numeric' });
   const more = upcoming.length > 1 ? `<div class="hc-note" style="margin-top:6px;">+ ${upcoming.length - 1} autre${upcoming.length > 2 ? 's' : ''} événement${upcoming.length > 2 ? 's' : ''} à venir</div>` : '';
   el.innerHTML = `<div class="home-calendar-card">
     <div class="hc-label">📅 Événements à venir</div>
@@ -3872,7 +4070,7 @@ function runGlobalSearch(q){
 
   // Dictionnaire
   const wordMatches = getFullDictionary().filter(w=>
-    w.fr.toLowerCase().includes(query) || w.ak.toLowerCase().includes(query));
+    w.fr.toLowerCase().includes(query) || w.ak.toLowerCase().includes(query) || ABUESA_I18N.gloss(w.fr).toLowerCase().includes(query));
   if(wordMatches.length){
     blocks.push(`<div class="search-category">📖 Dictionnaire (${wordMatches.length})</div>` +
       wordMatches.slice(0,15).map(w=>
@@ -4071,7 +4269,7 @@ function renderCommunityMessage(msg){
   const div = document.createElement('div');
   div.style.marginBottom = '10px';
   const name = msg.name ? escapeHtmlSafe(msg.name) : 'Anonyme';
-  const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}) : '';
+  const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString(window.ABUESA_I18N ? ABUESA_I18N.locale() : 'fr-FR', {hour:'2-digit', minute:'2-digit'}) : '';
   const body = msg.kind === 'audio'
     ? `<audio controls src="${msg.audio_url}" style="width:100%;margin-top:3px;"></audio>`
     : `<div style="font-size:17.5px;color:var(--ink);margin-top:2px;">${escapeHtmlSafe(msg.content)}</div>`;
