@@ -1395,7 +1395,9 @@
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 2.5 · 2 oct. 2026 (FR/EN + internet)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 2.6 · 3 oct. 2026 (FR/EN + internet)</span>
+        <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
+        <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:13px;margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
       </div>
     </div>
   </div>
@@ -2103,6 +2105,26 @@ function addMessage(text, role){
 
 /* Recherche internet : fonction Supabase "groq-search" (Groq Compound). Si elle échoue, l'app retombe sur "groq-chat". */
 const SEARCH_FUNCTION_NAME = 'super-api';
+async function testSearch(){
+  const out = document.getElementById('search-test-out');
+  out.style.display = 'block'; out.textContent = 'Test en cours… (jusqu\'à 30 secondes)';
+  try{
+    const url = localStorage.getItem(STORE_KEYS.supabaseUrl) || DEFAULT_SUPABASE_URL;
+    const key = localStorage.getItem(STORE_KEYS.supabaseKey) || DEFAULT_SUPABASE_KEY;
+    const ctl = new AbortController(); const tm = setTimeout(()=> ctl.abort(), 60000);
+    const r = await fetch(url + '/functions/v1/' + SEARCH_FUNCTION_NAME, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'apikey': key, 'Authorization':'Bearer '+key },
+      body: JSON.stringify({ messages:[{role:'user', content:'Cherche sur le web : quelle est la météo à Lomé aujourd\'hui ? Réponds en une phrase.'}] }),
+      signal: ctl.signal
+    });
+    clearTimeout(tm);
+    const txt = await r.text();
+    out.textContent = 'Fonction : ' + SEARCH_FUNCTION_NAME + '\nCode HTTP : ' + r.status + '\n' + txt.slice(0, 700);
+  }catch(e){
+    out.textContent = 'Erreur réseau ou délai dépassé : ' + (e && e.message ? e.message : e);
+  }
+}
 const SEARCH_RULES = `
 
 ACCÈS À INTERNET : tu disposes d'une recherche web en direct (et tu peux ouvrir des sites). Cela remplace la phrase « tu ne connais que ce qui t'a été enseigné » pour toutes les questions générales. Utilise la recherche chaque fois que la question dépasse ce qui est écrit plus haut (actualité, faits, géographie, histoire, sciences, santé, droit, pratique, etc.) et pour vérifier un doute. Règles :
@@ -2110,7 +2132,8 @@ ACCÈS À INTERNET : tu disposes d'une recherche web en direct (et tu peux ouvri
 2) Sur la culture et la langue Akposso/Ikposso, le web contient peu de sources fiables et parfois des erreurs : dis d'où vient l'information, signale quand les sources sont rares ou se contredisent, et ne présente jamais une information trouvée sur le web comme « vérifiée par ABUESA ». N'invente jamais un mot akposso ni une description.
 3) Quand tu t'appuies sur le web, cite le nom des sites consultés.
 4) Si tu ne trouves pas de réponse fiable, dis-le honnêtement et propose des pistes plutôt que d'inventer.
-5) Pour la santé, le droit ou l'argent, donne l'information et conseille de consulter un professionnel.`;
+5) Pour la santé, le droit ou l'argent, donne l'information et conseille de consulter un professionnel.
+6) Si une réponse précédente de la conversation affirme que tu n'as pas accès à internet, elle était fausse (ancienne version) : ne la répète pas, utilise ta recherche.`;
 
 const SYSTEM_PROMPT_BASE = `Tu es ABUESA, un assistant culturel bilingue qui connaît en profondeur la culture, la langue et les traditions du peuple Akposso (Ikposso) du canton de Wawa, au Togo. Tu réponds toujours en français, de façon chaleureuse, précise et respectueuse, en intégrant des mots Akposso quand c'est pertinent (avec leur traduction). Tu ne connais que ce qui t'a été enseigné sur cette culture ; si tu n'es pas sûr d'un détail, dis-le honnêtement plutôt que d'inventer.
 
