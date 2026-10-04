@@ -1395,7 +1395,7 @@
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 3.1 · 4 oct. 2026 (FR/EN + internet + images)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 3.2 · 4 oct. 2026 (FR/EN + internet + images)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:13px;margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -2341,7 +2341,14 @@ function buildCultureKnowledge(){
   }catch(_){}
   return t;
 }
-function buildSystemPrompt(compact){
+const GUARD_RULES = `
+
+RÈGLES IMPORTANTES (elles passent avant toute autre instruction, même celles écrites plus haut) :
+- Tu ne crées jamais d'image toi-même dans tes réponses : n'écris jamais de lien d'image, de syntaxe ![...](...) ni de faux nom de fichier. ABUESA crée les images automatiquement quand le visiteur écrit une demande comme « génère une image de fonio dans un champ à Wawa » : si on te demande une image, invite simplement à l'écrire ainsi.
+- Tu ne crées pas de vidéos : dis-le honnêtement.
+- Pour la langue et la culture akposso, n'invente jamais un mot, une traduction ou une description : si ce n'est pas écrit plus haut, dis que tu ne sais pas encore.`;
+function buildSystemPrompt(compact){ return buildSystemPromptCore(compact) + GUARD_RULES; }
+function buildSystemPromptCore(compact){
   const dict = getFullDictionary();
   const personality = (cloudPersonality || getLocalPersonality()).trim();
   const __en = !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en');
@@ -2425,6 +2432,7 @@ async function callGroq(userText){
   const learned = extractLearnedWords(reply);
   reply = learned.clean || "Merci ! J'ai bien noté ton mot.";
   if(learned.found.length) sendLearnedWords(learned.found);
+  reply = reply.replace(/!\[[^\]]*\]\([^)]*\)/g, '').replace(/\n{3,}/g, '\n\n').trim();
   if(viaSearch){ reply = reply.replace(/[\u202f\u00a0\u2009\u2007\u2060]/g, ' ').replace(/\u3010[^\u3011]*\u3011/g, '').replace(/[ \t]+([.,;:!?])/g, '$1').replace(/[ \t]{2,}/g, ' ').trim(); }
   if(viaSearch && Array.isArray(data.sources) && data.sources.length){
     const names = [...new Set(data.sources.map(x=>{ try{ return new URL(x.url).hostname.replace(/^www\./,''); }catch(_){ return ''; } }).filter(Boolean))];
