@@ -912,6 +912,7 @@
     <button type="button" class="more-item" data-act="install">📲 Installer l'application</button>
     <button type="button" class="more-item" data-act="share">📤 Partager ABUESA</button>
     <button type="button" class="more-item" id="lang-toggle" data-no-i18n>🌐 English</button>
+    <button type="button" class="more-item" id="forget-quick">🧹 Oublier ma conversation</button>
     <a class="more-item" href="https://wa.me/22899619969?text=Bonjour%20Alexi%2C%20je%20t%27%C3%A9cris%20depuis%20ABUESA-IA" target="_blank" rel="noopener">💬 Écrire à Alexi (WhatsApp)</a>
   </div>
 
@@ -1395,7 +1396,7 @@
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 3.2 · 4 oct. 2026 (FR/EN + internet + images)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 3.4 · 4 oct. 2026 (FR/EN + internet + images)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:13px;margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -2300,6 +2301,11 @@ document.getElementById('wd-send').addEventListener('click', async ()=>{
   status.className = 'status-line status-bad';
 });
 
+/* Raccourci dans le menu ⋮ : même action que le bouton de la page À propos */
+document.getElementById('forget-quick').addEventListener('click', ()=>{
+  const mm = document.getElementById('more-menu'); if(mm) mm.style.display = 'none';
+  document.getElementById('forget-memory').click();
+});
 /* Bouton « Oublier ma conversation » (page À propos) */
 document.getElementById('forget-memory').addEventListener('click', async ()=>{
   if(!confirm("Effacer tout ce qu'ABUESA se rappelle de toi ?")) return;
@@ -3038,10 +3044,12 @@ const CULTURE_NAMES = [
 ];
 /* Descriptions transmises par Alexi (à compléter au fur et à mesure) */
 const CULTURE_DESC = {
+  'AYÊ': "En français : le fonio.",
   'ADJOGBO': "Danse traditionnelle des vieilles mamans et des femmes, exécutée avec des jeux de regards, des « yeux d'amour ». Elle se danse lors des mariages et des deuils."
 };
 /* Versions anglaises des descriptions (validées par Alexi) */
 const CULTURE_DESC_EN = {
+  'AYÊ': "In English: fonio.",
   'ADJOGBO': "A traditional dance of elderly mothers and women, performed with playful glances, \"eyes of love\". It is danced at weddings and funerals."
 };
 function cultureDescFor(n){
