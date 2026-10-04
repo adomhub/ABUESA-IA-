@@ -925,6 +925,7 @@
         <p>Le centre des informations culturelles Akposso : vie quotidienne, traditions et événements de Wawa, partagés par la communauté.</p>
       </div>
 
+      <div id="home-ovazu"></div>
       <div id="home-calendar"></div>
 
       <div id="home-weather"></div>
@@ -1396,7 +1397,7 @@
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 3.4 · 4 oct. 2026 (FR/EN + internet + images)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 3.5 · 4 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:13px;margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1420,6 +1421,11 @@
   EN["💬 Faire apparaître mon activité ici"] = "💬 Show my activity here";
   EN["Découvrir →"] = "Discover →";
   EN["🔎 Recherche en cours…"] = "🔎 Searching…";
+  EN["🌾 Fête OVAZU"] = "🌾 OVAZU festival"; EN["C'est aujourd'hui !"] = "It's today!"; EN["Demain !"] = "Tomorrow!";
+  EN["Fête des moissons du fonio · 2e samedi de décembre"] = "Fonio harvest festival · 2nd Saturday of December";
+  EN["📲 Partager la carte OVAZU"] = "📲 Share the OVAZU card";
+  EN["Fête OVAZU"] = "OVAZU festival"; EN["Proverbe du jour"] = "Proverb of the day"; EN["Carnet du village"] = "Village notebook";
+  EN["Découvre ABUESA-IA"] = "Discover ABUESA-IA";
   EN["🎨 Création de l'image…"] = "🎨 Creating the image…";
   EN["🎨 Image créée par IA. Elle peut contenir des erreurs (plantes, vêtements, danses) : ne la prends pas pour une photo réelle."] = "🎨 AI-generated image. It may contain mistakes (plants, clothing, dances): do not take it for a real photo.";
   EN["⬇️ Enregistrer l'image"] = "⬇️ Save the image";
@@ -1452,6 +1458,7 @@
     [/^Question (\d+) \/ (\d+) · Meilleur score : (\d+) \/ (\d+)$/, function(m){ return 'Question ' + m[1] + ' / ' + m[2] + ' · Best score: ' + m[3] + ' / ' + m[4]; }],
     [/^Score final : (\d+) \/ (\d+)$/, function(m){ return 'Final score: ' + m[1] + ' / ' + m[2]; }],
     [/^🏘️ (\d+) villages et quartiers dans (\d+) cantons(.*)$/, function(m){ return '🏘️ ' + m[1] + ' villages and neighbourhoods in ' + m[2] + ' cantons' + m[3].replace('précis','exact').replace('approximatifs','approximate'); }],
+    [/^Dans (\d+) jours$/, function(m){ return 'In ' + m[1] + ' days'; }],
     [/^\(jour (\d+) sur (\d+)\)$/, function(m){ return '(day ' + m[1] + ' of ' + m[2] + ')'; }],
     [/^\+ (\d+) autres? événements? à venir$/, function(m){ var n = +m[1]; return '+ ' + n + ' more upcoming event' + (n > 1 ? 's' : ''); }],
     [/^Aujourd'hui : (-?\d+)° à (-?\d+)° · Pluie probable jusqu'à (\d+) %(.*)$/, function(m){ return 'Today: ' + m[1] + '° to ' + m[2] + '° · Chance of rain up to ' + m[3] + '%' + m[4].replace('(dernière mise à jour connue)','(last known update)'); }],
@@ -1592,6 +1599,7 @@
     try{ if(typeof buildQuiz === 'function'){ quizIndex = 0; quizScore = 0; buildQuiz(); renderQuiz(); } }catch(_){}
     try{ if(typeof renderMapCount === 'function') renderMapCount(); }catch(_){}
     failed = 0;
+    try{ if(typeof renderHomeOvazu === 'function') renderHomeOvazu(); }catch(_){}
     try{ if(typeof renderHomeEvents === 'function') renderHomeEvents(); }catch(_){}
     try{ if(typeof renderHomeCarnet === 'function') renderHomeCarnet(); }catch(_){}
     try{ if(typeof renderHomeProverb === 'function') renderHomeProverb(); }catch(_){}
@@ -3981,11 +3989,11 @@ async function shareCard({ label, title, body }){
   ctx.font = '700 88px "Fraunces", Georgia, serif';
   ctx.fillText('ABUESA-IA', W / 2, 150);
   ctx.font = '400 38px "Inter", Arial, sans-serif';
-  ctx.fillText('Culture Akposso · Wawa, Togo', W / 2, 220);
+  ctx.fillText((window.ABUESA_I18N ? ABUESA_I18N.t('Culture Akposso · Wawa, Togo') : 'Culture Akposso · Wawa, Togo'), W / 2, 220);
 
   ctx.fillStyle = '#B8860B';
   ctx.font = '700 44px "Inter", Arial, sans-serif';
-  ctx.fillText(String(label).toUpperCase(), W / 2, 470);
+  ctx.fillText(String(window.ABUESA_I18N ? ABUESA_I18N.t(String(label)) : label).toUpperCase(), W / 2, 470);
 
   ctx.fillStyle = '#8A3D24';
   let fs = 84, lines = [];
@@ -4012,7 +4020,7 @@ async function shareCard({ label, title, body }){
   ctx.fillStyle = '#1E3A22'; ctx.fillRect(0, H - 500, W, 500);
   ctx.fillStyle = '#F7F3E8';
   ctx.font = '700 42px "Inter", Arial, sans-serif';
-  ctx.fillText('Découvre ABUESA-IA', W / 2, H - 425);
+  ctx.fillText((window.ABUESA_I18N ? ABUESA_I18N.t('Découvre ABUESA-IA') : 'Découvre ABUESA-IA'), W / 2, H - 425);
   ctx.font = '400 32px "Inter", Arial, sans-serif';
   ctx.fillText('adomhub.github.io/ABUESA-IA-', W / 2, H - 382);
 
@@ -4037,6 +4045,44 @@ function shareProverbCard(){
   if(!currentProverb) return;
   shareCard({ label:'Proverbe du jour', title:'« ' + currentProverb.ak + ' »', body: currentProverb.fr });
 }
+
+/* ---------- OVAZU : compte à rebours et carte à partager ---------- */
+/* OVAZU = 2e samedi de décembre (fête des moissons du fonio, voir les repères de la rubrique Culture) */
+function ovazuDate(now){
+  const second = (y) => { const d = new Date(y, 11, 1); return new Date(y, 11, 1 + ((6 - d.getDay() + 7) % 7) + 7); };
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  let d = second(now.getFullYear());
+  if(d < today) d = second(now.getFullYear() + 1);
+  return { date: d, days: Math.round((d - today) / 86400000) };
+}
+function ovazuTexts(){
+  const en = window.ABUESA_I18N && ABUESA_I18N.lang() === 'en';
+  const o = ovazuDate(new Date());
+  const dateStr = o.date.toLocaleDateString(window.ABUESA_I18N ? ABUESA_I18N.locale() : 'fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  return { o, en, dateStr };
+}
+function renderHomeOvazu(){
+  const el = document.getElementById('home-ovazu');
+  if(!el) return;
+  const { o, dateStr } = ovazuTexts();
+  const when = o.days === 0 ? "C'est aujourd'hui !" : o.days === 1 ? 'Demain !' : 'Dans ' + o.days + ' jours';
+  el.innerHTML = `<div class="home-calendar-card">
+    <div class="hc-label">🌾 Fête OVAZU</div>
+    <div class="hc-day">${when}</div>
+    <div class="hc-note">Fête des moissons du fonio · 2e samedi de décembre</div>
+    <div class="hc-note" style="margin-top:2px;"><b>${dateStr}</b></div>
+    <button class="share-card-btn" onclick="shareOvazuCard()">📲 Partager la carte OVAZU</button>
+  </div>`;
+}
+function shareOvazuCard(){
+  const { o, en, dateStr } = ovazuTexts();
+  const year = o.date.getFullYear();
+  const body = en
+    ? 'Fonio harvest festival, a celebration of abundance and reunion of the Akposso people. ' + dateStr + '.'
+    : "Fête des moissons du fonio, de l'abondance et des retrouvailles Akposso. " + dateStr + '.';
+  shareCard({ label: en ? 'OVAZU festival' : 'Fête OVAZU', title: 'OVAZU ' + year, body });
+}
+renderHomeOvazu();
 
 let cloudEvents = [];
 async function fetchCloudEvents(){
