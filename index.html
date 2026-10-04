@@ -1395,8 +1395,9 @@
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 2.8 · 3 oct. 2026 (FR/EN + internet)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 2.9 · 4 oct. 2026 (FR/EN + internet)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
+        <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir la dernière erreur de recherche</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:13px;margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
       </div>
     </div>
@@ -2105,6 +2106,12 @@ function addMessage(text, role){
 
 /* Recherche internet : fonction Supabase "groq-search" (Groq Compound). Si elle échoue, l'app retombe sur "groq-chat". */
 const SEARCH_FUNCTION_NAME = 'super-api';
+function showSearchErr(){
+  const out = document.getElementById('search-test-out');
+  out.style.display = 'block';
+  let e = ''; try{ e = localStorage.getItem('abuesa_last_search_err') || ''; }catch(_){}
+  out.textContent = e ? ('Dernière erreur de recherche :\n' + e) : 'Aucune erreur de recherche enregistrée sur ce téléphone.';
+}
 async function testSearch(){
   const out = document.getElementById('search-test-out');
   out.style.display = 'block'; out.textContent = 'Test en cours… (jusqu\'à 30 secondes)';
@@ -2133,7 +2140,8 @@ ACCÈS À INTERNET : tu disposes d'une recherche web en direct (et tu peux ouvri
 3) Quand tu t'appuies sur le web, cite le nom des sites consultés.
 4) Si tu ne trouves pas de réponse fiable, dis-le honnêtement et propose des pistes plutôt que d'inventer.
 5) Pour la santé, le droit ou l'argent, donne l'information et conseille de consulter un professionnel.
-6) Si une réponse précédente de la conversation affirme que tu n'as pas accès à internet, elle était fausse (ancienne version) : ne la répète pas, utilise ta recherche.`;
+6) Reste économe : fais peu de recherches (2 au maximum pour une question simple) et n'ouvre que les pages utiles.
+7) Si une réponse précédente de la conversation affirme que tu n'as pas accès à internet, elle était fausse (ancienne version) : ne la répète pas, utilise ta recherche.`;
 
 const SYSTEM_PROMPT_BASE = `Tu es ABUESA, un assistant culturel bilingue qui connaît en profondeur la culture, la langue et les traditions du peuple Akposso (Ikposso) du canton de Wawa, au Togo. Tu réponds toujours en français, de façon chaleureuse, précise et respectueuse, en intégrant des mots Akposso quand c'est pertinent (avec leur traduction). Tu ne connais que ce qui t'a été enseigné sur cette culture ; si tu n'es pas sûr d'un détail, dis-le honnêtement plutôt que d'inventer.
 
@@ -2326,7 +2334,7 @@ function buildCultureKnowledge(){
   }catch(_){}
   return t;
 }
-function buildSystemPrompt(){
+function buildSystemPrompt(compact){
   const dict = getFullDictionary();
   const personality = (cloudPersonality || getLocalPersonality()).trim();
   const __en = !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en');
@@ -2339,7 +2347,7 @@ function buildSystemPrompt(){
   }
   prompt += buildCultureKnowledge();
   prompt += buildMemoryPrompt();
-  if(dict.length === 0) return prompt;
+  if(dict.length === 0 || compact) return prompt;
   const dictLines = dict.map(w=> `${w.ak} = ${__en ? ABUESA_I18N.gloss(w.fr) : w.fr}`).join(' ; ');
   return `${prompt}
 
@@ -2367,7 +2375,8 @@ async function callGroq(userText){
   try{
     const ctl = new AbortController();
     const tm = setTimeout(()=> ctl.abort(), 70000);
-    const searchMessages = [{role:'system', content: buildSystemPrompt() + SEARCH_RULES}, ...history.slice(-10), {role:'user', content:userText}];
+    const needDict = /\b(mot|mots|dit-on|dire|traduc\w*|signifie|veut dire|sens|akposso|ikposso|dictionnaire|how do you say|what does|mean|meaning|translate)\b/i.test(userText);
+    const searchMessages = [{role:'system', content: buildSystemPrompt(!needDict) + SEARCH_RULES}, ...history.slice(-4), {role:'user', content:userText}];
     const sr = await fetch(url + '/functions/v1/' + SEARCH_FUNCTION_NAME, {
       method:'POST',
       headers:{ 'Content-Type':'application/json', 'apikey': key, 'Authorization':'Bearer '+key },
@@ -2375,8 +2384,14 @@ async function callGroq(userText){
       signal: ctl.signal
     });
     clearTimeout(tm);
-    if(sr.ok){ res = sr; viaSearch = true; }
-  }catch(_){ /* recherche indisponible : on utilise le chat habituel */ }
+    if(sr.ok){ res = sr; viaSearch = true; try{ localStorage.removeItem('abuesa_last_search_err'); }catch(_){} }
+    else{
+      let tx = ''; try{ tx = await sr.text(); }catch(_){}
+      try{ localStorage.setItem('abuesa_last_search_err', new Date().toLocaleString() + '\nHTTP ' + sr.status + '\n' + tx.slice(0, 900)); }catch(_){}
+    }
+  }catch(e){ /* recherche indisponible : on utilise le chat habituel */
+    try{ localStorage.setItem('abuesa_last_search_err', new Date().toLocaleString() + '\n' + (e && e.message ? e.message : e)); }catch(_){}
+  }
   if(!res){
   try{
     res = await fetch(url + '/functions/v1/groq-chat', {
