@@ -1397,7 +1397,7 @@
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 3.8 · 5 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 3.9 · 5 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:13px;margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -3978,7 +3978,18 @@ function wrapCanvasText(ctx, text, maxWidth){
   return lines;
 }
 async function shareCard({ label, title, body, date, greeting, greetingNote }){
-  try{ if(document.fonts && document.fonts.ready) await document.fonts.ready; }catch(_){}
+  try{
+    /* Force le chargement des lettres akposso (Ē, Ō, ɩ, ʋ…) : sinon le canevas les dessine sans leurs signes */
+    const sample = 'ĒēŌōĪīŪūÖöƖɩʋɔɛŋƆƐ';
+    if(document.fonts && document.fonts.load){
+      await Promise.all([
+        document.fonts.load('700 60px "Fraunces"', sample),
+        document.fonts.load('400 40px "Inter"', sample),
+        document.fonts.load('italic 400 40px "Inter"', sample)
+      ]);
+    }
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+  }catch(_){}
   const W = 1080, H = 1920;
   const c = document.createElement('canvas');
   c.width = W; c.height = H;
