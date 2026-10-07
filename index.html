@@ -1397,7 +1397,7 @@
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 3.9 · 5 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 4.1 · 7 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:13px;margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1762,6 +1762,29 @@ function initSupabase(){
   }
 }
 initSupabase();
+
+/* ===== Compteur de visites (anonyme) : une alerte par nouvel appareil, un ping par jour ===== */
+const VISIT_FUNCTION_NAME = 'clever-processor';
+(function(){
+  try{
+    if(/[?&]moi=1/.test(location.search)) localStorage.setItem('abuesa_no_count','1'); // ton propre téléphone : on ne compte pas
+    if(localStorage.getItem('abuesa_no_count')) return;
+    var day = new Date().toISOString().slice(0,10);
+    if(localStorage.getItem('abuesa_vday') === day) return;
+    var vid = localStorage.getItem('abuesa_vid');
+    if(!vid){
+      vid = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2,12));
+      localStorage.setItem('abuesa_vid', vid);
+    }
+    var url = localStorage.getItem(STORE_KEYS.supabaseUrl) || DEFAULT_SUPABASE_URL;
+    var key = localStorage.getItem(STORE_KEYS.supabaseKey) || DEFAULT_SUPABASE_KEY;
+    fetch(url + '/functions/v1/' + VISIT_FUNCTION_NAME, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'apikey': key, 'Authorization':'Bearer '+key },
+      body: JSON.stringify({ vid: vid })
+    }).then(function(r){ if(r.ok) localStorage.setItem('abuesa_vday', day); }).catch(function(){});
+  }catch(_){}
+})();
 
 /* ---------- Navigation ---------- */
 document.querySelectorAll('nav.tabbar button').forEach(btn=>{
@@ -3693,6 +3716,98 @@ const GALLERY_MAX_SIZE = 150 * 1024 * 1024; // 150 Mo, avant compression (limit�
    Une photo de smartphone moderne (4000×3000px, 5-10 Mo) devient une image
    de 1600px de large maximum en JPEG qualité 80% (souvent < 500 Ko) —
    ça économise le stockage Supabase ET la data mobile du visiteur. */
+/* ===== Compression vidéo sur le téléphone avant l'envoi =====
+   Rejoue la vidéo en plus petit (max 960 px, ~1,2 Mbit/s) et la réenregistre.
+   Prend à peu près la durée de la vidéo. En cas de souci, on garde l'original. */
+const VIDEO_UPLOAD_MAX = 50 * 1024 * 1024;      // limite Supabase gratuit par fichier
+const VIDEO_COMPRESS_MIN = 8 * 1024 * 1024;     // en dessous, on n'y touche pas
+const VIDEO_MAX_SECONDS = 90;                   // au-delà, la compression serait trop longue
+
+function compressVideo(file, onProgress){
+  return new Promise((resolve)=>{
+    let done = false, timer = null, audioCtx = null, objUrl = null;
+    const finish = (res)=>{
+      if(done) return; done = true;
+      clearTimeout(timer);
+      try{ if(audioCtx) audioCtx.close(); }catch(_){}
+      try{ if(objUrl) URL.revokeObjectURL(objUrl); }catch(_){}
+      resolve(res || file);
+    };
+    try{
+      if(!file.type.startsWith('video') || file.size <= VIDEO_COMPRESS_MIN) return finish(file);
+      if(!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) return finish(file);
+      const mimes = [
+        'video/mp4;codecs=avc1.42E01E,mp4a.40.2', 'video/mp4',
+        'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'
+      ];
+      const mime = mimes.find(m => MediaRecorder.isTypeSupported(m));
+      if(!mime) return finish(file);
+
+      const v = document.createElement('video');
+      v.playsInline = true; v.preload = 'auto';
+      objUrl = URL.createObjectURL(file);
+      v.src = objUrl;
+
+      v.onerror = ()=> finish(file);
+      v.onloadedmetadata = async ()=>{
+        try{
+          const dur = v.duration;
+          if(!isFinite(dur) || dur <= 0 || dur > VIDEO_MAX_SECONDS) return finish(file);
+          const scale = Math.min(1, 960 / Math.max(v.videoWidth, v.videoHeight));
+          const w = Math.round(v.videoWidth * scale / 2) * 2;
+          const h = Math.round(v.videoHeight * scale / 2) * 2;
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+
+          const tracks = canvas.captureStream(30).getVideoTracks();
+          // Son : on le récupère sans le jouer à voix haute
+          try{
+            const AC = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AC();
+            await audioCtx.resume();
+            const src = audioCtx.createMediaElementSource(v);
+            const dest = audioCtx.createMediaStreamDestination();
+            src.connect(dest);
+            dest.stream.getAudioTracks().forEach(t => tracks.push(t));
+          }catch(_){ /* sans son plutôt que pas de vidéo */ }
+
+          const rec = new MediaRecorder(new MediaStream(tracks), {
+            mimeType: mime, videoBitsPerSecond: 1200000, audioBitsPerSecond: 64000
+          });
+          const chunks = [];
+          rec.ondataavailable = (e)=>{ if(e.data && e.data.size) chunks.push(e.data); };
+          rec.onerror = ()=> finish(file);
+          rec.onstop = ()=>{
+            if(done) return;
+            const type = mime.split(';')[0];
+            const blob = new Blob(chunks, { type });
+            if(!blob.size) return finish(file);
+            // Si ce n'est pas plus léger et que l'original passe, on garde l'original
+            if(blob.size >= file.size && file.size <= VIDEO_UPLOAD_MAX) return finish(file);
+            const ext = type === 'video/mp4' ? 'mp4' : 'webm';
+            finish(new File([blob], 'video-' + Date.now() + '.' + ext, { type }));
+          };
+
+          const draw = ()=>{
+            if(done) return;
+            ctx.drawImage(v, 0, 0, w, h);
+            if(onProgress) onProgress(Math.min(99, Math.round(v.currentTime / dur * 100)));
+            if(v.ended){ if(rec.state !== 'inactive') rec.stop(); return; }
+            requestAnimationFrame(draw);
+          };
+          v.onended = ()=>{ if(rec.state !== 'inactive') rec.stop(); };
+
+          timer = setTimeout(()=>{ try{ if(rec.state !== 'inactive') rec.stop(); }catch(_){} finish(file); }, dur * 2000 + 15000);
+          rec.start(1000);
+          await v.play();
+          draw();
+        }catch(_){ finish(file); }
+      };
+    }catch(_){ finish(file); }
+  });
+}
+
 function compressImage(file, maxDim = 1600, quality = 0.8){
   return new Promise((resolve)=>{
     if(!file.type.startsWith('image')){ resolve(file); return; }
@@ -3855,10 +3970,20 @@ document.getElementById('gallery-submit').addEventListener('click', async ()=>{
   }
 
   btn.disabled = true;
-  status.textContent = selectedGalleryFile.type.startsWith('image') ? 'Compression de la photo…' : 'Envoi en cours…';
+  const isVid = selectedGalleryFile.type.startsWith('video');
+  status.textContent = isVid ? 'Compression de la vidéo… garde l\'écran allumé' : 'Compression de la photo…';
   status.className = 'status-line';
 
-  const fileToUpload = await compressImage(selectedGalleryFile);
+  const fileToUpload = isVid
+    ? await compressVideo(selectedGalleryFile, (pct)=>{ status.textContent = 'Compression de la vidéo… ' + pct + ' %'; })
+    : await compressImage(selectedGalleryFile);
+
+  if(isVid && fileToUpload.size > VIDEO_UPLOAD_MAX){
+    btn.disabled = false;
+    status.textContent = 'Cette vidéo est trop lourde (' + (fileToUpload.size/(1024*1024)).toFixed(0) + ' Mo, maximum 50 Mo). Choisis-en une plus courte.';
+    status.className = 'status-line status-bad';
+    return;
+  }
   status.textContent = 'Envoi en cours…';
 
   const isVideo = fileToUpload.type.startsWith('video');
