@@ -936,6 +936,8 @@
 
       <div id="home-carnet"></div>
 
+      <div id="home-marche"></div>
+
       <div id="home-partners"></div>
 
       <div id="home-support">
@@ -1397,7 +1399,7 @@
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 4.1 · 7 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 4.2 · 8 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:13px;margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1418,6 +1420,13 @@
   EN["Naissance"] = "Birth"; EN["Décès"] = "Death"; EN["Dot / Mariage"] = "Dowry / Wedding"; EN["Annonce"] = "Announcement";
   EN["Cet espace est réservé aux commerces, artistes et événements de chez nous. Ton activité peut apparaître ici, devant toute la communauté Akposso."] = "This space is reserved for shops, artists and events from our community. Your activity can appear here, in front of the whole Akposso community.";
   EN["Annonces de partenaires qui soutiennent ABUESA."] = "Announcements from partners who support ABUESA.";
+  EN["🛒 Marché ABUESA"] = "🛒 ABUESA Market";
+  EN["Objets d'occasion proposés par la communauté. Tu contactes directement le vendeur."] = "Second-hand items offered by the community. You contact the seller directly.";
+  EN["⚠️ ABUESA ne gère pas les paiements : regarde l'objet avant de payer, et ne paie jamais à l'avance sans l'avoir vu."] = "⚠️ ABUESA does not handle payments: look at the item before paying, and never pay in advance without seeing it.";
+  EN["Bientôt ici : vélos, téléphones, habits et autres objets d'occasion de chez nous. Tu veux vendre quelque chose ? Écris-moi, je publie ton annonce avec ton numéro."] = "Coming soon: bikes, phones, clothes and other second-hand items from our community. Want to sell something? Write to me and I will publish your listing with your number.";
+  EN["💬 Vendre un objet ici"] = "💬 Sell an item here";
+  EN["💬 Contacter le vendeur"] = "💬 Contact the seller";
+  EN["📞 Appeler"] = "📞 Call";
   EN["💬 Faire apparaître mon activité ici"] = "💬 Show my activity here";
   EN["Découvrir →"] = "Discover →";
   EN["🔎 Recherche en cours…"] = "🔎 Searching…";
@@ -1604,6 +1613,7 @@
     try{ if(typeof renderHomeCarnet === 'function') renderHomeCarnet(); }catch(_){}
     try{ if(typeof renderHomeProverb === 'function') renderHomeProverb(); }catch(_){}
     try{ if(typeof renderHomePartners === 'function') renderHomePartners(); }catch(_){}
+    try{ if(typeof renderHomeMarche === 'function') renderHomeMarche(); }catch(_){}
     run(document.body); applyUT(document);
     if(!silent && typeof showToast === 'function') showToast(l === 'en' ? 'Language: English' : 'Langue : Français');
   }
@@ -4374,6 +4384,61 @@ function renderHomePartners(){
 }
 renderHomePartners();
 fetchCloudPartners().then(renderHomePartners);
+
+/* ===== Marché ABUESA : objets d'occasion. Annonces publiées uniquement par Alexi (Supabase > Table Editor > marche).
+   L'acheteur contacte directement le vendeur sur WhatsApp ou par téléphone. ===== */
+let cloudMarche = [];
+async function fetchCloudMarche(){
+  if(!supabaseClient){ cloudMarche = []; return; }
+  const { data, error } = await supabaseClient
+    .from('marche')
+    .select('titre, description, prix, categorie, ville, vendeur, contact, photo, fin')
+    .eq('actif', true)
+    .order('id', { ascending:false })
+    .limit(12);
+  if(!error && data){
+    const today = new Date().toISOString().slice(0, 10);
+    cloudMarche = data.filter(x=> x && x.titre && x.contact && (!x.fin || x.fin >= today));
+  }
+}
+function marchePhone(c){
+  let d = String(c || '').replace(/[^\d]/g, '');
+  if(d.length === 8) d = '228' + d;      // numéro togolais sans indicatif
+  return d.length >= 10 ? d : '';
+}
+function renderHomeMarche(){
+  const el = document.getElementById('home-marche');
+  if(!el) return;
+  const sellMsg = encodeURIComponent("Bonjour Alexi, je voudrais vendre un objet dans le Marché d'ABUESA.");
+  const sellBtn = `<a class="share-card-btn" style="display:inline-block;text-decoration:none;margin-top:10px;" target="_blank" rel="noopener" href="https://wa.me/22899619969?text=${sellMsg}">💬 Vendre un objet ici</a>`;
+  const items = cloudMarche.map(x=>{
+    const ph = marchePhone(x.contact);
+    const msg = encodeURIComponent('Bonjour, je suis intéressé par « ' + x.titre + ' » vu sur ABUESA.');
+    const photo = /^https?:\/\//i.test(String(x.photo || '')) ? `<img src="${escAll(x.photo)}" alt="" loading="lazy" onerror="this.style.display='none'" style="width:100%;max-height:200px;object-fit:cover;border-radius:10px;margin-bottom:6px;">` : '';
+    const meta = [x.categorie, x.ville].filter(Boolean).map(escAll).join(' · ');
+    return `<div class="hc-day" style="margin-top:10px;">
+      ${photo}
+      <strong>${escAll(x.titre)}</strong>${x.prix ? ` <span style="color:var(--green,#1f3d28);font-weight:700;">· ${escAll(x.prix)}</span>` : ''}
+      ${meta ? `<div class="hc-note" style="margin-top:2px;">${meta}</div>` : ''}
+      ${x.description ? `<div class="hc-note" style="margin-top:2px;"><span data-ut>${escAll(x.description)}</span></div>` : ''}
+      ${x.vendeur ? `<div class="hc-note" style="margin-top:2px;">👤 ${escAll(x.vendeur)}</div>` : ''}
+      ${ph ? `<a class="share-card-btn" style="display:inline-block;text-decoration:none;" target="_blank" rel="noopener" href="https://wa.me/${ph}?text=${msg}">💬 Contacter le vendeur</a>
+      <a class="share-card-btn" style="display:inline-block;text-decoration:none;" href="tel:+${ph}">📞 Appeler</a>` : ''}
+    </div>`;
+  }).join('');
+  const intro = cloudMarche.length
+    ? `<div class="hc-note">Objets d'occasion proposés par la communauté. Tu contactes directement le vendeur.</div>
+       <div class="hc-note" style="margin-top:4px;">⚠️ ABUESA ne gère pas les paiements : regarde l'objet avant de payer, et ne paie jamais à l'avance sans l'avoir vu.</div>`
+    : `<div class="hc-note">Bientôt ici : vélos, téléphones, habits et autres objets d'occasion de chez nous. Tu veux vendre quelque chose ? Écris-moi, je publie ton annonce avec ton numéro.</div>`;
+  el.innerHTML = `<div class="home-calendar-card">
+    <div class="hc-label">🛒 Marché ABUESA</div>
+    ${intro}
+    ${items}
+    ${sellBtn}
+  </div>`;
+}
+renderHomeMarche();
+fetchCloudMarche().then(renderHomeMarche);
 
 document.getElementById('copy-support-number').addEventListener('click', async ()=>{
   try{
