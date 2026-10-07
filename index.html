@@ -126,7 +126,7 @@
   header.topbar .wordmark{
     font-family:'Fraunces',serif;
     font-weight:700;
-    font-size:29px;
+    font-size:calc(29px * var(--fs,1.15));
     letter-spacing:0.3px;
     color:var(--ink);
     line-height:1;
@@ -134,7 +134,7 @@
   }
   header.topbar .wordmark span{ color:var(--forest-deep); }
   header.topbar .subtitle{
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--ink-soft);
     
     
@@ -145,13 +145,13 @@
   header.topbar button.icon-btn{
     background:none;
     border:none;
-    font-size:20px;
+    font-size:calc(20px * var(--fs,1.15));
     padding:3px;
     cursor:pointer;
     color:var(--ink);
   }
 
-  .more-item{display:block;width:100%;text-align:left;padding:12px 14px;border:none;background:none;font:inherit;font-size:17.5px;color:var(--ink);text-decoration:none;border-radius:10px;cursor:pointer;}
+  .more-item{display:block;width:100%;text-align:left;padding:12px 14px;border:none;background:none;font:inherit;font-size:calc(17.5px * var(--fs,1.15));color:var(--ink);text-decoration:none;border-radius:10px;cursor:pointer;}
   .more-item:active{background:rgba(0,0,0,.07);}
 
   main.view{
@@ -182,11 +182,11 @@
     align-items:center;
     gap:3px;
     font-family:'Inter',sans-serif;
-    font-size:13px;
+    font-size:calc(13px * var(--fs,1.15));
     color:var(--ink-soft);
     cursor:pointer;
   }
-  nav.tabbar button .emoji{ font-size:24px; line-height:1; }
+  nav.tabbar button .emoji{ font-size:calc(24px * var(--fs,1.15)); line-height:1; }
   nav.tabbar button.active{ color:var(--clay); }
   nav.tabbar button.active .emoji{ filter:none; }
 
@@ -205,7 +205,7 @@
     max-width:82%;
     padding:11px 14px;
     border-radius:16px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     line-height:1.5;
     white-space:pre-wrap;
     word-wrap:break-word;
@@ -232,7 +232,7 @@
     border-collapse:collapse;
     width:100%;
     margin:6px 0 10px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
   }
   .chat-table th, .chat-table td{
     border:1px solid var(--line);
@@ -249,7 +249,7 @@
     text-align:center;
   }
   .welcome-block h2{
-    font-size:27.5px;
+    font-size:calc(27.5px * var(--fs,1.15));
     margin:0 0 4px;
     color:var(--ink);
     line-height:1.15;
@@ -258,12 +258,12 @@
   .welcome-block .fr-translation{
     font-family:'Fraunces',serif;
     font-weight:600;
-    font-size:22px;
+    font-size:calc(22px * var(--fs,1.15));
     color:var(--clay);
     margin:0 0 10px;
   }
   .welcome-block p{
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--ink-soft);
     margin:0 auto;
     max-width:320px;
@@ -282,7 +282,7 @@
     border:1px solid var(--line);
     border-radius:20px;
     padding:8px 14px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--ink);
     cursor:pointer;
     white-space:nowrap;
@@ -303,7 +303,7 @@
     border-radius:20px;
     padding:10px 16px;
     font-family:'Inter',sans-serif;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     max-height:110px;
     background:var(--paper);
     color:var(--ink);
@@ -316,7 +316,7 @@
     width:42px;
     height:42px;
     border-radius:50%;
-    font-size:20px;
+    font-size:calc(20px * var(--fs,1.15));
     cursor:pointer;
     flex-shrink:0;
   }
@@ -325,11 +325,11 @@
   /* ================= GENERIC SECTION ================= */
   .section-pad{ padding:16px 16px 24px; }
   .section-title{
-    font-size:21px;
+    font-size:calc(21px * var(--fs,1.15));
     margin:4px 0 4px;
   }
   .section-desc{
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--ink-soft);
     margin:0 0 16px;
     line-height:1.45;
@@ -341,7 +341,7 @@
     padding:11px 14px;
     border:1px solid var(--line);
     border-radius:12px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     background:var(--white);
     margin-bottom:14px;
   }
@@ -359,11 +359,11 @@
   .word-card .akposso{
     font-family:'Fraunces',serif;
     font-weight:600;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--clay);
   }
   .word-card .french{
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--ink-soft);
     margin-top:2px;
   }
@@ -373,7 +373,7 @@
     border-radius:50%;
     width:34px;
     height:34px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     flex-shrink:0;
     cursor:pointer;
   }
@@ -381,7 +381,7 @@
     text-align:center;
     padding:30px 20px;
     color:var(--ink-soft);
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
   }
 
   /* ---- Carte ---- */
@@ -395,8 +395,8 @@
     margin-bottom:12px;
   }
 
-  #map .leaflet-popup-content{ font-size:15px; line-height:1.35; margin:10px 12px; }
-  #map .leaflet-popup-content ul{ margin:4px 0 0 16px; padding:0; font-size:15px; }
+  #map .leaflet-popup-content{ font-size:calc(15px * var(--fs,1.15)); line-height:1.35; margin:10px 12px; }
+  #map .leaflet-popup-content ul{ margin:4px 0 0 16px; padding:0; font-size:calc(15px * var(--fs,1.15)); }
 
   /* ---- Quiz ---- */
   .quiz-card{
@@ -407,7 +407,7 @@
   }
   .quiz-card .question{
     font-family:'Fraunces',serif;
-    font-size:20px;
+    font-size:calc(20px * var(--fs,1.15));
     margin-bottom:14px;
   }
   .quiz-option{
@@ -419,14 +419,14 @@
     border-radius:10px;
     padding:11px 14px;
     margin-bottom:8px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     cursor:pointer;
     font-family:'Inter',sans-serif;
     color:var(--ink);
   }
   .quiz-option.correct{ background:#DDEBC0; border-color:var(--citron-deep); }
   .quiz-option.wrong{ background:#EBD0C4; border-color:var(--clay); }
-  .quiz-score{ font-size:17.5px; color:var(--ink-soft); margin-top:10px; }
+  .quiz-score{ font-size:calc(17.5px * var(--fs,1.15)); color:var(--ink-soft); margin-top:10px; }
 
   /* ---- Artistes ---- */
   .artist-card{
@@ -438,12 +438,12 @@
   }
   .artist-card h3{
     margin:0 0 4px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--clay);
   }
   .artist-card p{
     margin:0;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--ink-soft);
     line-height:1.5;
   }
@@ -467,9 +467,9 @@
     max-height:80vh;
     overflow-y:auto;
   }
-  .modal-sheet h3{ margin:0 0 14px; font-size:20px; }
+  .modal-sheet h3{ margin:0 0 14px; font-size:calc(20px * var(--fs,1.15)); }
   .modal-sheet label{
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--ink-soft);
     display:block;
     margin:12px 0 5px;
@@ -480,7 +480,7 @@
     padding:10px 13px;
     border:1px solid var(--line);
     border-radius:10px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     background:var(--paper);
   }
   .modal-sheet .save-btn{
@@ -490,15 +490,15 @@
     border:none;
     border-radius:12px;
     padding:12px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     margin-top:18px;
     cursor:pointer;
   }
   .modal-sheet .close-row{ text-align:right; }
   .modal-sheet .close-row button{
-    background:none;border:none;font-size:24px;color:var(--ink-soft);cursor:pointer;
+    background:none;border:none;font-size:calc(24px * var(--fs,1.15));color:var(--ink-soft);cursor:pointer;
   }
-  .status-line{ font-size:17.5px; margin-top:8px; }
+  .status-line{ font-size:calc(17.5px * var(--fs,1.15)); margin-top:8px; }
   .status-ok{ color:#4E7A1F; }
   .status-bad{ color:var(--clay); }
 
@@ -519,7 +519,7 @@
     color:var(--white);
     padding:9px 16px;
     border-radius:20px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     box-shadow:var(--shadow);
     opacity:0;
     transform:translateY(6px);
@@ -532,7 +532,7 @@
   .fav-btn{
     background:none;
     border:none;
-    font-size:20px;
+    font-size:calc(20px * var(--fs,1.15));
     cursor:pointer;
     padding:4px 6px;
     line-height:1;
@@ -550,7 +550,7 @@
     border:1px solid var(--line);
     border-radius:10px;
     padding:8px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     font-family:'Inter',sans-serif;
     color:var(--ink-soft);
     cursor:pointer;
@@ -571,7 +571,7 @@
     text-align:left;
   }
   .word-of-day .label{
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     text-transform:uppercase;
     letter-spacing:0.4px;
     color:var(--gold);
@@ -581,10 +581,10 @@
   .word-of-day .word{
     font-family:'Fraunces',serif;
     font-weight:600;
-    font-size:21px;
+    font-size:calc(21px * var(--fs,1.15));
     color:var(--clay);
   }
-  .word-of-day .meaning{ font-size:17.5px; color:var(--ink-soft); }
+  .word-of-day .meaning{ font-size:calc(17.5px * var(--fs,1.15)); color:var(--ink-soft); }
 
   /* ---- Admin panel ---- */
   .admin-section{
@@ -593,7 +593,7 @@
     border-top:1px dashed var(--line);
   }
   .admin-section h4{
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     margin:0 0 10px;
     color:var(--clay);
   }
@@ -603,7 +603,7 @@
     padding:9px 11px;
     border:1px solid var(--line);
     border-radius:9px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     background:var(--paper);
   }
   .admin-row button, .admin-actions button{
@@ -611,21 +611,21 @@
     border:none;
     border-radius:9px;
     padding:9px 13px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     cursor:pointer;
     color:var(--ink);
     white-space:nowrap;
   }
   .admin-actions{ display:flex; gap:8px; margin-top:6px; }
   .admin-actions button.secondary{ background:var(--paper-dim); }
-  .admin-list{ max-height:120px; overflow-y:auto; font-size:17.5px; color:var(--ink-soft); margin-top:8px; }
+  .admin-list{ max-height:120px; overflow-y:auto; font-size:calc(17.5px * var(--fs,1.15)); color:var(--ink-soft); margin-top:8px; }
 
   /* ---- Credits ---- */
   .credits-toggle{
     background:none;
     border:none;
     color:var(--ink-soft);
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     text-decoration:underline;
     padding:0;
     margin-top:16px;
@@ -634,7 +634,7 @@
   .credits-box{
     display:none;
     margin-top:10px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--ink-soft);
     line-height:1.6;
     background:var(--paper);
@@ -659,7 +659,7 @@
     background:var(--paper-dim);
   }
   .gallery-item .gi-caption{
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--ink-soft);
     padding:6px 8px;
     line-height:1.35;
@@ -668,7 +668,7 @@
     display:inline-block;
     background:var(--clay);
     color:#fff;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     font-weight:700;
     padding:2px 7px;
     border-radius:20px;
@@ -688,7 +688,7 @@
     border:1px solid var(--line);
     border-radius:20px;
     padding:6px 12px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--ink-soft);
     white-space:nowrap;
     cursor:pointer;
@@ -705,7 +705,7 @@
     border:1px solid var(--line);
     border-radius:20px;
     padding:6px 12px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--ink-soft);
     white-space:nowrap;
     cursor:pointer;
@@ -735,12 +735,12 @@
   }
   .home-card-text h3{
     margin:0 0 4px;
-    font-size:21px;
+    font-size:calc(21px * var(--fs,1.15));
     color:var(--ink);
   }
   .home-card-text p{
     margin:0;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--ink-soft);
     line-height:1.35;
   }
@@ -751,7 +751,7 @@
     border:none;
     border-radius:20px;
     padding:9px 14px;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     font-weight:600;
     white-space:nowrap;
     cursor:pointer;
@@ -766,7 +766,7 @@
     margin-top:16px;
   }
   .home-calendar-card .hc-label{
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     text-transform:uppercase;
     letter-spacing:0.5px;
     color:var(--gold);
@@ -775,11 +775,11 @@
   }
   .home-calendar-card .hc-day{
     font-family:'Fraunces',serif;
-    font-size:22px;
+    font-size:calc(22px * var(--fs,1.15));
     color:var(--clay);
   }
   .home-calendar-card .hc-note{
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--ink-soft);
     margin-top:4px;
   }
@@ -791,7 +791,7 @@
     background:var(--white);
     color:var(--forest-deep);
     font-family:inherit;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     font-weight:600;
     cursor:pointer;
   }
@@ -815,7 +815,7 @@
     padding:10px 14px;
   }
   .home-featured-card .hf-label{
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     text-transform:uppercase;
     letter-spacing:0.5px;
     color:var(--gold);
@@ -823,13 +823,13 @@
     margin-bottom:4px;
   }
   .home-featured-card .hf-caption{
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--ink);
   }
 
   /* ---- Recherche universelle ---- */
   .search-category{
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     text-transform:uppercase;
     letter-spacing:0.5px;
     color:var(--gold);
@@ -848,16 +848,17 @@
   .search-result .sr-title{
     font-family:'Fraunces',serif;
     font-weight:600;
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--clay);
   }
   .search-result .sr-sub{
-    font-size:17.5px;
+    font-size:calc(17.5px * var(--fs,1.15));
     color:var(--ink-soft);
     margin-top:2px;
   }
+  :root{ --fs:1.15; }
   html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
-  input,textarea,select{ font-size:17.5px; }
+  input,textarea,select{ font-size:calc(17.5px * var(--fs,1.15)); }
 </style>
 </head>
 <body>
@@ -892,7 +893,7 @@
           <div class="wordmark">ABUESA<span>-IA</span></div>
         </div>
       </div>
-      <button type="button" class="icon-btn" id="lang-quick" data-no-i18n aria-label="Language" style="margin-left:auto;font-weight:800;font-size:15px;border:1px solid var(--line);border-radius:999px;padding:5px 11px;">EN</button>
+      <button type="button" class="icon-btn" id="lang-quick" data-no-i18n aria-label="Language" style="margin-left:auto;font-weight:800;font-size:calc(15px * var(--fs,1.15));border:1px solid var(--line);border-radius:999px;padding:5px 11px;">EN</button>
     </div>
     <div class="topbar-row2">
       <div class="subtitle">Culture Akposso · Wawa, Togo</div>
@@ -1019,20 +1020,20 @@
       </div>
 
       <div style="margin-top:30px;padding-top:24px;border-top:2px solid var(--forest);">
-        <h2 class="serif" style="font-size:24px;color:var(--forest-deep);text-align:center;margin-bottom:14px;">À propos de ABUESA</h2>
-        <p style="font-size:17.5px;line-height:1.7;color:var(--ink);text-align:center;">
+        <h2 class="serif" style="font-size:calc(24px * var(--fs,1.15));color:var(--forest-deep);text-align:center;margin-bottom:14px;">À propos de ABUESA</h2>
+        <p style="font-size:calc(17.5px * var(--fs,1.15));line-height:1.7;color:var(--ink);text-align:center;">
           ABUESA est né pour combler cet espace : un lieu où la langue akposso peut être écoutée, apprise et célébrée, par celles et ceux qui la parlent déjà comme par celles et ceux qui la découvrent.
         </p>
-        <p style="font-size:17.5px;line-height:1.7;color:var(--ink);text-align:center;">
+        <p style="font-size:calc(17.5px * var(--fs,1.15));line-height:1.7;color:var(--ink);text-align:center;">
           Créé par <b>Adom K. Alexi</b>, auteur et entrepreneur togolais basé à Badou, également fondateur du projet ADOM ALEXI.
         </p>
-        <p style="font-size:17.5px;line-height:1.7;color:var(--ink);text-align:center;">
+        <p style="font-size:calc(17.5px * var(--fs,1.15));line-height:1.7;color:var(--ink);text-align:center;">
           <b>Notre mission :</b> rendre les langues africaines visibles et accessibles dans le monde numérique, en commençant par l'akposso — une langue, une voix, un mot à la fois.
         </p>
-        <p style="font-size:17.5px;line-height:1.7;color:var(--ink-soft);text-align:center;margin-top:16px;">
+        <p style="font-size:calc(17.5px * var(--fs,1.15));line-height:1.7;color:var(--ink-soft);text-align:center;margin-top:16px;">
           Envie d'aller plus loin ? Discute avec ABUESA, génère des images et vidéos inspirées de la culture akposso dans l'espace membre.
         </p>
-        <p style="font-size:17.5px;line-height:1.8;color:var(--ink-soft);text-align:center;margin-top:14px;">
+        <p style="font-size:calc(17.5px * var(--fs,1.15));line-height:1.8;color:var(--ink-soft);text-align:center;margin-top:14px;">
           <b style="color:var(--ink);">Créateur et promoteur</b> — Alexi K. Adom<br>
           <b style="color:var(--ink);">Soutenir ABUESA</b> — Yas +228 91 04 03 46 · Moov +228 99 61 99 69
         </p>
@@ -1085,8 +1086,8 @@
       <h3 class="serif">🎙️ Répéter après moi</h3>
       <p class="section-desc" style="margin-top:-6px;">Lis le mot en Akposso à voix haute, enregistre-toi, puis réécoute-toi pour t'entraîner. Pas de voix robotique ici — juste toi qui progresses !</p>
       <div id="practice-word-card" style="background:var(--paper-dim);border-radius:14px;padding:20px;text-align:center;margin:14px 0;">
-        <div id="practice-ak" style="font-family:'Fraunces',serif;font-weight:700;font-size:29.5px;color:var(--forest-deep);"></div>
-        <div id="practice-fr" style="font-size:17.5px;color:var(--ink-soft);margin-top:6px;"></div>
+        <div id="practice-ak" style="font-family:'Fraunces',serif;font-weight:700;font-size:calc(29.5px * var(--fs,1.15));color:var(--forest-deep);"></div>
+        <div id="practice-fr" style="font-size:calc(17.5px * var(--fs,1.15));color:var(--ink-soft);margin-top:6px;"></div>
       </div>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;">
         <button class="save-btn" id="practice-record" style="width:auto;padding:11px 20px;">🎤 Enregistrer</button>
@@ -1158,45 +1159,45 @@
               <path fill="var(--clay)" d="M36 4 C46 1 56 3 61 9 C69 6 80 12 77 21 C84 26 82 37 75 42 C80 50 75 61 67 63 C71 73 65 85 57 89 C59 99 51 113 45 117 C43 109 41 99 39 91 C31 87 27 77 31 69 C23 65 21 55 27 49 C19 45 17 35 23 29 C17 23 19 13 29 9 C31 6 34 5 36 4 Z"/>
             </svg>
           </div>
-          <h3 class="serif" style="margin:0;font-size:17.5px;">À propos de ABUESA</h3>
+          <h3 class="serif" style="margin:0;font-size:calc(17.5px * var(--fs,1.15));">À propos de ABUESA</h3>
         </div>
-        <p style="font-size:17.5px;line-height:1.6;color:var(--ink-soft);">
+        <p style="font-size:calc(17.5px * var(--fs,1.15));line-height:1.6;color:var(--ink-soft);">
           ABUESA est un espace numérique dédié à la culture, à la langue et aux traditions du peuple <b style="color:var(--ink);">Akposso (Ikposso)</b>, originaire du canton de Wawa, dans la région des Plateaux au Togo.
         </p>
-        <p style="font-size:17.5px;line-height:1.6;color:var(--ink-soft);">
+        <p style="font-size:calc(17.5px * var(--fs,1.15));line-height:1.6;color:var(--ink-soft);">
           L'application rassemble un dictionnaire français–akposso, une carte des villages, des repères culturels, un espace pour les artistes, et un chat pour poser des questions — pensée pour que cette culture continue de se transmettre, se documenter et se faire connaître, ici et dans la diaspora.
         </p>
-        <p style="font-size:17.5px;line-height:1.6;color:var(--ink-soft);">
+        <p style="font-size:calc(17.5px * var(--fs,1.15));line-height:1.6;color:var(--ink-soft);">
           ABUESA est vivant : il grandit avec les contributions de chacun — mots ajoutés, artistes inscrits, avis laissés par les visiteurs.
         </p>
 
         <div style="margin-top:16px;background:var(--white);border:1px solid var(--line);border-radius:12px;padding:14px;">
-          <div style="font-family:'Fraunces',serif;font-weight:600;font-size:17.5px;color:var(--clay);margin-bottom:6px;">🌱 Construis ABUESA avec nous</div>
-          <p style="font-size:17.5px;line-height:1.6;color:var(--ink-soft);margin:0;">
+          <div style="font-family:'Fraunces',serif;font-weight:600;font-size:calc(17.5px * var(--fs,1.15));color:var(--clay);margin-bottom:6px;">🌱 Construis ABUESA avec nous</div>
+          <p style="font-size:calc(17.5px * var(--fs,1.15));line-height:1.6;color:var(--ink-soft);margin:0;">
             Un mot que tu connais et qui manque ? Une tradition à raconter ? Tu es artiste et tu veux te faire connaître ? ABUESA n'est pas figé — c'est un espace vivant que la communauté Akposso construit ensemble. Laisse ton avis dans <b style="color:var(--ink);">📝 Avis</b> ou inscris-toi dans <b style="color:var(--ink);">🎤 Artistes</b> : chaque contribution compte.
           </p>
         </div>
 
         <div style="margin-top:12px;background:var(--white);border:1px solid var(--line);border-radius:12px;padding:14px;">
-          <div style="font-family:'Fraunces',serif;font-weight:600;font-size:17.5px;color:var(--clay);margin-bottom:6px;">💚 Soutenir ABUESA</div>
-          <p style="font-size:17.5px;line-height:1.6;color:var(--ink-soft);margin:0 0 10px;">
+          <div style="font-family:'Fraunces',serif;font-weight:600;font-size:calc(17.5px * var(--fs,1.15));color:var(--clay);margin-bottom:6px;">💚 Soutenir ABUESA</div>
+          <p style="font-size:calc(17.5px * var(--fs,1.15));line-height:1.6;color:var(--ink-soft);margin:0 0 10px;">
             ABUESA est gratuit et le restera. Mais le faire vivre a un coût réel (hébergement, IA, temps de recherche). Si ce projet te touche, tu peux contribuer :
           </p>
-          <p style="font-size:17.5px;line-height:1.8;color:var(--ink);margin:0 0 10px;">
+          <p style="font-size:calc(17.5px * var(--fs,1.15));line-height:1.8;color:var(--ink);margin:0 0 10px;">
             📱 <b>Flooz / Mobile Money :</b> +228 99-61-99-69
           </p>
-          <a href="https://wa.me/22899619969?text=Bonjour%2C%20je%20souhaite%20soutenir%20ABUESA%20financièrement." target="_blank" rel="noopener" style="display:block;text-align:center;background:var(--clay);color:var(--white);border-radius:10px;padding:11px;font-size:17.5px;text-decoration:none;font-weight:600;">Contacter Alexi pour contribuer</a>
+          <a href="https://wa.me/22899619969?text=Bonjour%2C%20je%20souhaite%20soutenir%20ABUESA%20financièrement." target="_blank" rel="noopener" style="display:block;text-align:center;background:var(--clay);color:var(--white);border-radius:10px;padding:11px;font-size:calc(17.5px * var(--fs,1.15));text-decoration:none;font-weight:600;">Contacter Alexi pour contribuer</a>
         </div>
 
         <div style="margin-top:12px;background:var(--white);border:1px solid var(--line);border-radius:12px;padding:14px;">
-          <div style="font-family:'Fraunces',serif;font-weight:600;font-size:17.5px;color:var(--clay);margin-bottom:6px;">🧠 La mémoire d'ABUESA</div>
-          <p style="font-size:17.5px;line-height:1.6;color:var(--ink-soft);margin:0 0 10px;">
+          <div style="font-family:'Fraunces',serif;font-weight:600;font-size:calc(17.5px * var(--fs,1.15));color:var(--clay);margin-bottom:6px;">🧠 La mémoire d'ABUESA</div>
+          <p style="font-size:calc(17.5px * var(--fs,1.15));line-height:1.6;color:var(--ink-soft);margin:0 0 10px;">
             ABUESA garde un petit résumé de tes échanges pour se souvenir de toi d'une visite à l'autre. Il ne te demande pas ton nom : donne-le seulement si tu veux, et ne lui confie rien de secret. Les mots que tu proposes restent dans ABUESA, en attente de vérification. Tu peux effacer ta conversation à tout moment.
           </p>
           <button class="save-btn" id="forget-memory" style="background:var(--ink-soft);">🧹 Oublier ma conversation</button>
         </div>
 
-        <div style="margin-top:14px;font-size:17.5px;color:var(--ink-soft);line-height:1.8;">
+        <div style="margin-top:14px;font-size:calc(17.5px * var(--fs,1.15));color:var(--ink-soft);line-height:1.8;">
           <b style="color:var(--ink);">Créateur</b> — Adom K. Alexi, fils de Wawa, auteur et développeur.<br>
           <b style="color:var(--ink);">Adresse</b> — Wawa, Badou, Togo<br>
           <b style="color:var(--ink);">Contact</b> — 📧 alexiadom64@gmail.com · 📱 +228 99-61-99-69
@@ -1210,7 +1211,7 @@
     <div class="section-pad">
       <h2 class="section-title serif">Artistes</h2>
       <p class="section-desc">Voix et créateurs qui portent la culture Akposso aujourd'hui.</p>
-      <button id="open-artist-form" style="width:100%;background:var(--clay);color:var(--white);border:none;border-radius:12px;padding:12px;font-size:17.5px;font-family:'Inter',sans-serif;cursor:pointer;margin-bottom:16px;">🎤 Fais-toi connaître comme artiste</button>
+      <button id="open-artist-form" style="width:100%;background:var(--clay);color:var(--white);border:none;border-radius:12px;padding:12px;font-size:calc(17.5px * var(--fs,1.15));font-family:'Inter',sans-serif;cursor:pointer;margin-bottom:16px;">🎤 Fais-toi connaître comme artiste</button>
       <div id="artists-list"></div>
     </div>
   </main>
@@ -1272,7 +1273,7 @@
       </div>
 
       <div id="gallery-upload-zone">
-        <input type="file" id="gallery-file" accept="image/*,video/*" style="display:block;width:100%;box-sizing:border-box;padding:14px;background:var(--paper);border:2px dashed var(--line);border-radius:12px;margin-bottom:10px;font-size:17.5px;color:var(--ink-soft);">
+        <input type="file" id="gallery-file" accept="image/*,video/*" style="display:block;width:100%;box-sizing:border-box;padding:14px;background:var(--paper);border:2px dashed var(--line);border-radius:12px;margin-bottom:10px;font-size:calc(17.5px * var(--fs,1.15));color:var(--ink-soft);">
         <div id="gallery-file-preview"></div>
 
         <label for="gallery-caption">Légende (facultatif)</label>
@@ -1312,8 +1313,8 @@
 
       <div id="community-input-row" style="display:flex;gap:8px;align-items:flex-end;">
         <textarea id="community-text" rows="1" placeholder="Écris un message…" style="flex:1;resize:none;"></textarea>
-        <button id="community-record" type="button" aria-label="Message vocal" style="flex:0 0 auto;background:var(--paper);border:1px solid var(--line);border-radius:50%;width:44px;height:44px;font-size:20px;">🎤</button>
-        <button id="community-send" type="button" aria-label="Envoyer" style="flex:0 0 auto;background:var(--clay);color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:17.5px;">➤</button>
+        <button id="community-record" type="button" aria-label="Message vocal" style="flex:0 0 auto;background:var(--paper);border:1px solid var(--line);border-radius:50%;width:44px;height:44px;font-size:calc(20px * var(--fs,1.15));">🎤</button>
+        <button id="community-send" type="button" aria-label="Envoyer" style="flex:0 0 auto;background:var(--clay);color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:calc(17.5px * var(--fs,1.15));">➤</button>
       </div>
       <div id="community-status" class="status-line"></div>
     </div>
@@ -1324,7 +1325,7 @@
     <div class="modal-sheet" style="max-height:88vh;">
       <div class="close-row"><button id="close-search">×</button></div>
       <h3 class="serif">🔍 Rechercher sur ABUESA</h3>
-      <input type="text" id="global-search-input" placeholder="Un mot, un village, un artiste, une tradition…" style="width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:12px;font-size:17.5px;background:var(--paper);margin:6px 0 14px;">
+      <input type="text" id="global-search-input" placeholder="Un mot, un village, un artiste, une tradition…" style="width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:12px;font-size:calc(17.5px * var(--fs,1.15));background:var(--paper);margin:6px 0 14px;">
       <div id="global-search-results"></div>
     </div>
   </div>
@@ -1340,7 +1341,7 @@
       <input type="text" id="fb-name" placeholder="Ton prénom">
 
       <label for="fb-message">Ton message</label>
-      <textarea id="fb-message" rows="4" placeholder="Ex : Il manque le mot pour « famille »..." style="width:100%;padding:10px 13px;border:1px solid var(--line);border-radius:10px;font-size:17.5px;background:var(--paper);font-family:'Inter',sans-serif;resize:vertical;"></textarea>
+      <textarea id="fb-message" rows="4" placeholder="Ex : Il manque le mot pour « famille »..." style="width:100%;padding:10px 13px;border:1px solid var(--line);border-radius:10px;font-size:calc(17.5px * var(--fs,1.15));background:var(--paper);font-family:'Inter',sans-serif;resize:vertical;"></textarea>
 
       <button class="save-btn" id="fb-send">Envoyer 📩</button>
       <div class="status-line" id="fb-status"></div>
@@ -1381,6 +1382,13 @@
       <div class="close-row"><button id="close-settings">×</button></div>
       <h3 class="serif">Réglages</h3>
 
+      <label>Taille du texte</label>
+      <div id="fs-choices" style="display:flex;gap:8px;margin-bottom:6px;">
+        <button type="button" class="share-card-btn" data-fs="1" data-no-i18n style="margin-top:0;">A</button>
+        <button type="button" class="share-card-btn" data-fs="1.15" data-no-i18n style="margin-top:0;">A+</button>
+        <button type="button" class="share-card-btn" data-fs="1.3" data-no-i18n style="margin-top:0;">A++</button>
+      </div>
+
       <label for="supabase-url">URL Supabase (mémoire partagée)</label>
       <input type="text" id="supabase-url" placeholder="https://xxxx.supabase.co">
 
@@ -1399,10 +1407,10 @@
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:14px;">Version 4.2 · 8 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.4 · 8 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
-        <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:13px;margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
+        <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
       </div>
     </div>
   </div>
@@ -1425,6 +1433,7 @@
   EN["⚠️ ABUESA ne gère pas les paiements : regarde l'objet avant de payer, et ne paie jamais à l'avance sans l'avoir vu."] = "⚠️ ABUESA does not handle payments: look at the item before paying, and never pay in advance without seeing it.";
   EN["Bientôt ici : vélos, téléphones, habits et autres objets d'occasion de chez nous. Tu veux vendre quelque chose ? Écris-moi, je publie ton annonce avec ton numéro."] = "Coming soon: bikes, phones, clothes and other second-hand items from our community. Want to sell something? Write to me and I will publish your listing with your number.";
   EN["💬 Vendre un objet ici"] = "💬 Sell an item here";
+  EN["Taille du texte"] = "Text size";
   EN["💬 Contacter le vendeur"] = "💬 Contact the seller";
   EN["📞 Appeler"] = "📞 Call";
   EN["💬 Faire apparaître mon activité ici"] = "💬 Show my activity here";
@@ -1773,6 +1782,28 @@ function initSupabase(){
 }
 initSupabase();
 
+/* ===== Taille du texte réglable (A / A+ / A++) ===== */
+(function(){
+  function apply(v){
+    document.documentElement.style.setProperty('--fs', v);
+    document.querySelectorAll('#fs-choices button').forEach(function(b){
+      var on = b.getAttribute('data-fs') === String(v);
+      b.style.background = on ? 'var(--forest-deep)' : '';
+      b.style.color = on ? '#fff' : '';
+    });
+  }
+  var saved = null;
+  try{ saved = localStorage.getItem('abuesa_fs'); }catch(_){}
+  apply(saved || '1.15');
+  document.querySelectorAll('#fs-choices button').forEach(function(b){
+    b.addEventListener('click', function(){
+      var v = b.getAttribute('data-fs');
+      try{ localStorage.setItem('abuesa_fs', v); }catch(_){}
+      apply(v);
+    });
+  });
+})();
+
 /* ===== Compteur de visites (anonyme) : une alerte par nouvel appareil, un ping par jour ===== */
 const VISIT_FUNCTION_NAME = 'clever-processor';
 (function(){
@@ -1975,8 +2006,8 @@ function renderFeedbackHistory(){
   if(list.length === 0){ el.innerHTML=''; return; }
   const rows = list.slice().reverse().map(f=>
     `<div class="word-card" style="display:block;">
-       <div style="font-size:17.5px;color:var(--ink-soft);margin-bottom:3px;">${f.date}${f.name ? ' · '+f.name : ''}</div>
-       <div style="font-size:17.5px;">${f.message}</div>
+       <div style="font-size:calc(17.5px * var(--fs,1.15));color:var(--ink-soft);margin-bottom:3px;">${f.date}${f.name ? ' · '+f.name : ''}</div>
+       <div style="font-size:calc(17.5px * var(--fs,1.15));">${f.message}</div>
      </div>`
   ).join('');
   el.innerHTML = `<label style="margin-bottom:8px;">Envoyés par email depuis cet appareil</label>${rows}`;
@@ -2005,8 +2036,8 @@ async function renderFeedbackWall(){
   wallEl.innerHTML = data.map(f=>{
     const d = new Date(f.created_at).toLocaleDateString(window.ABUESA_I18N ? ABUESA_I18N.locale() : 'fr-FR', { day:'2-digit', month:'2-digit', year:'numeric' });
     return `<div class="word-card" style="display:block;">
-      <div style="font-size:17.5px;color:var(--ink-soft);margin-bottom:3px;">${d}${f.name ? ' · '+f.name : ''}</div>
-      <div style="font-size:17.5px;">${f.message}</div>
+      <div style="font-size:calc(17.5px * var(--fs,1.15));color:var(--ink-soft);margin-bottom:3px;">${d}${f.name ? ' · '+f.name : ''}</div>
+      <div style="font-size:calc(17.5px * var(--fs,1.15));">${f.message}</div>
     </div>`;
   }).join('');
 }
@@ -2539,7 +2570,7 @@ async function handleMediaRequest(kind, text){
     typingEl.remove();
     if(res.image){
       const div = addMessage('', 'bot');
-      div.innerHTML = '<img alt="" style="max-width:100%;border-radius:12px;display:block;"><div class="img-note" style="font-size:14px;opacity:.75;margin-top:6px;"></div><a class="share-card-btn" download="abuesa-image.jpg" style="display:inline-block;margin-top:8px;text-decoration:none;"></a>';
+      div.innerHTML = '<img alt="" style="max-width:100%;border-radius:12px;display:block;"><div class="img-note" style="font-size:calc(14px * var(--fs,1.15));opacity:.75;margin-top:6px;"></div><a class="share-card-btn" download="abuesa-image.jpg" style="display:inline-block;margin-top:8px;text-decoration:none;"></a>';
       div.querySelector('img').src = res.image;
       div.querySelector('.img-note').textContent = (window.ABUESA_I18N ? ABUESA_I18N.t("🎨 Image créée par IA. Elle peut contenir des erreurs (plantes, vêtements, danses) : ne la prends pas pour une photo réelle.") : "🎨 Image créée par IA. Elle peut contenir des erreurs (plantes, vêtements, danses) : ne la prends pas pour une photo réelle.");
       const a = div.querySelector('a'); a.href = res.image; a.textContent = (window.ABUESA_I18N ? ABUESA_I18N.t("⬇️ Enregistrer l'image") : "⬇️ Enregistrer l'image");
@@ -2940,7 +2971,7 @@ async function loadWawaMap(map){
   if(box){
     box.innerHTML = WAWA_CANTONS.map(c =>
       '<details style="margin:6px 0;"><summary style="font-weight:700;cursor:pointer;">' + escAll(c.name) + ' (' + c.villages.length + ')</summary><div style="margin-top:6px;">'
-      + c.villages.map(v => '<button type="button" class="map-v" data-k="' + escAll(c.name+'|'+v) + '" style="margin:3px 4px 3px 0;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--white);font-size:17.5px;">' + escAll(v) + '</button>').join('')
+      + c.villages.map(v => '<button type="button" class="map-v" data-k="' + escAll(c.name+'|'+v) + '" style="margin:3px 4px 3px 0;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--white);font-size:calc(17.5px * var(--fs,1.15));">' + escAll(v) + '</button>').join('')
       + '</div></details>').join('');
     box.onclick = e=>{
       const b = e.target.closest('.map-v'); if(!b) return;
@@ -3106,8 +3137,8 @@ CULTURE_NAMES.forEach((g, gi)=>{
   d.dataset.cs = ['danses','jeux','vivres','couleurs'][gi];
   d.innerHTML = '<summary style="font-weight:700;cursor:pointer;color:var(--gold);">' + g.icon + ' ' + escAll(g.title) + ' (' + g.items.length + ')</summary>'
     + '<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;">'
-    + g.items.map(n => '<span class="cn-chip" data-n="' + escAll(n) + '" style="padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--white);font-size:17.5px;font-weight:700;' + (CULTURE_DESC[n] ? 'cursor:pointer;border-color:var(--clay);' : '') + '">' + escAll(n) + (CULTURE_DESC[n] ? ' ℹ️' : '') + '</span>').join('')
-    + '</div><div class="cn-desc" style="display:none;margin-top:12px;padding:12px 14px;border-left:4px solid var(--clay);background:var(--white);border-radius:8px;font-size:17.5px;line-height:1.5;"></div>';
+    + g.items.map(n => '<span class="cn-chip" data-n="' + escAll(n) + '" style="padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--white);font-size:calc(17.5px * var(--fs,1.15));font-weight:700;' + (CULTURE_DESC[n] ? 'cursor:pointer;border-color:var(--clay);' : '') + '">' + escAll(n) + (CULTURE_DESC[n] ? ' ℹ️' : '') + '</span>').join('')
+    + '</div><div class="cn-desc" style="display:none;margin-top:12px;padding:12px 14px;border-left:4px solid var(--clay);background:var(--white);border-radius:8px;font-size:calc(17.5px * var(--fs,1.15));line-height:1.5;"></div>';
   d.addEventListener('click', e=>{
     const c = e.target.closest('.cn-chip'); if(!c) return;
     const box = d.querySelector('.cn-desc'), n = c.dataset.n;
@@ -3250,17 +3281,17 @@ async function renderArtists(){
     const div = document.createElement('div');
     div.className='artist-card';
     const songsHtml = (a.songs && a.songs.length)
-      ? `<div style="margin-top:8px;font-size:17.5px;color:var(--ink);"><b>Titres :</b> ${a.songs.join(' · ')}</div>`
+      ? `<div style="margin-top:8px;font-size:calc(17.5px * var(--fs,1.15));color:var(--ink);"><b>Titres :</b> ${a.songs.join(' · ')}</div>`
       : '';
     const currentSongHtml = a.currentSongTitle
-      ? `<div style="margin-top:8px;font-size:17.5px;">🎵 <b>Chanson d'actualité :</b> ${a.currentSongTitle}${a.currentSongLink ? ` — <a href="${a.currentSongLink}" target="_blank" rel="noopener" style="color:var(--clay);">écouter</a>` : ''}</div>`
+      ? `<div style="margin-top:8px;font-size:calc(17.5px * var(--fs,1.15));">🎵 <b>Chanson d'actualité :</b> ${a.currentSongTitle}${a.currentSongLink ? ` — <a href="${a.currentSongLink}" target="_blank" rel="noopener" style="color:var(--clay);">écouter</a>` : ''}</div>`
       : '';
     const flag = a.verified === false
-      ? `<div style="margin-top:8px;font-size:17.5px;color:var(--clay);">⚠️ Non confirmé en ligne — à vérifier</div>`
+      ? `<div style="margin-top:8px;font-size:calc(17.5px * var(--fs,1.15));color:var(--clay);">⚠️ Non confirmé en ligne — à vérifier</div>`
       : a.selfSubmitted
-        ? `<div style="margin-top:8px;font-size:17.5px;color:#4E7A1F;">✓ Inscrit par l'artiste lui-même</div>`
-        : (a.addedByAdmin ? `<div style="margin-top:8px;font-size:17.5px;color:#4E7A1F;">Ajouté depuis l'app</div>` : '');
-    div.innerHTML = `<h3>${a.name}</h3>${a.realName ? `<div style="font-size:17.5px;color:var(--ink);margin-bottom:4px;">${a.realName}</div>` : ''}<p>${a.bio}</p>${songsHtml}${currentSongHtml}${flag}`;
+        ? `<div style="margin-top:8px;font-size:calc(17.5px * var(--fs,1.15));color:#4E7A1F;">✓ Inscrit par l'artiste lui-même</div>`
+        : (a.addedByAdmin ? `<div style="margin-top:8px;font-size:calc(17.5px * var(--fs,1.15));color:#4E7A1F;">Ajouté depuis l'app</div>` : '');
+    div.innerHTML = `<h3>${a.name}</h3>${a.realName ? `<div style="font-size:calc(17.5px * var(--fs,1.15));color:var(--ink);margin-bottom:4px;">${a.realName}</div>` : ''}<p>${a.bio}</p>${songsHtml}${currentSongHtml}${flag}`;
     artistsList.appendChild(div);
   });
 }
@@ -3344,7 +3375,7 @@ function renderAdminPanel(){
     </div>
 
     <label>Personnalité de l'assistant (chat)</label>
-    <textarea id="admin-personality" rows="4" placeholder="Ex : Sois joueur et utilise des expressions typiques de Wawa. Tutoie toujours les jeunes visiteurs. Termine parfois par un proverbe akposso." style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:17.5px;">${(cloudPersonality || getLocalPersonality())}</textarea>
+    <textarea id="admin-personality" rows="4" placeholder="Ex : Sois joueur et utilise des expressions typiques de Wawa. Tutoie toujours les jeunes visiteurs. Termine parfois par un proverbe akposso." style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:calc(17.5px * var(--fs,1.15));">${(cloudPersonality || getLocalPersonality())}</textarea>
     <div class="admin-actions">
       <button id="admin-save-personality">💾 Enregistrer la personnalité</button>
     </div>
@@ -3374,7 +3405,7 @@ function renderAdminPanel(){
       <input type="text" id="admin-conte-titre" placeholder="Titre du conte">
     </div>
     <div class="admin-row">
-      <textarea id="admin-conte-texte" rows="3" placeholder="Texte du conte" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:17.5px;"></textarea>
+      <textarea id="admin-conte-texte" rows="3" placeholder="Texte du conte" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:calc(17.5px * var(--fs,1.15));"></textarea>
     </div>
     <div class="admin-actions"><button id="admin-add-conte">+ Ajouter le conte</button></div>
     <div id="admin-conte-status" class="status-line"></div>
@@ -3384,14 +3415,14 @@ function renderAdminPanel(){
       <input type="text" id="admin-hommage-nom" placeholder="Nom de la personne">
     </div>
     <div class="admin-row">
-      <textarea id="admin-hommage-texte" rows="3" placeholder="Texte d'hommage" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:17.5px;"></textarea>
+      <textarea id="admin-hommage-texte" rows="3" placeholder="Texte d'hommage" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:calc(17.5px * var(--fs,1.15));"></textarea>
     </div>
     <div class="admin-actions"><button id="admin-add-hommage">+ Ajouter l'hommage</button></div>
     <div id="admin-hommage-status" class="status-line"></div>
 
     <label>Ajouter au carnet du village</label>
     <div class="admin-row">
-      <select id="admin-carnet-type" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:17.5px;">
+      <select id="admin-carnet-type" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:calc(17.5px * var(--fs,1.15));">
         <option value="Naissance">👶 Naissance</option>
         <option value="Décès">🕊️ Décès</option>
         <option value="Dot / Mariage">💍 Dot / Mariage</option>
@@ -3401,7 +3432,7 @@ function renderAdminPanel(){
       <input type="text" id="admin-carnet-nom" placeholder="Nom de la personne / de la famille">
     </div>
     <div class="admin-row">
-      <textarea id="admin-carnet-message" rows="2" placeholder="Message (optionnel)" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:17.5px;"></textarea>
+      <textarea id="admin-carnet-message" rows="2" placeholder="Message (optionnel)" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:calc(17.5px * var(--fs,1.15));"></textarea>
     </div>
     <div class="admin-actions"><button id="admin-add-carnet">+ Ajouter au carnet</button></div>
     <div id="admin-carnet-status" class="status-line"></div>
@@ -3853,7 +3884,7 @@ function renderGalleryGrid(){
     grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">Rien dans cette catégorie pour l\'instant.</div>';
     return;
   }
-  const adminHint = isAdminUnlocked() ? '<div style="grid-column:1/-1;font-size:17.5px;color:var(--clay);">🗑️ Admin : appui long sur une photo ou une vidéo pour la supprimer.</div>' : '';
+  const adminHint = isAdminUnlocked() ? '<div style="grid-column:1/-1;font-size:calc(17.5px * var(--fs,1.15));color:var(--clay);">🗑️ Admin : appui long sur une photo ou une vidéo pour la supprimer.</div>' : '';
   grid.innerHTML = adminHint + filtered.map(item=>{
     const media = item.media_type === 'video'
       ? `<video src="${item.media_url}" controls muted playsinline></video>`
@@ -4682,7 +4713,7 @@ async function loadExistingPronunciations(){
     .limit(1);
   if(error || !data || data.length === 0) return;
   const url = data[0].audio_url;
-  el.innerHTML = `<button class="save-btn" style="width:auto;padding:8px 16px;background:var(--ink-soft);font-size:17.5px;" id="practice-play-existing">🔊 Écouter un exemple déjà enregistré</button>`;
+  el.innerHTML = `<button class="save-btn" style="width:auto;padding:8px 16px;background:var(--ink-soft);font-size:calc(17.5px * var(--fs,1.15));" id="practice-play-existing">🔊 Écouter un exemple déjà enregistré</button>`;
   document.getElementById('practice-play-existing').addEventListener('click', ()=> new Audio(url).play());
 }
 function showPracticeWord(forcedWord){
@@ -4794,8 +4825,8 @@ function renderCommunityMessage(msg){
   const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString(window.ABUESA_I18N ? ABUESA_I18N.locale() : 'fr-FR', {hour:'2-digit', minute:'2-digit'}) : '';
   const body = msg.kind === 'audio'
     ? `<audio controls src="${msg.audio_url}" style="width:100%;margin-top:3px;"></audio>`
-    : `<div style="font-size:17.5px;color:var(--ink);margin-top:2px;">${escapeHtmlSafe(msg.content)}</div>`;
-  div.innerHTML = `<div style="font-size:17.5px;color:var(--gold);font-weight:700;">${name} <span style="color:var(--ink-soft);font-weight:400;">· ${time}</span></div>${body}`;
+    : `<div style="font-size:calc(17.5px * var(--fs,1.15));color:var(--ink);margin-top:2px;">${escapeHtmlSafe(msg.content)}</div>`;
+  div.innerHTML = `<div style="font-size:calc(17.5px * var(--fs,1.15));color:var(--gold);font-weight:700;">${name} <span style="color:var(--ink-soft);font-weight:400;">· ${time}</span></div>${body}`;
   communityMessagesEl.appendChild(div);
 }
 async function loadCommunityMessages(){
