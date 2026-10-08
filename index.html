@@ -1407,7 +1407,7 @@
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.5 · 8 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.6 · 8 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -3437,6 +3437,28 @@ function renderAdminPanel(){
     <div class="admin-actions"><button id="admin-add-carnet">+ Ajouter au carnet</button></div>
     <div id="admin-carnet-status" class="status-line"></div>
 
+    <label>🛒 Marché : publier une annonce</label>
+    <div class="admin-row"><input type="text" id="admin-m-titre" placeholder="Objet (ex : Téléphone Honor)"></div>
+    <div class="admin-row">
+      <input type="text" id="admin-m-prix" placeholder="Prix (ex : 20 000 FCFA)">
+      <input type="text" id="admin-m-cat" placeholder="Catégorie (Téléphones…)">
+    </div>
+    <div class="admin-row">
+      <input type="text" id="admin-m-ville" placeholder="Ville / quartier">
+      <input type="text" id="admin-m-vendeur" placeholder="Nom du vendeur">
+    </div>
+    <div class="admin-row"><input type="tel" id="admin-m-contact" placeholder="Numéro du vendeur (ex : 99619969)"></div>
+    <div class="admin-row">
+      <textarea id="admin-m-desc" rows="2" placeholder="Description (état, détails…)" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:calc(17.5px * var(--fs,1.15));"></textarea>
+    </div>
+    <div class="admin-row">
+      <input type="date" id="admin-m-fin" title="Date de fin (facultatif)">
+      <input type="file" id="admin-m-photo" accept="image/*">
+    </div>
+    <div class="admin-actions"><button id="admin-m-add">+ Publier l'annonce</button></div>
+    <div id="admin-m-status" class="status-line"></div>
+    <div class="admin-list" id="admin-m-list" style="margin-top:8px;"></div>
+
     <label>Ajouter un artiste</label>
     <div class="admin-row">
       <input type="text" id="admin-artist-name" placeholder="Nom de l'artiste">
@@ -3457,6 +3479,7 @@ function renderAdminPanel(){
   `;
 
   renderAdminAddedList();
+  initAdminMarche();
 
   document.getElementById('admin-add-word').addEventListener('click', async ()=>{
     const fr = document.getElementById('admin-word-fr').value.trim();
@@ -3710,6 +3733,100 @@ function renderAdminPanel(){
     try{ sessionStorage.removeItem('abuesa_admin_code'); }catch(_){}
     refreshAdminVisibility();
     showToast('Mode admin désactivé');
+  });
+}
+
+/* ===== Admin Marché : tout passe par la fonction protégée par le code admin ===== */
+async function adminCall(payload){
+  let code = null; try{ code = sessionStorage.getItem('abuesa_admin_code'); }catch(_){}
+  if(!code){ code = (prompt('Code admin :') || '').trim(); if(!code) return null; }
+  const base = localStorage.getItem(STORE_KEYS.supabaseUrl) || DEFAULT_SUPABASE_URL;
+  try{
+    const res = await fetch(base + '/functions/v1/swift-responder', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ ...payload, code })
+    });
+    const out = await res.json().catch(()=>({}));
+    if(!res.ok){
+      if(res.status === 403){ try{ sessionStorage.removeItem('abuesa_admin_code'); }catch(_){} }
+      showToast(out.error || 'Action impossible');
+      return null;
+    }
+    try{ sessionStorage.setItem('abuesa_admin_code', code); }catch(_){}
+    return out;
+  }catch(_){ showToast('Erreur réseau, réessaie'); return null; }
+}
+function shrinkImage(file, maxSide){
+  return new Promise((resolve)=>{
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = ()=>{
+      const k = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      c.toBlob(b => resolve(b || file), 'image/jpeg', 0.82);
+    };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
+}
+async function refreshAdminMarcheList(){
+  const el = document.getElementById('admin-m-list'); if(!el) return;
+  const out = await adminCall({ action:'marche_list' });
+  if(!out){ el.innerHTML = '<div class="hc-note">Liste non chargée (code admin ?). <button id="admin-m-reload" style="border:none;background:none;color:var(--clay);cursor:pointer;text-decoration:underline;">Réessayer</button></div>'; const b = document.getElementById('admin-m-reload'); if(b) b.onclick = refreshAdminMarcheList; return; }
+  const items = out.items || [];
+  if(!items.length){ el.innerHTML = '<div class="hc-note">Aucune annonce pour le moment.</div>'; return; }
+  const btn = 'border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 8px;cursor:pointer;font-family:inherit;color:#000;';
+  el.innerHTML = items.map(x=>`<div style="padding:8px 0;border-bottom:1px solid var(--line);">
+      <strong>${escAll(x.titre)}</strong>${x.prix ? ' · ' + escAll(x.prix) : ''} ${x.actif ? '<span style="color:#1f7a3a;">● en ligne</span>' : '<span style="color:#888;">○ masquée</span>'}
+      <div style="margin-top:4px;">
+        <button data-m="toggle" data-id="${x.id}" data-actif="${x.actif ? 1 : 0}" style="${btn}">${x.actif ? '🙈 Masquer' : '👁 Réafficher'}</button>
+        <button data-m="del" data-id="${x.id}" style="${btn}color:var(--clay);">🗑 Supprimer</button>
+      </div></div>`).join('');
+}
+function initAdminMarche(){
+  const list = document.getElementById('admin-m-list'); if(!list) return;
+  refreshAdminMarcheList();
+  list.addEventListener('click', async (e)=>{
+    const b = e.target.closest('button[data-m]'); if(!b) return;
+    const id = Number(b.dataset.id);
+    if(b.dataset.m === 'del'){
+      if(!confirm('Supprimer définitivement cette annonce ?')) return;
+      if(await adminCall({ action:'marche_delete', id })) showToast('Annonce supprimée ✓');
+    } else {
+      if(await adminCall({ action:'marche_toggle', id, actif: b.dataset.actif !== '1' })) showToast('Mis à jour ✓');
+    }
+    await refreshAdminMarcheList();
+    fetchCloudMarche().then(renderHomeMarche);
+  });
+  document.getElementById('admin-m-add').addEventListener('click', async ()=>{
+    const v = id => document.getElementById(id).value.trim();
+    const status = document.getElementById('admin-m-status');
+    const btn = document.getElementById('admin-m-add');
+    if(!v('admin-m-titre') || !v('admin-m-contact')){ showToast("Remplis au moins l'objet et le numéro du vendeur"); return; }
+    btn.disabled = true; status.className = 'status-line'; status.textContent = 'Publication…';
+    let photo = null;
+    const f = document.getElementById('admin-m-photo').files[0];
+    if(f && supabaseClient){
+      status.textContent = 'Envoi de la photo…';
+      const blob = await shrinkImage(f, 1000);
+      const path = `marche/${Date.now()}-${Math.random().toString(36).slice(2,8)}.jpg`;
+      const { error: upErr } = await supabaseClient.storage.from('medias').upload(path, blob, { contentType:'image/jpeg' });
+      if(upErr){ status.textContent = "Photo non envoyée : " + upErr.message; status.className = 'status-line status-bad'; btn.disabled = false; return; }
+      photo = supabaseClient.storage.from('medias').getPublicUrl(path).data.publicUrl;
+    }
+    const out = await adminCall({ action:'marche_add', item:{
+      titre:v('admin-m-titre'), prix:v('admin-m-prix'), categorie:v('admin-m-cat'), ville:v('admin-m-ville'),
+      vendeur:v('admin-m-vendeur'), contact:v('admin-m-contact'), description:v('admin-m-desc'),
+      fin:document.getElementById('admin-m-fin').value || null, photo
+    }});
+    btn.disabled = false;
+    if(!out){ status.textContent = ''; return; }
+    ['titre','prix','cat','ville','vendeur','contact','desc','fin'].forEach(k=>{ document.getElementById('admin-m-'+k).value=''; });
+    document.getElementById('admin-m-photo').value = '';
+    status.textContent = 'Annonce publiée ✓';
+    await refreshAdminMarcheList();
+    fetchCloudMarche().then(renderHomeMarche);
   });
 }
 
