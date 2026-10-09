@@ -1407,7 +1407,7 @@
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.7 · 9 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.8 · 9 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -3469,6 +3469,10 @@ function renderAdminPanel(){
       <textarea id="admin-p-desc" rows="2" placeholder="Description" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:calc(17.5px * var(--fs,1.15));"></textarea>
     </div>
     <div class="admin-row"><input type="date" id="admin-p-fin" title="Date de fin (facultatif)"></div>
+    <div class="hc-note" style="margin-top:6px;">📷 Photo du produit (facultatif)</div>
+    <div class="admin-row"><input type="file" id="admin-p-photo" accept="image/*"></div>
+    <div class="hc-note" style="margin-top:6px;">🎬 Vidéo du produit (facultatif, 50 Mo max, compressée automatiquement)</div>
+    <div class="admin-row"><input type="file" id="admin-p-video" accept="video/*"></div>
     <div class="admin-actions"><button id="admin-p-add">+ Publier le partenaire</button></div>
     <div id="admin-p-status" class="status-line"></div>
     <div class="admin-list" id="admin-p-list" style="margin-top:8px;"></div>
@@ -3881,13 +3885,39 @@ function initAdminPartners(){
     const btn = document.getElementById('admin-p-add');
     if(!v('admin-p-nom')){ showToast('Remplis au moins le nom du partenaire'); return; }
     btn.disabled = true; status.className = 'status-line'; status.textContent = 'Publication…';
+    const fail = (msg)=>{ status.textContent = msg; status.className = 'status-line status-bad'; btn.disabled = false; };
+    let photo = null, video = null;
+    const pf = document.getElementById('admin-p-photo').files[0];
+    const vf = document.getElementById('admin-p-video').files[0];
+    if((pf || vf) && !supabaseClient){ fail('Supabase non branché : impossible d\'envoyer un fichier'); return; }
+    if(pf){
+      status.textContent = 'Envoi de la photo…';
+      const blob = await shrinkImage(pf, 1000);
+      const path = `partenaires/${Date.now()}-${Math.random().toString(36).slice(2,8)}.jpg`;
+      const { error: e1 } = await supabaseClient.storage.from('medias').upload(path, blob, { contentType:'image/jpeg' });
+      if(e1){ fail('Photo non envoyée : ' + e1.message); return; }
+      photo = supabaseClient.storage.from('medias').getPublicUrl(path).data.publicUrl;
+    }
+    if(vf){
+      status.textContent = 'Compression de la vidéo…';
+      const vb = await compressVideo(vf, (pct)=>{ status.textContent = 'Compression de la vidéo… ' + pct + ' %'; });
+      if(vb.size > VIDEO_UPLOAD_MAX){ fail('Vidéo trop lourde (' + (vb.size/(1024*1024)).toFixed(0) + ' Mo, maximum 50 Mo). Choisis-en une plus courte.'); return; }
+      status.textContent = 'Envoi de la vidéo…';
+      const ext = (vb.type && vb.type.indexOf('mp4') >= 0) ? 'mp4' : (vb.type && vb.type.indexOf('webm') >= 0) ? 'webm' : ((vf.name.split('.').pop() || 'mp4').toLowerCase());
+      const path = `partenaires/${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+      const { error: e2 } = await supabaseClient.storage.from('medias').upload(path, vb, { contentType: vb.type || vf.type || 'video/mp4' });
+      if(e2){ fail('Vidéo non envoyée : ' + e2.message); return; }
+      video = supabaseClient.storage.from('medias').getPublicUrl(path).data.publicUrl;
+    }
+    status.textContent = 'Publication…';
     const out = await adminCall({ action:'part_add', item:{
       nom:v('admin-p-nom'), categorie:v('admin-p-cat'), lien:v('admin-p-lien'), description:v('admin-p-desc'),
-      fin:document.getElementById('admin-p-fin').value || null
+      fin:document.getElementById('admin-p-fin').value || null, photo, video
     }});
     btn.disabled = false;
     if(!out){ status.textContent = ''; return; }
     ['nom','cat','lien','desc','fin'].forEach(k=>{ document.getElementById('admin-p-'+k).value=''; });
+    document.getElementById('admin-p-photo').value = ''; document.getElementById('admin-p-video').value = '';
     status.textContent = 'Partenaire publié ✓';
     await refreshAdminPartnersList();
     fetchCloudPartners().then(renderHomePartners);
@@ -4550,12 +4580,20 @@ fetchCloudCarnet().then(renderHomeCarnet);
 let cloudPartners = [];
 async function fetchCloudPartners(){
   if(!supabaseClient){ cloudPartners = []; return; }
-  const { data, error } = await supabaseClient
+  let { data, error } = await supabaseClient
     .from('partenaires')
-    .select('nom, description, lien, categorie, fin')
+    .select('nom, description, lien, categorie, fin, photo, video')
     .eq('actif', true)
     .order('id', { ascending:false })
     .limit(8);
+  if(error){   // colonnes photo/video pas encore créées : on retombe sur l'ancienne lecture
+    ({ data, error } = await supabaseClient
+      .from('partenaires')
+      .select('nom, description, lien, categorie, fin')
+      .eq('actif', true)
+      .order('id', { ascending:false })
+      .limit(8));
+  }
   if(!error && data){
     const today = new Date().toISOString().slice(0, 10);
     cloudPartners = data.filter(p=> p && p.nom && (!p.fin || p.fin >= today));
@@ -4578,7 +4616,10 @@ function renderHomePartners(){
   const pitch = `<a class="share-card-btn" style="display:inline-block;text-decoration:none;margin-top:10px;" target="_blank" rel="noopener" href="https://wa.me/22899619969?text=${pitchMsg}">💬 Faire apparaître mon activité ici</a>`;
   const items = cloudPartners.map(p=>{
     const href = partnerLink(p.lien);
+    const pPhoto = /^https?:\/\//i.test(String(p.photo || '')) ? `<img src="${escAll(p.photo)}" alt="" loading="lazy" onerror="this.style.display='none'" style="width:100%;max-height:240px;object-fit:cover;border-radius:10px;margin-bottom:6px;">` : '';
+    const pVideo = /^https?:\/\//i.test(String(p.video || '')) ? `<video src="${escAll(p.video)}" controls playsinline preload="none" style="width:100%;max-height:300px;border-radius:10px;margin-bottom:6px;background:#000;"></video>` : '';
     return `<div class="hc-day" style="margin-top:10px;">
+      ${pPhoto}${pVideo}
       <strong>${escAll(p.nom)}</strong>${p.categorie ? ` <span class="hc-note">· ${escAll(p.categorie)}</span>` : ''}
       ${p.description ? `<div class="hc-note" style="margin-top:2px;"><span data-ut>${escAll(p.description)}</span></div>` : ''}
       ${href ? `<a class="share-card-btn" style="display:inline-block;text-decoration:none;" target="_blank" rel="noopener sponsored" href="${escAll(href)}">Découvrir →</a>` : ''}
