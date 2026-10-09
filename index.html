@@ -1407,7 +1407,7 @@
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.6 · 8 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.7 · 9 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -3459,6 +3459,20 @@ function renderAdminPanel(){
     <div id="admin-m-status" class="status-line"></div>
     <div class="admin-list" id="admin-m-list" style="margin-top:8px;"></div>
 
+    <label>🤝 Partenaires : publier une annonce</label>
+    <div class="admin-row"><input type="text" id="admin-p-nom" placeholder="Nom du partenaire (commerce, artiste, événement)"></div>
+    <div class="admin-row">
+      <input type="text" id="admin-p-cat" placeholder="Catégorie">
+      <input type="text" id="admin-p-lien" placeholder="Lien ou numéro WhatsApp">
+    </div>
+    <div class="admin-row">
+      <textarea id="admin-p-desc" rows="2" placeholder="Description" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:calc(17.5px * var(--fs,1.15));"></textarea>
+    </div>
+    <div class="admin-row"><input type="date" id="admin-p-fin" title="Date de fin (facultatif)"></div>
+    <div class="admin-actions"><button id="admin-p-add">+ Publier le partenaire</button></div>
+    <div id="admin-p-status" class="status-line"></div>
+    <div class="admin-list" id="admin-p-list" style="margin-top:8px;"></div>
+
     <label>Ajouter un artiste</label>
     <div class="admin-row">
       <input type="text" id="admin-artist-name" placeholder="Nom de l'artiste">
@@ -3480,6 +3494,7 @@ function renderAdminPanel(){
 
   renderAdminAddedList();
   initAdminMarche();
+  initAdminPartners();
 
   document.getElementById('admin-add-word').addEventListener('click', async ()=>{
     const fr = document.getElementById('admin-word-fr').value.trim();
@@ -3827,6 +3842,55 @@ function initAdminMarche(){
     status.textContent = 'Annonce publiée ✓';
     await refreshAdminMarcheList();
     fetchCloudMarche().then(renderHomeMarche);
+  });
+}
+
+/* ===== Admin Partenaires (même principe que le Marché) ===== */
+async function refreshAdminPartnersList(){
+  const el = document.getElementById('admin-p-list'); if(!el) return;
+  const out = await adminCall({ action:'part_list' });
+  if(!out){ el.innerHTML = '<div class="hc-note">Liste non chargée (code admin ?). <button id="admin-p-reload" style="border:none;background:none;color:var(--clay);cursor:pointer;text-decoration:underline;">Réessayer</button></div>'; const b = document.getElementById('admin-p-reload'); if(b) b.onclick = refreshAdminPartnersList; return; }
+  const items = out.items || [];
+  if(!items.length){ el.innerHTML = '<div class="hc-note">Aucun partenaire pour le moment.</div>'; return; }
+  const btn = 'border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 8px;cursor:pointer;font-family:inherit;color:#000;';
+  el.innerHTML = items.map(x=>`<div style="padding:8px 0;border-bottom:1px solid var(--line);">
+      <strong>${escAll(x.nom)}</strong>${x.categorie ? ' · ' + escAll(x.categorie) : ''} ${x.actif ? '<span style="color:#1f7a3a;">● en ligne</span>' : '<span style="color:#888;">○ masqué</span>'}
+      <div style="margin-top:4px;">
+        <button data-p="toggle" data-id="${x.id}" data-actif="${x.actif ? 1 : 0}" style="${btn}">${x.actif ? '🙈 Masquer' : '👁 Réafficher'}</button>
+        <button data-p="del" data-id="${x.id}" style="${btn}color:var(--clay);">🗑 Supprimer</button>
+      </div></div>`).join('');
+}
+function initAdminPartners(){
+  const list = document.getElementById('admin-p-list'); if(!list) return;
+  refreshAdminPartnersList();
+  list.addEventListener('click', async (e)=>{
+    const b = e.target.closest('button[data-p]'); if(!b) return;
+    const id = Number(b.dataset.id);
+    if(b.dataset.p === 'del'){
+      if(!confirm('Supprimer définitivement ce partenaire ?')) return;
+      if(await adminCall({ action:'part_delete', id })) showToast('Partenaire supprimé ✓');
+    } else {
+      if(await adminCall({ action:'part_toggle', id, actif: b.dataset.actif !== '1' })) showToast('Mis à jour ✓');
+    }
+    await refreshAdminPartnersList();
+    fetchCloudPartners().then(renderHomePartners);
+  });
+  document.getElementById('admin-p-add').addEventListener('click', async ()=>{
+    const v = id => document.getElementById(id).value.trim();
+    const status = document.getElementById('admin-p-status');
+    const btn = document.getElementById('admin-p-add');
+    if(!v('admin-p-nom')){ showToast('Remplis au moins le nom du partenaire'); return; }
+    btn.disabled = true; status.className = 'status-line'; status.textContent = 'Publication…';
+    const out = await adminCall({ action:'part_add', item:{
+      nom:v('admin-p-nom'), categorie:v('admin-p-cat'), lien:v('admin-p-lien'), description:v('admin-p-desc'),
+      fin:document.getElementById('admin-p-fin').value || null
+    }});
+    btn.disabled = false;
+    if(!out){ status.textContent = ''; return; }
+    ['nom','cat','lien','desc','fin'].forEach(k=>{ document.getElementById('admin-p-'+k).value=''; });
+    status.textContent = 'Partenaire publié ✓';
+    await refreshAdminPartnersList();
+    fetchCloudPartners().then(renderHomePartners);
   });
 }
 
