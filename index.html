@@ -1407,7 +1407,7 @@
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.8 · 9 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.9.1 · 10 oct. 2026 (FR/EN + internet + images + OVAZU)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -2439,6 +2439,15 @@ function buildSystemPromptCore(compact){
   }
   prompt += buildCultureKnowledge();
   prompt += buildMemoryPrompt();
+  // Mots ajoutés par Alexi dans l'espace admin : toujours envoyés, en premier et même en version légère,
+  // pour qu'ils ne soient jamais coupés ni oubliés (ils sont fiables, ils passent avant tout le reste).
+  const adminWords = [...getExtraWords(), ...cloudWords].filter(w=> w && w.ak && w.fr);
+  if(adminWords.length){
+    const seen = new Set();
+    const lines = adminWords.filter(w=>{ const k = (w.ak + '|' + w.fr).toLowerCase(); if(seen.has(k)) return false; seen.add(k); return true; })
+      .map(w=> `${w.ak} = ${__en ? ABUESA_I18N.gloss(w.fr) : w.fr}`).join(' ; ');
+    prompt += `\n\nMots akposso ajoutés par Alexi, le créateur d'ABUESA (FIABLES, prioritaires sur tout le reste ; si un mot de la question figure ici, utilise ce sens et ne dis jamais que tu ne le connais pas) :\n${lines}`;
+  }
   if(dict.length === 0 || compact) return prompt;
   const dictLines = dict.map(w=> `${w.ak} = ${__en ? ABUESA_I18N.gloss(w.fr) : w.fr}`).join(' ; ');
   return `${prompt}
@@ -2467,7 +2476,19 @@ async function callGroq(userText){
   try{
     const ctl = new AbortController();
     const tm = setTimeout(()=> ctl.abort(), 70000);
-    const needDict = /\b(mot|mots|dit-on|dire|traduc\w*|signifie|veut dire|sens|akposso|ikposso|dictionnaire|how do you say|what does|mean|meaning|translate)\b/i.test(userText);
+    // Le dictionnaire complet est envoyé dès que le message peut concerner la langue : mots-clés,
+    // lettres spéciales de l'ikposso, mot présent dans le dictionnaire, ou message court (salutation, phrase à traduire).
+    const needDict = /\b(mot|mots|dit-on|dire|traduc\w*|signifie|veut dire|sens|akposso|ikposso|dictionnaire|how do you say|what does|mean|meaning|translate|comment|salut\w*|bonjour|bonsoir|merci|phrase|expression|prononc\w*)\b/i.test(userText)
+      || /[ɛɔɩʋɣɖŋƐƆƖƲēōīūȇ]/.test(userText)
+      || userText.trim().split(/\s+/).length <= 6
+      || (function(){
+           try{
+             const nz = s=> String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9\s]/g,' ');
+             const akWords = new Set();
+             getFullDictionary().forEach(w=> nz(w.ak).split(/\s+/).forEach(t=>{ if(t.length >= 3) akWords.add(t); }));
+             return nz(userText).split(/\s+/).some(t=> t.length >= 3 && akWords.has(t));
+           }catch(_){ return false; }
+         })();
     const searchMessages = [{role:'system', content: buildSystemPrompt(!needDict) + SEARCH_RULES}, ...history.slice(-4), {role:'user', content:userText}];
     const sr = await fetch(url + '/functions/v1/' + SEARCH_FUNCTION_NAME, {
       method:'POST',
