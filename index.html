@@ -1112,6 +1112,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
       <details style="margin-bottom:14px;border:1px solid var(--line);border-radius:14px;padding:10px 14px;">
         <summary style="font-weight:800;cursor:pointer;">🔊 Lexique parlé — la voix d'Alexi (106 mots)</summary>
         <p style="font-size:.9em;opacity:.75;">Appuie sur ▶ pour entendre le mot en Akposso, prononcé par Alexi.</p>
+        <div id="lex-status" style="font-weight:700;color:var(--clay);"></div>
         <div id="lex-list"></div>
       </details>
       <input type="text" id="dict-search" placeholder="Chercher un mot…">
@@ -5270,11 +5271,32 @@ document.getElementById('community-record').addEventListener('click', async ()=>
 (function(){
   var LEX=[["Salutations", "Bonjour", "ivuao", 0.0, 1.2], ["Salutations", "Comment vas-tu ?", "avlē muani", 1.8, 4.24], ["Salutations", "Je vais bien", "navlē bubuē", 4.84, 6.54], ["Salutations", "Bonsoir", "izuao ou izua", 7.14, 8.46], ["Salutations", "Comment ça va ? Ça va bien", "ezamu Ani ? Niza bubuē", 9.06, 10.28], ["Salutations", "Bonne nuit", "ïliē kôbuèkè", 10.88, 15.74], ["Salutations", "Comment vas-tu ? Je vais bien", "eza-muani ? nizakabuē", 16.34, 17.84], ["Salutations", "Merci beaucoup", "ewlesē põo", 18.44, 22.36], ["Salutations", "De rien", "onési-ahlakpô", 22.96, 24.28], ["Salutations", "Pardon", "kukô", 24.88, 26.1], ["Salutations", "S'il te plaît", "naduēyã ou naduyēyã", 26.7, 28.36], ["Salutations", "Bienvenue", "yanasē ou anasēo", 28.96, 36.8], ["Salutations", "Au revoir", "kunamualē", 37.4, 41.02], ["Salutations", "À bientôt", "ékualēo", 41.62, 43.34], ["Salutations", "Bon courage", "zētudu", 43.94, 45.08], ["Famille", "Père", "ila", 45.68, 47.04], ["Famille", "Mère", "ina", 47.64, 51.02], ["Famille", "Grand-père", "alévlé ou ilévlé", 51.62, 54.24], ["Famille", "Grand-mère", "kaka ou inévlé", 54.84, 56.28], ["Famille", "Fils", "ika", 56.88, 59.06], ["Famille", "Fille", "idjæ", 59.66, 62.59], ["Famille", "Frère", "ivla", 63.19, 68.02], ["Famille", "Sœur", "inédjæ", 68.62, 70.87], ["Famille", "Oncle", "gnegne", 71.47, 74.1], ["Famille", "Tante", "ilevletsi ou alévletsi ou tsitsi", 74.7, 77.88], ["Famille", "Cousin", "anu-lavla ayilē", 78.48, 79.64], ["Famille", "Cousine (autre forme)", "anu-navi ayilē ou anu-lavla ayuvi", 80.24, 81.5], ["Famille", "Mari", "ugni", 82.1, 86.76], ["Famille", "Femme", "ossifì", 87.36, 88.28], ["Famille", "Enfants", "uvi", 88.88, 90.73], ["Famille", "Bébé", "évidjé-fiu", 91.33, 93.47], ["Famille", "Ancêtre", "alevleni ou ilévlé", 94.07, 95.47], ["Famille", "Chef de famille", "uluwli ou udunu-wli", 96.07, 97.65], ["Famille", "Beau-père", "ihala", 98.25, 103.17], ["Famille", "Belle-mère", "ikôna", 103.77, 107.45], ["Famille", "Beau-frère", "ihēlē", 108.05, 111.01], ["Famille", "Belle-sœur", "iheletsi", 111.61, 113.15], ["Nature", "Soleil", "ovê", 113.75, 114.59], ["Nature", "Lune", "utsi", 115.19, 116.11], ["Nature", "Étoile", "ilô", 116.71, 118.23], ["Nature", "Pluie", "adî", 118.83, 121.23], ["Nature", "Vent", "ulu", 121.83, 124.95], ["Nature", "Rivière", "õbē", 125.55, 127.03], ["Nature", "Montagne", "ito", 127.63, 130.33], ["Nature", "Forêt", "ôfu", 130.93, 133.59], ["Nature", "Arbre", "itsu", 134.19, 134.85], ["Nature", "Terre", "utì ou utikpæ", 135.45, 136.81], ["Nature", "Feu", "ivu", 137.41, 138.45], ["Nature", "Eau", "ivi", 139.05, 142.51], ["Nature", "Ciel", "ava", 143.11, 144.73], ["Nature", "Nuit", "ihli", 145.33, 148.38], ["Nature", "Jour", "ēyui", 148.98, 149.9], ["Nature", "Saison", "itiniti", 150.5, 151.74], ["Sagesse", "Prière", "avitakpô ou avita", 152.34, 153.22], ["Sagesse", "Bénédiction", "ēbua", 153.82, 155.0], ["Sagesse", "Sagesse", "ēsēmù", 155.6, 157.2], ["Sagesse", "Vérité", "ēsēsisi", 157.8, 160.84], ["Sagesse", "Justice", "éssēzadu", 161.44, 163.02], ["Sagesse", "Respect", "duēlu nuti", 163.62, 167.84], ["Sagesse", "Honneurs", "dubēdu", 168.44, 170.16], ["Sagesse", "Courage", "ētuzēdu", 170.76, 172.92], ["Sagesse", "Paix", "ētēlulua", 173.52, 174.5], ["Sagesse", "Amour", "ôfualuēssē", 175.1, 175.96], ["Sagesse", "Espoir", "su-émununé", 176.56, 177.34], ["Sagesse", "Foi", "ētēnu", 177.94, 178.96], ["Vie quotidienne", "Manger", "yēku", 179.56, 180.6], ["Vie quotidienne", "Boire", "gnua", 181.2, 183.16], ["Vie quotidienne", "Dormir", "lē", 183.76, 185.6], ["Vie quotidienne", "Travailler", "na-ôlu", 186.2, 187.36], ["Vie quotidienne", "Marcher", "ssē", 187.96, 189.14], ["Vie quotidienne", "Parler", "yēssē", 189.74, 192.84], ["Vie quotidienne", "Écouter", "katu", 193.44, 194.4], ["Vie quotidienne", "Voir", "kôssu", 195.0, 197.02], ["Vie quotidienne", "Écouter", "katu", 197.62, 199.02], ["Vie quotidienne", "Penser", "ôlô-nuhlu", 199.62, 201.6], ["Vie quotidienne", "Aimer", "fualuēssē", 202.2, 203.18], ["Vie quotidienne", "Donner", "ka-ēku", 203.78, 204.84], ["Vie quotidienne", "Recevoir", "tē-ēku", 205.44, 206.98], ["Vie quotidienne", "Acheter", "vu", 207.58, 209.14], ["Vie quotidienne", "Vendre", "yi-ēku", 209.74, 211.14], ["Vie quotidienne", "Construire", "tsi-udunu", 211.74, 212.94], ["Corps humain", "Tête", "ēlu", 213.54, 215.02], ["Corps humain", "Yeux", "émû", 215.62, 216.76], ["Corps humain", "Oreille", "utu", 217.36, 219.36], ["Corps humain", "Nez", "iyo", 219.96, 222.74], ["Corps humain", "Bouche", "unuku", 223.34, 223.88], ["Corps humain", "Main", "ahla", 224.48, 225.64], ["Corps humain", "Pieds", "uvu", 226.24, 227.12], ["Corps humain", "Cœur", "ôvô", 227.72, 229.12], ["Corps humain", "Ventre", "ēmēku", 229.72, 230.68], ["Corps humain", "Dos", "idu", 231.28, 232.02], ["Nombres", "1", "ēdi", 232.62, 233.78], ["Nombres", "2", "ēfoi ou ēfua", 234.38, 235.26], ["Nombres", "3", "ēla", 235.86, 236.8], ["Nombres", "4", "ēna", 237.4, 238.96], ["Nombres", "5", "ētu", 239.56, 240.56], ["Nombres", "6", "ēwlu", 241.16, 242.68], ["Nombres", "7", "ēwludi", 243.28, 244.32], ["Nombres", "8", "ēlē", 244.92, 245.96], ["Nombres", "9", "ēlēdi", 246.56, 247.54], ["Nombres", "10", "idjo", 248.14, 249.24], ["Couleurs", "Rouge", "ôvē", 249.84, 250.82], ["Couleurs", "Blanc", "œfue", 251.42, 252.4], ["Couleurs", "Noir", "ôwē", 253.0, 255.09], ["Couleurs", "Vert", "ugbatawla", 255.69, 256.55], ["Couleurs", "Bleu", "blô ou ugbatawlawē", 257.15, 265.45]];
   var box=document.getElementById('lex-list'); if(!box) return;
-  var au=null, stopAt=0, cur=null;
-  function getAudio(){ if(!au){ au=new Audio('voix-akposso.mp3'); au.preload='auto';
-    au.addEventListener('timeupdate',function(){ if(stopAt && au.currentTime>=stopAt){ au.pause(); stopAt=0; reset(); } });
-    au.addEventListener('ended',reset); } return au; }
-  function reset(){ if(cur){ cur.textContent='▶'; cur=null; } }
+  var au=null, stopAt=0, cur=null, timer=null, loading=null;
+  var st=document.getElementById('lex-status');
+  function say(t){ if(st) st.textContent=t||''; }
+  function reset(){ if(timer){ clearInterval(timer); timer=null; } stopAt=0; if(cur){ cur.textContent='▶'; cur=null; } }
+  /* Charge tout le fichier une fois (blob) : le saut vers un mot marche alors sur tous les téléphones */
+  function load(){
+    if(au) return Promise.resolve(au);
+    if(loading) return loading;
+    say('Chargement de la voix…');
+    loading=fetch('voix-akposso.mp3',{cache:'force-cache'}).then(function(r){
+      if(!r.ok) throw new Error('HTTP '+r.status); return r.blob();
+    }).then(function(bl){
+      au=new Audio(URL.createObjectURL(bl)); au.preload='auto'; au.addEventListener('ended',reset);
+      say(''); return au;
+    }).catch(function(e){ loading=null; say('Voix introuvable ('+e.message+'). Vérifie que voix-akposso.mp3 est bien sur GitHub.'); throw e; });
+    return loading;
+  }
+  function seekPlay(a,w,b){
+    function go(){
+      try{ a.currentTime=w[3]; }catch(_){}
+      stopAt=w[4];
+      var p=a.play(); if(p&&p.catch) p.catch(function(e){ reset(); say('Lecture bloquée : '+e.name); });
+      timer=setInterval(function(){ if(stopAt && a.currentTime>=stopAt){ a.pause(); reset(); } },40);
+    }
+    if(a.readyState>=1) go(); else a.addEventListener('loadedmetadata',go,{once:true});
+  }
   function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
   var html='', lastCat='';
   LEX.forEach(function(w,i){
@@ -5286,10 +5308,10 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   box.innerHTML=html;
   box.addEventListener('click',function(e){
     var b=e.target.closest('.lex-play'); if(!b) return;
-    var a=getAudio(), w=LEX[+b.getAttribute('data-i')];
-    if(cur===b){ a.pause(); stopAt=0; reset(); return; }
-    reset(); cur=b; b.textContent='⏸';
-    try{ a.pause(); a.currentTime=w[3]; stopAt=w[4]; var p=a.play(); if(p&&p.catch) p.catch(function(){ reset(); }); }catch(_){ reset(); }
+    var w=LEX[+b.getAttribute('data-i')];
+    if(cur===b){ if(au) au.pause(); reset(); return; }
+    if(au) au.pause(); reset(); cur=b; b.textContent='⏸'; say('');
+    load().then(function(a){ if(cur===b) seekPlay(a,w,b); }).catch(function(){ reset(); });
   });
 })();
 </script>
