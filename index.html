@@ -5280,7 +5280,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     if(au) return Promise.resolve(au);
     if(loading) return loading;
     say('Chargement de la voix…');
-    loading=fetch('voix-akposso.mp3',{cache:'force-cache'}).then(function(r){
+    loading=fetch('voix-akposso.mp3?v=3',{cache:'no-cache'}).then(function(r){
       if(!r.ok) throw new Error('HTTP '+r.status); return r.blob();
     }).then(function(bl){
       au=new Audio(URL.createObjectURL(bl)); au.preload='auto'; au.addEventListener('ended',reset);
