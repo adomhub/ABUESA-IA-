@@ -1452,7 +1452,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.17 · 17 oct. 2026 (lexique d'Alexi dans la personnalité d'ABUESA)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.18 · 17 oct. 2026 (voix d'Alexi dans le chat)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -2221,6 +2221,7 @@ function addMessage(text, role){
   div.className = 'msg ' + role;
   if(role.startsWith('bot')){
     div.innerHTML = renderMarkdownLite(text);
+    if(role==='bot' && window.abuesaVoix) window.abuesaVoix.attach(div, text);
   } else {
     div.textContent = text;
   }
@@ -5279,7 +5280,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   var cur=null, au=null, loading=null;
   var st=document.getElementById('lex-status');
   function say(t){ if(st) st.textContent=t||''; }
-  function reset(){ if(cur){ cur.textContent='▶'; cur=null; } }
+  function reset(){ if(cur){ cur.textContent=cur.__idle||'▶'; cur=null; } }
   function halt(){ if(au){ try{ au.pause(); }catch(_){} au=null; } }
   /* Un petit mp3 par mot, chargé une seule fois depuis voix-data.js (pas de saut dans un long fichier) */
   function load(){
@@ -5303,11 +5304,9 @@ document.getElementById('community-record').addEventListener('click', async ()=>
       +'<div data-no-i18n><div style="opacity:.7;font-size:.9em;">'+esc(w[1])+'</div><div style="font-weight:700;">'+esc(w[2])+'</div></div></div>';
   });
   box.innerHTML=html;
-  box.addEventListener('click',function(e){
-    var b=e.target.closest('.lex-play'); if(!b) return;
-    var i=+b.getAttribute('data-i');
+  function start(b,i,playLabel){
     if(cur===b){ halt(); reset(); return; }
-    halt(); reset(); cur=b; b.textContent='⏸'; say('');
+    halt(); reset(); cur=b; b.textContent=playLabel||'⏸'; say('');
     load().then(function(V){
       if(cur!==b) return;
       var a=new Audio('data:audio/mpeg;base64,'+V[i]);
@@ -5315,7 +5314,43 @@ document.getElementById('community-record').addEventListener('click', async ()=>
       a.onerror=function(){ if(cur===b){ reset(); say('Ce mot ne peut pas être lu sur ce téléphone.'); } };
       var p=a.play(); if(p&&p.catch) p.catch(function(){ if(cur===b) reset(); });
     }).catch(function(){ reset(); });
+  }
+  box.addEventListener('click',function(e){
+    var b=e.target.closest('.lex-play'); if(!b) return;
+    start(b,+b.getAttribute('data-i'));
   });
+  /* ===== Chat : sous la réponse d'ABUESA-IA, un bouton ▶ par mot du lexique cité (voix d'Alexi) ===== */
+  var MAT=[];
+  LEX.forEach(function(w,i){
+    if(w[3]===null) return;
+    String(w[2]).split(/\s+ou\s+/).forEach(function(f){
+      f=f.replace(/[?!.]/g,'').trim().normalize('NFC');
+      if(f.length<3) return;
+      try{ MAT.push({i:i,re:new RegExp('(?<![\\p{L}\\p{M}-])'+f.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![\\p{L}\\p{M}-])','iu')}); }catch(_){}
+    });
+  });
+  window.abuesaVoix={
+    attach:function(div,text){
+      try{
+        var t=String(text||'').normalize('NFC'), seen={}, hits=[];
+        MAT.forEach(function(m){ if(!seen[m.i] && m.re.test(t)){ seen[m.i]=1; hits.push(m.i); } });
+        if(!hits.length) return;
+        hits=hits.slice(0,4);
+        var row=document.createElement('div');
+        row.setAttribute('data-no-i18n','');
+        row.style.cssText='margin-top:10px;padding-top:8px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;align-items:center;';
+        var lab=document.createElement('span'); lab.textContent='🔊 Voix d\u2019Alexi :'; lab.style.cssText='font-weight:700;'; row.appendChild(lab);
+        hits.forEach(function(i){
+          var b=document.createElement('button'); b.type='button'; b.className='chat-voix';
+          b.__idle='▶ '+LEX[i][1]+' · '+LEX[i][2]; b.textContent=b.__idle;
+          b.style.cssText='border:0;border-radius:999px;padding:8px 12px;background:var(--forest);color:#fff;font:inherit;font-size:.9em;';
+          b.onclick=function(){ start(b,i,'⏸ '+LEX[i][1]+' · '+LEX[i][2]); };
+          row.appendChild(b);
+        });
+        div.appendChild(row);
+      }catch(_){}
+    }
+  };
 })();
 </script>
 </body>
