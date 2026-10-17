@@ -1452,7 +1452,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.22 · 17 oct. 2026 (tu/vous, mot ku-yēmua)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.23 · 17 oct. 2026 (admin : une seule demande de code)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -3830,9 +3830,23 @@ function renderAdminPanel(){
 }
 
 /* ===== Admin Marché : tout passe par la fonction protégée par le code admin ===== */
-async function adminCall(payload){
+let _adminAsk = null;
+function askAdminCodeOnce(){
+  /* Une seule fenêtre « Code admin » à la fois, même si plusieurs actions la demandent en même temps */
+  if(!_adminAsk){
+    _adminAsk = new Promise(function(ok){
+      setTimeout(function(){ var c=(prompt('Code admin :') || '').trim(); _adminAsk=null; ok(c || null); }, 0);
+    });
+  }
+  return _adminAsk;
+}
+async function adminCall(payload, opts){
   let code = null; try{ code = sessionStorage.getItem('abuesa_admin_code'); }catch(_){}
-  if(!code){ code = (prompt('Code admin :') || '').trim(); if(!code) return null; }
+  if(!code){
+    if(opts && opts.silent) return null;   /* chargement automatique : on ne dérange pas avec une fenêtre */
+    code = await askAdminCodeOnce(); if(!code) return null;
+    try{ const again = sessionStorage.getItem('abuesa_admin_code'); if(again) code = again; }catch(_){}
+  }
   const base = localStorage.getItem(STORE_KEYS.supabaseUrl) || DEFAULT_SUPABASE_URL;
   try{
     const res = await fetch(base + '/functions/v1/swift-responder', {
@@ -3863,10 +3877,10 @@ function shrinkImage(file, maxSide){
     img.src = url;
   });
 }
-async function refreshAdminMarcheList(){
+async function refreshAdminMarcheList(ask){
   const el = document.getElementById('admin-m-list'); if(!el) return;
-  const out = await adminCall({ action:'marche_list' });
-  if(!out){ el.innerHTML = '<div class="hc-note">Liste non chargée (code admin ?). <button id="admin-m-reload" style="border:none;background:none;color:var(--clay);cursor:pointer;text-decoration:underline;">Réessayer</button></div>'; const b = document.getElementById('admin-m-reload'); if(b) b.onclick = refreshAdminMarcheList; return; }
+  const out = await adminCall({ action:'marche_list' }, { silent: ask !== true });
+  if(!out){ el.innerHTML = '<div class="hc-note">Liste non chargée. Appuie sur « Réessayer » pour entrer le code admin. <button id="admin-m-reload" style="border:none;background:none;color:var(--clay);cursor:pointer;text-decoration:underline;">Réessayer</button></div>'; const b = document.getElementById('admin-m-reload'); if(b) b.onclick = ()=> refreshAdminMarcheList(true); return; }
   const items = out.items || [];
   if(!items.length){ el.innerHTML = '<div class="hc-note">Aucune annonce pour le moment.</div>'; return; }
   const btn = 'border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 8px;cursor:pointer;font-family:inherit;color:#000;';
@@ -3924,10 +3938,10 @@ function initAdminMarche(){
 }
 
 /* ===== Admin Partenaires (même principe que le Marché) ===== */
-async function refreshAdminPartnersList(){
+async function refreshAdminPartnersList(ask){
   const el = document.getElementById('admin-p-list'); if(!el) return;
-  const out = await adminCall({ action:'part_list' });
-  if(!out){ el.innerHTML = '<div class="hc-note">Liste non chargée (code admin ?). <button id="admin-p-reload" style="border:none;background:none;color:var(--clay);cursor:pointer;text-decoration:underline;">Réessayer</button></div>'; const b = document.getElementById('admin-p-reload'); if(b) b.onclick = refreshAdminPartnersList; return; }
+  const out = await adminCall({ action:'part_list' }, { silent: ask !== true });
+  if(!out){ el.innerHTML = '<div class="hc-note">Liste non chargée. Appuie sur « Réessayer » pour entrer le code admin. <button id="admin-p-reload" style="border:none;background:none;color:var(--clay);cursor:pointer;text-decoration:underline;">Réessayer</button></div>'; const b = document.getElementById('admin-p-reload'); if(b) b.onclick = ()=> refreshAdminPartnersList(true); return; }
   const items = out.items || [];
   if(!items.length){ el.innerHTML = '<div class="hc-note">Aucun partenaire pour le moment.</div>'; return; }
   const btn = 'border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 8px;cursor:pointer;font-family:inherit;color:#000;';
