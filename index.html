@@ -1452,7 +1452,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.16 · 16 oct. 2026 (lexique d'Alexi dans la personnalité d'ABUESA)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.17 · 17 oct. 2026 (lexique d'Alexi dans la personnalité d'ABUESA)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -5287,7 +5287,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     if(loading) return loading;
     say('Chargement de la voix…');
     loading=new Promise(function(ok,ko){
-      var s=document.createElement('script'); s.src='voix-data.js?v=6';
+      var s=document.createElement('script'); s.src='voix-mots.js';
       s.onload=function(){ say(''); window.ABUESA_VOIX?ok(window.ABUESA_VOIX):ko(new Error('vide')); };
       s.onerror=function(){ loading=null; say('Voix introuvable. Vérifie que voix-data.js est bien sur GitHub.'); ko(new Error('404')); };
       document.head.appendChild(s);
