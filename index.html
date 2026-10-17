@@ -1110,7 +1110,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
       <button class="save-btn" id="open-practice" style="background:var(--forest);margin-bottom:14px;">🎙️ Répéter après moi — s'entraîner à l'oral</button>
       <button class="save-btn" id="open-word" style="background:var(--clay);margin-bottom:14px;">➕ Proposer un mot que tu connais</button>
       <details style="margin-bottom:14px;border:1px solid var(--line);border-radius:14px;padding:10px 14px;">
-        <summary style="font-weight:800;cursor:pointer;">🔊 Lexique parlé — la voix d'Alexi</summary>
+        <summary style="font-weight:800;cursor:pointer;">🔊 Lexique parlé</summary>
         <p style="font-size:.9em;opacity:.75;">Appuie sur ▶ pour entendre le mot en Akposso, prononcé par Alexi.</p>
         <div id="lex-status" style="font-weight:700;color:var(--clay);"></div>
         <div id="lex-list"></div>
@@ -1452,7 +1452,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.18 · 17 oct. 2026 (voix d'Alexi dans le chat)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.19 · 17 oct. 2026 (voix dans le chat, lecture à voix haute)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -2489,7 +2489,7 @@ function buildSystemPromptCore(compact){
   prompt += buildCultureKnowledge();
   prompt += buildMemoryPrompt();
   // Lexique prononcé par Alexi (formes équivalentes séparées par « ou ») : toujours envoyé, fiable
-  prompt += `\n\nLexique akposso enregistré à voix haute par Alexi, le créateur (FIABLE ; « ou » = deux formes équivalentes ; les mots sont écoutables dans l'onglet Dico, bloc « 🔊 Lexique parlé ») :\n${ALEXI_LEXIQUE}`;
+  prompt += `\n\nLexique akposso enregistré à voix haute par un locuteur akposso (ne nomme JAMAIS la personne qui parle ; dis seulement « la voix du lexique ») (FIABLE ; « ou » = deux formes équivalentes ; les mots sont écoutables dans l'onglet Dico, bloc « 🔊 Lexique parlé ») :\n${ALEXI_LEXIQUE}`;
   // Mots ajoutés par Alexi dans l'espace admin : toujours envoyés, en premier et même en version légère,
   // pour qu'ils ne soient jamais coupés ni oubliés (ils sont fiables, ils passent avant tout le reste).
   const adminWords = [...getExtraWords(), ...cloudWords].filter(w=> w && w.ak && w.fr);
@@ -2728,7 +2728,7 @@ const DICTIONARY = [
   { fr:'rester', ak:'ya' }, { fr:'laver', ak:'wele' }, { fr:'coudre', ak:'wlɛ' },
   { fr:'écrire', ak:'ŋlo' }, { fr:'creuser', ak:'gbɔ' }, { fr:'faire / créer', ak:'kele' },
   // Nombres
-  { fr:'deux', ak:'ɛfʋa' }, { fr:'cinq', ak:'ɛtʋ' }, { fr:'six', ak:'ɛwlʋ' },
+  { fr:'deux', ak:'ēfoi ou ēfua' }, { fr:'cinq', ak:'ɛtʋ' }, { fr:'six', ak:'ɛwlʋ' },
   { fr:'sept', ak:'ɛwlʋdɩ' }, { fr:'neuf', ak:'ɛlɛdɩ' }, { fr:'dix', ak:'idzo' },
   { fr:'cent', ak:'gbɔwa' },
   // Notions / expressions
@@ -2756,7 +2756,7 @@ const DICTIONARY = [
   // Nature et environnement
   { fr:'soleil', ak:'ÔVÈ' }, { fr:'lune', ak:'UTSI' }, { fr:'étoile', ak:'ILÔ' },
   { fr:'vent', ak:'ULÙ' }, { fr:'rivière', ak:'ÔBÈ' }, { fr:'forêt', ak:'ÔFU' },
-  { fr:'arbre', ak:'ITSU' }, { fr:'terre', ak:'UTI' }, { fr:'nuit', ak:'ÌYILI' },
+  { fr:'arbre', ak:'ITSU' }, { fr:'terre', ak:'utì ou utikpæ' }, { fr:'nuit', ak:'ÌYILI' },
   { fr:'jour', ak:'ÈYI' }, { fr:'saison', ak:'Seazne' },
   // Sagesse et spiritualité
   { fr:'âme', ak:'ÔVƐ' }, { fr:'prière', ak:'AVITA' }, { fr:'bénédiction', ak:'ÈBUA' },
@@ -5334,12 +5334,13 @@ document.getElementById('community-record').addEventListener('click', async ()=>
       try{
         var t=String(text||'').normalize('NFC'), seen={}, hits=[];
         MAT.forEach(function(m){ if(!seen[m.i] && m.re.test(t)){ seen[m.i]=1; hits.push(m.i); } });
-        if(!hits.length) return;
+        var canSay=('speechSynthesis' in window) && t.length>25 && !/^(Erreur|⏳|🎨|🎬)/.test(t);
+        if(!hits.length && !canSay) return;
         hits=hits.slice(0,4);
         var row=document.createElement('div');
         row.setAttribute('data-no-i18n','');
         row.style.cssText='margin-top:10px;padding-top:8px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;align-items:center;';
-        var lab=document.createElement('span'); lab.textContent='🔊 Voix d\u2019Alexi :'; lab.style.cssText='font-weight:700;'; row.appendChild(lab);
+        if(hits.length){ var lab=document.createElement('span'); lab.textContent='🔊 Écouter :'; lab.style.cssText='font-weight:700;'; row.appendChild(lab); }
         hits.forEach(function(i){
           var b=document.createElement('button'); b.type='button'; b.className='chat-voix';
           b.__idle='▶ '+LEX[i][1]+' · '+LEX[i][2]; b.textContent=b.__idle;
@@ -5347,10 +5348,32 @@ document.getElementById('community-record').addEventListener('click', async ()=>
           b.onclick=function(){ start(b,i,'⏸ '+LEX[i][1]+' · '+LEX[i][2]); };
           row.appendChild(b);
         });
+        if(canSay){
+          var sb=document.createElement('button'); sb.type='button';
+          sb.textContent='🔈 Lire la réponse'; sb.style.cssText='border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:transparent;color:inherit;font:inherit;font-size:.9em;';
+          sb.onclick=function(){ speak(t,sb); };
+          row.appendChild(sb);
+        }
         div.appendChild(row);
       }catch(_){}
     }
   };
+  /* Lecture à voix haute (français / anglais). Les mots akposso sont retirés : on ne les fait pas lire par une voix de synthèse. */
+  function speak(text,btn){
+    try{
+      var ss=window.speechSynthesis;
+      if(ss.speaking||ss.pending){ ss.cancel(); btn.textContent='🔈 Lire la réponse'; return; }
+      halt(); reset();
+      var x=text.replace(/\[\[[^\]]*\]\]/g,' ').replace(/\*\*[^*]+\*\*/g,' ').replace(/[*_#`>]/g,' ').replace(/https?:\/\/\S+/g,' ');
+      MAT.forEach(function(m){ x=x.replace(new RegExp(m.re.source,'giu'),' '); });
+      x=x.replace(/\s+/g,' ').trim(); if(!x) return;
+      var en=(x.toLowerCase().match(/\b(the|and|you|is|are|this|that|with|for|of|to|in)\b/g)||[]).length;
+      var fr=(x.toLowerCase().match(/\b(le|la|les|des|est|et|une|un|que|pour|dans|de|du|en|sur)\b/g)||[]).length;
+      var u=new SpeechSynthesisUtterance(x); u.lang=(en>fr)?'en-US':'fr-FR'; u.rate=0.95;
+      u.onend=u.onerror=function(){ btn.textContent='🔈 Lire la réponse'; };
+      btn.textContent='⏹ Arrêter'; ss.cancel(); ss.speak(u);
+    }catch(_){ btn.textContent='🔈 Lire la réponse'; }
+  }
 })();
 </script>
 </body>
