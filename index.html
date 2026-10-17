@@ -1452,7 +1452,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.19 · 17 oct. 2026 (voix dans le chat, lecture à voix haute)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.21 · 17 oct. 2026 (suppression admin dans la communauté)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1889,7 +1889,7 @@ const adminSection = document.getElementById('admin-section');
 /* Le code admin n'est jamais stocké ni comparé en clair : seule son empreinte
    SHA-256 est présente dans ce fichier. Impossible de le retrouver en lisant
    le code source. */
-const ADMIN_CODE_HASH = 'bf6ee186c564bc8654283e903adde7a943819f11f0448f962c7f455eb05c805a';
+const ADMIN_CODE_HASH = 'c27bbe599fb439b49f286e8e496a7873860bd3a35188aa9d3d989f105df30ff4';
 
 async function sha256Hex(text){
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
@@ -5121,6 +5121,17 @@ function renderCommunityMessage(msg){
     ? `<audio controls src="${msg.audio_url}" style="width:100%;margin-top:3px;"></audio>`
     : `<div style="font-size:calc(17.5px * var(--fs,1.15));color:var(--ink);margin-top:2px;">${escapeHtmlSafe(msg.content)}</div>`;
   div.innerHTML = `<div style="font-size:calc(17.5px * var(--fs,1.15));color:var(--gold);font-weight:700;">${name} <span style="color:var(--ink-soft);font-weight:400;">· ${time}</span></div>${body}`;
+  if(typeof isAdminUnlocked==='function' && isAdminUnlocked()){
+    const del = document.createElement('button');
+    del.type='button'; del.textContent='🗑 Supprimer';
+    del.style.cssText='margin-top:4px;border:1px solid var(--clay);color:var(--clay);background:transparent;border-radius:999px;padding:6px 12px;font:inherit;font-size:.85em;';
+    del.onclick = async ()=>{
+      if(!confirm(msg.kind==='audio' ? 'Supprimer ce message vocal ?' : 'Supprimer ce message ?')) return;
+      const out = await adminCall({ action:'com_delete', id: msg.id ?? null, created_at: msg.created_at || null, audio_url: msg.audio_url || null });
+      if(out && out.ok){ div.remove(); showToast('Message supprimé ✓'); }
+    };
+    div.appendChild(del);
+  }
   communityMessagesEl.appendChild(div);
 }
 async function loadCommunityMessages(){
@@ -5131,7 +5142,7 @@ async function loadCommunityMessages(){
   }
   const { data, error } = await supabaseClient
     .from('community_messages')
-    .select('name, kind, content, audio_url, created_at')
+    .select('*')
     .order('created_at', { ascending:true })
     .limit(100);
   communityMessagesEl.innerHTML = '';
