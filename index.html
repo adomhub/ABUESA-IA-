@@ -1493,7 +1493,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.26 · 18 oct. 2026 (Atelier : fonction dédiée)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.26.1 · 18 oct. 2026 (Atelier : tutoiement, pas d'invention)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -5471,7 +5471,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   function left(){ $('at-left').textContent=admin()?'(illimité)':'Il te reste '+Math.max(0,LIMIT-used())+' essai(s) aujourd\'hui.'; }
   $('open-atelier').onclick=()=>{ left(); modal.classList.add('active'); };
   $('close-atelier').onclick=()=>modal.classList.remove('active');
-  const SYS="Tu es un développeur web expert. Tu crées des mini-applications mobiles. Réponds UNIQUEMENT avec un seul fichier HTML complet (<!doctype html> jusqu'à </html>), sans explication ni balises markdown. Tout le CSS et le JS sont dans ce fichier, sans bibliothèque externe, sans appel réseau, sans formulaire envoyé à un serveur. Interface mobile d'abord, grands boutons, texte lisible, en français, design propre. Contenu respectueux, jamais de contenu haineux, sexuel ou illégal. L'application doit fonctionner immédiatement.";
+  const SYS="Tu es un développeur web expert. Tu crées des mini-applications mobiles. Réponds UNIQUEMENT avec un seul fichier HTML complet (<!doctype html> jusqu'à </html>), sans explication ni balises markdown. Tout le CSS et le JS sont dans ce fichier, sans bibliothèque externe, sans appel réseau, sans formulaire envoyé à un serveur. Interface mobile d'abord, grands boutons, texte lisible, en français, design propre. Contenu respectueux, jamais de contenu haineux, sexuel ou illégal. Tutoie toujours l'utilisateur (jamais « vous »). N'invente JAMAIS de mots akposso, de proverbes ni de faits culturels : si tu n'es pas sûr, n'en mets pas et demande à l'utilisateur de fournir le contenu dans le code. Ajoute en début de CSS : *{box-sizing:border-box} body{margin:0;padding:16px;overflow-wrap:anywhere} pour que rien ne dépasse de l'écran. L'application doit fonctionner immédiatement.";
   function clean(t){
     t=String(t||'').replace(/^```[a-z]*\s*/i,'').replace(/```\s*$/,'').trim();
     const a=t.search(/<!doctype html|<html/i); if(a>0) t=t.slice(a);
