@@ -1493,7 +1493,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.25 · 18 oct. 2026 (Atelier : créer une application)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.26 · 18 oct. 2026 (Atelier : fonction dédiée)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -5492,12 +5492,16 @@ document.getElementById('community-record').addEventListener('click', async ()=>
       if(prev){ messages.push({role:'user',content:'Voici mon application actuelle :\n'+prev}); messages.push({role:'user',content:'Modifie-la ainsi et renvoie le fichier HTML complet : '+instruction}); }
       else messages.push({role:'user',content:'Crée cette application : '+instruction});
       const ctl=new AbortController(); const tm=setTimeout(()=>ctl.abort(),90000);
-      const res=await fetch(url+'/functions/v1/groq-chat',{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','apikey':key,'Authorization':'Bearer '+key},body:JSON.stringify({messages})});
+      const res=await fetch(url+'/functions/v1/smooth-task',{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','apikey':key,'Authorization':'Bearer '+key},body:JSON.stringify({messages})});
       clearTimeout(tm);
-      if(!res.ok) throw new Error(res.status===429?'Beaucoup de monde en ce moment, réessaie dans une minute.':'Service momentanément indisponible.');
+      if(!res.ok) { let d=''; try{ d=(await res.text()).slice(0,200); }catch(_){} throw new Error(res.status===429?'Beaucoup de monde en ce moment, réessaie dans une minute.':'Service indisponible (HTTP '+res.status+') '+d); }
       const data=await res.json();
       const h=clean(data.reply);
-      if(!/<\/html>/i.test(h)||h.length<200) throw new Error("L'application n'a pas pu être créée. Reformule ta demande plus simplement.");
+      if(!/<\/html>/i.test(h)||h.length<200){
+        const raw=String(data.reply||data.error||JSON.stringify(data)||'');
+        try{ localStorage.setItem('abuesa_atelier_err',raw.slice(0,3000)); }catch(_){}
+        throw new Error("L'application n'a pas pu être créée. [Diagnostic : "+raw.length+" caractères] DÉBUT : "+raw.slice(0,160).replace(/\s+/g,' ')+" … FIN : "+raw.slice(-120).replace(/\s+/g,' '));
+      }
       show(h); bump(); left(); lastPrompt=instruction;
       $('at-status').textContent='✅ Voilà ! Teste-la ci-dessous. Tu peux la modifier, la télécharger ou la partager.';
     }catch(e){ $('at-status').textContent='⚠ '+(e&&e.name==='AbortError'?'Trop long, réessaie.':(e.message||'Erreur')); }
