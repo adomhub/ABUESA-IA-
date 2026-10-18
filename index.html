@@ -859,6 +859,14 @@
   :root{ --fs:1.15; }
   html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
   input,textarea,select{ font-size:calc(17.5px * var(--fs,1.15)); }
+
+  #atelier-modal{ position:absolute; inset:0; background:rgba(43,43,34,0.45); display:none; align-items:flex-end; z-index:50; }
+  #atelier-modal.active{ display:flex; }
+  #atelier-modal .modal-sheet{ max-height:92vh; }
+  #at-prompt{ width:100%; padding:10px 13px; border:1px solid var(--line); border-radius:10px; font-size:calc(17px * var(--fs,1.15)); font-family:inherit; }
+  #at-frame{ width:100%; height:55vh; border:1px solid var(--line); border-radius:12px; background:#fff; margin-top:10px; display:none; }
+  .at-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+  .at-ex{ border:1px solid var(--line); background:var(--white); border-radius:999px; padding:7px 12px; font-size:calc(15px * var(--fs,1.15)); }
 </style>
 </head>
 <body>
@@ -991,6 +999,14 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
       </div>
 
       <div id="home-featured"></div>
+
+      <div id="home-atelier">
+        <div class="home-calendar-card">
+          <div class="hc-label">🛠️ Atelier ABUESA</div>
+          <div class="hc-note">Décris une application en quelques mots : ABUESA-IA la crée pour toi. Tu la testes, tu la modifies, tu la télécharges.</div>
+          <button class="share-card-btn" id="open-atelier">✨ Créer une application</button>
+        </div>
+      </div>
 
       <div class="home-menu">
         <div class="home-card">
@@ -1378,6 +1394,28 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
     </div>
   </div>
 
+  <!-- ===== ATELIER MODAL ===== -->
+  <div id="atelier-modal">
+    <div class="modal-sheet">
+      <div class="close-row"><button id="close-atelier">×</button></div>
+      <h3 class="serif">🛠️ Créer une application</h3>
+      <p class="section-desc" style="margin-top:-6px;">Écris ce que tu veux. Ex : « un quiz sur la culture akposso », « un convertisseur FCFA / euro ». <span id="at-left"></span></p>
+      <textarea id="at-prompt" rows="3" placeholder="Décris ton application..."></textarea>
+      <div class="at-row" id="at-examples"></div>
+      <div class="at-row">
+        <button class="save-btn" id="at-go" style="flex:1;">✨ Créer</button>
+      </div>
+      <div id="at-status" class="section-desc" style="margin-top:8px;"></div>
+      <iframe id="at-frame" sandbox="allow-scripts allow-forms allow-modals" title="Aperçu de l'application"></iframe>
+      <div class="at-row" id="at-actions" style="display:none;">
+        <button class="at-ex" id="at-modify">✏️ Modifier</button>
+        <button class="at-ex" id="at-dl">⬇️ Télécharger</button>
+        <button class="at-ex" id="at-share">📤 Partager</button>
+        <button class="at-ex" id="at-full">⛶ Plein écran</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== FEEDBACK MODAL ===== -->
   <div id="feedback-modal">
     <div class="modal-sheet">
@@ -1455,7 +1493,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.24 · 18 oct. 2026 (confidentialité, règles, signalement)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.25 · 18 oct. 2026 (Atelier : créer une application)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -5415,6 +5453,62 @@ document.getElementById('community-record').addEventListener('click', async ()=>
       btn.textContent='⏹ Arrêter'; ss.cancel(); ss.speak(u);
     }catch(_){ btn.textContent='🔈 Lire la réponse'; }
   }
+})();
+</script>
+<script>
+/* ===== ATELIER : créer une application à partir d'un prompt ===== */
+(function(){
+  const $=id=>document.getElementById(id);
+  const modal=$('atelier-modal'); if(!modal) return;
+  const LIMIT=3, KEY='abuesa_atelier_day';
+  let html='', lastPrompt='', busy=false;
+  const EX=['Un quiz sur la culture akposso','Un convertisseur FCFA / euro','Une calculatrice de pourboire','Un compteur de jours avant Ova Zu'];
+  $('at-examples').innerHTML=EX.map(t=>'<button class="at-ex">'+t+'</button>').join('');
+  $('at-examples').onclick=e=>{ if(e.target.classList.contains('at-ex')) $('at-prompt').value=e.target.textContent; };
+  const admin=()=>typeof isAdminUnlocked==='function'&&isAdminUnlocked();
+  function used(){ try{ const o=JSON.parse(localStorage.getItem(KEY)||'{}'); return o.d===new Date().toDateString()?o.n:0; }catch(_){return 0;} }
+  function bump(){ try{ localStorage.setItem(KEY,JSON.stringify({d:new Date().toDateString(),n:used()+1})); }catch(_){} }
+  function left(){ $('at-left').textContent=admin()?'(illimité)':'Il te reste '+Math.max(0,LIMIT-used())+' essai(s) aujourd\'hui.'; }
+  $('open-atelier').onclick=()=>{ left(); modal.classList.add('active'); };
+  $('close-atelier').onclick=()=>modal.classList.remove('active');
+  const SYS="Tu es un développeur web expert. Tu crées des mini-applications mobiles. Réponds UNIQUEMENT avec un seul fichier HTML complet (<!doctype html> jusqu'à </html>), sans explication ni balises markdown. Tout le CSS et le JS sont dans ce fichier, sans bibliothèque externe, sans appel réseau, sans formulaire envoyé à un serveur. Interface mobile d'abord, grands boutons, texte lisible, en français, design propre. Contenu respectueux, jamais de contenu haineux, sexuel ou illégal. L'application doit fonctionner immédiatement.";
+  function clean(t){
+    t=String(t||'').replace(/^```[a-z]*\s*/i,'').replace(/```\s*$/,'').trim();
+    const a=t.search(/<!doctype html|<html/i); if(a>0) t=t.slice(a);
+    const b=t.toLowerCase().lastIndexOf('</html>'); if(b>0) t=t.slice(0,b+7);
+    return t;
+  }
+  function show(h){
+    html=h; const f=$('at-frame'); f.srcdoc=h; f.style.display='block'; $('at-actions').style.display='flex';
+  }
+  async function run(instruction, prev){
+    if(busy) return;
+    if(!admin() && used()>=LIMIT){ $('at-status').textContent='Tu as utilisé tes '+LIMIT+' essais du jour. Reviens demain 🙏'; return; }
+    busy=true; $('at-go').disabled=true; $('at-status').textContent='⏳ ABUESA-IA construit ton application… (20 à 40 secondes)';
+    try{
+      const url=localStorage.getItem(STORE_KEYS.supabaseUrl)||DEFAULT_SUPABASE_URL;
+      const key=localStorage.getItem(STORE_KEYS.supabaseKey)||DEFAULT_SUPABASE_KEY;
+      const messages=[{role:'system',content:SYS}];
+      if(prev){ messages.push({role:'user',content:'Voici mon application actuelle :\n'+prev}); messages.push({role:'user',content:'Modifie-la ainsi et renvoie le fichier HTML complet : '+instruction}); }
+      else messages.push({role:'user',content:'Crée cette application : '+instruction});
+      const ctl=new AbortController(); const tm=setTimeout(()=>ctl.abort(),90000);
+      const res=await fetch(url+'/functions/v1/groq-chat',{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','apikey':key,'Authorization':'Bearer '+key},body:JSON.stringify({messages})});
+      clearTimeout(tm);
+      if(!res.ok) throw new Error(res.status===429?'Beaucoup de monde en ce moment, réessaie dans une minute.':'Service momentanément indisponible.');
+      const data=await res.json();
+      const h=clean(data.reply);
+      if(!/<\/html>/i.test(h)||h.length<200) throw new Error("L'application n'a pas pu être créée. Reformule ta demande plus simplement.");
+      show(h); bump(); left(); lastPrompt=instruction;
+      $('at-status').textContent='✅ Voilà ! Teste-la ci-dessous. Tu peux la modifier, la télécharger ou la partager.';
+    }catch(e){ $('at-status').textContent='⚠ '+(e&&e.name==='AbortError'?'Trop long, réessaie.':(e.message||'Erreur')); }
+    busy=false; $('at-go').disabled=false;
+  }
+  $('at-go').onclick=()=>{ const v=$('at-prompt').value.trim(); if(v.length<5){ $('at-status').textContent='Décris un peu plus ton application.'; return; } run(v,null); };
+  $('at-modify').onclick=()=>{ const v=$('at-prompt').value.trim(); if(!html){return;} if(v.length<3){ $('at-status').textContent='Écris dans la case ce que tu veux changer, puis appuie sur Modifier.'; $('at-prompt').focus(); return; } run(v,html); };
+  function file(){ return new File([html],'mon-application-abuesa.html',{type:'text/html'}); }
+  $('at-dl').onclick=()=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(file()); a.download='mon-application-abuesa.html'; document.body.appendChild(a); a.click(); a.remove(); };
+  $('at-share').onclick=async()=>{ try{ if(navigator.canShare&&navigator.canShare({files:[file()]})) await navigator.share({files:[file()],title:'Application créée avec ABUESA-IA'}); else $('at-dl').click(); }catch(_){} };
+  $('at-full').onclick=()=>{ const f=$('at-frame'); (f.requestFullscreen||f.webkitRequestFullscreen||function(){}).call(f); };
 })();
 </script>
 </body>
