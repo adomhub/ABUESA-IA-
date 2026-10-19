@@ -1003,8 +1003,8 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
       <div id="home-atelier">
         <div class="home-calendar-card">
           <div class="hc-label">🛠️ Atelier ABUESA</div>
-          <div class="hc-note">Décris une application en quelques mots : ABUESA-IA la crée pour toi. Tu la testes, tu la modifies, tu la télécharges.</div>
-          <button class="share-card-btn" id="open-atelier">✨ Créer une application</button>
+          <div class="hc-note">Décris ce que tu veux en quelques mots (application, jeu, site, affiche, animation, musique…) : ABUESA-IA le crée pour toi. Tu le testes, tu le modifies, tu le télécharges.</div>
+          <button class="share-card-btn" id="open-atelier">✨ Créer avec l'IA</button>
         </div>
       </div>
 
@@ -1398,9 +1398,9 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
   <div id="atelier-modal">
     <div class="modal-sheet">
       <div class="close-row"><button id="close-atelier">×</button></div>
-      <h3 class="serif">🛠️ Créer une application</h3>
-      <p class="section-desc" style="margin-top:-6px;">Écris ce que tu veux. Ex : « un quiz sur la culture akposso », « un convertisseur FCFA / euro ». <span id="at-left"></span></p>
-      <textarea id="at-prompt" rows="3" placeholder="Décris ton application..."></textarea>
+      <h3 class="serif">🛠️ Atelier de création</h3>
+      <p class="section-desc" style="margin-top:-6px;">Demande tout ce que tu veux : application, jeu, site, affiche, document, animation, musique… <span id="at-left"></span></p>
+      <textarea id="at-prompt" rows="3" placeholder="Décris ce que tu veux créer..."></textarea>
       <div class="at-row" id="at-examples"></div>
       <div class="at-row">
         <button class="save-btn" id="at-go" style="flex:1;">✨ Créer</button>
@@ -1493,7 +1493,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.26.1 · 18 oct. 2026 (Atelier : tutoiement, pas d'invention)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.28 · 19 oct. 2026 (Atelier : créer tout ce qu'on demande)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -5460,18 +5460,16 @@ document.getElementById('community-record').addEventListener('click', async ()=>
 (function(){
   const $=id=>document.getElementById(id);
   const modal=$('atelier-modal'); if(!modal) return;
-  const LIMIT=3, KEY='abuesa_atelier_day';
+  const COOL=20000; let lastRun=0;
   let html='', lastPrompt='', busy=false;
-  const EX=['Un quiz sur la culture akposso','Un convertisseur FCFA / euro','Une calculatrice de pourboire','Un compteur de jours avant Ova Zu'];
+  const EX=['Un quiz sur la culture akposso','Une affiche pour la fête Ova Zu','Un piano avec une boîte à rythmes','Un petit dessin animé du soleil qui se lève','Un jeu de mémoire avec score','Un CV simple à imprimer'];
   $('at-examples').innerHTML=EX.map(t=>'<button class="at-ex">'+t+'</button>').join('');
   $('at-examples').onclick=e=>{ if(e.target.classList.contains('at-ex')) $('at-prompt').value=e.target.textContent; };
   const admin=()=>typeof isAdminUnlocked==='function'&&isAdminUnlocked();
-  function used(){ try{ const o=JSON.parse(localStorage.getItem(KEY)||'{}'); return o.d===new Date().toDateString()?o.n:0; }catch(_){return 0;} }
-  function bump(){ try{ localStorage.setItem(KEY,JSON.stringify({d:new Date().toDateString(),n:used()+1})); }catch(_){} }
-  function left(){ $('at-left').textContent=admin()?'(illimité)':'Il te reste '+Math.max(0,LIMIT-used())+' essai(s) aujourd\'hui.'; }
+  function left(){ $('at-left').textContent='Autant de créations que tu veux.'; }
   $('open-atelier').onclick=()=>{ left(); modal.classList.add('active'); };
   $('close-atelier').onclick=()=>modal.classList.remove('active');
-  const SYS="Tu es un développeur web expert. Tu crées des mini-applications mobiles. Réponds UNIQUEMENT avec un seul fichier HTML complet (<!doctype html> jusqu'à </html>), sans explication ni balises markdown. Tout le CSS et le JS sont dans ce fichier, sans bibliothèque externe, sans appel réseau, sans formulaire envoyé à un serveur. Interface mobile d'abord, grands boutons, texte lisible, en français, design propre. Contenu respectueux, jamais de contenu haineux, sexuel ou illégal. Tutoie toujours l'utilisateur (jamais « vous »). N'invente JAMAIS de mots akposso, de proverbes ni de faits culturels : si tu n'es pas sûr, n'en mets pas et demande à l'utilisateur de fournir le contenu dans le code. Ajoute en début de CSS : *{box-sizing:border-box} body{margin:0;padding:16px;overflow-wrap:anywhere} pour que rien ne dépasse de l'écran. L'application doit fonctionner immédiatement.";
+  const SYS="Tu es le créateur universel d'ABUESA-IA. Quelle que soit la demande, tu produis UN SEUL fichier HTML complet (<!doctype html> jusqu'à </html>), sans explication ni balises markdown, qui fonctionne tout de suite sur téléphone. Tu peux créer : applications et outils, jeux, sites et pages web, affiches, invitations, cartes de vœux, CV, factures, documents imprimables, présentations en diapositives, histoires et livres illustrés, dessins et illustrations en SVG ou canvas, animations et dessins animés (canvas/CSS, avec bouton Lecture), clips vidéo animés (images, textes, transitions, son), musique et instruments (synthétiseur avec l'API Web Audio : mélodies, rythmes, boîte à rythmes, piano, avec bouton Jouer), quiz, calculateurs, tableaux de bord, formulaires, planificateurs. Tout le CSS et le JS sont dans le fichier, sans bibliothèque ni image externe, sans appel réseau (dessine avec SVG, canvas, emoji, CSS). Interface mobile d'abord, grands boutons, texte lisible, en français, design soigné et coloré. Ne te limite pas : fais une création riche, complète et professionnelle, sans raccourcir ni résumer le code. Si la demande est vaste, réalise-en une version complète et utilisable. Tutoie toujours l'utilisateur. N'invente JAMAIS de mots akposso, de proverbes ni de faits culturels : si tu n'es pas sûr, laisse un champ modifiable. Contenu respectueux, jamais haineux, sexuel ou illégal. Ajoute en début de CSS : *{box-sizing:border-box} body{margin:0;padding:16px;overflow-wrap:anywhere}.";
   function clean(t){
     t=String(t||'').replace(/^```[a-z]*\s*/i,'').replace(/```\s*$/,'').trim();
     const a=t.search(/<!doctype html|<html/i); if(a>0) t=t.slice(a);
@@ -5483,8 +5481,8 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   }
   async function run(instruction, prev){
     if(busy) return;
-    if(!admin() && used()>=LIMIT){ $('at-status').textContent='Tu as utilisé tes '+LIMIT+' essais du jour. Reviens demain 🙏'; return; }
-    busy=true; $('at-go').disabled=true; $('at-status').textContent='⏳ ABUESA-IA construit ton application… (20 à 40 secondes)';
+    if(!admin()){ const w=Math.ceil((lastRun+COOL-Date.now())/1000); if(w>0){ $('at-status').textContent='Patiente '+w+' s avant la prochaine création 🙏'; return; } }
+    busy=true; $('at-go').disabled=true; $('at-status').textContent='⏳ ABUESA-IA crée pour toi… (20 à 40 secondes)';
     try{
       const url=localStorage.getItem(STORE_KEYS.supabaseUrl)||DEFAULT_SUPABASE_URL;
       const key=localStorage.getItem(STORE_KEYS.supabaseKey)||DEFAULT_SUPABASE_KEY;
@@ -5502,7 +5500,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
         try{ localStorage.setItem('abuesa_atelier_err',raw.slice(0,3000)); }catch(_){}
         throw new Error("L'application n'a pas pu être créée. [Diagnostic : "+raw.length+" caractères] DÉBUT : "+raw.slice(0,160).replace(/\s+/g,' ')+" … FIN : "+raw.slice(-120).replace(/\s+/g,' '));
       }
-      show(h); bump(); left(); lastPrompt=instruction;
+      show(h); lastRun=Date.now(); left(); lastPrompt=instruction;
       $('at-status').textContent='✅ Voilà ! Teste-la ci-dessous. Tu peux la modifier, la télécharger ou la partager.';
     }catch(e){ $('at-status').textContent='⚠ '+(e&&e.name==='AbortError'?'Trop long, réessaie.':(e.message||'Erreur')); }
     busy=false; $('at-go').disabled=false;
