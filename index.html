@@ -1412,6 +1412,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <button class="at-ex" id="at-dl">⬇️ Télécharger</button>
         <button class="at-ex" id="at-share">📤 Partager</button>
         <button class="at-ex" id="at-full">⛶ Plein écran</button>
+        <button class="at-ex" id="at-report">🚩 Signaler</button>
       </div>
     </div>
   </div>
@@ -1493,7 +1494,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.28.3 · 19 oct. 2026 (Atelier : amour, mariage, guerre autorisés)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.29 · 19 oct. 2026 (bouton Signaler : chat IA et Atelier)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -2263,6 +2264,15 @@ function addMessage(text, role){
   if(role.startsWith('bot')){
     div.innerHTML = renderMarkdownLite(text);
     if(role==='bot' && window.abuesaVoix) window.abuesaVoix.attach(div, text);
+    if(role==='bot' && String(text||'').length>25 && !/^(Erreur|⏳|🎨|🎬)/.test(text)){
+      const rp = document.createElement('a');
+      rp.setAttribute('data-no-i18n','');
+      rp.textContent = '🚩 Signaler cette réponse';
+      rp.href = 'https://wa.me/22899619969?text=' + encodeURIComponent('Signalement ABUESA (Chat IA)\nRéponse : ' + String(text).slice(0, 700));
+      rp.target = '_blank'; rp.rel = 'noopener';
+      rp.style.cssText = 'display:inline-block;margin-top:8px;font-size:.8em;color:var(--ink-soft);text-decoration:underline;';
+      div.appendChild(rp);
+    }
   } else {
     div.textContent = text;
   }
@@ -5511,6 +5521,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   function file(){ return new File([html],'mon-application-abuesa.html',{type:'text/html'}); }
   $('at-dl').onclick=()=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(file()); a.download='mon-application-abuesa.html'; document.body.appendChild(a); a.click(); a.remove(); };
   $('at-share').onclick=async()=>{ try{ if(navigator.canShare&&navigator.canShare({files:[file()]})) await navigator.share({files:[file()],title:'Application créée avec ABUESA-IA'}); else $('at-dl').click(); }catch(_){} };
+  $('at-report').onclick=()=>{ const t='Signalement ABUESA (Atelier)\nDemande : '+(lastPrompt||$('at-prompt').value||'').slice(0,500)+'\nCode (début) : '+String(html).slice(0,600); window.open('https://wa.me/22899619969?text='+encodeURIComponent(t),'_blank'); };
   $('at-full').onclick=()=>{ const f=$('at-frame'); (f.requestFullscreen||f.webkitRequestFullscreen||function(){}).call(f); };
 })();
 </script>
