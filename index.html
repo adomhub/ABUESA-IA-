@@ -867,6 +867,13 @@
   #at-frame{ width:100%; height:55vh; border:1px solid var(--line); border-radius:12px; background:#fff; margin-top:10px; display:none; }
   .at-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
   .at-ex{ border:1px solid var(--line); background:var(--white); border-radius:999px; padding:7px 12px; font-size:calc(15px * var(--fs,1.15)); }
+
+  #live-modal{ position:absolute; inset:0; background:rgba(43,43,34,0.45); display:none; align-items:flex-end; z-index:50; }
+  #live-modal.active{ display:flex; }
+  #live-modal .modal-sheet{ max-height:92vh; }
+  .live-card{ background:var(--cream,#f7f3e8); border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin:10px 0; }
+  .live-btn{ display:block; width:100%; text-align:center; text-decoration:none; border:0; border-radius:12px; padding:14px; margin-top:10px; font:inherit; font-weight:800; background:var(--forest,#2e5a2e); color:#fff; }
+  .live-btn.alt{ background:transparent; color:inherit; border:1px solid var(--line); font-weight:700; }
 </style>
 </head>
 <body>
@@ -901,7 +908,8 @@
           <div class="wordmark">ABUESA<span>-IA</span></div>
         </div>
       </div>
-      <button type="button" class="icon-btn" id="lang-quick" data-no-i18n aria-label="Language" style="margin-left:auto;font-weight:800;font-size:calc(15px * var(--fs,1.15));border:1px solid var(--line);border-radius:999px;padding:5px 11px;">EN</button>
+      <button type="button" class="icon-btn" id="open-live" aria-label="Appel vidéo et soirée Live" style="margin-left:auto;font-size:calc(24px * var(--fs,1.15));padding:4px 6px;">📹</button>
+      <button type="button" class="icon-btn" id="lang-quick" data-no-i18n aria-label="Language" style="margin-left:6px;font-weight:800;font-size:calc(15px * var(--fs,1.15));border:1px solid var(--line);border-radius:999px;padding:5px 11px;">EN</button>
     </div>
     <div class="topbar-row2">
       <div class="subtitle">Culture Akposso · Wawa, Togo</div>
@@ -1394,6 +1402,28 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
     </div>
   </div>
 
+  <!-- ===== LIVE / APPEL VIDEO MODAL ===== -->
+  <div id="live-modal">
+    <div class="modal-sheet">
+      <div class="close-row"><button id="close-live">×</button></div>
+      <h3 class="serif">📹 Soirée Live Akposso</h3>
+      <p class="section-desc" style="margin-top:-6px;">Un espace pour se retrouver en vidéo et parler de la tradition et de la culture du peuple akposso.</p>
+      <div class="live-card">
+        <div style="font-weight:800;">🔴 Prochaine soirée</div>
+        <div id="live-next" style="margin-top:4px;"></div>
+      </div>
+      <a class="live-btn" id="live-join" href="#" target="_blank" rel="noopener">🔴 Rejoindre la soirée Live</a>
+      <button class="live-btn alt" id="live-invite" type="button">📤 Inviter par WhatsApp</button>
+      <div class="live-card" style="margin-top:16px;">
+        <div style="font-weight:800;">📞 Organiser mon propre appel vidéo</div>
+        <div style="margin-top:4px;">Crée une salle privée et envoie le lien à ta famille ou à tes amis.</div>
+        <button class="live-btn" id="live-private" type="button">➕ Créer une salle privée</button>
+        <div id="live-private-out" style="margin-top:8px;display:none;"></div>
+      </div>
+      <p class="section-desc" style="margin-top:14px;"><b>Règles de la soirée :</b> respect des anciens et de chacun, on se tutoie, pas d'insultes ni de moqueries, on laisse parler. Les soirées utilisent le service gratuit Jitsi Meet : pas de compte à créer pour rejoindre, ton navigateur demandera l'accès à la caméra et au micro. L'animateur peut exclure quelqu'un qui ne respecte pas ces règles.</p>
+    </div>
+  </div>
+
   <!-- ===== ATELIER MODAL ===== -->
   <div id="atelier-modal">
     <div class="modal-sheet">
@@ -1494,7 +1524,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.29 · 19 oct. 2026 (bouton Signaler : chat IA et Atelier)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.30 · 20 oct. 2026 (📹 Soirée Live et appel vidéo)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -5523,6 +5553,38 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   $('at-share').onclick=async()=>{ try{ if(navigator.canShare&&navigator.canShare({files:[file()]})) await navigator.share({files:[file()],title:'Application créée avec ABUESA-IA'}); else $('at-dl').click(); }catch(_){} };
   $('at-report').onclick=()=>{ const t='Signalement ABUESA (Atelier)\nDemande : '+(lastPrompt||$('at-prompt').value||'').slice(0,500)+'\nCode (début) : '+String(html).slice(0,600); window.open('https://wa.me/22899619969?text='+encodeURIComponent(t),'_blank'); };
   $('at-full').onclick=()=>{ const f=$('at-frame'); (f.requestFullscreen||f.webkitRequestFullscreen||function(){}).call(f); };
+})();
+</script>
+<script>
+/* ===== SOIRÉE LIVE / APPEL VIDÉO (Jitsi Meet, gratuit) ===== */
+(function(){
+  const $=id=>document.getElementById(id);
+  const modal=$('live-modal'); if(!modal) return;
+  /* À modifier pour annoncer la prochaine soirée (laisser '' si pas encore de date) */
+  const NEXT_LIVE={ quand:'', sujet:'Tradition et culture du peuple akposso' };
+  const ROOM='ABUESA-IA-Live-Akposso';
+  const base='https://meet.jit.si/';
+  const link=r=>base+encodeURIComponent(r)+'#config.prejoinPageEnabled=true&userInfo.displayName=%22%22';
+  const site='https://adomhub.github.io/ABUESA-IA-/';
+  function show(){
+    $('live-next').innerHTML=(NEXT_LIVE.quand?('<b>'+NEXT_LIVE.quand+'</b><br>'):'<b>Date à annoncer</b> — reste connecté, ABUESA-IA te prévient.<br>')+'Sujet : '+NEXT_LIVE.sujet;
+    $('live-join').href=link(ROOM);
+    modal.classList.add('active');
+  }
+  $('open-live').onclick=show;
+  $('close-live').onclick=()=>modal.classList.remove('active');
+  function share(text){
+    const url='https://wa.me/?text='+encodeURIComponent(text);
+    if(navigator.share){ navigator.share({text}).catch(()=>window.open(url,'_blank')); } else window.open(url,'_blank');
+  }
+  $('live-invite').onclick=()=>share('📹 Soirée Live Akposso sur ABUESA-IA : on parle de la tradition et de la culture de notre peuple.\n'+(NEXT_LIVE.quand?('Quand : '+NEXT_LIVE.quand+'\n'):'')+'Rejoins-nous : '+link(ROOM)+'\nL\'app : '+site);
+  $('live-private').onclick=()=>{
+    const id='ABUESA-'+Math.random().toString(36).slice(2,8)+Math.random().toString(36).slice(2,6);
+    const l=link(id);
+    const out=$('live-private-out'); out.style.display='block';
+    out.innerHTML='<a class="live-btn" href="'+l+'" target="_blank" rel="noopener">▶ Ouvrir ma salle</a><button class="live-btn alt" id="live-priv-share" type="button">📤 Envoyer le lien par WhatsApp</button>';
+    $('live-priv-share').onclick=()=>share('📹 Rejoins-moi en appel vidéo : '+l);
+  };
 })();
 </script>
 </body>
