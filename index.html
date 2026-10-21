@@ -1412,7 +1412,9 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <div style="font-weight:800;">🔴 Prochaine soirée</div>
         <div id="live-next" style="margin-top:4px;"></div>
       </div>
-      <a class="live-btn" id="live-join" href="#" target="_blank" rel="noopener">🔴 Rejoindre la soirée Live</a>
+      <a class="live-btn" id="live-watch" href="#" target="_blank" rel="noopener" style="background:#b3261e;color:#fff;">▶ Regarder en direct</a>
+      <div id="live-watch-note" class="section-desc" style="margin:4px 0 0;display:none;">Le lien du direct sera annoncé avec la soirée.</div>
+      <a class="live-btn alt" id="live-join" href="#" target="_blank" rel="noopener">🎙️ Rejoindre le salon (parler en vidéo)</a>
       <button class="live-btn alt" id="live-invite" type="button">📤 Inviter par WhatsApp</button>
       <div class="live-card" style="margin-top:16px;">
         <div style="font-weight:800;">📞 Organiser mon propre appel vidéo</div>
@@ -1524,7 +1526,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.30.1 · 20 oct. 2026 (📹 à côté de la loupe)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.31 · 20 oct. 2026 (▶ Regarder en direct)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -5566,18 +5568,39 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   const base='https://meet.jit.si/';
   const link=r=>base+encodeURIComponent(r)+'#config.prejoinPageEnabled=true&userInfo.displayName=%22%22';
   const site='https://adomhub.github.io/ABUESA-IA-/';
+  /* La soirée est lue dans les « Événements » de l'espace admin : un événement dont le titre contient « live » ou « soirée ».
+     Le lien du direct (YouTube, Facebook, TikTok…) se met dans la description de l'événement. */
+  let watchUrl='';
+  function pickLive(){
+    try{
+      if(typeof cloudEvents==='undefined'||!cloudEvents) return;
+      const today=new Date().toISOString().slice(0,10);
+      const e=cloudEvents.filter(x=>x.date_evenement>=today&&/live|soir[ée]e|direct/i.test(x.titre||'')).sort((a,b)=>a.date_evenement<b.date_evenement?-1:1)[0];
+      if(!e) return;
+      const d=new Date(e.date_evenement+'T00:00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+      NEXT_LIVE.quand=d; NEXT_LIVE.sujet=e.titre||NEXT_LIVE.sujet;
+      const m=String(e.description||'').match(/https?:\/\/[^\s<>"']+/);
+      watchUrl=m?m[0]:'';
+      NEXT_LIVE.note=String(e.description||'').replace(/https?:\/\/[^\s<>"']+/g,'').trim();
+    }catch(_){}
+  }
   function show(){
-    $('live-next').innerHTML=(NEXT_LIVE.quand?('<b>'+NEXT_LIVE.quand+'</b><br>'):'<b>Date à annoncer</b> — reste connecté, ABUESA-IA te prévient.<br>')+'Sujet : '+NEXT_LIVE.sujet;
+    watchUrl=''; NEXT_LIVE.note=''; pickLive();
+    $('live-next').innerHTML=(NEXT_LIVE.quand?('<b>'+NEXT_LIVE.quand+'</b><br>'):'<b>Date à annoncer</b> — reste connecté, ABUESA-IA te prévient.<br>')+'Sujet : '+NEXT_LIVE.sujet+(NEXT_LIVE.note?('<br>'+NEXT_LIVE.note):'');
     $('live-join').href=link(ROOM);
+    const w=$('live-watch');
+    if(watchUrl){ w.href=watchUrl; w.style.opacity=''; $('live-watch-note').style.display='none'; }
+    else { w.href='#'; w.style.opacity='.6'; $('live-watch-note').style.display='block'; }
     modal.classList.add('active');
   }
+  $('live-watch').addEventListener('click',function(e){ if(!watchUrl){ e.preventDefault(); } });
   $('open-live').onclick=show;
   $('close-live').onclick=()=>modal.classList.remove('active');
   function share(text){
     const url='https://wa.me/?text='+encodeURIComponent(text);
     if(navigator.share){ navigator.share({text}).catch(()=>window.open(url,'_blank')); } else window.open(url,'_blank');
   }
-  $('live-invite').onclick=()=>share('📹 Soirée Live Akposso sur ABUESA-IA : on parle de la tradition et de la culture de notre peuple.\n'+(NEXT_LIVE.quand?('Quand : '+NEXT_LIVE.quand+'\n'):'')+'Rejoins-nous : '+link(ROOM)+'\nL\'app : '+site);
+  $('live-invite').onclick=()=>share('📹 Soirée Live Akposso sur ABUESA-IA : on parle de la tradition et de la culture de notre peuple.\n'+(NEXT_LIVE.quand?('Quand : '+NEXT_LIVE.quand+'\n'):'')+(watchUrl?('Regarder en direct : '+watchUrl+'\n'):'')+'Rejoindre le salon : '+link(ROOM)+'\nL\'app : '+site);
   $('live-private').onclick=()=>{
     const id='ABUESA-'+Math.random().toString(36).slice(2,8)+Math.random().toString(36).slice(2,6);
     const l=link(id);
