@@ -871,6 +871,21 @@
   #live-modal{ position:absolute; inset:0; background:rgba(43,43,34,0.45); display:none; align-items:flex-end; z-index:50; }
   #live-modal.active{ display:flex; }
   #live-modal .modal-sheet{ max-height:92vh; }
+  #live-room{ position:absolute; inset:0; z-index:70; background:#000; display:none; flex-direction:column; }
+  #live-room.active{ display:flex; }
+  #live-room .lr-bar{ display:flex; gap:8px; align-items:center; padding:8px 10px; background:#1b2a1e; color:#fff; }
+  #live-room .lr-bar b{ flex:1; font-size:calc(16px * var(--fs,1.15)); }
+  #live-room .lr-bar button{ border:0; border-radius:10px; padding:10px 12px; font:inherit; font-weight:700; background:#c7d92e; color:#111; }
+  #live-room .lr-bar button.x{ background:#b3261e; color:#fff; }
+  #live-room iframe{ flex:1; width:100%; border:0; background:#111; }
+  #live-room .lr-foot{ padding:6px 10px; background:#1b2a1e; color:#cfd8c4; font-size:calc(14px * var(--fs,1.15)); }
+  #live-room .lr-foot a{ color:#c7d92e; }
+  #live-room{ position:absolute; inset:0; z-index:70; background:#000; display:none; flex-direction:column; }
+  #live-room.active{ display:flex; }
+  #live-room .lr-bar{ display:flex; gap:6px; padding:8px; background:#1c1c14; flex-wrap:wrap; }
+  #live-room .lr-bar button, #live-room .lr-bar a{ flex:1 1 auto; border:0; border-radius:10px; padding:11px 10px; font:inherit; font-weight:700; font-size:15px; background:#c6d92f; color:#111; text-align:center; text-decoration:none; }
+  #live-room .lr-bar .x{ background:#b3261e; color:#fff; }
+  #live-room iframe{ flex:1; width:100%; border:0; background:#000; }
   .live-card{ background:var(--cream,#f7f3e8); border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin:10px 0; }
   .live-btn{ display:block; width:100%; text-align:center; text-decoration:none; border:0; border-radius:12px; padding:14px; margin-top:10px; font:inherit; font-weight:800; background:var(--forest,#2e5a2e); color:#fff; }
   .live-btn.alt{ background:transparent; color:inherit; border:1px solid var(--line); font-weight:700; }
@@ -1411,6 +1426,22 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
   </div>
 
   <!-- ===== LIVE / APPEL VIDEO MODAL ===== -->
+  <div id="live-room">
+    <div class="lr-bar"><b id="lr-title">📹 Soirée Live</b><button type="button" id="lr-invite">📤 Inviter</button><button type="button" class="x" id="lr-quit">✕ Quitter</button></div>
+    <iframe id="lr-frame" allow="camera; microphone; fullscreen; display-capture; autoplay; clipboard-write" title="Salon vidéo"></iframe>
+    <div class="lr-foot">Si la vidéo ne s'affiche pas : <a id="lr-ext" href="#" target="_blank" rel="noopener">ouvrir dans le navigateur</a></div>
+  </div>
+
+  <div id="live-room">
+    <div class="lr-bar">
+      <button type="button" class="x" id="lr-close">✕ Quitter</button>
+      <button type="button" id="lr-invite">📤 Inviter (WhatsApp)</button>
+      <button type="button" id="lr-copy">📋 Copier le lien</button>
+      <a id="lr-ext" href="#" target="_blank" rel="noopener">↗ Navigateur</a>
+    </div>
+    <iframe id="lr-frame" allow="camera; microphone; fullscreen; display-capture; autoplay; clipboard-write" title="Salon vidéo"></iframe>
+  </div>
+
   <div id="live-modal">
     <div class="modal-sheet">
       <div class="close-row"><button id="close-live">×</button></div>
@@ -1534,7 +1565,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.32.1 · 21 oct. 2026 (🔔 notifications, abonnement corrigé)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.33 · 21 oct. 2026 (📹 salon dans l'app + inviter)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -5631,21 +5662,47 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     else { w.href='#'; w.style.opacity='.6'; $('live-watch-note').style.display='block'; }
     modal.classList.add('active');
   }
-  $('live-watch').addEventListener('click',function(e){ if(!watchUrl){ e.preventDefault(); } });
   $('open-live').onclick=show;
   $('close-live').onclick=()=>modal.classList.remove('active');
+  $('live-watch').addEventListener('click',function(e){ if(!watchUrl){ e.preventDefault(); } });
   function share(text){
     const url='https://wa.me/?text='+encodeURIComponent(text);
     if(navigator.share){ navigator.share({text}).catch(()=>window.open(url,'_blank')); } else window.open(url,'_blank');
   }
-  $('live-invite').onclick=()=>share('📹 Soirée Live Akposso sur ABUESA-IA : on parle de la tradition et de la culture de notre peuple.\n'+(NEXT_LIVE.quand?('Quand : '+NEXT_LIVE.quand+'\n'):'')+(watchUrl?('Regarder en direct : '+watchUrl+'\n'):'')+'Rejoindre le salon : '+link(ROOM)+'\nL\'app : '+site);
-  $('live-private').onclick=()=>{
-    const id='ABUESA-'+Math.random().toString(36).slice(2,8)+Math.random().toString(36).slice(2,6);
-    const l=link(id);
+  /* Le salon s'ouvre DANS l'app, avec une barre « Inviter » toujours visible : on ne quitte plus la soirée pour inviter. */
+  let curRoom='', curKind='live';
+  const roomUrl=r=>base+encodeURIComponent(r)+'#config.prejoinPageEnabled=true&config.disableDeepLinking=true&config.startWithAudioMuted=true&interfaceConfig.MOBILE_APP_PROMO=false';
+  function inviteText(){
+    if(curKind==='private') return '📹 Rejoins-moi en appel vidéo : '+link(curRoom);
+    return '📹 Soirée Live Akposso sur ABUESA-IA : on parle de la tradition et de la culture de notre peuple.\n'+(NEXT_LIVE.quand?('Quand : '+NEXT_LIVE.quand+'\n'):'')+(watchUrl?('Regarder en direct : '+watchUrl+'\n'):'')+'Rejoindre le salon : '+link(curRoom)+'\nL\'app : '+site;
+  }
+  function openRoom(room,kind){
+    curRoom=room; curKind=kind;
+    $('lr-ext').href=link(room);
+    $('lr-frame').src=roomUrl(room);
+    $('live-room').classList.add('active');
+  }
+  function closeRoom(){ $('lr-frame').src='about:blank'; $('live-room').classList.remove('active'); }
+  $('live-join').addEventListener('click',function(e){ e.preventDefault(); openRoom(ROOM,'live'); });
+  $('lr-close').onclick=closeRoom;
+  $('lr-invite').onclick=()=>share(inviteText());
+  $('lr-copy').onclick=async()=>{ const t=link(curRoom); try{ await navigator.clipboard.writeText(t); showToast('Lien copié ✓'); }catch(_){ prompt('Copie ce lien :',t); } };
+  $('live-invite').onclick=()=>{ curRoom=ROOM; curKind='live'; share(inviteText()); };
+  /* Salle privée : le lien reste le MÊME tant que tu ne demandes pas une nouvelle salle */
+  const PK='abuesa_live_private';
+  function privId(fresh){
+    let id=''; try{ id=localStorage.getItem(PK)||''; }catch(_){}
+    if(!id||fresh){ id='ABUESA-'+Math.random().toString(36).slice(2,8)+Math.random().toString(36).slice(2,6); try{ localStorage.setItem(PK,id); }catch(_){} }
+    return id;
+  }
+  function drawPrivate(){
     const out=$('live-private-out'); out.style.display='block';
-    out.innerHTML='<a class="live-btn" href="'+l+'" target="_blank" rel="noopener">▶ Ouvrir ma salle</a><button class="live-btn alt" id="live-priv-share" type="button">📤 Envoyer le lien par WhatsApp</button>';
-    $('live-priv-share').onclick=()=>share('📹 Rejoins-moi en appel vidéo : '+l);
-  };
+    out.innerHTML='<button class="live-btn" id="lp-open" type="button">▶ Ouvrir ma salle (dans l\'app)</button><button class="live-btn alt" id="lp-share" type="button">📤 Envoyer le lien par WhatsApp</button><button class="live-btn alt" id="lp-new" type="button">🔄 Nouvelle salle (nouveau lien)</button>';
+    $('lp-open').onclick=()=>openRoom(privId(false),'private');
+    $('lp-share').onclick=()=>{ curRoom=privId(false); curKind='private'; share(inviteText()); };
+    $('lp-new').onclick=()=>{ if(confirm('Créer une nouvelle salle ? L\'ancien lien ne sera plus le même.')){ privId(true); drawPrivate(); showToast('Nouvelle salle créée'); } };
+  }
+  $('live-private').onclick=drawPrivate;
 })();
 </script>
 <script>
