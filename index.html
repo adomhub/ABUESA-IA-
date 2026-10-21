@@ -1008,6 +1008,14 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
 
       <div id="home-featured"></div>
 
+      <div id="home-notif">
+        <div class="home-calendar-card">
+          <div class="hc-label">🔔 Reste informé</div>
+          <div class="hc-note" id="notif-note">Reçois une notification quand il y a une soirée Live, un événement ou une nouveauté dans ABUESA-IA.</div>
+          <button class="share-card-btn" id="notif-btn" type="button">🔔 Activer les notifications</button>
+        </div>
+      </div>
+
       <div id="home-atelier">
         <div class="home-calendar-card">
           <div class="hc-label">🛠️ Atelier ABUESA</div>
@@ -1526,7 +1534,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.31 · 20 oct. 2026 (▶ Regarder en direct)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.32 · 21 oct. 2026 (🔔 notifications)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -3557,6 +3565,16 @@ function renderAdminPanel(){
     </div>
     <div id="admin-event-status" class="status-line"></div>
 
+    <label>🔔 Envoyer une notification à tous</label>
+    <div class="admin-row"><input type="text" id="admin-push-title" placeholder="Titre (ex : Soirée Live ce soir !)" maxlength="80"></div>
+    <div class="admin-row"><input type="text" id="admin-push-body" placeholder="Message (ex : On parle des contes à 20h. Rejoins-nous !)" maxlength="200"></div>
+    <div class="admin-row">
+      <input type="text" id="admin-push-url" placeholder="Lien (facultatif, sinon ouvre l'app)">
+      <button id="admin-push-send">🔔</button>
+    </div>
+    <div id="admin-push-status" class="status-line"></div>
+    <div class="admin-actions"><button id="admin-push-count" type="button">👥 Combien d'abonnés ?</button></div>
+
     <label>Ajouter un conte / récit</label>
     <div class="admin-row">
       <input type="text" id="admin-conte-titre" placeholder="Titre du conte">
@@ -3762,6 +3780,26 @@ function renderAdminPanel(){
     status.className = 'status-line status-ok';
     await fetchCloudEvents();
     renderHomeEvents();
+  });
+
+  document.getElementById('admin-push-count').addEventListener('click', async ()=>{
+    const st = document.getElementById('admin-push-status');
+    const out = await adminCall({ action:'push_count' });
+    if(out){ st.textContent = '👥 ' + out.count + ' appareil(s) abonné(s) aux notifications.'; st.className = 'status-line status-ok'; }
+  });
+  document.getElementById('admin-push-send').addEventListener('click', async ()=>{
+    const st = document.getElementById('admin-push-status');
+    const title = document.getElementById('admin-push-title').value.trim();
+    const body = document.getElementById('admin-push-body').value.trim();
+    let url = document.getElementById('admin-push-url').value.trim();
+    if(!body){ st.textContent = 'Écris un message.'; st.className = 'status-line status-bad'; return; }
+    if(!confirm('Envoyer cette notification à TOUS les abonnés ?\n\n' + (title||'ABUESA-IA') + '\n' + body)) return;
+    st.textContent = 'Envoi en cours…'; st.className = 'status-line';
+    const out = await adminCall({ action:'push_send', title, body, url: url || './' });
+    if(out){
+      st.textContent = '✅ Envoyée à ' + out.sent + ' appareil(s)' + (out.failed ? (' · ' + out.failed + ' échec(s)') : '') + (out.removed ? (' · ' + out.removed + ' ancien(s) retiré(s)') : '') + '.';
+      st.className = 'status-line status-ok';
+    } else { st.textContent = 'Envoi impossible (voir le message).'; st.className = 'status-line status-bad'; }
   });
 
   document.getElementById('admin-add-conte').addEventListener('click', async ()=>{
@@ -5607,6 +5645,40 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     const out=$('live-private-out'); out.style.display='block';
     out.innerHTML='<a class="live-btn" href="'+l+'" target="_blank" rel="noopener">▶ Ouvrir ma salle</a><button class="live-btn alt" id="live-priv-share" type="button">📤 Envoyer le lien par WhatsApp</button>';
     $('live-priv-share').onclick=()=>share('📹 Rejoins-moi en appel vidéo : '+l);
+  };
+})();
+</script>
+<script>
+/* ===== NOTIFICATIONS PUSH (abonnement) ===== */
+(function(){
+  const PUB='BM6d1sYyyLZAFQWx9xv2A_i-dgzL69J4R9qakrG7YLDr_Ca9xAfRZcWUfSZQr5lpQBmil0x7QA6Pya4AfhQTyaA';
+  const $=id=>document.getElementById(id);
+  const btn=$('notif-btn'), note=$('notif-note'); if(!btn) return;
+  const ok=('serviceWorker' in navigator)&&('PushManager' in window)&&('Notification' in window);
+  function b64(u){ const p='='.repeat((4-u.length%4)%4); const s=(u+p).replace(/-/g,'+').replace(/_/g,'/'); const r=atob(s); const a=new Uint8Array(r.length); for(let i=0;i<r.length;i++) a[i]=r.charCodeAt(i); return a; }
+  function label(on){ btn.textContent=on?'🔕 Désactiver les notifications':'🔔 Activer les notifications'; btn.dataset.on=on?'1':''; }
+  async function current(){ try{ const reg=await navigator.serviceWorker.ready; return await reg.pushManager.getSubscription(); }catch(_){ return null; } }
+  if(!ok){ btn.style.display='none'; note.textContent='Les notifications ne sont pas disponibles sur ce navigateur. Sur iPhone, installe d\'abord ABUESA-IA sur l\'écran d\'accueil.'; return; }
+  current().then(s=>{ if(s&&Notification.permission==='granted'){ label(true); note.textContent='✅ Notifications activées : tu seras prévenu des soirées Live et des nouveautés.'; } });
+  btn.onclick=async()=>{
+    try{
+      if(btn.dataset.on){
+        const s=await current(); if(s){ const ep=s.endpoint; await s.unsubscribe(); try{ if(typeof supabaseClient!=='undefined'&&supabaseClient) await supabaseClient.from('push_subs').delete().eq('endpoint',ep); }catch(_){} }
+        label(false); note.textContent='Notifications désactivées.'; return;
+      }
+      const perm=await Notification.requestPermission();
+      if(perm!=='granted'){ note.textContent='Tu as refusé les notifications. Pour les activer : réglages du navigateur → paramètres du site → Notifications.'; return; }
+      const reg=await navigator.serviceWorker.ready;
+      let sub=await reg.pushManager.getSubscription();
+      if(!sub) sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64(PUB)});
+      const j=sub.toJSON();
+      if(typeof supabaseClient!=='undefined'&&supabaseClient){
+        const {error}=await supabaseClient.from('push_subs').upsert({endpoint:j.endpoint,p256dh:j.keys.p256dh,auth:j.keys.auth},{onConflict:'endpoint',ignoreDuplicates:true});
+        if(error) throw error;
+      }
+      label(true); note.textContent='✅ Notifications activées : tu seras prévenu des soirées Live et des nouveautés.';
+      try{ reg.showNotification('ABUESA-IA',{body:'Notifications activées ✓',icon:'icon-192.png'}); }catch(_){}
+    }catch(e){ note.textContent='Impossible d\'activer les notifications : '+((e&&e.message)||'erreur'); }
   };
 })();
 </script>
