@@ -1565,7 +1565,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.35 · 25 oct. 2026 (🛡️ sauvegarde complète dans l'espace admin)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.36 · 25 oct. 2026 (📊 statistiques de visites dans l'espace admin)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -3703,6 +3703,10 @@ function renderAdminPanel(){
     <div class="admin-actions"><button id="admin-backup-full" type="button">🛡️ Sauvegarder tout (Supabase)</button></div>
     <div id="admin-backup-status" class="status-line"></div>
 
+    <label>📊 Statistiques de visites</label>
+    <div class="admin-actions"><button id="admin-stats-refresh" type="button">🔄 Actualiser les statistiques</button></div>
+    <div id="admin-stats-box" class="hc-note" style="margin-top:8px;">Chargement…</div>
+
     <div class="admin-list" id="admin-added-list"></div>
 
     <button class="credits-toggle" id="admin-lock" style="color:var(--clay);">🔒 Quitter le mode admin</button>
@@ -4018,6 +4022,37 @@ function renderAdminPanel(){
     else { st.textContent += ' · ' + total + ' éléments sauvegardés.'; }
     showToast('Sauvegarde téléchargée 🛡️');
   });
+
+  /* ===== Statistiques de visites (chiffres seulement, via la fonction SQL abuesa_stats) ===== */
+  async function loadAdminStats(){
+    const box = document.getElementById('admin-stats-box'); if(!box) return;
+    if(!supabaseClient){ box.textContent = 'Supabase non branché (Réglages).'; return; }
+    box.textContent = 'Chargement…';
+    const { data, error } = await supabaseClient.rpc('abuesa_stats');
+    if(error || !data){
+      box.textContent = 'Statistiques indisponibles : ' + ((error && error.message) || 'pas de réponse') + '. As-tu exécuté le script SQL « abuesa_stats » dans Supabase ?';
+      return;
+    }
+    const n = v => Number(v) || 0;
+    const days = Array.isArray(data.days) ? data.days : [];
+    const max = Math.max(1, ...days.map(d => n(d.visits)));
+    const bars = days.map(d=>{
+      const dt = new Date(String(d.day) + 'T00:00:00');
+      const lab = dt.toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit' });
+      const w = Math.round(n(d.visits) / max * 100);
+      return '<div style="display:flex;align-items:center;gap:8px;margin:3px 0;"><span style="width:52px;flex:none;">' + lab + '</span>'
+        + '<span style="flex:1;background:var(--paper-dim);border-radius:6px;height:16px;overflow:hidden;"><span style="display:block;height:100%;width:' + w + '%;background:var(--forest);"></span></span>'
+        + '<b style="width:30px;text-align:right;flex:none;">' + n(d.visits) + '</b></div>';
+    }).join('');
+    box.innerHTML =
+      '<div style="line-height:1.7;">👥 <b>' + n(data.total_visitors) + '</b> visiteurs au total (appareils différents)<br>'
+      + '🆕 <b>' + n(data.new_today) + '</b> nouveau(x) aujourd\'hui · <b>' + n(data.new_7d) + '</b> sur 7 jours<br>'
+      + '🔁 <b>' + n(data.active_today) + '</b> visiteur(s) aujourd\'hui · <b>' + n(data.active_7d) + '</b> sur 7 jours</div>'
+      + '<div style="margin-top:10px;font-weight:700;">Visiteurs par jour (14 derniers jours)</div>' + bars
+      + '<div style="margin-top:6px;opacity:.7;">Ton propre téléphone n\'est pas compté s\'il a été ouvert avec « ?moi=1 ».</div>';
+  }
+  document.getElementById('admin-stats-refresh').addEventListener('click', loadAdminStats);
+  loadAdminStats();
 
   document.getElementById('admin-import').addEventListener('click', ()=>{
     document.getElementById('admin-import-file').click();
