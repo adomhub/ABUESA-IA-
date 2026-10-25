@@ -1565,7 +1565,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.34 · 22 oct. 2026 (✏️ ikposso corrigé dans À propos)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.35 · 25 oct. 2026 (🛡️ sauvegarde complète dans l'espace admin)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -3697,6 +3697,12 @@ function renderAdminPanel(){
       <button class="secondary" id="admin-import">⬆ Importer</button>
     </div>
     <input type="file" id="admin-import-file" accept="application/json" style="display:none;">
+
+    <label>🛡️ Sauvegarde complète d'ABUESA-IA</label>
+    <div class="hc-note">Télécharge dans un seul fichier tout ce que les visiteurs et toi avez publié (dictionnaire, avis, galerie, communauté, marché, partenaires, carnet du village…). Fais-la une fois par semaine et garde le fichier sur ton téléphone ou envoie-le-toi par e-mail.</div>
+    <div class="admin-actions"><button id="admin-backup-full" type="button">🛡️ Sauvegarder tout (Supabase)</button></div>
+    <div id="admin-backup-status" class="status-line"></div>
+
     <div class="admin-list" id="admin-added-list"></div>
 
     <button class="credits-toggle" id="admin-lock" style="color:var(--clay);">🔒 Quitter le mode admin</button>
@@ -3947,6 +3953,70 @@ function renderAdminPanel(){
     a.click();
     URL.revokeObjectURL(url);
     showToast('Sauvegarde téléchargée');
+  });
+
+  /* ===== Sauvegarde complète Supabase (un seul fichier JSON) ===== */
+  const BACKUP_KEY = 'abuesa_last_backup';
+  function paintBackupStatus(){
+    const st = document.getElementById('admin-backup-status'); if(!st) return;
+    let last = null; try{ last = localStorage.getItem(BACKUP_KEY); }catch(_){}
+    if(!last){ st.textContent = '⚠️ Aucune sauvegarde faite sur cet appareil. Fais-en une maintenant.'; st.className = 'status-line status-bad'; return; }
+    const days = Math.floor((Date.now() - new Date(last).getTime()) / 86400000);
+    const when = new Date(last).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
+    if(days >= 7){ st.textContent = '⚠️ Dernière sauvegarde : ' + when + ' (il y a ' + days + ' jours). Il est temps d\'en refaire une.'; st.className = 'status-line status-bad'; }
+    else { st.textContent = '✅ Dernière sauvegarde : ' + when + (days === 0 ? ' (aujourd\'hui)' : ' (il y a ' + days + ' jour' + (days > 1 ? 's' : '') + ')') + '.'; st.className = 'status-line status-ok'; }
+  }
+  paintBackupStatus();
+  async function readWholeTable(name){
+    const rows = [];
+    for(let from = 0; from < 20000; from += 1000){
+      const { data, error } = await supabaseClient.from(name).select('*').range(from, from + 999);
+      if(error) throw error;
+      rows.push(...(data || []));
+      if(!data || data.length < 1000) break;
+    }
+    return rows;
+  }
+  document.getElementById('admin-backup-full').addEventListener('click', async ()=>{
+    const btn = document.getElementById('admin-backup-full');
+    const st = document.getElementById('admin-backup-status');
+    if(!supabaseClient){ st.textContent = 'Supabase non branché (Réglages).'; st.className = 'status-line status-bad'; return; }
+    btn.disabled = true;
+    const TABLES = ['dictionary_words','proverbes','contes','hommages','evenements','carnet_village','app_personality','feedback','artist_submissions','gallery','community_messages','pronunciations','partenaires','marche'];
+    const backup = { app:'ABUESA-IA', version:'4.35', exportedAt:new Date().toISOString(), tables:{}, problemes:{}, local:{ extraWords:getExtraWords(), extraArtists:getExtraArtists() } };
+    let done = 0;
+    for(const t of TABLES){
+      st.textContent = 'Sauvegarde en cours… ' + (++done) + ' / ' + TABLES.length + ' (' + t + ')';
+      st.className = 'status-line';
+      try{ backup.tables[t] = await readWholeTable(t); }
+      catch(e){ backup.problemes[t] = (e && e.message) ? e.message : 'erreur'; }
+    }
+    /* Marché et partenaires : on récupère aussi les annonces masquées via la fonction admin (sans redemander le code si déjà saisi) */
+    try{
+      const m = await adminCall({ action:'marche_list' }, { silent:true });
+      if(m && Array.isArray(m.items)){ backup.tables.marche = m.items; delete backup.problemes.marche; }
+      const p = await adminCall({ action:'part_list' }, { silent:true });
+      if(p && Array.isArray(p.items)){ backup.tables.partenaires = p.items; delete backup.problemes.partenaires; }
+    }catch(_){}
+    const total = Object.values(backup.tables).reduce((n, r)=> n + r.length, 0);
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type:'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'abuesa-sauvegarde-complete-' + new Date().toISOString().slice(0,10) + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=> URL.revokeObjectURL(url), 5000);
+    btn.disabled = false;
+    const nbPb = Object.keys(backup.problemes).length;
+    if(total === 0 && nbPb){
+      st.textContent = 'Sauvegarde échouée : aucune table lisible (' + Object.values(backup.problemes)[0] + ').';
+      st.className = 'status-line status-bad';
+      return;
+    }
+    try{ localStorage.setItem(BACKUP_KEY, new Date().toISOString()); }catch(_){}
+    paintBackupStatus();
+    if(nbPb){ st.textContent += ' · ' + nbPb + ' table(s) non lue(s) : ' + Object.keys(backup.problemes).join(', ') + '.'; }
+    else { st.textContent += ' · ' + total + ' éléments sauvegardés.'; }
+    showToast('Sauvegarde téléchargée 🛡️');
   });
 
   document.getElementById('admin-import').addEventListener('click', ()=>{
