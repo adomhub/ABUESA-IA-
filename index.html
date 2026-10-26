@@ -1567,7 +1567,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.38 · 26 oct. 2026 (✅ modération des publications)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.39 · 26 oct. 2026 (🗑 suppression admin des avis et des artistes)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -2183,7 +2183,7 @@ async function renderFeedbackWall(){
   wallEl.innerHTML = `<div class="empty-state" style="padding:16px;">Chargement…</div>`;
   const { data, error } = await supabaseClient
     .from('feedback')
-    .select('name, message, created_at')
+    .select('id, name, message, created_at')
     .order('created_at', { ascending:false })
     .limit(30);
   if(error){
@@ -2199,8 +2199,17 @@ async function renderFeedbackWall(){
     return `<div class="word-card" style="display:block;">
       <div style="font-size:calc(17.5px * var(--fs,1.15));color:var(--ink-soft);margin-bottom:3px;">${d}${f.name ? ' · '+f.name : ''}</div>
       <div style="font-size:calc(17.5px * var(--fs,1.15));">${f.message}</div>
+      ${(isAdminUnlocked() && f.id != null) ? `<button type="button" class="secondary" data-del-fb="${f.id}" style="margin-top:8px;">🗑 Supprimer (admin)</button>` : ''}
     </div>`;
   }).join('');
+  wallEl.querySelectorAll('[data-del-fb]').forEach(b=> b.addEventListener('click', ()=> adminDeletePost('feedback', b.dataset.delFb, renderFeedbackWall)));
+}
+
+async function adminDeletePost(table, id, after){
+  if(!isAdminUnlocked() || id === null || id === undefined) return;
+  if(!confirm('Supprimer définitivement cette publication ?')) return;
+  const r = await adminCall({ action:'mod_reject', table, id });
+  if(r && r.ok){ showToast('Supprimée 🗑'); if(typeof after === 'function') after(); }
 }
 
 document.getElementById('open-feedback').addEventListener('click', ()=>{
@@ -3452,10 +3461,11 @@ async function renderArtists(){
   if(supabaseClient){
     const { data, error } = await supabaseClient
       .from('artist_submissions')
-      .select('name, songs, current_song_title, current_song_link, created_at')
+      .select('id, name, songs, current_song_title, current_song_link, created_at')
       .order('created_at', { ascending:false });
     if(!error && data){
       submitted = data.map(s=>({
+        dbId:s.id,
         name:s.name,
         bio:'Artiste inscrit via ABUESA.',
         songs: s.songs ? s.songs.split(',').map(x=>x.trim()).filter(Boolean) : [],
@@ -3491,7 +3501,9 @@ async function renderArtists(){
       : a.selfSubmitted
         ? `<div style="margin-top:8px;font-size:calc(17.5px * var(--fs,1.15));color:#4E7A1F;">✓ Inscrit par l'artiste lui-même</div>`
         : (a.addedByAdmin ? `<div style="margin-top:8px;font-size:calc(17.5px * var(--fs,1.15));color:#4E7A1F;">Ajouté depuis l'app</div>` : '');
-    div.innerHTML = `<h3>${a.name}</h3>${a.realName ? `<div style="font-size:calc(17.5px * var(--fs,1.15));color:var(--ink);margin-bottom:4px;">${a.realName}</div>` : ''}<p>${a.bio}</p>${songsHtml}${currentSongHtml}${flag}`;
+    div.innerHTML = `<h3>${a.name}</h3>${a.realName ? `<div style="font-size:calc(17.5px * var(--fs,1.15));color:var(--ink);margin-bottom:4px;">${a.realName}</div>` : ''}<p>${a.bio}</p>${songsHtml}${currentSongHtml}${flag}${(isAdminUnlocked() && a.dbId != null) ? `<button type="button" class="secondary" data-del-art="${a.dbId}" style="margin-top:8px;">🗑 Supprimer (admin)</button>` : ''}`;
+    const delBtn = div.querySelector('[data-del-art]');
+    if(delBtn) delBtn.addEventListener('click', ()=> adminDeletePost('artist_submissions', delBtn.dataset.delArt, renderArtists));
     artistsList.appendChild(div);
   });
 }
