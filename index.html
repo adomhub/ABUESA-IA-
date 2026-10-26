@@ -1011,6 +1011,8 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
 
       <div id="home-marche"></div>
 
+      <div id="home-annuaire"></div>
+
       <div id="home-partners"></div>
 
       <div id="home-support">
@@ -1567,7 +1569,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.39 · 26 oct. 2026 (🗑 suppression admin des avis et des artistes)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.40 · 26 oct. 2026 (📒 annuaire local : artisans et services)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1783,6 +1785,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
     try{ if(typeof renderHomeProverb === 'function') renderHomeProverb(); }catch(_){}
     try{ if(typeof renderHomePartners === 'function') renderHomePartners(); }catch(_){}
     try{ if(typeof renderHomeMarche === 'function') renderHomeMarche(); }catch(_){}
+    try{ if(typeof renderHomeAnnuaire === 'function') renderHomeAnnuaire(); }catch(_){}
     try{ if(typeof renderHomeMarkets === 'function') renderHomeMarkets(); }catch(_){}
     run(document.body); applyUT(document);
     if(!silent && typeof showToast === 'function') showToast(l === 'en' ? 'Language: English' : 'Langue : Français');
@@ -3681,6 +3684,23 @@ function renderAdminPanel(){
     <div id="admin-m-status" class="status-line"></div>
     <div class="admin-list" id="admin-m-list" style="margin-top:8px;"></div>
 
+    <label>📒 Annuaire local (artisans et services)</label>
+    <div class="admin-row"><input type="text" id="admin-a-nom" placeholder="Nom (ex : Kossi Mensah)"></div>
+    <div class="admin-row">
+      <input type="text" id="admin-a-metier" placeholder="Métier (ex : Menuisier)">
+      <input type="text" id="admin-a-cat" placeholder="Catégorie" value="Artisans" list="admin-a-cats">
+      <datalist id="admin-a-cats"><option value="Artisans"><option value="Transport"><option value="Santé"><option value="Commerces"><option value="Services"></datalist>
+    </div>
+    <div class="admin-row">
+      <input type="text" id="admin-a-village" placeholder="Village / quartier">
+      <input type="tel" id="admin-a-contact" placeholder="Numéro (ex : 99619969)">
+    </div>
+    <div class="admin-row"><input type="text" id="admin-a-desc" placeholder="Précisions (facultatif)"></div>
+    <div class="admin-row"><input type="file" id="admin-a-photo" accept="image/*"></div>
+    <div class="admin-actions"><button id="admin-a-add">+ Ajouter à l'annuaire</button></div>
+    <div id="admin-a-status" class="status-line"></div>
+    <div class="admin-list" id="admin-a-list" style="margin-top:8px;"></div>
+
     <label>🤝 Partenaires : publier une annonce</label>
     <div class="admin-row"><input type="text" id="admin-p-nom" placeholder="Nom du partenaire (commerce, artiste, événement)"></div>
     <div class="admin-row">
@@ -3735,6 +3755,7 @@ function renderAdminPanel(){
 
   renderAdminAddedList();
   initAdminMarche();
+  initAdminAnnuaire();
   initAdminPartners();
 
   document.getElementById('admin-add-word').addEventListener('click', async ()=>{
@@ -4007,7 +4028,7 @@ function renderAdminPanel(){
     const st = document.getElementById('admin-backup-status');
     if(!supabaseClient){ st.textContent = 'Supabase non branché (Réglages).'; st.className = 'status-line status-bad'; return; }
     btn.disabled = true;
-    const TABLES = ['dictionary_words','proverbes','contes','hommages','evenements','carnet_village','app_personality','feedback','artist_submissions','gallery','community_messages','pronunciations','partenaires','marche'];
+    const TABLES = ['dictionary_words','proverbes','contes','hommages','evenements','carnet_village','app_personality','feedback','artist_submissions','gallery','community_messages','pronunciations','partenaires','marche','annuaire'];
     const backup = { app:'ABUESA-IA', version:'4.35', exportedAt:new Date().toISOString(), tables:{}, problemes:{}, local:{ extraWords:getExtraWords(), extraArtists:getExtraArtists() } };
     let done = 0;
     for(const t of TABLES){
@@ -4020,6 +4041,8 @@ function renderAdminPanel(){
     try{
       const m = await adminCall({ action:'marche_list' }, { silent:true });
       if(m && Array.isArray(m.items)){ backup.tables.marche = m.items; delete backup.problemes.marche; }
+      const an = await adminCall({ action:'ann_list' }, { silent:true });
+      if(an && Array.isArray(an.items)){ backup.tables.annuaire = an.items; delete backup.problemes.annuaire; }
       const p = await adminCall({ action:'part_list' }, { silent:true });
       if(p && Array.isArray(p.items)){ backup.tables.partenaires = p.items; delete backup.problemes.partenaires; }
     }catch(_){}
@@ -4253,6 +4276,66 @@ function initAdminMarche(){
     status.textContent = 'Annonce publiée ✓';
     await refreshAdminMarcheList();
     fetchCloudMarche().then(renderHomeMarche);
+  });
+}
+
+/* ===== Admin Annuaire (artisans et services) ===== */
+async function refreshAdminAnnuaireList(ask){
+  const el = document.getElementById('admin-a-list'); if(!el) return;
+  const out = await adminCall({ action:'ann_list' }, { silent: ask !== true });
+  if(!out){ el.innerHTML = '<div class="hc-note">Liste non chargée. Appuie sur « Réessayer » pour entrer le code admin. <button id="admin-a-reload" style="border:none;background:none;color:var(--clay);cursor:pointer;text-decoration:underline;">Réessayer</button></div>'; const b = document.getElementById('admin-a-reload'); if(b) b.onclick = ()=> refreshAdminAnnuaireList(true); return; }
+  const items = out.items || [];
+  if(!items.length){ el.innerHTML = '<div class="hc-note">Aucune fiche pour le moment.</div>'; return; }
+  const btn = 'border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 8px;cursor:pointer;font-family:inherit;color:#000;';
+  el.innerHTML = items.map(x=>`<div style="padding:8px 0;border-bottom:1px solid var(--line);">
+      <strong>${escAll(x.nom)}</strong>${x.metier ? ' · ' + escAll(x.metier) : ''} ${x.actif ? '<span style="color:#1f7a3a;">● en ligne</span>' : '<span style="color:#888;">○ masquée</span>'}
+      <div style="margin-top:4px;">
+        <button data-a="toggle" data-id="${x.id}" data-actif="${x.actif ? 1 : 0}" style="${btn}">${x.actif ? '🙈 Masquer' : '👁 Réafficher'}</button>
+        <button data-a="del" data-id="${x.id}" style="${btn}color:var(--clay);">🗑 Supprimer</button>
+      </div></div>`).join('');
+}
+function initAdminAnnuaire(){
+  const list = document.getElementById('admin-a-list'); if(!list) return;
+  refreshAdminAnnuaireList();
+  list.addEventListener('click', async (e)=>{
+    const b = e.target.closest('button[data-a]'); if(!b) return;
+    const id = Number(b.dataset.id);
+    if(b.dataset.a === 'del'){
+      if(!confirm('Supprimer définitivement cette fiche ?')) return;
+      if(await adminCall({ action:'ann_delete', id })) showToast('Fiche supprimée ✓');
+    } else {
+      if(await adminCall({ action:'ann_toggle', id, actif: b.dataset.actif !== '1' })) showToast('Mis à jour ✓');
+    }
+    await refreshAdminAnnuaireList();
+    fetchCloudAnnuaire().then(renderHomeAnnuaire);
+  });
+  document.getElementById('admin-a-add').addEventListener('click', async ()=>{
+    const v = id => document.getElementById(id).value.trim();
+    const status = document.getElementById('admin-a-status');
+    const btn = document.getElementById('admin-a-add');
+    if(!v('admin-a-nom') || !v('admin-a-contact')){ showToast('Remplis au moins le nom et le numéro'); return; }
+    btn.disabled = true; status.className = 'status-line'; status.textContent = 'Publication…';
+    let photo = null;
+    const f = document.getElementById('admin-a-photo').files[0];
+    if(f && supabaseClient){
+      status.textContent = 'Envoi de la photo…';
+      const blob = await shrinkImage(f, 800);
+      const path = `annuaire/${Date.now()}-${Math.random().toString(36).slice(2,8)}.jpg`;
+      const { error: upErr } = await supabaseClient.storage.from('medias').upload(path, blob, { contentType:'image/jpeg' });
+      if(upErr){ status.textContent = 'Photo non envoyée : ' + upErr.message; status.className = 'status-line status-bad'; btn.disabled = false; return; }
+      photo = supabaseClient.storage.from('medias').getPublicUrl(path).data.publicUrl;
+    }
+    const out = await adminCall({ action:'ann_add', item:{
+      nom:v('admin-a-nom'), metier:v('admin-a-metier'), categorie:v('admin-a-cat') || 'Artisans',
+      village:v('admin-a-village'), contact:v('admin-a-contact'), description:v('admin-a-desc'), photo
+    }});
+    btn.disabled = false;
+    if(!out){ status.textContent = ''; return; }
+    ['nom','metier','village','contact','desc'].forEach(k=>{ document.getElementById('admin-a-'+k).value=''; });
+    document.getElementById('admin-a-photo').value = '';
+    status.textContent = 'Fiche ajoutée ✓';
+    await refreshAdminAnnuaireList();
+    fetchCloudAnnuaire().then(renderHomeAnnuaire);
   });
 }
 
@@ -5139,6 +5222,68 @@ function renderHomeMarche(){
 }
 renderHomeMarche();
 fetchCloudMarche().then(renderHomeMarche);
+
+/* ===== Annuaire local : artisans et services. Fiches ajoutées uniquement par Alexi depuis l'admin.
+   Le visiteur appelle ou écrit sur WhatsApp. ABUESA ne garantit pas la qualité du travail. ===== */
+let cloudAnnuaire = [];
+let annuaireFilter = '';
+async function fetchCloudAnnuaire(){
+  if(!supabaseClient){ cloudAnnuaire = []; return; }
+  const { data, error } = await supabaseClient
+    .from('annuaire')
+    .select('nom, metier, categorie, village, contact, description, photo')
+    .eq('actif', true)
+    .order('id', { ascending:false })
+    .limit(200);
+  if(!error && data) cloudAnnuaire = data.filter(x=> x && x.nom && x.contact);
+}
+function renderHomeAnnuaire(){
+  const el = document.getElementById('home-annuaire');
+  if(!el) return;
+  const en = !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en');
+  const addMsg = encodeURIComponent("Bonjour Alexi, je voudrais figurer dans l'annuaire d'ABUESA.");
+  const addBtn = `<a class="share-card-btn" style="display:inline-block;text-decoration:none;margin-top:10px;" target="_blank" rel="noopener" href="https://wa.me/22899619969?text=${addMsg}">💬 ${en ? 'Be listed here' : 'Figurer dans l’annuaire'}</a>`;
+  if(!cloudAnnuaire.length){
+    el.innerHTML = `<div class="home-calendar-card">
+      <div class="hc-label">📒 ${en ? 'Local directory' : 'Annuaire local'}</div>
+      <div class="hc-note">${en ? 'Coming soon: craftsmen and services of our region, one tap to call.' : 'Bientôt ici : les artisans et services de chez nous, avec un appel en un geste. Tu as un métier ? Écris-moi, je t’ajoute avec ton numéro.'}</div>
+      ${addBtn}
+    </div>`;
+    return;
+  }
+  const cats = [...new Set(cloudAnnuaire.map(x=> x.categorie || 'Autres'))];
+  if(annuaireFilter && !cats.includes(annuaireFilter)) annuaireFilter = '';
+  const chips = cats.length > 1
+    ? `<div style="margin:8px 0;display:flex;flex-wrap:wrap;gap:6px;">` + ['', ...cats].map(c=>
+        `<button type="button" data-ann-cat="${escAll(c)}" class="chip${annuaireFilter === c ? ' active' : ''}" style="padding:6px 12px;border-radius:16px;border:1px solid var(--line);background:${annuaireFilter === c ? 'var(--forest,#2f5233)' : '#fff'};color:${annuaireFilter === c ? '#fff' : '#000'};font-family:inherit;cursor:pointer;">${c ? escAll(c) : (en ? 'All' : 'Tous')}</button>`).join('') + `</div>`
+    : '';
+  const shown = cloudAnnuaire.filter(x=> !annuaireFilter || (x.categorie || 'Autres') === annuaireFilter);
+  const items = shown.map(x=>{
+    const ph = marchePhone(x.contact);
+    const msg = encodeURIComponent('Bonjour, je vous contacte depuis l’annuaire d’ABUESA.');
+    const photo = /^https?:\/\//i.test(String(x.photo || '')) ? `<img src="${escAll(x.photo)}" alt="" loading="lazy" onerror="this.style.display='none'" style="width:100%;max-height:180px;object-fit:cover;border-radius:10px;margin-bottom:6px;">` : '';
+    const meta = [x.metier, x.village].filter(Boolean).map(escAll).join(' · ');
+    return `<div class="hc-day" style="margin-top:10px;">
+      ${photo}
+      <strong>${escAll(x.nom)}</strong>
+      ${meta ? `<div class="hc-note" style="margin-top:2px;">${meta}</div>` : ''}
+      ${x.description ? `<div class="hc-note" style="margin-top:2px;"><span data-ut>${escAll(x.description)}</span></div>` : ''}
+      ${ph ? `<a class="share-card-btn" style="display:inline-block;text-decoration:none;" target="_blank" rel="noopener" href="https://wa.me/${ph}?text=${msg}">💬 WhatsApp</a>
+      <a class="share-card-btn" style="display:inline-block;text-decoration:none;" href="tel:+${ph}">📞 ${en ? 'Call' : 'Appeler'}</a>` : ''}
+    </div>`;
+  }).join('');
+  el.innerHTML = `<div class="home-calendar-card">
+    <div class="hc-label">📒 ${en ? 'Local directory' : 'Annuaire local'}</div>
+    <div class="hc-note">${en ? 'Craftsmen and services of our region. You contact them directly.' : 'Artisans et services de chez nous. Tu les contactes directement.'}</div>
+    <div class="hc-note" style="margin-top:4px;">⚠️ ${en ? 'ABUESA does not guarantee the work: agree on the price before starting.' : 'ABUESA ne garantit pas le travail : mets-toi d’accord sur le prix avant de commencer.'}</div>
+    ${chips}
+    ${items}
+    ${addBtn}
+  </div>`;
+  el.querySelectorAll('[data-ann-cat]').forEach(b=> b.addEventListener('click', ()=>{ annuaireFilter = b.dataset.annCat; renderHomeAnnuaire(); }));
+}
+renderHomeAnnuaire();
+fetchCloudAnnuaire().then(renderHomeAnnuaire);
 
 document.getElementById('copy-support-number').addEventListener('click', async ()=>{
   try{
