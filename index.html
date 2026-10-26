@@ -999,6 +999,8 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
       <div id="home-ovazu"></div>
       <div id="home-calendar"></div>
 
+      <div id="home-markets"></div>
+
       <div id="home-weather"></div>
 
       <div id="home-proverb"></div>
@@ -1565,7 +1567,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.36 · 25 oct. 2026 (📊 statistiques de visites dans l'espace admin)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.38 · 26 oct. 2026 (✅ modération des publications)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1781,6 +1783,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
     try{ if(typeof renderHomeProverb === 'function') renderHomeProverb(); }catch(_){}
     try{ if(typeof renderHomePartners === 'function') renderHomePartners(); }catch(_){}
     try{ if(typeof renderHomeMarche === 'function') renderHomeMarche(); }catch(_){}
+    try{ if(typeof renderHomeMarkets === 'function') renderHomeMarkets(); }catch(_){}
     run(document.body); applyUT(document);
     if(!silent && typeof showToast === 'function') showToast(l === 'en' ? 'Language: English' : 'Langue : Français');
   }
@@ -2233,12 +2236,12 @@ document.getElementById('fb-send').addEventListener('click', async ()=>{
       status.className = 'status-line status-bad';
       return;
     }
-    status.textContent = 'Avis publié sur le mur ✓';
+    status.textContent = 'Merci ! Ton avis sera visible après validation par Alexi ✓';
     status.className = 'status-line status-ok';
     document.getElementById('fb-message').value = '';
     markThrottled('feedback');
     renderFeedbackWall();
-    showToast('Merci pour ton avis 🙏');
+    showToast('Merci pour ton avis 🙏 (visible après validation)');
     return;
   }
 
@@ -2582,6 +2585,7 @@ function buildCultureKnowledge(){
     if(ds.length){ t += '\n\nDescriptions fournies par Alexi (fiables, tu peux les citer ; ne les complète pas avec des détails inventés) :'; ds.forEach(k=>{ t += '\n- ' + k + ' : ' + CULTURE_DESC[k]; }); }
   }catch(_){}
   try{
+    t += '\n\nMarchés hebdomadaires (jours confirmés par Alexi) : ' + MARKET_DAYS.map(m=> ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'][m.day] + ' = marché de ' + m.name).join(' ; ') + '.';
     t += '\n\nVillages de la préfecture de Wawa, par canton :';
     WAWA_CANTONS.forEach(c=>{ t += '\n- ' + c.name + ' : ' + c.villages.join(', '); });
   }catch(_){}
@@ -3531,7 +3535,7 @@ document.getElementById('artist-submit').addEventListener('click', async ()=>{
       status.className = 'status-line status-bad';
       return;
     }
-    status.textContent = 'Profil publié sur le mur public ✓';
+    status.textContent = 'Merci ! Ton profil sera visible après validation par Alexi ✓';
     status.className = 'status-line status-ok';
   } else {
     const list = getLocalArtistSubmissions();
@@ -3702,6 +3706,11 @@ function renderAdminPanel(){
     <div class="hc-note">Télécharge dans un seul fichier tout ce que les visiteurs et toi avez publié (dictionnaire, avis, galerie, communauté, marché, partenaires, carnet du village…). Fais-la une fois par semaine et garde le fichier sur ton téléphone ou envoie-le-toi par e-mail.</div>
     <div class="admin-actions"><button id="admin-backup-full" type="button">🛡️ Sauvegarder tout (Supabase)</button></div>
     <div id="admin-backup-status" class="status-line"></div>
+
+    <label>✅ Modération (avis, artistes, galerie)</label>
+    <div class="hc-note">Les publications des visiteurs n'apparaissent qu'après ton accord.</div>
+    <div class="admin-actions"><button id="admin-mod-refresh" type="button">🔄 Voir les publications en attente</button></div>
+    <div id="admin-mod-list" class="admin-list"></div>
 
     <label>📊 Statistiques de visites</label>
     <div class="admin-actions"><button id="admin-stats-refresh" type="button">🔄 Actualiser les statistiques</button></div>
@@ -4022,6 +4031,47 @@ function renderAdminPanel(){
     else { st.textContent += ' · ' + total + ' éléments sauvegardés.'; }
     showToast('Sauvegarde téléchargée 🛡️');
   });
+
+  /* ===== Modération : valider / refuser les publications des visiteurs ===== */
+  const esc = v => String(v == null ? '' : v).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const MOD_LABEL = { feedback:'💬 Avis', artist_submissions:'🎤 Artiste', gallery:'📸 Galerie' };
+  async function loadModeration(ask){
+    const box = document.getElementById('admin-mod-list'); if(!box) return;
+    const out = await adminCall({ action:'mod_list' }, { silent: ask !== true });
+    if(!out){ box.innerHTML = '<div class="hc-note">Touche « Voir les publications en attente » (le code admin sera demandé).</div>'; return; }
+    const items = out.items || [];
+    if(!items.length){ box.innerHTML = '<div class="hc-note">✅ Rien en attente.</div>'; return; }
+    box.innerHTML = items.map((it, i)=>{
+      let body = '';
+      if(it.table === 'feedback') body = '<b>' + esc(it.name || 'Anonyme') + '</b> : ' + esc(it.message);
+      else if(it.table === 'artist_submissions') body = '<b>' + esc(it.name) + '</b><br>Titres : ' + esc(it.songs) + (it.current_song_title ? '<br>Single : ' + esc(it.current_song_title) : '') + (it.current_song_link ? '<br>Lien : ' + esc(it.current_song_link) : '') + (it.contact ? '<br>Contact : ' + esc(it.contact) : '');
+      else {
+        const m = /^https?:\/\//i.test(it.media_url || '') ? it.media_url : '';
+        const media = !m ? '' : (it.media_type === 'video'
+          ? '<video src="' + esc(m) + '" controls preload="metadata" style="max-width:100%;max-height:220px;border-radius:8px;margin:6px 0;"></video>'
+          : '<img src="' + esc(m) + '" style="max-width:100%;max-height:220px;border-radius:8px;margin:6px 0;" alt="">');
+        body = '<b>' + esc(it.name || 'Anonyme') + '</b>' + (it.caption ? ' : ' + esc(it.caption) : '') + (it.category ? '<br>' + esc(it.category) : '') + (it.lieu ? ' · ' + esc(it.lieu) : '') + '<br>' + media;
+      }
+      return '<div class="admin-item" style="display:block;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.12);">'
+        + '<div class="hc-note">' + (MOD_LABEL[it.table] || it.table) + ' · ' + esc(String(it.created_at || '').slice(0,10)) + '</div>'
+        + '<div style="margin:4px 0 8px;">' + body + '</div>'
+        + '<div class="admin-actions"><button type="button" data-mod="approve" data-i="' + i + '">✅ Valider</button>'
+        + '<button type="button" class="secondary" data-mod="reject" data-i="' + i + '">🗑 Refuser</button></div></div>';
+    }).join('');
+    box.querySelectorAll('button[data-mod]').forEach(b=>{
+      b.addEventListener('click', async ()=>{
+        const it = items[Number(b.dataset.i)];
+        const reject = b.dataset.mod === 'reject';
+        if(reject && !confirm('Supprimer définitivement cette publication ?')) return;
+        b.disabled = true;
+        const r = await adminCall({ action: reject ? 'mod_reject' : 'mod_approve', table: it.table, id: it.id });
+        if(r && r.ok){ showToast(reject ? 'Refusée et supprimée' : 'Validée ✅'); loadModeration(true); }
+        else b.disabled = false;
+      });
+    });
+  }
+  document.getElementById('admin-mod-refresh').addEventListener('click', ()=> loadModeration(true));
+  loadModeration(false);
 
   /* ===== Statistiques de visites (chiffres seulement, via la fonction SQL abuesa_stats) ===== */
   async function loadAdminStats(){
@@ -4612,7 +4662,7 @@ document.getElementById('gallery-submit').addEventListener('click', async ()=>{
     return;
   }
 
-  status.textContent = 'Publié dans la galerie ✓';
+  status.textContent = 'Merci ! Ta publication sera visible dans la galerie après validation par Alexi ✓';
   status.className = 'status-line status-ok';
   document.getElementById('gallery-caption').value = '';
   document.getElementById('gallery-name').value = '';
@@ -4648,6 +4698,46 @@ function renderHomeCalendar(){
   </div>`;
 }
 renderHomeCalendar();
+
+/* Marchés hebdomadaires (jours confirmés par Alexi, 25 oct. 2026) : jour de la semaine (0 = dimanche) */
+const MARKET_DAYS = [
+  { day:1, name:'Agbo' },
+  { day:2, name:'Zogbégan' },
+  { day:3, name:'Doumé' },
+  { day:4, name:'Badou' },
+  { day:5, name:'Kougnowou' },
+];
+function renderHomeMarkets(){
+  const el = document.getElementById('home-markets');
+  if(!el) return;
+  const en = !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en');
+  const names = en
+    ? ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+    : ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+  const today = new Date().getDay();
+  const tomorrow = (today + 1) % 7;
+  const find = d => MARKET_DAYS.find(m => m.day === d);
+  const line = (d, label) => {
+    const m = find(d);
+    return m
+      ? `${label} (${names[d]}) — ${en ? 'market' : 'marché'} : <strong>${m.name}</strong>`
+      : `${label} (${names[d]}) — ${en ? 'no market in this list' : 'pas de marché dans cette liste'}`;
+  };
+  const list = MARKET_DAYS.map(m => {
+    const isToday = m.day === today;
+    return `<div class="hc-note" style="margin-top:4px;${isToday ? 'font-weight:800;color:var(--forest-deep);' : ''}">${isToday ? '👉 ' : ''}${names[m.day]} : ${m.name}</div>`;
+  }).join('');
+  el.innerHTML = `<div class="home-calendar-card">
+    <div class="hc-label">${en ? '🛒 Markets of the week' : '🛒 Marchés de la semaine'}</div>
+    <div class="hc-day">${line(today, en ? 'Today' : "Aujourd'hui")}</div>
+    <div class="hc-note" style="margin-top:4px;">${line(tomorrow, en ? 'Tomorrow' : 'Demain')}</div>
+    <details style="margin-top:8px;">
+      <summary class="hc-note" style="cursor:pointer;">${en ? 'See all the markets' : 'Voir tous les marchés'}</summary>
+      ${list}
+    </details>
+  </div>`;
+}
+renderHomeMarkets();
 
 function switchToView(viewId){
   document.querySelectorAll('nav.tabbar button').forEach(b=>b.classList.remove('active'));
