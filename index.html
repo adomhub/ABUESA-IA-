@@ -1013,6 +1013,8 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
 
       <div id="home-annuaire"></div>
 
+      <div id="home-pharmaco"></div>
+
       <div id="home-transfert"></div>
 
       <div id="home-partners"></div>
@@ -1575,7 +1577,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.45 · 28 oct. 2026 (✏️ titres visibles dans les formulaires)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.47 · 28 oct. 2026 (🌿 pharmacopée akposso : plantes et remèdes à chercher)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1792,6 +1794,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
     try{ if(typeof renderHomePartners === 'function') renderHomePartners(); }catch(_){}
     try{ if(typeof renderHomeMarche === 'function') renderHomeMarche(); }catch(_){}
     try{ if(typeof renderHomeAnnuaire === 'function') renderHomeAnnuaire(); }catch(_){}
+    try{ if(typeof renderHomePharmaco === 'function') renderHomePharmaco(); }catch(_){}
     try{ if(typeof renderHomeTransfert === 'function') renderHomeTransfert(); }catch(_){}
     try{ if(typeof renderHomeCercles === 'function') renderHomeCercles(); }catch(_){}
     try{ if(typeof renderHomeMarkets === 'function') renderHomeMarkets(); }catch(_){}
@@ -3710,6 +3713,21 @@ function renderAdminPanel(){
     <div id="admin-a-status" class="status-line"></div>
     <div class="admin-list" id="admin-a-list" style="margin-top:8px;"></div>
 
+    <label>🌿 Pharmacopée akposso (plantes et remèdes)</label>
+    <div class="hc-note">Écris seulement ce que te disent des anciens ou guérisseurs, avec leur accord. Pas de dose.</div>
+    <div class="admin-row">
+      <input type="text" id="admin-p-nom" placeholder="Nom akposso de la plante / du remède">
+      <input type="text" id="admin-p-fr" placeholder="Nom en français (si connu)">
+    </div>
+    <div class="admin-row"><input type="text" id="admin-p-maux" placeholder="Maux, séparés par des virgules (ex : paludisme, toux)"></div>
+    <div class="admin-row"><input type="text" id="admin-p-usage" placeholder="Ce que dit la tradition (ex : feuilles en tisane)"></div>
+    <div class="admin-row"><input type="text" id="admin-p-prec" placeholder="Précautions (ex : déconseillé aux femmes enceintes)"></div>
+    <div class="admin-row"><input type="text" id="admin-p-source" placeholder="Qui a transmis ce savoir (nom, village)"></div>
+    <div class="admin-row"><input type="file" id="admin-p-photo" accept="image/*"></div>
+    <div class="admin-actions"><button id="admin-p-add">+ Ajouter à la pharmacopée</button></div>
+    <div id="admin-p-status" class="status-line"></div>
+    <div class="admin-list" id="admin-p-list" style="margin-top:8px;"></div>
+
     <label>💸 Services d'envoi d'argent (comparateur)</label>
     <div class="hc-note">Écris seulement ce que tu as vérifié sur le site officiel du service.</div>
     <div class="admin-row"><input type="text" id="admin-s-nom" placeholder="Nom du service (ex : Taptap Send)"></div>
@@ -3776,6 +3794,7 @@ function renderAdminPanel(){
   renderAdminAddedList();
   initAdminMarche();
   initAdminAnnuaire();
+  initAdminPharmaco();
   initAdminServices();
   initAdminPartners();
 
@@ -4049,7 +4068,7 @@ function renderAdminPanel(){
     const st = document.getElementById('admin-backup-status');
     if(!supabaseClient){ st.textContent = 'Supabase non branché (Réglages).'; st.className = 'status-line status-bad'; return; }
     btn.disabled = true;
-    const TABLES = ['dictionary_words','proverbes','contes','hommages','evenements','carnet_village','app_personality','feedback','artist_submissions','gallery','community_messages','pronunciations','partenaires','marche','annuaire','transfert_services','cercle_posts','commentaires'];
+    const TABLES = ['dictionary_words','proverbes','contes','hommages','evenements','carnet_village','app_personality','feedback','artist_submissions','gallery','community_messages','pronunciations','partenaires','marche','annuaire','pharmacopee','transfert_services','cercle_posts','commentaires'];
     const backup = { app:'ABUESA-IA', version:'4.35', exportedAt:new Date().toISOString(), tables:{}, problemes:{}, local:{ extraWords:getExtraWords(), extraArtists:getExtraArtists() } };
     let done = 0;
     for(const t of TABLES){
@@ -4064,6 +4083,8 @@ function renderAdminPanel(){
       if(m && Array.isArray(m.items)){ backup.tables.marche = m.items; delete backup.problemes.marche; }
       const an = await adminCall({ action:'ann_list' }, { silent:true });
       if(an && Array.isArray(an.items)){ backup.tables.annuaire = an.items; delete backup.problemes.annuaire; }
+      const ph = await adminCall({ action:'ph_list' }, { silent:true });
+      if(ph && Array.isArray(ph.items)){ backup.tables.pharmacopee = ph.items; delete backup.problemes.pharmacopee; }
       const p = await adminCall({ action:'part_list' }, { silent:true });
       if(p && Array.isArray(p.items)){ backup.tables.partenaires = p.items; delete backup.problemes.partenaires; }
     }catch(_){}
@@ -5360,6 +5381,123 @@ function renderHomeAnnuaire(){
 renderHomeAnnuaire();
 fetchCloudAnnuaire().then(renderHomeAnnuaire);
 
+/* ===== Pharmacopée akposso : savoir traditionnel transmis par des anciens, ajouté seulement par Alexi.
+   Ce n'est pas un avis médical : pas de dose, avertissement toujours visible. ===== */
+let cloudPharmaco = [];
+async function fetchCloudPharmaco(){
+  if(!supabaseClient){ cloudPharmaco = []; return; }
+  const { data, error } = await supabaseClient
+    .from('pharmacopee')
+    .select('nom_akposso, nom_francais, maux, usage_trad, precautions, source, photo')
+    .eq('actif', true)
+    .order('nom_akposso', { ascending:true })
+    .limit(500);
+  if(!error && data) cloudPharmaco = data.filter(x=> x && x.nom_akposso);
+}
+function phNorm(s){ return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim(); }
+function paintPharmaco(){
+  const out = document.getElementById('ph-results'); if(!out) return;
+  const inp = document.getElementById('ph-search');
+  const q = phNorm(inp ? inp.value : '');
+  const shown = cloudPharmaco.filter(x=> !q || phNorm([x.nom_akposso, x.nom_francais, x.maux, x.usage_trad].join(' ')).includes(q)).slice(0, 30);
+  if(!shown.length){
+    out.innerHTML = `<div class="hc-note" style="margin-top:8px;">${q ? 'Aucun résultat. Essaie un autre mot (nom de la plante ou du mal). Tu connais ce remède ? Écris-moi pour qu’on le garde.' : 'Les premières fiches arrivent bientôt.'}</div>`;
+    return;
+  }
+  out.innerHTML = shown.map(x=>{
+    const photo = /^https?:\/\//i.test(String(x.photo || '')) ? `<img src="${escAll(x.photo)}" alt="" loading="lazy" onerror="this.style.display='none'" style="width:100%;max-height:180px;object-fit:cover;border-radius:10px;margin-bottom:6px;">` : '';
+    const maux = String(x.maux || '').split(',').map(s=> s.trim()).filter(Boolean).map(s=> `<span style="display:inline-block;padding:2px 8px;margin:2px 4px 2px 0;border:1px solid var(--line);border-radius:12px;font-size:.9em;">${escAll(s)}</span>`).join('');
+    return `<div class="hc-day" style="margin-top:10px;">
+      ${photo}
+      <strong>${escAll(x.nom_akposso)}</strong>${x.nom_francais ? ' · ' + escAll(x.nom_francais) : ''}
+      ${maux ? `<div style="margin-top:4px;">${maux}</div>` : ''}
+      ${x.usage_trad ? `<div class="hc-note" style="margin-top:4px;"><b>Selon la tradition :</b> ${escAll(x.usage_trad)}</div>` : ''}
+      ${x.precautions ? `<div class="hc-note" style="margin-top:2px;">⚠️ ${escAll(x.precautions)}</div>` : ''}
+      ${x.source ? `<div class="hc-note" style="margin-top:2px;opacity:.75;">Savoir transmis par : ${escAll(x.source)}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+function renderHomePharmaco(){
+  const el = document.getElementById('home-pharmaco'); if(!el) return;
+  const prev = document.getElementById('ph-search');
+  const keep = prev ? prev.value : '';
+  const addMsg = encodeURIComponent("Bonjour Alexi, je connais un remède akposso à ajouter à la pharmacopée d'ABUESA.");
+  el.innerHTML = `<div class="home-calendar-card">
+    <div class="hc-label">🌿 Pharmacopée akposso</div>
+    <div class="hc-note">Cherche une plante ou un mal (ex : toux, ventre, paludisme) pour découvrir les noms des remèdes de chez nous.</div>
+    <div class="hc-note" style="margin-top:4px;">⚠️ Savoir de la tradition orale, pas un avis médical. Ne remplace pas le centre de santé. Fièvre forte, enfant, femme enceinte ou douleur grave : va consulter. Ne prends jamais une plante dont tu n’es pas sûr du nom.</div>
+    <input type="search" id="ph-search" placeholder="🔎 Chercher une plante ou un mal…" style="width:100%;box-sizing:border-box;margin-top:8px;padding:10px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:1em;">
+    <div id="ph-results"></div>
+    <a class="share-card-btn" style="display:inline-block;text-decoration:none;margin-top:10px;" target="_blank" rel="noopener" href="https://wa.me/22899619969?text=${addMsg}">💬 Ajouter un remède que je connais</a>
+  </div>`;
+  const inp = document.getElementById('ph-search');
+  inp.value = keep;
+  inp.addEventListener('input', paintPharmaco);
+  paintPharmaco();
+}
+renderHomePharmaco();
+fetchCloudPharmaco().then(paintPharmaco);
+
+/* ===== Admin Pharmacopée ===== */
+async function refreshAdminPharmacoList(ask){
+  const el = document.getElementById('admin-p-list'); if(!el) return;
+  const out = await adminCall({ action:'ph_list' }, { silent: ask !== true });
+  if(!out){ el.innerHTML = '<div class="hc-note">Liste non chargée. <button id="admin-p-reload" style="border:none;background:none;color:var(--clay);cursor:pointer;text-decoration:underline;">Réessayer</button></div>'; const b = document.getElementById('admin-p-reload'); if(b) b.onclick = ()=> refreshAdminPharmacoList(true); return; }
+  const items = out.items || [];
+  if(!items.length){ el.innerHTML = '<div class="hc-note">Aucune fiche pour le moment.</div>'; return; }
+  const btn = 'border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 8px;cursor:pointer;font-family:inherit;color:#000;';
+  el.innerHTML = items.map(x=>`<div style="padding:8px 0;border-bottom:1px solid var(--line);">
+      <strong>${escAll(x.nom_akposso)}</strong>${x.nom_francais ? ' · ' + escAll(x.nom_francais) : ''} ${x.actif ? '<span style="color:#1f7a3a;">● en ligne</span>' : '<span style="color:#888;">○ masquée</span>'}
+      <div style="margin-top:4px;">
+        <button data-a="toggle" data-id="${x.id}" data-actif="${x.actif ? 1 : 0}" style="${btn}">${x.actif ? '🙈 Masquer' : '👁 Réafficher'}</button>
+        <button data-a="del" data-id="${x.id}" style="${btn}color:var(--clay);">🗑 Supprimer</button>
+      </div></div>`).join('');
+}
+function initAdminPharmaco(){
+  const list = document.getElementById('admin-p-list'); if(!list) return;
+  refreshAdminPharmacoList();
+  list.addEventListener('click', async (e)=>{
+    const b = e.target.closest('button[data-a]'); if(!b) return;
+    const id = Number(b.dataset.id);
+    if(b.dataset.a === 'del'){
+      if(!confirm('Supprimer définitivement cette fiche ?')) return;
+      if(await adminCall({ action:'ph_delete', id })) showToast('Fiche supprimée ✓');
+    } else {
+      if(await adminCall({ action:'ph_toggle', id, actif: b.dataset.actif !== '1' })) showToast('Mis à jour ✓');
+    }
+    await refreshAdminPharmacoList();
+    fetchCloudPharmaco().then(paintPharmaco);
+  });
+  document.getElementById('admin-p-add').addEventListener('click', async ()=>{
+    const v = id => document.getElementById(id).value.trim();
+    const status = document.getElementById('admin-p-status');
+    const btn = document.getElementById('admin-p-add');
+    if(!v('admin-p-nom')){ showToast('Écris au moins le nom akposso'); return; }
+    btn.disabled = true; status.className = 'status-line'; status.textContent = 'Publication…';
+    let photo = null;
+    const f = document.getElementById('admin-p-photo').files[0];
+    if(f && supabaseClient){
+      status.textContent = 'Envoi de la photo…';
+      const blob = await shrinkImage(f, 800);
+      const path = `pharmacopee/${Date.now()}-${Math.random().toString(36).slice(2,8)}.jpg`;
+      const { error: upErr } = await supabaseClient.storage.from('medias').upload(path, blob, { contentType:'image/jpeg' });
+      if(upErr){ status.textContent = 'Photo non envoyée : ' + upErr.message; status.className = 'status-line status-bad'; btn.disabled = false; return; }
+      photo = supabaseClient.storage.from('medias').getPublicUrl(path).data.publicUrl;
+    }
+    const out = await adminCall({ action:'ph_add', item:{
+      nom_akposso:v('admin-p-nom'), nom_francais:v('admin-p-fr'), maux:v('admin-p-maux'),
+      usage_trad:v('admin-p-usage'), precautions:v('admin-p-prec'), source:v('admin-p-source'), photo
+    }});
+    btn.disabled = false;
+    if(!out){ status.textContent = ''; return; }
+    ['nom','fr','maux','usage','prec','source'].forEach(k=>{ document.getElementById('admin-p-'+k).value=''; });
+    document.getElementById('admin-p-photo').value = '';
+    status.textContent = 'Fiche ajoutée ✓';
+    await refreshAdminPharmacoList();
+    fetchCloudPharmaco().then(paintPharmaco);
+  });
+}
+
 /* ===== Envoyer de l'argent au pays : comparateur (aucun argent ne passe par ABUESA) + accusé de réception familial ===== */
 let transfertServices = [];
 async function fetchTransfertServices(){
@@ -5552,10 +5690,10 @@ async function openComments(postId, engEl){
     if(r && r.ok){ showToast('Supprimé 🗑'); load(); }
   });
   ov.querySelector('#cm-send').onclick = async ()=>{
-    const name = ov.querySelector('#cm-name').value.trim();
+    const name = ov.querySelector('#cm-name').value.trim().replace(/[.,;:\s]+$/,'');
     const message = ov.querySelector('#cm-text').value.trim();
     if(!message){ showToast(en ? 'Write a comment' : 'Écris un commentaire'); return; }
-    if(/(https?:|www\.|\.com|\.net|\.org|wa\.me)/i.test(message)){ showToast(en ? 'Links are not allowed' : 'Les liens ne sont pas autorisés'); return; }
+    if(/(https?:|www\.|\.com|\.net|\.org|wa\.me)/i.test(message)){ alert(en ? 'Links are not allowed. Please remove the web address from your message.' : 'Les liens ne sont pas autorisés. Retire l’adresse du site de ton message.'); return; }
     const th = checkThrottle('cmt', 20);
     if(!th.ok){ showToast((en ? 'Wait ' : 'Attends encore ') + th.remaining + 's'); return; }
     markThrottled('cmt');
@@ -5667,10 +5805,10 @@ async function openCercle(canton){
     if(r && r.ok){ showToast('Supprimé 🗑'); load(); }
   });
   ov.querySelector('#ce-send').onclick = async ()=>{
-    const name = ov.querySelector('#ce-name').value.trim();
+    const name = ov.querySelector('#ce-name').value.trim().replace(/[.,;:\s]+$/,'');
     const message = ov.querySelector('#ce-text').value.trim();
     if(!message){ showToast(en ? 'Write a message' : 'Écris un message'); return; }
-    if(/(https?:|www\.|\.com|\.net|\.org|wa\.me)/i.test(message)){ showToast(en ? 'Links are not allowed' : 'Les liens ne sont pas autorisés'); return; }
+    if(/(https?:|www\.|\.com|\.net|\.org|wa\.me)/i.test(message)){ alert(en ? 'Links are not allowed. Please remove the web address from your message.' : 'Les liens ne sont pas autorisés. Retire l’adresse du site de ton message.'); return; }
     const th = checkThrottle('cercle', 30);
     if(!th.ok){ showToast((en ? 'Wait ' : 'Attends encore ') + th.remaining + 's'); return; }
     markThrottled('cercle');
