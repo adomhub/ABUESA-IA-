@@ -1013,6 +1013,8 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
 
       <div id="home-annuaire"></div>
 
+      <div id="home-transfert"></div>
+
       <div id="home-partners"></div>
 
       <div id="home-support">
@@ -1569,7 +1571,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.41 · 27 oct. 2026 (💸 guide « envoyer de l'argent au pays » dans le chat)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.42 · 28 oct. 2026 (💸 comparateur d'envoi et accusé de réception)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1786,6 +1788,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
     try{ if(typeof renderHomePartners === 'function') renderHomePartners(); }catch(_){}
     try{ if(typeof renderHomeMarche === 'function') renderHomeMarche(); }catch(_){}
     try{ if(typeof renderHomeAnnuaire === 'function') renderHomeAnnuaire(); }catch(_){}
+    try{ if(typeof renderHomeTransfert === 'function') renderHomeTransfert(); }catch(_){}
     try{ if(typeof renderHomeMarkets === 'function') renderHomeMarkets(); }catch(_){}
     run(document.body); applyUT(document);
     if(!silent && typeof showToast === 'function') showToast(l === 'en' ? 'Language: English' : 'Langue : Français');
@@ -3702,6 +3705,17 @@ function renderAdminPanel(){
     <div id="admin-a-status" class="status-line"></div>
     <div class="admin-list" id="admin-a-list" style="margin-top:8px;"></div>
 
+    <label>💸 Services d'envoi d'argent (comparateur)</label>
+    <div class="hc-note">Écris seulement ce que tu as vérifié sur le site officiel du service.</div>
+    <div class="admin-row"><input type="text" id="admin-s-nom" placeholder="Nom du service (ex : Taptap Send)"></div>
+    <div class="admin-row"><input type="url" id="admin-s-lien" placeholder="Lien officiel (https://…)"></div>
+    <div class="admin-row"><input type="text" id="admin-s-livre" placeholder="Livre vers (ex : Mixx by Yas, Flooz, banque)"></div>
+    <div class="admin-row"><input type="text" id="admin-s-frais" placeholder="Frais vérifiés (ex : 1 € par envoi)"></div>
+    <div class="admin-row"><input type="text" id="admin-s-note" placeholder="Remarque (facultatif)"></div>
+    <div class="admin-actions"><button id="admin-s-add">+ Ajouter le service</button></div>
+    <div id="admin-s-status" class="status-line"></div>
+    <div class="admin-list" id="admin-s-list" style="margin-top:8px;"></div>
+
     <label>🤝 Partenaires : publier une annonce</label>
     <div class="admin-row"><input type="text" id="admin-p-nom" placeholder="Nom du partenaire (commerce, artiste, événement)"></div>
     <div class="admin-row">
@@ -3757,6 +3771,7 @@ function renderAdminPanel(){
   renderAdminAddedList();
   initAdminMarche();
   initAdminAnnuaire();
+  initAdminServices();
   initAdminPartners();
 
   document.getElementById('admin-add-word').addEventListener('click', async ()=>{
@@ -4029,7 +4044,7 @@ function renderAdminPanel(){
     const st = document.getElementById('admin-backup-status');
     if(!supabaseClient){ st.textContent = 'Supabase non branché (Réglages).'; st.className = 'status-line status-bad'; return; }
     btn.disabled = true;
-    const TABLES = ['dictionary_words','proverbes','contes','hommages','evenements','carnet_village','app_personality','feedback','artist_submissions','gallery','community_messages','pronunciations','partenaires','marche','annuaire'];
+    const TABLES = ['dictionary_words','proverbes','contes','hommages','evenements','carnet_village','app_personality','feedback','artist_submissions','gallery','community_messages','pronunciations','partenaires','marche','annuaire','transfert_services'];
     const backup = { app:'ABUESA-IA', version:'4.35', exportedAt:new Date().toISOString(), tables:{}, problemes:{}, local:{ extraWords:getExtraWords(), extraArtists:getExtraArtists() } };
     let done = 0;
     for(const t of TABLES){
@@ -4337,6 +4352,59 @@ function initAdminAnnuaire(){
     status.textContent = 'Fiche ajoutée ✓';
     await refreshAdminAnnuaireList();
     fetchCloudAnnuaire().then(renderHomeAnnuaire);
+  });
+}
+
+/* ===== Admin : services d'envoi d'argent ===== */
+async function refreshAdminServicesList(ask){
+  const el = document.getElementById('admin-s-list'); if(!el) return;
+  const out = await adminCall({ action:'svc_list' }, { silent: ask !== true });
+  if(!out){ el.innerHTML = '<div class="hc-note">Liste non chargée. <button id="admin-s-reload" style="border:none;background:none;color:var(--clay);cursor:pointer;text-decoration:underline;">Réessayer</button></div>'; const b = document.getElementById('admin-s-reload'); if(b) b.onclick = ()=> refreshAdminServicesList(true); return; }
+  const items = out.items || [];
+  if(!items.length){ el.innerHTML = '<div class="hc-note">Aucun service pour le moment.</div>'; return; }
+  const btn = 'border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 8px;cursor:pointer;font-family:inherit;color:#000;';
+  el.innerHTML = items.map(x=>`<div style="padding:8px 0;border-bottom:1px solid var(--line);">
+      <strong>${escAll(x.nom)}</strong> ${x.actif ? '<span style="color:#1f7a3a;">● en ligne</span>' : '<span style="color:#888;">○ masqué</span>'}
+      <div class="hc-note">Frais : ${x.frais ? escAll(x.frais) : '— (à vérifier)'}${x.verifie_le ? ' · vérifié le ' + escAll(x.verifie_le) : ''}</div>
+      <div style="margin-top:4px;">
+        <button data-s="edit" data-id="${x.id}" style="${btn}">✏️ Modifier les frais</button>
+        <button data-s="toggle" data-id="${x.id}" data-actif="${x.actif ? 1 : 0}" style="${btn}">${x.actif ? '🙈 Masquer' : '👁 Réafficher'}</button>
+        <button data-s="del" data-id="${x.id}" style="${btn}color:var(--clay);">🗑 Supprimer</button>
+      </div></div>`).join('');
+  el._items = items;
+}
+function initAdminServices(){
+  const list = document.getElementById('admin-s-list'); if(!list) return;
+  refreshAdminServicesList();
+  list.addEventListener('click', async (e)=>{
+    const b = e.target.closest('button[data-s]'); if(!b) return;
+    const id = Number(b.dataset.id);
+    if(b.dataset.s === 'del'){
+      if(!confirm('Supprimer définitivement ce service ?')) return;
+      if(await adminCall({ action:'svc_delete', id })) showToast('Service supprimé ✓');
+    } else if(b.dataset.s === 'edit'){
+      const cur = (list._items || []).find(x=> x.id === id) || {};
+      const frais = prompt('Frais vérifiés sur le site officiel (ex : 1 € par envoi) :', cur.frais || '');
+      if(frais === null) return;
+      const livre = prompt('Livre vers (ex : Mixx by Yas, Flooz) :', cur.livre || '');
+      if(livre === null) return;
+      if(await adminCall({ action:'svc_update', id, item:{ frais, livre } })) showToast('Mis à jour ✓');
+    } else {
+      if(await adminCall({ action:'svc_toggle', id, actif: b.dataset.actif !== '1' })) showToast('Mis à jour ✓');
+    }
+    await refreshAdminServicesList();
+    fetchTransfertServices().then(renderHomeTransfert);
+  });
+  document.getElementById('admin-s-add').addEventListener('click', async ()=>{
+    const v = id => document.getElementById(id).value.trim();
+    const status = document.getElementById('admin-s-status');
+    if(!v('admin-s-nom') || !/^https:\/\//i.test(v('admin-s-lien'))){ showToast('Remplis le nom et le lien officiel (https://…)'); return; }
+    const out = await adminCall({ action:'svc_add', item:{ nom:v('admin-s-nom'), lien:v('admin-s-lien'), livre:v('admin-s-livre'), frais:v('admin-s-frais'), note:v('admin-s-note') } });
+    if(!out) return;
+    ['nom','lien','livre','frais','note'].forEach(k=>{ document.getElementById('admin-s-'+k).value=''; });
+    status.textContent = 'Service ajouté ✓';
+    await refreshAdminServicesList();
+    fetchTransfertServices().then(renderHomeTransfert);
   });
 }
 
@@ -5285,6 +5353,135 @@ function renderHomeAnnuaire(){
 }
 renderHomeAnnuaire();
 fetchCloudAnnuaire().then(renderHomeAnnuaire);
+
+/* ===== Envoyer de l'argent au pays : comparateur (aucun argent ne passe par ABUESA) + accusé de réception familial ===== */
+let transfertServices = [];
+async function fetchTransfertServices(){
+  if(!supabaseClient){ transfertServices = []; return; }
+  const { data, error } = await supabaseClient
+    .from('transfert_services')
+    .select('nom, lien, livre, frais, note, verifie_le')
+    .eq('actif', true)
+    .order('id', { ascending:true })
+    .limit(30);
+  if(!error && data) transfertServices = data.filter(x=> x && x.nom && /^https:\/\//i.test(String(x.lien || '')));
+}
+function renderHomeTransfert(){
+  const el = document.getElementById('home-transfert');
+  if(!el) return;
+  const en = !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en');
+  const svc = transfertServices.map(x=>{
+    const meta = [x.livre ? (en ? 'Delivers to: ' : 'Livre vers : ') + escAll(x.livre) : '',
+                  x.frais ? (en ? 'Fees: ' : 'Frais : ') + escAll(x.frais) + (x.verifie_le ? ' (' + (en ? 'checked ' : 'vérifié le ') + escAll(x.verifie_le) + ')' : '')
+                          : (en ? 'Fees: check on the official site' : 'Frais : à vérifier sur le site officiel')].filter(Boolean).join('<br>');
+    return `<div class="hc-day" style="margin-top:10px;">
+      <strong>${escAll(x.nom)}</strong>
+      <div class="hc-note" style="margin-top:2px;">${meta}</div>
+      ${x.note ? `<div class="hc-note" style="margin-top:2px;"><span data-ut>${escAll(x.note)}</span></div>` : ''}
+      <a class="share-card-btn" style="display:inline-block;text-decoration:none;" target="_blank" rel="noopener noreferrer" href="${escAll(x.lien)}">🔗 ${en ? 'Official site' : 'Site officiel'}</a>
+    </div>`;
+  }).join('');
+  el.innerHTML = `<div class="home-calendar-card">
+    <div class="hc-label">💸 ${en ? 'Send money home' : 'Envoyer de l’argent au pays'}</div>
+    <div class="hc-note">${en ? 'Compare before you send. ABUESA never touches your money: you pay on the official service only.' : 'Compare avant d’envoyer. ABUESA ne touche jamais à ton argent : tu paies uniquement sur le service officiel.'}</div>
+    <details style="margin-top:8px;"><summary class="hc-note" style="cursor:pointer;">${en ? 'How to choose' : 'Comment bien choisir'}</summary>
+      <div class="hc-note" style="margin-top:4px;">1. ${en ? 'Look at the fee AND the exchange rate: “zero fee” can hide a poor rate.' : 'Regarde les frais ET le taux de change : « zéro frais » peut cacher un mauvais taux.'}</div>
+      <div class="hc-note">2. ${en ? 'Check the service delivers to your family’s wallet (T-Money/Mixx by Yas or Flooz).' : 'Vérifie que le service livre bien sur le portefeuille de ta famille (T-Money/Mixx by Yas ou Flooz).'}</div>
+      <div class="hc-note">3. ${en ? 'Call your relative to confirm the phone number before sending.' : 'Appelle ton proche pour confirmer le numéro avant d’envoyer.'}</div>
+      <div class="hc-note">4. ${en ? 'Never share a PIN or an SMS code. Use only official apps.' : 'Ne partage jamais un code PIN ni un code reçu par SMS. Utilise seulement les applications officielles.'}</div>
+    </details>
+    ${svc || `<div class="hc-note" style="margin-top:8px;">${en ? 'The list is coming soon.' : 'La liste arrive bientôt.'}</div>`}
+    <button type="button" class="share-card-btn" id="transfert-ask" style="margin-top:10px;">💬 ${en ? 'Ask ABUESA-IA' : 'Demander à ABUESA-IA'}</button>
+    <div style="margin-top:14px;font-weight:700;">✅ ${en ? 'Receipt confirmation' : 'Accusé de réception'}</div>
+    <div class="hc-note">${en ? 'After sending, create a link and share it on WhatsApp. Your family taps “received” and you see it here. No amount is stored.' : 'Après ton envoi, crée un lien et partage-le sur WhatsApp. Ta famille touche « bien reçu » et tu le vois ici. Aucun montant n’est gardé.'}</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
+      <input type="text" id="acc-benef" maxlength="40" placeholder="${en ? 'Who receives? (first name)' : 'Qui reçoit ? (prénom)'}" style="flex:1;min-width:140px;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;">
+      <input type="text" id="acc-exp" maxlength="40" placeholder="${en ? 'Your first name' : 'Ton prénom'}" style="flex:1;min-width:120px;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;">
+    </div>
+    <button type="button" class="share-card-btn" id="acc-create" style="margin-top:8px;">🔗 ${en ? 'Create the link' : 'Créer le lien'}</button>
+    <div id="acc-list" style="margin-top:8px;"></div>
+  </div>`;
+  document.getElementById('transfert-ask').addEventListener('click', ()=>{
+    switchToView('chat-view');
+    const ci = document.getElementById('chat-input');
+    if(ci){ ci.value = en ? 'How can I send money to my family in Wawa?' : 'Comment envoyer de l’argent à ma famille à Wawa ?'; ci.focus(); }
+  });
+  document.getElementById('acc-create').addEventListener('click', createAccuse);
+  renderAccuseList();
+}
+function getMyAccuses(){ try{ return JSON.parse(localStorage.getItem('abuesa_accuses') || '[]').filter(a=> a && /^[a-f0-9]{12}$/.test(a.code)).slice(0, 8); }catch(_){ return []; } }
+function accuseLink(code){ return location.origin + location.pathname + '?accuse=' + code; }
+async function createAccuse(){
+  const en = !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en');
+  if(!supabaseClient){ showToast(en ? 'Service unavailable' : 'Service indisponible'); return; }
+  const benef = (document.getElementById('acc-benef').value || '').trim();
+  const exp = (document.getElementById('acc-exp').value || '').trim();
+  if(!benef){ showToast(en ? 'Enter who receives' : 'Écris qui reçoit (prénom)'); return; }
+  const th = checkThrottle('accuse', 15);
+  if(!th.ok){ showToast((en ? 'Wait ' : 'Attends encore ') + th.remaining + 's'); return; }
+  markThrottled('accuse');
+  const { data, error } = await supabaseClient.rpc('accuse_create', { p_benef: benef, p_exp: exp });
+  if(error || !data){ showToast(en ? 'Could not create the link' : 'Lien non créé : ' + ((error && error.message) || 'erreur')); return; }
+  const list = getMyAccuses();
+  list.unshift({ code: String(data), benef, created: new Date().toISOString() });
+  try{ localStorage.setItem('abuesa_accuses', JSON.stringify(list.slice(0, 8))); }catch(_){}
+  document.getElementById('acc-benef').value = '';
+  renderAccuseList();
+  showToast(en ? 'Link created ✓' : 'Lien créé ✓');
+}
+async function renderAccuseList(){
+  const box = document.getElementById('acc-list'); if(!box) return;
+  const en = !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en');
+  const list = getMyAccuses();
+  if(!list.length){ box.innerHTML = ''; return; }
+  const lab = { attente: en ? '⏳ waiting' : '⏳ en attente', recu: en ? '✅ received' : '✅ bien reçu', pas_recu: en ? '❌ not received yet' : '❌ pas encore reçu' };
+  const rows = await Promise.all(list.map(async a=>{
+    let st = 'attente';
+    try{ const { data } = await supabaseClient.rpc('accuse_status', { p_code: a.code }); if(data && data.statut) st = data.statut; }catch(_){}
+    const msg = encodeURIComponent((en ? 'Hello ' : 'Bonjour ') + a.benef + (en ? ', I sent you money. Please tap this link to confirm you received it: ' : ', je t’ai envoyé de l’argent. Touche ce lien pour confirmer que tu l’as reçu : ') + accuseLink(a.code));
+    return `<div class="hc-day" style="margin-top:6px;"><strong>${escAll(a.benef)}</strong> · ${lab[st] || lab.attente}
+      <div><a class="share-card-btn" style="display:inline-block;text-decoration:none;" target="_blank" rel="noopener" href="https://wa.me/?text=${msg}">📤 ${en ? 'Share on WhatsApp' : 'Partager sur WhatsApp'}</a></div></div>`;
+  }));
+  box.innerHTML = rows.join('');
+}
+renderHomeTransfert();
+fetchTransfertServices().then(renderHomeTransfert);
+
+/* Page d'accusé : la famille ouvre le lien ?accuse=CODE et répond */
+(function(){
+  let code = '';
+  try{ code = new URLSearchParams(location.search).get('accuse') || ''; }catch(_){}
+  if(!/^[a-f0-9]{12}$/.test(code)) return;
+  const go = async ()=>{
+    if(!supabaseClient){ return; }
+    const { data } = await supabaseClient.rpc('accuse_status', { p_code: code });
+    if(!data) return;
+    const en = !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en');
+    const ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px;';
+    const done = data.statut === 'recu' ? (en ? '✅ Already confirmed. Thank you!' : '✅ Déjà confirmé. Merci !') : '';
+    ov.innerHTML = `<div style="background:#fff;color:#000;border-radius:16px;max-width:420px;width:100%;padding:20px;font-size:calc(17.5px * var(--fs,1.15));">
+      <div style="font-weight:800;margin-bottom:8px;">💸 ${en ? 'Money sent to you' : 'Argent envoyé pour toi'}</div>
+      <div>${escAll(data.expediteur || (en ? 'Someone' : 'Quelqu’un'))} ${en ? 'says they sent money to' : 'dit avoir envoyé de l’argent à'} <b>${escAll(data.beneficiaire)}</b>.<br>${en ? 'Check your mobile money wallet. Did you receive it?' : 'Regarde ton portefeuille Mobile Money. L’as-tu reçu ?'}</div>
+      <div id="acc-ov-msg" style="margin-top:8px;font-weight:700;">${done}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+        <button type="button" id="acc-yes" style="flex:1;padding:12px;border-radius:10px;border:none;background:#2f5233;color:#fff;font-family:inherit;font-size:inherit;cursor:pointer;">✅ ${en ? 'Yes, received' : 'Oui, bien reçu'}</button>
+        <button type="button" id="acc-no" style="flex:1;padding:12px;border-radius:10px;border:1px solid #999;background:#fff;color:#000;font-family:inherit;font-size:inherit;cursor:pointer;">❌ ${en ? 'Not yet' : 'Pas encore'}</button>
+      </div>
+      <button type="button" id="acc-close" style="margin-top:10px;border:none;background:none;text-decoration:underline;font-family:inherit;font-size:inherit;cursor:pointer;">${en ? 'Close' : 'Fermer'}</button>
+      <div style="margin-top:8px;opacity:.7;font-size:.8em;">${en ? 'ABUESA never asks for money, a PIN or a code.' : 'ABUESA ne demande jamais d’argent, de code PIN ni de code secret.'}</div>
+    </div>`;
+    document.body.appendChild(ov);
+    const reply = async (st)=>{
+      const { error } = await supabaseClient.rpc('accuse_reply', { p_code: code, p_statut: st });
+      document.getElementById('acc-ov-msg').textContent = error ? (en ? 'Error, try again.' : 'Erreur, réessaie.') : (st === 'recu' ? (en ? '✅ Thank you! The sender will see it.' : '✅ Merci ! L’expéditeur le verra.') : (en ? '👍 Noted. The sender will see it.' : '👍 Noté. L’expéditeur le verra.'));
+    };
+    document.getElementById('acc-yes').onclick = ()=> reply('recu');
+    document.getElementById('acc-no').onclick = ()=> reply('pas_recu');
+    document.getElementById('acc-close').onclick = ()=>{ ov.remove(); try{ history.replaceState(null, '', location.pathname); }catch(_){} };
+  };
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
 
 document.getElementById('copy-support-number').addEventListener('click', async ()=>{
   try{
