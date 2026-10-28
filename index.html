@@ -1031,6 +1031,8 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
 
       <div id="home-feed"></div>
 
+      <div id="home-cercles"></div>
+
       <div id="home-notif">
         <div class="home-calendar-card">
           <div class="hc-label">🔔 Reste informé</div>
@@ -1573,7 +1575,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.43 · 28 oct. 2026 (🌍 fil d'actualité, réactions et commentaires)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.44 · 28 oct. 2026 (🏘️ cercles par canton, Diaspora et Ghana)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1791,6 +1793,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
     try{ if(typeof renderHomeMarche === 'function') renderHomeMarche(); }catch(_){}
     try{ if(typeof renderHomeAnnuaire === 'function') renderHomeAnnuaire(); }catch(_){}
     try{ if(typeof renderHomeTransfert === 'function') renderHomeTransfert(); }catch(_){}
+    try{ if(typeof renderHomeCercles === 'function') renderHomeCercles(); }catch(_){}
     try{ if(typeof renderHomeMarkets === 'function') renderHomeMarkets(); }catch(_){}
     run(document.body); applyUT(document);
     if(!silent && typeof showToast === 'function') showToast(l === 'en' ? 'Language: English' : 'Langue : Français');
@@ -4046,7 +4049,7 @@ function renderAdminPanel(){
     const st = document.getElementById('admin-backup-status');
     if(!supabaseClient){ st.textContent = 'Supabase non branché (Réglages).'; st.className = 'status-line status-bad'; return; }
     btn.disabled = true;
-    const TABLES = ['dictionary_words','proverbes','contes','hommages','evenements','carnet_village','app_personality','feedback','artist_submissions','gallery','community_messages','pronunciations','partenaires','marche','annuaire','transfert_services'];
+    const TABLES = ['dictionary_words','proverbes','contes','hommages','evenements','carnet_village','app_personality','feedback','artist_submissions','gallery','community_messages','pronunciations','partenaires','marche','annuaire','transfert_services','cercle_posts','commentaires'];
     const backup = { app:'ABUESA-IA', version:'4.35', exportedAt:new Date().toISOString(), tables:{}, problemes:{}, local:{ extraWords:getExtraWords(), extraArtists:getExtraArtists() } };
     let done = 0;
     for(const t of TABLES){
@@ -5453,8 +5456,8 @@ fetchTransfertServices().then(renderHomeTransfert);
 /* ===== Réactions, commentaires et fil d'actualité (v4.43) ===== */
 const REACTIONS = [ { k:'heart', e:'❤️' }, { k:'pray', e:'🙏' }, { k:'clap', e:'👏' } ];
 const engBtn = 'border:1px solid var(--line);background:#fff;border-radius:16px;padding:6px 10px;cursor:pointer;font-family:inherit;color:#000;font-size:inherit;';
-function engagementHtml(id){
-  return `<div class="eng" data-post="${escAll(String(id))}" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px;">`
+function engagementHtml(id, type){
+  return `<div class="eng" data-type="${type || 'gallery'}" data-post="${escAll(String(id))}" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px;">`
     + REACTIONS.map(r=> `<button type="button" class="eng-r" data-k="${r.k}" style="${engBtn}">${r.e} <span>0</span></button>`).join('')
     + `<button type="button" class="eng-c" style="${engBtn}">💬 <span>0</span></button></div>`;
 }
@@ -5462,14 +5465,17 @@ async function hydrateEngagement(root){
   if(!supabaseClient || !root) return;
   const els = [...root.querySelectorAll('.eng[data-post]')];
   if(!els.length) return;
-  const ids = [...new Set(els.map(e=> e.dataset.post))];
+  const types = [...new Set(els.map(e=> e.dataset.type || 'gallery'))];
   try{
+    for(const type of types){
+    const group = els.filter(e=> (e.dataset.type || 'gallery') === type);
+    const ids = [...new Set(group.map(e=> e.dataset.post))];
     const [r, c] = await Promise.all([
-      supabaseClient.rpc('reactions_summary', { p_type:'gallery', p_ids:ids, p_vid:getVisitorId() }),
-      supabaseClient.rpc('comments_counts', { p_type:'gallery', p_ids:ids })
+      supabaseClient.rpc('reactions_summary', { p_type:type, p_ids:ids, p_vid:getVisitorId() }),
+      supabaseClient.rpc('comments_counts', { p_type:type, p_ids:ids })
     ]);
     const rs = (r && r.data) || {}, cs = (c && c.data) || {};
-    els.forEach(el=>{
+    group.forEach(el=>{
       const sm = rs[el.dataset.post] || {};
       const mine = Array.isArray(sm.mine) ? sm.mine : [];
       el.querySelectorAll('.eng-r').forEach(b=>{
@@ -5480,6 +5486,7 @@ async function hydrateEngagement(root){
       });
       el.querySelector('.eng-c span').textContent = Number(cs[el.dataset.post]) || 0;
     });
+    }
   }catch(_){}
 }
 document.addEventListener('click', async (e)=>{
@@ -5488,7 +5495,7 @@ document.addEventListener('click', async (e)=>{
     const el = rb.closest('.eng'); if(!el || !supabaseClient) return;
     const th = checkThrottle('react', 1); if(!th.ok) return;
     markThrottled('react');
-    const { data, error } = await supabaseClient.rpc('reaction_toggle', { p_type:'gallery', p_id:el.dataset.post, p_vid:getVisitorId(), p_key:rb.dataset.k });
+    const { data, error } = await supabaseClient.rpc('reaction_toggle', { p_type:(el.dataset.type || 'gallery'), p_id:el.dataset.post, p_vid:getVisitorId(), p_key:rb.dataset.k });
     if(error){ showToast('Réaction impossible'); return; }
     const span = rb.querySelector('span');
     const n = Number(span.textContent) || 0;
@@ -5503,6 +5510,7 @@ document.addEventListener('click', async (e)=>{
 });
 async function openComments(postId, engEl){
   if(!supabaseClient) return;
+  const ptype = (engEl && engEl.dataset.type) || 'gallery';
   const en = !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en');
   const ov = document.createElement('div');
   ov.style.cssText = 'position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;';
@@ -5524,7 +5532,7 @@ async function openComments(postId, engEl){
   const list = ov.querySelector('#cm-list');
   const load = async ()=>{
     const { data, error } = await supabaseClient.from('commentaires').select('id, name, message, created_at')
-      .eq('post_type','gallery').eq('post_id', postId).order('created_at', { ascending:true }).limit(60);
+      .eq('post_type', ptype).eq('post_id', postId).order('created_at', { ascending:true }).limit(60);
     if(error){ list.innerHTML = '<div class="hc-note">' + escAll(error.message) + '</div>'; return; }
     if(!data || !data.length){ list.innerHTML = `<div class="hc-note">${en ? 'No comments yet. Be the first!' : 'Pas encore de commentaire. Sois le premier !'}</div>`; return; }
     const admin = isAdminUnlocked();
@@ -5549,7 +5557,7 @@ async function openComments(postId, engEl){
     const th = checkThrottle('cmt', 20);
     if(!th.ok){ showToast((en ? 'Wait ' : 'Attends encore ') + th.remaining + 's'); return; }
     markThrottled('cmt');
-    const { error } = await supabaseClient.from('commentaires').insert({ post_type:'gallery', post_id:String(postId), name: name || null, message });
+    const { error } = await supabaseClient.from('commentaires').insert({ post_type:ptype, post_id:String(postId), name: name || null, message });
     if(error){ showToast(en ? 'Could not send' : 'Envoi impossible'); return; }
     try{ localStorage.setItem('abuesa_pseudo', name); }catch(_){}
     ov.querySelector('#cm-text').value = '';
@@ -5590,6 +5598,88 @@ async function renderHomeFeed(){
   hydrateEngagement(el);
 }
 renderHomeFeed();
+
+/* ===== Cercles : un mur par canton, plus Diaspora et Ghana (v4.44) ===== */
+function cercleNames(){
+  let names = [];
+  try{ names = WAWA_CANTONS.map(c=> c.name); }catch(_){}
+  return [...names, 'Diaspora', 'Ghana'];
+}
+function renderHomeCercles(){
+  const el = document.getElementById('home-cercles');
+  if(!el) return;
+  const en = !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en');
+  let mine = ''; try{ mine = localStorage.getItem('abuesa_cercle') || ''; }catch(_){}
+  const chips = cercleNames().map(n=>
+    `<button type="button" data-cercle="${escAll(n)}" style="padding:8px 14px;border-radius:18px;border:1px solid var(--line);background:${n === mine ? 'var(--forest,#2f5233)' : '#fff'};color:${n === mine ? '#fff' : '#000'};font-family:inherit;font-size:inherit;cursor:pointer;">${n === 'Diaspora' ? '🌍 ' : n === 'Ghana' ? '🇬🇭 ' : '🏘️ '}${escAll(n)}</button>`).join('');
+  el.innerHTML = `<div class="home-calendar-card">
+    <div class="hc-label">🏘️ ${en ? 'Circles' : 'Cercles'}</div>
+    <div class="hc-note">${en ? 'Every canton has its own wall. Choose yours to share news, greet your village and meet people from home.' : 'Chaque canton a son mur. Choisis le tien pour partager des nouvelles, saluer ton village et retrouver les gens de chez toi.'}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">${chips}</div>
+  </div>`;
+  el.querySelectorAll('[data-cercle]').forEach(b=> b.addEventListener('click', ()=> openCercle(b.dataset.cercle)));
+}
+async function openCercle(canton){
+  if(!supabaseClient){ showToast('Service indisponible'); return; }
+  const en = !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en');
+  try{ localStorage.setItem('abuesa_cercle', canton); }catch(_){}
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;z-index:99997;background:#fff;color:#000;display:flex;flex-direction:column;font-size:calc(17.5px * var(--fs,1.15));';
+  ov.innerHTML = `<div style="padding:14px 16px;font-weight:800;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);">🏘️ ${escAll(canton)}<button type="button" id="ce-close" style="border:none;background:none;font-size:1.3em;cursor:pointer;">✕</button></div>
+    <div style="padding:12px 16px;border-bottom:1px solid var(--line);">
+      <input type="text" id="ce-name" maxlength="30" placeholder="${en ? 'Your first name' : 'Ton prénom'}" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;margin-bottom:6px;">
+      <textarea id="ce-text" rows="3" maxlength="500" placeholder="${en ? 'Share news, greet your village…' : 'Partage une nouvelle, salue ton village…'}" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;"></textarea>
+      <div class="hc-note">${en ? 'No links, no insults. Posts can be removed.' : 'Pas de liens, pas d’insultes. Les messages peuvent être supprimés.'}</div>
+      <button type="button" id="ce-send" class="share-card-btn" style="margin-top:6px;">📤 ${en ? 'Post' : 'Publier'}</button>
+    </div>
+    <div id="ce-list" style="padding:0 16px 24px;overflow:auto;flex:1;"></div>`;
+  document.body.appendChild(ov);
+  let pseudo = ''; try{ pseudo = localStorage.getItem('abuesa_pseudo') || ''; }catch(_){}
+  ov.querySelector('#ce-name').value = pseudo;
+  ov.querySelector('#ce-close').onclick = ()=>{ ov.remove(); renderHomeCercles(); };
+  const list = ov.querySelector('#ce-list');
+  const load = async ()=>{
+    list.innerHTML = `<div class="hc-note" style="margin-top:12px;">${en ? 'Loading…' : 'Chargement…'}</div>`;
+    const { data, error } = await supabaseClient.from('cercle_posts').select('id, name, message, created_at')
+      .eq('canton', canton).order('created_at', { ascending:false }).limit(40);
+    if(error){ list.innerHTML = '<div class="hc-note">' + escAll(error.message) + '</div>'; return; }
+    if(!data || !data.length){ list.innerHTML = `<div class="hc-note" style="margin-top:12px;">${en ? 'Nothing here yet. Be the first to greet this circle!' : 'Rien ici pour l’instant. Sois le premier à saluer ce cercle !'}</div>`; return; }
+    const admin = isAdminUnlocked();
+    list.innerHTML = data.map(p=>{
+      const d = new Date(p.created_at).toLocaleDateString(window.ABUESA_I18N ? ABUESA_I18N.locale() : 'fr-FR', { day:'numeric', month:'short' });
+      const rep = encodeURIComponent('Bonjour Alexi, je signale ce message sur ABUESA (' + canton + ') : « ' + String(p.message).slice(0, 120) + ' »');
+      return `<div class="hc-day" style="margin-top:12px;"><div class="hc-note"><b>${escAll(p.name || (en ? 'Anonymous' : 'Anonyme'))}</b> · ${escAll(d)}</div>
+        <div style="margin-top:4px;white-space:pre-wrap;">${escAll(p.message)}</div>
+        ${engagementHtml(p.id, 'cercle')}
+        <a class="hc-note" target="_blank" rel="noopener" href="https://wa.me/22899619969?text=${rep}">🚩 ${en ? 'Report' : 'Signaler'}</a>
+        ${admin ? `<button type="button" data-pdel="${escAll(String(p.id))}" style="border:none;background:none;color:var(--clay);text-decoration:underline;cursor:pointer;font-family:inherit;">🗑 ${en ? 'Delete' : 'Supprimer'}</button>` : ''}</div>`;
+    }).join('');
+    hydrateEngagement(list);
+  };
+  list.addEventListener('click', async (ev)=>{
+    const d = ev.target.closest('[data-pdel]'); if(!d) return;
+    if(!confirm('Supprimer ce message ?')) return;
+    const r = await adminCall({ action:'cercle_delete', id: d.dataset.pdel });
+    if(r && r.ok){ showToast('Supprimé 🗑'); load(); }
+  });
+  ov.querySelector('#ce-send').onclick = async ()=>{
+    const name = ov.querySelector('#ce-name').value.trim();
+    const message = ov.querySelector('#ce-text').value.trim();
+    if(!message){ showToast(en ? 'Write a message' : 'Écris un message'); return; }
+    if(/(https?:|www\.|\.com|\.net|\.org|wa\.me)/i.test(message)){ showToast(en ? 'Links are not allowed' : 'Les liens ne sont pas autorisés'); return; }
+    const th = checkThrottle('cercle', 30);
+    if(!th.ok){ showToast((en ? 'Wait ' : 'Attends encore ') + th.remaining + 's'); return; }
+    markThrottled('cercle');
+    const { error } = await supabaseClient.from('cercle_posts').insert({ canton, name: name || null, message });
+    if(error){ showToast(en ? 'Could not post' : 'Publication impossible'); return; }
+    try{ localStorage.setItem('abuesa_pseudo', name); }catch(_){}
+    ov.querySelector('#ce-text').value = '';
+    showToast(en ? 'Posted ✓' : 'Publié ✓');
+    load();
+  };
+  load();
+}
+renderHomeCercles();
 
 /* Page d'accusé : la famille ouvre le lien ?accuse=CODE et répond */
 (function(){
