@@ -1575,7 +1575,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.44 · 28 oct. 2026 (🏘️ cercles par canton, Diaspora et Ghana)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.45 · 28 oct. 2026 (✏️ titres visibles dans les formulaires)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -5518,7 +5518,9 @@ async function openComments(postId, engEl){
     <div style="padding:14px 16px;font-weight:800;display:flex;justify-content:space-between;align-items:center;">💬 ${en ? 'Comments' : 'Commentaires'}<button type="button" id="cm-close" style="border:none;background:none;font-size:1.3em;cursor:pointer;">✕</button></div>
     <div id="cm-list" style="padding:0 16px;overflow:auto;flex:1;min-height:80px;"></div>
     <div style="padding:12px 16px;border-top:1px solid var(--line);">
+      <div style="font-weight:700;margin-bottom:2px;">${en ? 'Your first name' : 'Ton prénom'}</div>
       <input type="text" id="cm-name" maxlength="30" placeholder="${en ? 'Your first name' : 'Ton prénom'}" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;margin-bottom:6px;">
+      <div style="font-weight:700;margin-bottom:2px;">${en ? 'Your comment' : 'Ton commentaire'}</div>
       <textarea id="cm-text" rows="2" maxlength="300" placeholder="${en ? 'Write a kind comment…' : 'Écris un commentaire respectueux…'}" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;"></textarea>
       <div class="hc-note">${en ? 'No links. Be respectful: comments can be removed.' : 'Pas de liens. Sois respectueux : les commentaires peuvent être supprimés.'}</div>
       <button type="button" id="cm-send" class="share-card-btn" style="margin-top:6px;">📤 ${en ? 'Send' : 'Envoyer'}</button>
@@ -5559,7 +5561,7 @@ async function openComments(postId, engEl){
     markThrottled('cmt');
     const { error } = await supabaseClient.from('commentaires').insert({ post_type:ptype, post_id:String(postId), name: name || null, message });
     if(error){ showToast(en ? 'Could not send' : 'Envoi impossible'); return; }
-    try{ localStorage.setItem('abuesa_pseudo', name); }catch(_){}
+    try{ if(name.length <= 20 && name.split(/\s+/).length <= 3) localStorage.setItem('abuesa_pseudo', name); }catch(_){}
     ov.querySelector('#cm-text').value = '';
     load();
   };
@@ -5627,7 +5629,9 @@ async function openCercle(canton){
   ov.style.cssText = 'position:fixed;inset:0;z-index:99997;background:#fff;color:#000;display:flex;flex-direction:column;font-size:calc(17.5px * var(--fs,1.15));';
   ov.innerHTML = `<div style="padding:14px 16px;font-weight:800;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);">🏘️ ${escAll(canton)}<button type="button" id="ce-close" style="border:none;background:none;font-size:1.3em;cursor:pointer;">✕</button></div>
     <div style="padding:12px 16px;border-bottom:1px solid var(--line);">
+      <div style="font-weight:700;margin-bottom:2px;">${en ? 'Your first name' : 'Ton prénom'}</div>
       <input type="text" id="ce-name" maxlength="30" placeholder="${en ? 'Your first name' : 'Ton prénom'}" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;margin-bottom:6px;">
+      <div style="font-weight:700;margin-bottom:2px;">${en ? 'Your message' : 'Ton message'}</div>
       <textarea id="ce-text" rows="3" maxlength="500" placeholder="${en ? 'Share news, greet your village…' : 'Partage une nouvelle, salue ton village…'}" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;"></textarea>
       <div class="hc-note">${en ? 'No links, no insults. Posts can be removed.' : 'Pas de liens, pas d’insultes. Les messages peuvent être supprimés.'}</div>
       <button type="button" id="ce-send" class="share-card-btn" style="margin-top:6px;">📤 ${en ? 'Post' : 'Publier'}</button>
@@ -5672,7 +5676,7 @@ async function openCercle(canton){
     markThrottled('cercle');
     const { error } = await supabaseClient.from('cercle_posts').insert({ canton, name: name || null, message });
     if(error){ showToast(en ? 'Could not post' : 'Publication impossible'); return; }
-    try{ localStorage.setItem('abuesa_pseudo', name); }catch(_){}
+    try{ if(name.length <= 20 && name.split(/\s+/).length <= 3) localStorage.setItem('abuesa_pseudo', name); }catch(_){}
     ov.querySelector('#ce-text').value = '';
     showToast(en ? 'Posted ✓' : 'Publié ✓');
     load();
