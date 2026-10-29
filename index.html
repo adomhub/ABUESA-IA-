@@ -1625,7 +1625,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.52 · 29 oct. 2026 (⌨️ clavier akposso complet : accents, tons, majuscules + 🎙️ banque vocale)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.54 · 29 oct. 2026 (⌨️ vrai clavier ikposso a-z + lettres spéciales, accents et tons)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -5517,15 +5517,16 @@ try{ fetchCloudWords().then(renderHomeWordGoal); }catch(_){}
 
 /* ===== Clavier akposso : lettres spéciales de l'orthographe (tirées du dictionnaire de l'application), à toucher pour écrire,
    puis copier-coller dans WhatsApp. Aucune donnée envoyée. ===== */
-const AK_BASE = ['ɛ','ɔ','ɩ','ʋ','ɣ','ŋ','ǝ','ʉ','ɨ','ɖ','ƒ','ɓ','ɗ','ɲ'];
+const AK_ROWS = ['1234567890', 'azertyuiop', 'qsdfghjklm', 'wxcvbn'];
+const AK_PUNCT = ["'", ',', '.', '?', '!', '-'];
+const AK_SPECIAL = ['ɛ','ɔ','ɩ','ʋ','ɣ','ŋ','ǝ','ʉ','ɨ','ɖ','ƒ','ɓ','ɗ','ɲ'];
 const AK_VOW = ['à','á','â','ǎ','ā','è','é','ê','ě','ē','ì','í','î','ǐ','ī','ò','ó','ô','ǒ','ō','ù','ú','û','ǔ','ū'];
-const AK_TONES = [['\u0300','grave (ton bas)'],['\u0301','aigu (ton haut)'],['\u0302','circonflexe'],['\u030C','ton montant'],['\u0304','ton moyen'],['\u0303','nasale']];
-let akShift = false;
-function akClick(e, field){
-  const b = e.target.closest('.ak-key'); if(!b) return;
-  if(b.dataset.shift){ akShift = !akShift; document.querySelectorAll('[data-akkeys]').forEach(el=>{ el.innerHTML = akKeysHtml(); }); return; }
-  akInsert(field, b.dataset.ch);
-}
+const AK_TONES = [['̀','ton bas','` bas'],['́','ton haut','´ haut'],['̂','ton descendant','^ desc.'],['̌','ton montant','ˇ mont.'],['̄','ton moyen','¯ moy.'],['̃','nasale','~ nasal']];
+let akShift = false, akMore = false, akPhone = false;
+const akFields = [];
+function akApplyMode(){ akFields.forEach(f=>{ f.setAttribute('inputmode', akPhone ? 'text' : 'none'); }); }
+function akRenderAll(){ document.querySelectorAll('[data-akkeys]').forEach(el=>{ el.innerHTML = akKeysHtml(); }); }
+function akRegister(f){ if(f && !akFields.includes(f)){ akFields.push(f); akApplyMode(); } }
 function akInsert(field, ch){
   if(!field) return;
   const s = field.selectionStart == null ? field.value.length : field.selectionStart;
@@ -5536,37 +5537,76 @@ function akInsert(field, ch){
   try{ field.setSelectionRange(p, p); }catch(_){}
   field.dispatchEvent(new Event('input', { bubbles:true }));
 }
+function akBackspace(field){
+  if(!field) return;
+  let s = field.selectionStart == null ? field.value.length : field.selectionStart;
+  const e = field.selectionEnd == null ? s : field.selectionEnd;
+  if(s === e){
+    if(s === 0) return;
+    const rem = Array.from(field.value.slice(0, s)).pop();
+    s -= rem.length;
+  }
+  field.value = field.value.slice(0, s) + field.value.slice(e);
+  field.focus();
+  try{ field.setSelectionRange(s, s); }catch(_){}
+  field.dispatchEvent(new Event('input', { bubbles:true }));
+}
+function akClick(e, field){
+  const b = e.target.closest('.ak-key'); if(!b) return;
+  const act = b.dataset.act;
+  if(act === 'shift'){ akShift = !akShift; akRenderAll(); return; }
+  if(act === 'more'){ akMore = !akMore; akRenderAll(); return; }
+  if(act === 'phone'){ akPhone = !akPhone; akApplyMode(); akRenderAll(); if(akPhone && field) field.focus(); return; }
+  if(act === 'space'){ akInsert(field, ' '); return; }
+  if(act === 'back'){ akBackspace(field); return; }
+  if(act === 'enter'){ if(field && field.tagName === 'TEXTAREA') akInsert(field, '\n'); return; }
+  if(b.dataset.ch != null) akInsert(field, b.dataset.ch);
+}
 function akKeysHtml(){
-  const k = (c, label, title)=> `<button type="button" class="ak-key" data-ch="${c}" title="${title || ''}" data-no-i18n>${label || c}</button>`;
   const cs = c=> akShift ? c.toUpperCase() : c;
-  return `<button type="button" class="ak-key" data-shift="1" data-no-i18n style="${akShift ? 'background:var(--forest,#2f5233);color:#fff;' : ''}">${akShift ? 'ABC → abc' : 'abc → ABC'}</button>`
-    + `<div style="width:100%;font-size:.8em;opacity:.7;">Lettres</div>` + AK_BASE.map(c=> k(cs(c))).join('')
-    + `<div style="width:100%;font-size:.8em;opacity:.7;">Voyelles avec accent</div>` + AK_VOW.map(c=> k(cs(c))).join('')
-    + `<div style="width:100%;font-size:.8em;opacity:.7;">Accent à ajouter sur la lettre d’avant (ex : ɛ puis ◌̀ donne ɛ̀)</div>` + AK_TONES.map(t=> k(t[0], '◌' + t[0], t[1])).join('');
+  const k = (c, label, title)=> `<button type="button" class="ak-key" data-ch="${c}" title="${title || ''}" data-no-i18n>${label || c}</button>`;
+  const a = (act, label, cls)=> `<button type="button" class="ak-key ${cls || ''}" data-act="${act}" data-no-i18n>${label}</button>`;
+  const row = html=> `<div class="ak-row">${html}</div>`;
+  const chunks = (arr, n)=> { const r = []; for(let i = 0; i < arr.length; i += n) r.push(arr.slice(i, i + n)); return r; };
+  let out = '';
+  out += row(AK_ROWS[0].split('').map(c=> k(c)).join(''));
+  out += row(AK_ROWS[1].split('').map(c=> k(cs(c))).join(''));
+  out += row(AK_ROWS[2].split('').map(c=> k(cs(c))).join(''));
+  out += row(AK_ROWS[3].split('').map(c=> k(cs(c))).join('') + AK_PUNCT.map(c=> k(c)).join(''));
+  out += `<div class="ak-label">Lettres de l’akposso</div>`;
+  chunks(AK_SPECIAL, 7).forEach(r=>{ out += row(r.map(c=> k(cs(c))).join('')); });
+  out += row(a('shift', akShift ? '⇧ MAJ activée' : '⇧ Majuscule', akShift ? 'ak-on' : '') + a('space', 'espace', 'ak-wide') + a('back', '⌫') + a('enter', '↵'));
+  out += row(a('more', akMore ? '▲ Cacher accents et tons' : '▼ Accents et tons', akMore ? 'ak-on' : '') + a('phone', akPhone ? '⌨️ Clavier akposso' : '📱 Clavier du téléphone'));
+  if(akMore){
+    out += `<div class="ak-label">Voyelles avec accent</div>`;
+    chunks(AK_VOW, 9).forEach(r=>{ out += row(r.map(c=> k(cs(c))).join('')); });
+    out += `<div class="ak-label">Tons et nasale : écris la lettre, puis touche le ton, qui se pose dessus (ex : ɛ puis « bas » donne ɛ̀)</div>`;
+    out += row(AK_TONES.map(t=> k(t[0], t[2], t[1])).join(''));
+  }
+  return out;
 }
 (function initAkKeys(){
   const st = document.createElement('style');
-  st.textContent = '.ak-keys{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0;}.ak-key{min-width:42px;padding:8px 10px;border:1px solid var(--line,#ddd);border-radius:10px;background:#fff;color:#000;font-size:1.15em;font-family:inherit;cursor:pointer;}';
+  st.textContent = '.ak-keys{margin:6px 0;}.ak-row{display:flex;gap:4px;margin-bottom:5px;}.ak-row .ak-key{flex:1;min-width:0;padding:9px 0;}.ak-key{border:1px solid var(--line,#ddd);border-radius:8px;background:#fff;color:#000;font-size:1.05em;font-family:inherit;cursor:pointer;touch-action:manipulation;}.ak-key.ak-on{background:var(--forest,#2f5233);color:#fff;}.ak-key.ak-wide{flex:4;}.ak-label{font-size:.8em;opacity:.7;margin:6px 0 3px;}';
   document.head.appendChild(st);
-  /* Dans « Proposer un mot » : les lettres écrivent dans le dernier champ touché */
+  /* Dans « Proposer un mot » : le clavier écrit dans le champ du mot akposso */
   const wk = document.getElementById('wd-keys');
   if(wk){
-    let last = document.getElementById('wd-ak');
-    ['wd-ak','wd-fr','wd-ex'].forEach(id=>{ const f = document.getElementById(id); if(f) f.addEventListener('focus', ()=>{ last = f; }); });
+    const f = document.getElementById('wd-ak'); akRegister(f);
     wk.innerHTML = akKeysHtml();
-    wk.setAttribute('data-akkeys','1'); wk.addEventListener('click', e=> akClick(e, last));
+    wk.setAttribute('data-akkeys','1'); wk.addEventListener('click', e=> akClick(e, f));
   }
   /* Carte d'accueil : écrire, puis copier */
   const el = document.getElementById('home-akkeys');
   if(el){
     el.innerHTML = `<div class="home-calendar-card">
       <div class="hc-label">⌨️ Clavier akposso</div>
-      <div class="hc-note">Écris en akposso avec les lettres spéciales, puis copie ton texte pour le coller dans WhatsApp.</div>
+      <div class="hc-note">Un vrai clavier ikposso : toutes les lettres de a à z, les lettres spéciales, les accents et les tons. Écris, puis copie ton texte pour le coller dans WhatsApp.</div>
+      <textarea id="ak-home-text" rows="3" inputmode="none" placeholder="Touche les lettres, écris ton texte…" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:1em;"></textarea>
       <div class="ak-keys" id="ak-home-keys" data-akkeys="1">${akKeysHtml()}</div>
-      <textarea id="ak-home-text" rows="3" placeholder="Touche les lettres, écris ton texte…" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:1em;"></textarea>
       <button type="button" class="share-card-btn" id="ak-home-copy">📋 Copier le texte</button>
     </div>`;
-    const ta = document.getElementById('ak-home-text');
+    const ta = document.getElementById('ak-home-text'); akRegister(ta);
     document.getElementById('ak-home-keys').addEventListener('click', e=> akClick(e, ta));
     document.getElementById('ak-home-copy').addEventListener('click', async ()=>{
       if(!ta.value){ showToast('Écris d’abord quelque chose'); return; }
@@ -5614,11 +5654,10 @@ fetchCloudVoix().then(renderHomeVoix);
   const $ = id => document.getElementById(id);
   const status = $('vx-status');
   let recorder = null, chunks = [], blob = null, playUrl = null, startedAt = 0, stopTimer = null, durS = 0;
-  /* lettres spéciales dans le dernier champ touché */
-  let last = $('vx-ak');
-  ['vx-ak','vx-fr'].forEach(id=> $(id).addEventListener('focus', ()=>{ last = $(id); }));
+  /* clavier akposso : écrit dans le champ du mot akposso */
+  akRegister($('vx-ak'));
   $('vx-keys').innerHTML = akKeysHtml(); $('vx-keys').setAttribute('data-akkeys','1');
-  $('vx-keys').addEventListener('click', e=> akClick(e, last));
+  $('vx-keys').addEventListener('click', e=> akClick(e, $('vx-ak')));
   $('close-voix').addEventListener('click', ()=>{
     modal.classList.remove('active');
     if(recorder && recorder.state === 'recording') recorder.stop();
