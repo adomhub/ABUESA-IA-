@@ -1625,7 +1625,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.51 · 29 oct. 2026 (🎙️ banque vocale avec consentement + ⌨️ clavier akposso + 🎯 défi)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.52 · 29 oct. 2026 (⌨️ clavier akposso complet : accents, tons, majuscules + 🎙️ banque vocale)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -5517,7 +5517,15 @@ try{ fetchCloudWords().then(renderHomeWordGoal); }catch(_){}
 
 /* ===== Clavier akposso : lettres spéciales de l'orthographe (tirées du dictionnaire de l'application), à toucher pour écrire,
    puis copier-coller dans WhatsApp. Aucune donnée envoyée. ===== */
-const AK_LETTERS = ['ɛ','ɔ','ɩ','ʋ','ɣ','ŋ','ǝ','ʉ','Ɛ','Ɔ','Ɩ','Ʋ','Ŋ','é','è','ē'];
+const AK_BASE = ['ɛ','ɔ','ɩ','ʋ','ɣ','ŋ','ǝ','ʉ','ɨ','ɖ','ƒ','ɓ','ɗ','ɲ'];
+const AK_VOW = ['à','á','â','ǎ','ā','è','é','ê','ě','ē','ì','í','î','ǐ','ī','ò','ó','ô','ǒ','ō','ù','ú','û','ǔ','ū'];
+const AK_TONES = [['\u0300','grave (ton bas)'],['\u0301','aigu (ton haut)'],['\u0302','circonflexe'],['\u030C','ton montant'],['\u0304','ton moyen'],['\u0303','nasale']];
+let akShift = false;
+function akClick(e, field){
+  const b = e.target.closest('.ak-key'); if(!b) return;
+  if(b.dataset.shift){ akShift = !akShift; document.querySelectorAll('[data-akkeys]').forEach(el=>{ el.innerHTML = akKeysHtml(); }); return; }
+  akInsert(field, b.dataset.ch);
+}
 function akInsert(field, ch){
   if(!field) return;
   const s = field.selectionStart == null ? field.value.length : field.selectionStart;
@@ -5529,7 +5537,12 @@ function akInsert(field, ch){
   field.dispatchEvent(new Event('input', { bubbles:true }));
 }
 function akKeysHtml(){
-  return AK_LETTERS.map(c=> `<button type="button" class="ak-key" data-ch="${c}" data-no-i18n>${c}</button>`).join('');
+  const k = (c, label, title)=> `<button type="button" class="ak-key" data-ch="${c}" title="${title || ''}" data-no-i18n>${label || c}</button>`;
+  const cs = c=> akShift ? c.toUpperCase() : c;
+  return `<button type="button" class="ak-key" data-shift="1" data-no-i18n style="${akShift ? 'background:var(--forest,#2f5233);color:#fff;' : ''}">${akShift ? 'ABC → abc' : 'abc → ABC'}</button>`
+    + `<div style="width:100%;font-size:.8em;opacity:.7;">Lettres</div>` + AK_BASE.map(c=> k(cs(c))).join('')
+    + `<div style="width:100%;font-size:.8em;opacity:.7;">Voyelles avec accent</div>` + AK_VOW.map(c=> k(cs(c))).join('')
+    + `<div style="width:100%;font-size:.8em;opacity:.7;">Accent à ajouter sur la lettre d’avant (ex : ɛ puis ◌̀ donne ɛ̀)</div>` + AK_TONES.map(t=> k(t[0], '◌' + t[0], t[1])).join('');
 }
 (function initAkKeys(){
   const st = document.createElement('style');
@@ -5541,7 +5554,7 @@ function akKeysHtml(){
     let last = document.getElementById('wd-ak');
     ['wd-ak','wd-fr','wd-ex'].forEach(id=>{ const f = document.getElementById(id); if(f) f.addEventListener('focus', ()=>{ last = f; }); });
     wk.innerHTML = akKeysHtml();
-    wk.addEventListener('click', e=>{ const b = e.target.closest('.ak-key'); if(b) akInsert(last, b.dataset.ch); });
+    wk.setAttribute('data-akkeys','1'); wk.addEventListener('click', e=> akClick(e, last));
   }
   /* Carte d'accueil : écrire, puis copier */
   const el = document.getElementById('home-akkeys');
@@ -5549,12 +5562,12 @@ function akKeysHtml(){
     el.innerHTML = `<div class="home-calendar-card">
       <div class="hc-label">⌨️ Clavier akposso</div>
       <div class="hc-note">Écris en akposso avec les lettres spéciales, puis copie ton texte pour le coller dans WhatsApp.</div>
-      <div class="ak-keys" id="ak-home-keys">${akKeysHtml()}</div>
+      <div class="ak-keys" id="ak-home-keys" data-akkeys="1">${akKeysHtml()}</div>
       <textarea id="ak-home-text" rows="3" placeholder="Touche les lettres, écris ton texte…" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:1em;"></textarea>
       <button type="button" class="share-card-btn" id="ak-home-copy">📋 Copier le texte</button>
     </div>`;
     const ta = document.getElementById('ak-home-text');
-    document.getElementById('ak-home-keys').addEventListener('click', e=>{ const b = e.target.closest('.ak-key'); if(b) akInsert(ta, b.dataset.ch); });
+    document.getElementById('ak-home-keys').addEventListener('click', e=> akClick(e, ta));
     document.getElementById('ak-home-copy').addEventListener('click', async ()=>{
       if(!ta.value){ showToast('Écris d’abord quelque chose'); return; }
       try{ await navigator.clipboard.writeText(ta.value); showToast('Texte copié ✓'); }
@@ -5604,8 +5617,8 @@ fetchCloudVoix().then(renderHomeVoix);
   /* lettres spéciales dans le dernier champ touché */
   let last = $('vx-ak');
   ['vx-ak','vx-fr'].forEach(id=> $(id).addEventListener('focus', ()=>{ last = $(id); }));
-  $('vx-keys').innerHTML = akKeysHtml();
-  $('vx-keys').addEventListener('click', e=>{ const b = e.target.closest('.ak-key'); if(b) akInsert(last, b.dataset.ch); });
+  $('vx-keys').innerHTML = akKeysHtml(); $('vx-keys').setAttribute('data-akkeys','1');
+  $('vx-keys').addEventListener('click', e=> akClick(e, last));
   $('close-voix').addEventListener('click', ()=>{
     modal.classList.remove('active');
     if(recorder && recorder.state === 'recording') recorder.stop();
