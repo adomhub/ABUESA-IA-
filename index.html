@@ -459,6 +459,9 @@
   }
   #settings-modal.active, #feedback-modal.active, #search-modal.active, #artist-modal.active, #gallery-modal.active, #community-modal.active, #practice-modal.active{ display:flex; }
   #word-modal.active{ display:flex; }
+  #voix-modal{ position:absolute; inset:0; background:rgba(43,43,34,0.45); display:none; align-items:flex-end; z-index:50; }
+  #voix-modal.active{ display:flex; }
+  #voix-modal input[type=text]{ width:100%; box-sizing:border-box; padding:10px; border:1px solid var(--line,#ddd); border-radius:10px; font-family:inherit; font-size:1em; margin-bottom:8px; }
   .modal-sheet{
     background:var(--white);
     width:100%;
@@ -970,6 +973,8 @@
       <div id="home-wordgoal"></div>
 
       <div id="home-akkeys"></div>
+
+      <div id="home-voix"></div>
 
       <div id="home-song">
         <div class="home-calendar-card">
@@ -1539,6 +1544,34 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
     </div>
   </div>
 
+  <!-- ===== VOIX MODAL (Banque vocale ikposso, avec consentement) ===== -->
+  <div id="voix-modal">
+    <div class="modal-sheet" style="max-height:92vh;overflow:auto;">
+      <div class="close-row"><button id="close-voix">×</button></div>
+      <h3 class="serif">🎙️ Enregistrer en akposso</h3>
+      <p class="section-desc" style="margin-top:-6px;">Dis un mot ou une phrase en akposso. Ton enregistrement est vérifié par Alexi avant d’être écouté par les autres.</p>
+      <label for="vx-ak">Le mot ou la phrase en akposso</label>
+      <div id="vx-keys" class="ak-keys"></div>
+      <input type="text" id="vx-ak" maxlength="300" placeholder="Ce que tu vas dire">
+      <label for="vx-fr">Son sens en français</label>
+      <input type="text" id="vx-fr" maxlength="200" placeholder="Ce que ça veut dire">
+      <label for="vx-name">Prénom de la personne qui parle</label>
+      <input type="text" id="vx-name" maxlength="40" placeholder="Prénom">
+      <label for="vx-village">Village ou canton</label>
+      <input type="text" id="vx-village" maxlength="60" placeholder="Ex : Tomégbé">
+      <div style="margin:8px 0;">
+        <button type="button" class="share-card-btn" id="vx-rec" style="margin-top:0;">🎤 Enregistrer</button>
+        <button type="button" class="share-card-btn" id="vx-play" style="margin-top:0;" disabled>▶️ Écouter</button>
+      </div>
+      <label style="display:flex;gap:8px;align-items:flex-start;font-weight:400;">
+        <input type="checkbox" id="vx-consent" style="margin-top:4px;flex:0 0 auto;">
+        <span>Je suis d’accord pour que cette voix soit gardée par ABUESA-IA afin de préserver, enseigner et étudier la langue akposso (application, livres, recherche). Le prénom et le village peuvent être cités. La personne enregistrée est moi, ou une personne présente qui m’a donné son accord. Ce n’est pas un enfant sans l’accord d’un parent. On peut demander le retrait de l’enregistrement à tout moment en écrivant à Alexi.</span>
+      </label>
+      <button class="save-btn" id="vx-send">Envoyer l’enregistrement 🌱</button>
+      <div class="status-line" id="vx-status"></div>
+    </div>
+  </div>
+
   <!-- ===== WORD MODAL (Proposer un mot) ===== -->
   <div id="word-modal">
     <div class="modal-sheet">
@@ -1592,7 +1625,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.50 · 29 oct. 2026 (⌨️ clavier akposso + 🎯 défi du dictionnaire + 👥 groupe WhatsApp)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.51 · 29 oct. 2026 (🎙️ banque vocale avec consentement + ⌨️ clavier akposso + 🎯 défi)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -3728,6 +3761,10 @@ function renderAdminPanel(){
     <div id="admin-a-status" class="status-line"></div>
     <div class="admin-list" id="admin-a-list" style="margin-top:8px;"></div>
 
+    <label>🎙️ Banque vocale (enregistrements à valider)</label>
+    <div class="hc-note">Écoute chaque enregistrement et vérifie le texte avant de publier.</div>
+    <div class="admin-list" id="admin-v-list" style="margin-top:8px;"></div>
+
     <label>🌿 Pharmacopée akposso (plantes et remèdes)</label>
     <div class="hc-note">Écris seulement ce que te disent des anciens ou guérisseurs, avec leur accord. Pas de dose.</div>
     <div class="admin-row">
@@ -3810,6 +3847,7 @@ function renderAdminPanel(){
   initAdminMarche();
   initAdminAnnuaire();
   initAdminPharmaco();
+  initAdminVoix();
   initAdminServices();
   initAdminPartners();
 
@@ -4083,7 +4121,7 @@ function renderAdminPanel(){
     const st = document.getElementById('admin-backup-status');
     if(!supabaseClient){ st.textContent = 'Supabase non branché (Réglages).'; st.className = 'status-line status-bad'; return; }
     btn.disabled = true;
-    const TABLES = ['dictionary_words','proverbes','contes','hommages','evenements','carnet_village','app_personality','feedback','artist_submissions','gallery','community_messages','pronunciations','partenaires','marche','annuaire','pharmacopee','transfert_services','cercle_posts','commentaires'];
+    const TABLES = ['dictionary_words','proverbes','contes','hommages','evenements','carnet_village','app_personality','feedback','artist_submissions','gallery','community_messages','pronunciations','partenaires','marche','annuaire','pharmacopee','voix_banque','transfert_services','cercle_posts','commentaires'];
     const backup = { app:'ABUESA-IA', version:'4.35', exportedAt:new Date().toISOString(), tables:{}, problemes:{}, local:{ extraWords:getExtraWords(), extraArtists:getExtraArtists() } };
     let done = 0;
     for(const t of TABLES){
@@ -4098,6 +4136,8 @@ function renderAdminPanel(){
       if(m && Array.isArray(m.items)){ backup.tables.marche = m.items; delete backup.problemes.marche; }
       const an = await adminCall({ action:'ann_list' }, { silent:true });
       if(an && Array.isArray(an.items)){ backup.tables.annuaire = an.items; delete backup.problemes.annuaire; }
+      const vb = await adminCall({ action:'vb_list' }, { silent:true });
+      if(vb && Array.isArray(vb.items)){ backup.tables.voix_banque = vb.items; delete backup.problemes.voix_banque; }
       const ph = await adminCall({ action:'ph_list' }, { silent:true });
       if(ph && Array.isArray(ph.items)){ backup.tables.pharmacopee = ph.items; delete backup.problemes.pharmacopee; }
       const p = await adminCall({ action:'part_list' }, { silent:true });
@@ -5522,6 +5562,163 @@ function akKeysHtml(){
     });
   }
 })();
+
+/* ===== Banque vocale ikposso : enregistrements avec consentement, en attente jusqu'à validation par Alexi ===== */
+let cloudVoix = [];
+async function fetchCloudVoix(){
+  if(!supabaseClient){ cloudVoix = []; return; }
+  const { data, error } = await supabaseClient
+    .from('voix_banque')
+    .select('locuteur, village, texte_ak, sens_fr, audio_url')
+    .eq('approuve', true)
+    .order('id', { ascending:false })
+    .limit(30);
+  if(!error && data) cloudVoix = data.filter(x=> x && x.texte_ak && /^https?:\/\//i.test(String(x.audio_url || '')));
+}
+function renderHomeVoix(){
+  const el = document.getElementById('home-voix'); if(!el) return;
+  const list = cloudVoix.slice(0, 8).map(x=>{
+    const who = [x.locuteur, x.village].filter(Boolean).map(escAll).join(' · ');
+    return `<div class="hc-day" style="margin-top:10px;">
+      <strong>${escAll(x.texte_ak)}</strong>${x.sens_fr ? ' · ' + escAll(x.sens_fr) : ''}
+      ${who ? `<div class="hc-note" style="margin-top:2px;">🗣️ ${who}</div>` : ''}
+      <audio controls preload="none" src="${escAll(x.audio_url)}" style="width:100%;margin-top:4px;"></audio>
+    </div>`;
+  }).join('');
+  el.innerHTML = `<div class="home-calendar-card">
+    <div class="hc-label">🎙️ Banque vocale ikposso</div>
+    <div class="hc-note">Écoute la langue des anciens, et garde-la en enregistrant un mot ou une phrase. Chaque voix est enregistrée avec l’accord de la personne et validée avant d’être publiée.</div>
+    ${list}
+    <button type="button" class="share-card-btn" id="voix-open">🎤 Enregistrer un mot ou une phrase</button>
+  </div>`;
+  const b = document.getElementById('voix-open');
+  if(b) b.addEventListener('click', ()=> document.getElementById('voix-modal').classList.add('active'));
+}
+renderHomeVoix();
+fetchCloudVoix().then(renderHomeVoix);
+(function initVoixModal(){
+  const modal = document.getElementById('voix-modal'); if(!modal) return;
+  const $ = id => document.getElementById(id);
+  const status = $('vx-status');
+  let recorder = null, chunks = [], blob = null, playUrl = null, startedAt = 0, stopTimer = null, durS = 0;
+  /* lettres spéciales dans le dernier champ touché */
+  let last = $('vx-ak');
+  ['vx-ak','vx-fr'].forEach(id=> $(id).addEventListener('focus', ()=>{ last = $(id); }));
+  $('vx-keys').innerHTML = akKeysHtml();
+  $('vx-keys').addEventListener('click', e=>{ const b = e.target.closest('.ak-key'); if(b) akInsert(last, b.dataset.ch); });
+  $('close-voix').addEventListener('click', ()=>{
+    modal.classList.remove('active');
+    if(recorder && recorder.state === 'recording') recorder.stop();
+  });
+  $('vx-play').addEventListener('click', ()=>{ if(playUrl) new Audio(playUrl).play(); });
+  $('vx-rec').addEventListener('click', async ()=>{
+    const btn = $('vx-rec');
+    if(recorder && recorder.state === 'recording'){ recorder.stop(); return; }
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === 'undefined'){
+      status.textContent = 'Ton navigateur ne permet pas l’enregistrement audio. Essaie avec Chrome.';
+      status.className = 'status-line status-bad'; return;
+    }
+    try{
+      const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+      chunks = [];
+      recorder = new MediaRecorder(stream);
+      recorder.ondataavailable = e=>{ if(e.data.size > 0) chunks.push(e.data); };
+      recorder.onstop = ()=>{
+        clearTimeout(stopTimer);
+        stream.getTracks().forEach(t=> t.stop());
+        durS = Math.max(1, Math.round((Date.now() - startedAt) / 1000));
+        blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
+        if(playUrl) URL.revokeObjectURL(playUrl);
+        playUrl = URL.createObjectURL(blob);
+        $('vx-play').disabled = false;
+        btn.textContent = '🎤 Réenregistrer';
+        status.textContent = 'Enregistré (' + durS + ' s). Écoute-toi, puis envoie.';
+        status.className = 'status-line status-ok';
+      };
+      startedAt = Date.now();
+      recorder.start();
+      stopTimer = setTimeout(()=>{ if(recorder && recorder.state === 'recording') recorder.stop(); }, 30000); // 30 s maximum
+      btn.textContent = '⏹️ Arrêter';
+      status.textContent = 'Parle maintenant… (30 secondes maximum)';
+      status.className = 'status-line';
+    }catch(_){
+      status.textContent = 'Micro refusé ou indisponible. Autorise le micro pour enregistrer.';
+      status.className = 'status-line status-bad';
+    }
+  });
+  $('vx-send').addEventListener('click', async ()=>{
+    const ak = $('vx-ak').value.trim();
+    const bad = m=>{ status.textContent = m; status.className = 'status-line status-bad'; };
+    if(!ak){ bad('Écris le mot ou la phrase en akposso.'); return; }
+    if(!blob){ bad('Enregistre d’abord ta voix.'); return; }
+    if(!$('vx-consent').checked){ bad('Coche la case d’accord pour envoyer.'); return; }
+    if(blob.size > 3 * 1024 * 1024){ bad('Enregistrement trop long. Fais plus court.'); return; }
+    if(/(https?:|www\.|\.com|\.net|\.org|wa\.me)/i.test(ak + ' ' + $('vx-fr').value + ' ' + $('vx-name').value + ' ' + $('vx-village').value)){ bad('Les liens ne sont pas autorisés.'); return; }
+    if(!supabaseClient){ bad('Envoi impossible pour l’instant.'); return; }
+    const t = checkThrottle('voix', 30);
+    if(!t.ok){ bad('Merci ! Attends encore ' + t.remaining + ' s avant un nouvel envoi.'); return; }
+    const btn = $('vx-send'); btn.disabled = true;
+    status.textContent = 'Envoi…'; status.className = 'status-line';
+    try{
+      const ext = /mp4|aac/i.test(blob.type) ? 'm4a' : (/ogg/i.test(blob.type) ? 'ogg' : 'webm');
+      const path = `banque/${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+      const { error: upErr } = await supabaseClient.storage.from('pronunciations').upload(path, blob, { contentType: blob.type || 'audio/webm' });
+      if(upErr) throw upErr;
+      const url = supabaseClient.storage.from('pronunciations').getPublicUrl(path).data.publicUrl;
+      const { error } = await supabaseClient.from('voix_banque').insert({
+        texte_ak: ak.slice(0, 300),
+        sens_fr: $('vx-fr').value.trim().slice(0, 200) || null,
+        locuteur: $('vx-name').value.trim().replace(/[.,;:\s]+$/,'').slice(0, 40) || null,
+        village: $('vx-village').value.trim().slice(0, 60) || null,
+        audio_url: url, duree_s: durS, consent: true, approuve: false
+      });
+      if(error) throw error;
+      markThrottled('voix');
+      status.textContent = 'Merci ! Ton enregistrement est envoyé. Alexi le vérifiera avant de le publier ✓';
+      status.className = 'status-line status-ok';
+      showToast('Merci pour ta voix 🙏');
+      ['vx-ak','vx-fr','vx-name','vx-village'].forEach(id=>{ $(id).value = ''; });
+      $('vx-consent').checked = false; blob = null; $('vx-play').disabled = true; $('vx-rec').textContent = '🎤 Enregistrer';
+    }catch(e){
+      bad('Envoi impossible : ' + ((e && e.message) || 'erreur') + '. Réessaie plus tard.');
+    }
+    btn.disabled = false;
+  });
+})();
+
+/* ===== Admin : banque vocale (valider, écouter, supprimer) ===== */
+async function refreshAdminVoixList(ask){
+  const el = document.getElementById('admin-v-list'); if(!el) return;
+  const out = await adminCall({ action:'vb_list' }, { silent: ask !== true });
+  if(!out){ el.innerHTML = '<div class="hc-note">Liste non chargée. <button id="admin-v-reload" style="border:none;background:none;color:var(--clay);cursor:pointer;text-decoration:underline;">Réessayer</button></div>'; const b = document.getElementById('admin-v-reload'); if(b) b.onclick = ()=> refreshAdminVoixList(true); return; }
+  const items = out.items || [];
+  if(!items.length){ el.innerHTML = '<div class="hc-note">Aucun enregistrement pour le moment.</div>'; return; }
+  const btn = 'border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 8px;cursor:pointer;font-family:inherit;color:#000;';
+  el.innerHTML = items.map(x=>`<div style="padding:8px 0;border-bottom:1px solid var(--line);">
+      <strong>${escAll(x.texte_ak)}</strong>${x.sens_fr ? ' · ' + escAll(x.sens_fr) : ''}
+      <div class="hc-note">${[x.locuteur, x.village].filter(Boolean).map(escAll).join(' · ')} ${x.approuve ? '<span style="color:#1f7a3a;">● publié</span>' : '<span style="color:#b36b00;">⏳ en attente</span>'}${x.consent ? '' : ' ⚠️ sans consentement'}</div>
+      <audio controls preload="none" src="${escAll(x.audio_url)}" style="width:100%;margin-top:4px;"></audio>
+      <div style="margin-top:4px;">
+        <button data-a="ok" data-id="${x.id}" data-v="${x.approuve ? 0 : 1}" style="${btn}">${x.approuve ? '🙈 Retirer' : '✅ Publier'}</button>
+        <button data-a="del" data-id="${x.id}" style="${btn}color:var(--clay);">🗑 Supprimer</button>
+      </div></div>`).join('');
+}
+function initAdminVoix(){
+  const list = document.getElementById('admin-v-list'); if(!list) return;
+  refreshAdminVoixList();
+  list.addEventListener('click', async (e)=>{
+    const b = e.target.closest('button[data-a]'); if(!b) return;
+    const id = Number(b.dataset.id);
+    if(b.dataset.a === 'del'){
+      if(!confirm('Supprimer définitivement cet enregistrement ?')) return;
+      if(await adminCall({ action:'vb_delete', id })) showToast('Supprimé ✓');
+    } else {
+      if(await adminCall({ action:'vb_approve', id, approuve: b.dataset.v === '1' })) showToast('Mis à jour ✓');
+    }
+    await refreshAdminVoixList();
+    fetchCloudVoix().then(renderHomeVoix);
+  });
+}
 
 /* ===== Admin Pharmacopée ===== */
 async function refreshAdminPharmacoList(ask){
