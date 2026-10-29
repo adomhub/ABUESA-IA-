@@ -967,6 +967,8 @@
         </div>
       </div>
 
+      <div id="home-wordgoal"></div>
+
       <div id="home-song">
         <div class="home-calendar-card">
           <div class="hc-label">🎵 La chanson d'ABUESA-IA</div>
@@ -1587,7 +1589,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.48 · 29 oct. 2026 (👥 bouton « Rejoindre le groupe WhatsApp » + 🌿 pharmacopée akposso)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.49 · 29 oct. 2026 (🎯 défi du dictionnaire + 👥 groupe WhatsApp + 🌿 pharmacopée)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -5447,6 +5449,28 @@ function renderHomePharmaco(){
 }
 renderHomePharmaco();
 fetchCloudPharmaco().then(paintPharmaco);
+
+/* ===== Défi collectif : faire grandir le dictionnaire akposso (compteur public + bouton « Proposer un mot ») ===== */
+function renderHomeWordGoal(){
+  const el = document.getElementById('home-wordgoal'); if(!el) return;
+  let n = 0;
+  try{ n = getFullDictionary().length; }catch(_){ n = 0; }
+  if(!n) return;
+  const goal = n < 100 ? 100 : Math.ceil((n + 1) / 100) * 100;
+  const pct = Math.min(100, Math.round(n * 100 / goal));
+  el.innerHTML = `<div class="home-calendar-card">
+    <div class="hc-label">🎯 Défi : le dictionnaire akposso</div>
+    <div class="hc-note">Notre langue vit quand nous l’écrivons ensemble. Chaque mot que tu connais compte.</div>
+    <div style="margin-top:8px;font-weight:700;">${n} mots sur ${goal}</div>
+    <div style="background:var(--line,#ddd);border-radius:10px;height:14px;margin-top:4px;overflow:hidden;"><div style="width:${pct}%;height:100%;background:var(--forest,#2f5233);"></div></div>
+    <button type="button" class="share-card-btn" id="wordgoal-btn" style="margin-top:10px;">➕ Proposer un mot</button>
+    <div class="hc-note" style="margin-top:6px;opacity:.75;">Les mots sont vérifiés avant d’entrer dans le dictionnaire.</div>
+  </div>`;
+  const b = document.getElementById('wordgoal-btn');
+  if(b) b.addEventListener('click', ()=>{ const o = document.getElementById('open-word'); if(o) o.click(); });
+}
+renderHomeWordGoal();
+try{ fetchCloudWords().then(renderHomeWordGoal); }catch(_){}
 
 /* ===== Admin Pharmacopée ===== */
 async function refreshAdminPharmacoList(ask){
