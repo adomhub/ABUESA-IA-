@@ -969,6 +969,8 @@
 
       <div id="home-wordgoal"></div>
 
+      <div id="home-akkeys"></div>
+
       <div id="home-song">
         <div class="home-calendar-card">
           <div class="hc-label">🎵 La chanson d'ABUESA-IA</div>
@@ -1545,6 +1547,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
       <p class="section-desc" style="margin-top:-6px;">Tu connais un mot akposso qui manque ? Écris-le ici. Il est gardé en attente : ABUESA peut s'en souvenir, et Alexi le vérifiera avant de le confirmer.</p>
 
       <label for="wd-ak">Le mot en akposso</label>
+      <div id="wd-keys" class="ak-keys"></div>
       <input type="text" id="wd-ak" maxlength="60" placeholder="Le mot en akposso">
 
       <label for="wd-fr">Son sens en français</label>
@@ -1589,7 +1592,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.49 · 29 oct. 2026 (🎯 défi du dictionnaire + 👥 groupe WhatsApp + 🌿 pharmacopée)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.50 · 29 oct. 2026 (⌨️ clavier akposso + 🎯 défi du dictionnaire + 👥 groupe WhatsApp)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -5471,6 +5474,54 @@ function renderHomeWordGoal(){
 }
 renderHomeWordGoal();
 try{ fetchCloudWords().then(renderHomeWordGoal); }catch(_){}
+
+/* ===== Clavier akposso : lettres spéciales de l'orthographe (tirées du dictionnaire de l'application), à toucher pour écrire,
+   puis copier-coller dans WhatsApp. Aucune donnée envoyée. ===== */
+const AK_LETTERS = ['ɛ','ɔ','ɩ','ʋ','ɣ','ŋ','ǝ','ʉ','Ɛ','Ɔ','Ɩ','Ʋ','Ŋ','é','è','ē'];
+function akInsert(field, ch){
+  if(!field) return;
+  const s = field.selectionStart == null ? field.value.length : field.selectionStart;
+  const e = field.selectionEnd == null ? s : field.selectionEnd;
+  field.value = field.value.slice(0, s) + ch + field.value.slice(e);
+  const p = s + ch.length;
+  field.focus();
+  try{ field.setSelectionRange(p, p); }catch(_){}
+  field.dispatchEvent(new Event('input', { bubbles:true }));
+}
+function akKeysHtml(){
+  return AK_LETTERS.map(c=> `<button type="button" class="ak-key" data-ch="${c}" data-no-i18n>${c}</button>`).join('');
+}
+(function initAkKeys(){
+  const st = document.createElement('style');
+  st.textContent = '.ak-keys{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0;}.ak-key{min-width:42px;padding:8px 10px;border:1px solid var(--line,#ddd);border-radius:10px;background:#fff;color:#000;font-size:1.15em;font-family:inherit;cursor:pointer;}';
+  document.head.appendChild(st);
+  /* Dans « Proposer un mot » : les lettres écrivent dans le dernier champ touché */
+  const wk = document.getElementById('wd-keys');
+  if(wk){
+    let last = document.getElementById('wd-ak');
+    ['wd-ak','wd-fr','wd-ex'].forEach(id=>{ const f = document.getElementById(id); if(f) f.addEventListener('focus', ()=>{ last = f; }); });
+    wk.innerHTML = akKeysHtml();
+    wk.addEventListener('click', e=>{ const b = e.target.closest('.ak-key'); if(b) akInsert(last, b.dataset.ch); });
+  }
+  /* Carte d'accueil : écrire, puis copier */
+  const el = document.getElementById('home-akkeys');
+  if(el){
+    el.innerHTML = `<div class="home-calendar-card">
+      <div class="hc-label">⌨️ Clavier akposso</div>
+      <div class="hc-note">Écris en akposso avec les lettres spéciales, puis copie ton texte pour le coller dans WhatsApp.</div>
+      <div class="ak-keys" id="ak-home-keys">${akKeysHtml()}</div>
+      <textarea id="ak-home-text" rows="3" placeholder="Touche les lettres, écris ton texte…" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:1em;"></textarea>
+      <button type="button" class="share-card-btn" id="ak-home-copy">📋 Copier le texte</button>
+    </div>`;
+    const ta = document.getElementById('ak-home-text');
+    document.getElementById('ak-home-keys').addEventListener('click', e=>{ const b = e.target.closest('.ak-key'); if(b) akInsert(ta, b.dataset.ch); });
+    document.getElementById('ak-home-copy').addEventListener('click', async ()=>{
+      if(!ta.value){ showToast('Écris d’abord quelque chose'); return; }
+      try{ await navigator.clipboard.writeText(ta.value); showToast('Texte copié ✓'); }
+      catch(_){ ta.select(); showToast('Appuie longtemps sur le texte pour copier'); }
+    });
+  }
+})();
 
 /* ===== Admin Pharmacopée ===== */
 async function refreshAdminPharmacoList(ask){
