@@ -1625,7 +1625,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.55 · 29 oct. 2026 (✏️ « ikposso » pour la langue + ⌨️ clavier ikposso a-z)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.56 · 30 oct. 2026 (🛒 marché du samedi Gbadi-Nkougna, pas de marché le dimanche)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -4945,13 +4945,14 @@ function renderHomeCalendar(){
 }
 renderHomeCalendar();
 
-/* Marchés hebdomadaires (jours confirmés par Alexi, 25 oct. 2026) : jour de la semaine (0 = dimanche) */
+/* Marchés hebdomadaires (jours confirmés par Alexi, 25 et 30 oct. 2026 : pas de marché le dimanche) : jour de la semaine (0 = dimanche) */
 const MARKET_DAYS = [
   { day:1, name:'Agbo' },
   { day:2, name:'Zogbégan' },
   { day:3, name:'Doumé' },
   { day:4, name:'Badou' },
   { day:5, name:'Kougnowou' },
+  { day:6, name:'Gbadi-Nkougna' },
 ];
 function renderHomeMarkets(){
   const el = document.getElementById('home-markets');
@@ -4967,7 +4968,7 @@ function renderHomeMarkets(){
     const m = find(d);
     return m
       ? `${label} (${names[d]}) — ${en ? 'market' : 'marché'} : <strong>${m.name}</strong>`
-      : `${label} (${names[d]}) — ${en ? 'no market in this list' : 'pas de marché dans cette liste'}`;
+      : `${label} (${names[d]}) — ${en ? 'no market' : 'pas de marché'}`;
   };
   const list = MARKET_DAYS.map(m => {
     const isToday = m.day === today;
