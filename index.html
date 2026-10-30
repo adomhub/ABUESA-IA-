@@ -1029,6 +1029,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
       <div id="home-carnet"></div>
 
       <div id="home-marche"></div>
+      <div id="home-marche-form"></div>
 
       <div id="home-annuaire"></div>
 
@@ -1625,7 +1626,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <b>Artistes :</b> Music In Africa, TogoActualité, Global Actu.<br><br>
         <b>Carte :</b> OpenStreetMap &amp; GeoNames (données ouvertes ODbL), découpage administratif MATDCL Togo.<br><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.56 · 30 oct. 2026 (🛒 marché du samedi Gbadi-Nkougna, pas de marché le dimanche)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.57 · 30 oct. 2026 (🛒 annonces ouvertes aux visiteurs, validées par Alexi)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1841,6 +1842,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
     try{ if(typeof renderHomeProverb === 'function') renderHomeProverb(); }catch(_){}
     try{ if(typeof renderHomePartners === 'function') renderHomePartners(); }catch(_){}
     try{ if(typeof renderHomeMarche === 'function') renderHomeMarche(); }catch(_){}
+    try{ if(typeof renderMarcheForm === 'function') renderMarcheForm(); }catch(_){}
     try{ if(typeof renderHomeAnnuaire === 'function') renderHomeAnnuaire(); }catch(_){}
     try{ if(typeof renderHomePharmaco === 'function') renderHomePharmaco(); }catch(_){}
     try{ if(typeof renderHomeTransfert === 'function') renderHomeTransfert(); }catch(_){}
@@ -4320,15 +4322,22 @@ async function refreshAdminMarcheList(ask){
   const el = document.getElementById('admin-m-list'); if(!el) return;
   const out = await adminCall({ action:'marche_list' }, { silent: ask !== true });
   if(!out){ el.innerHTML = '<div class="hc-note">Liste non chargée. Appuie sur « Réessayer » pour entrer le code admin. <button id="admin-m-reload" style="border:none;background:none;color:var(--clay);cursor:pointer;text-decoration:underline;">Réessayer</button></div>'; const b = document.getElementById('admin-m-reload'); if(b) b.onclick = ()=> refreshAdminMarcheList(true); return; }
-  const items = out.items || [];
+  const items = (out.items || []).slice().sort((a, b)=> ((b.propose && !b.actif) ? 1 : 0) - ((a.propose && !a.actif) ? 1 : 0));
   if(!items.length){ el.innerHTML = '<div class="hc-note">Aucune annonce pour le moment.</div>'; return; }
   const btn = 'border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 8px;cursor:pointer;font-family:inherit;color:#000;';
-  el.innerHTML = items.map(x=>`<div style="padding:8px 0;border-bottom:1px solid var(--line);">
+  el.innerHTML = items.map(x=>{
+    const pending = !!(x.propose && !x.actif);
+    const det = [x.categorie, x.ville, x.vendeur, x.contact].filter(Boolean).map(escAll).join(' · ');
+    return `<div style="padding:8px 0;border-bottom:1px solid var(--line);${pending ? 'background:#fff8e1;' : ''}">
+      ${pending ? '<div style="color:#b26a00;font-weight:700;">🆕 Proposée par un visiteur — à valider</div>' : ''}
       <strong>${escAll(x.titre)}</strong>${x.prix ? ' · ' + escAll(x.prix) : ''} ${x.actif ? '<span style="color:#1f7a3a;">● en ligne</span>' : '<span style="color:#888;">○ masquée</span>'}
+      ${det ? `<div class="hc-note">${det}</div>` : ''}
+      ${x.description ? `<div class="hc-note">${escAll(x.description)}</div>` : ''}
       <div style="margin-top:4px;">
-        <button data-m="toggle" data-id="${x.id}" data-actif="${x.actif ? 1 : 0}" style="${btn}">${x.actif ? '🙈 Masquer' : '👁 Réafficher'}</button>
-        <button data-m="del" data-id="${x.id}" style="${btn}color:var(--clay);">🗑 Supprimer</button>
-      </div></div>`).join('');
+        <button data-m="toggle" data-id="${x.id}" data-actif="${x.actif ? 1 : 0}" style="${btn}">${x.actif ? '🙈 Masquer' : (pending ? '✅ Valider' : '👁 Réafficher')}</button>
+        <button data-m="del" data-id="${x.id}" style="${btn}color:var(--clay);">${pending ? '❌ Refuser' : '🗑 Supprimer'}</button>
+      </div></div>`;
+  }).join('');
 }
 function initAdminMarche(){
   const list = document.getElementById('admin-m-list'); if(!list) return;
@@ -5344,11 +5353,12 @@ function marchePhone(c){
 function renderHomeMarche(){
   const el = document.getElementById('home-marche');
   if(!el) return;
-  const sellMsg = encodeURIComponent("Bonjour Alexi, je voudrais vendre un objet dans le Marché d'ABUESA.");
-  const sellBtn = `<a class="share-card-btn" style="display:inline-block;text-decoration:none;margin-top:10px;" target="_blank" rel="noopener" href="https://wa.me/22899619969?text=${sellMsg}">💬 Vendre un objet ici</a>`;
+  const en = !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en');
+  const sellBtn = `<button type="button" class="share-card-btn" id="marche-sell-open" style="margin-top:10px;">➕ ${en ? 'Post my ad' : 'Publier mon annonce'}</button>`;
   const items = cloudMarche.map(x=>{
     const ph = marchePhone(x.contact);
     const msg = encodeURIComponent('Bonjour, je suis intéressé par « ' + x.titre + ' » vu sur ABUESA.');
+    const repMsg = encodeURIComponent('Bonjour Alexi, je signale cette annonce du Marché ABUESA : « ' + String(x.titre).slice(0, 80) + ' »');
     const photo = /^https?:\/\//i.test(String(x.photo || '')) ? `<img src="${escAll(x.photo)}" alt="" loading="lazy" onerror="this.style.display='none'" style="width:100%;max-height:200px;object-fit:cover;border-radius:10px;margin-bottom:6px;">` : '';
     const meta = [x.categorie, x.ville].filter(Boolean).map(escAll).join(' · ');
     return `<div class="hc-day" style="margin-top:10px;">
@@ -5359,18 +5369,89 @@ function renderHomeMarche(){
       ${x.vendeur ? `<div class="hc-note" style="margin-top:2px;">👤 ${escAll(x.vendeur)}</div>` : ''}
       ${ph ? `<a class="share-card-btn" style="display:inline-block;text-decoration:none;" target="_blank" rel="noopener" href="https://wa.me/${ph}?text=${msg}">💬 Contacter le vendeur</a>
       <a class="share-card-btn" style="display:inline-block;text-decoration:none;" href="tel:+${ph}">📞 Appeler</a>` : ''}
+      <div style="margin-top:4px;"><a class="hc-note" target="_blank" rel="noopener" href="https://wa.me/22899619969?text=${repMsg}">🚩 ${en ? 'Report' : 'Signaler'}</a></div>
     </div>`;
   }).join('');
   const intro = cloudMarche.length
     ? `<div class="hc-note">Objets d'occasion proposés par la communauté. Tu contactes directement le vendeur.</div>
        <div class="hc-note" style="margin-top:4px;">⚠️ ABUESA ne gère pas les paiements : regarde l'objet avant de payer, et ne paie jamais à l'avance sans l'avoir vu.</div>`
-    : `<div class="hc-note">Bientôt ici : vélos, téléphones, habits et autres objets d'occasion de chez nous. Tu veux vendre quelque chose ? Écris-moi, je publie ton annonce avec ton numéro.</div>`;
+    : `<div class="hc-note">Bientôt ici : vélos, téléphones, habits et autres objets d'occasion de chez nous. Tu veux vendre quelque chose ? Publie ton annonce : elle sera visible après validation par Alexi.</div>`;
   el.innerHTML = `<div class="home-calendar-card">
     <div class="hc-label">🛒 Marché ABUESA</div>
     ${intro}
     ${items}
     ${sellBtn}
   </div>`;
+  const ob = document.getElementById('marche-sell-open');
+  if(ob) ob.addEventListener('click', ()=>{ marcheFormOpen = !marcheFormOpen; renderMarcheForm(); if(marcheFormOpen){ const f = document.getElementById('home-marche-form'); if(f) f.scrollIntoView({ behavior:'smooth', block:'start' }); } });
+}
+
+/* ----- Annonces proposées par les visiteurs (en attente, validées par Alexi depuis l'admin) ----- */
+let marcheFormOpen = false;
+const MARCHE_CATS = ['Téléphones', 'Vélos et motos', 'Habits', 'Terrain et maison', 'Vivres et champs', 'Travail et services', 'Autre'];
+function renderMarcheForm(){
+  const el = document.getElementById('home-marche-form');
+  if(!el) return;
+  if(!marcheFormOpen){ el.innerHTML = ''; return; }
+  const en = !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en');
+  const T = (fr, e) => en ? e : fr;
+  const catEn = { 'Téléphones':'Phones', 'Vélos et motos':'Bikes and motorbikes', 'Habits':'Clothes', 'Terrain et maison':'Land and houses', 'Vivres et champs':'Food and farm', 'Travail et services':'Jobs and services', 'Autre':'Other' };
+  const inp = 'width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:calc(17.5px * var(--fs,1.15));margin-top:8px;background:#fff;color:#000;';
+  el.innerHTML = `<div class="home-calendar-card">
+    <div class="hc-label">➕ ${T('Publier une annonce', 'Post an ad')}</div>
+    <div class="hc-note">${T("Ton annonce sera visible après validation par Alexi. Elle reste en ligne 30 jours.", 'Your ad will appear after Alexi approves it. It stays online for 30 days.')}</div>
+    <input type="text" id="mp-titre" maxlength="80" placeholder="${T('Ce que tu proposes (obligatoire)', 'What you offer (required)')}" style="${inp}">
+    <input type="text" id="mp-prix" maxlength="40" placeholder="${T('Prix (ex : 20 000 FCFA)', 'Price (e.g. 20,000 FCFA)')}" style="${inp}">
+    <select id="mp-cat" style="${inp}">${MARCHE_CATS.map(c=>`<option value="${escAll(c)}">${escAll(en ? catEn[c] : c)}</option>`).join('')}</select>
+    <input type="text" id="mp-ville" maxlength="60" placeholder="${T('Village / quartier', 'Village / area')}" style="${inp}">
+    <input type="text" id="mp-vendeur" maxlength="60" placeholder="${T('Ton nom', 'Your name')}" style="${inp}">
+    <input type="tel" id="mp-contact" maxlength="20" placeholder="${T('Ton numéro WhatsApp (obligatoire)', 'Your WhatsApp number (required)')}" style="${inp}">
+    <textarea id="mp-desc" rows="3" maxlength="600" placeholder="${T('Description (état, détails…)', 'Description (condition, details…)')}" style="${inp}"></textarea>
+    <label class="hc-note" style="display:block;margin-top:10px;"><input type="checkbox" id="mp-ok"> ${T("J'accepte que mon numéro soit visible par tous une fois l'annonce validée.", 'I agree that my number will be visible to everyone once the ad is approved.')}</label>
+    <div class="hc-note" style="margin-top:6px;">⚠️ ${T("ABUESA ne gère pas les paiements. Vends et achète seulement après avoir vu l'objet, et ne paie jamais à l'avance.", 'ABUESA does not handle payments. Only buy or sell after seeing the item, and never pay in advance.')}</div>
+    <button type="button" class="share-card-btn" id="mp-send" style="margin-top:10px;">📤 ${T("Envoyer l'annonce", 'Send my ad')}</button>
+    <div id="mp-status" class="status-line"></div>
+  </div>`;
+  document.getElementById('mp-send').addEventListener('click', sendMarcheProposal);
+}
+async function sendMarcheProposal(){
+  const en = !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en');
+  const T = (fr, e) => en ? e : fr;
+  const v = id => (document.getElementById(id).value || '').trim();
+  const status = document.getElementById('mp-status');
+  const btn = document.getElementById('mp-send');
+  const bad = m => { status.textContent = m; status.className = 'status-line status-bad'; };
+  const titre = v('mp-titre'), contact = v('mp-contact'), desc = v('mp-desc');
+  if(titre.length < 3){ bad(T("Écris ce que tu proposes (au moins 3 lettres).", 'Write what you offer (at least 3 letters).')); return; }
+  if(!marchePhone(contact)){ bad(T('Écris un numéro valide (ex : 99619969).', 'Enter a valid number (e.g. 99619969).')); return; }
+  if(!document.getElementById('mp-ok').checked){ bad(T("Coche la case pour accepter que ton numéro soit visible.", 'Tick the box to agree that your number is visible.')); return; }
+  if(/https?:\/\/|www\./i.test(titre + ' ' + desc + ' ' + v('mp-vendeur'))){ bad(T('Les liens ne sont pas acceptés dans les annonces.', 'Links are not allowed in ads.')); return; }
+  if(!supabaseClient){ bad(T("Connexion indisponible pour l'instant. Réessaie plus tard.", 'Connection unavailable right now. Try again later.')); return; }
+  const th = checkThrottle('marche', 120);
+  if(!th.ok){ bad(T(`Merci ! Attends encore ${th.remaining}s avant une nouvelle annonce.`, `Please wait ${th.remaining}s before posting another ad.`)); return; }
+  let dayKey = 'abuesa_marche_day', n = 0, today = new Date().toISOString().slice(0, 10);
+  try{
+    const sv = JSON.parse(localStorage.getItem(dayKey) || '{}');
+    n = sv.d === today ? (sv.n || 0) : 0;
+  }catch(_){ n = 0; }
+  if(n >= 3){ bad(T("Tu as déjà envoyé 3 annonces aujourd'hui. Reviens demain.", "You have already sent 3 ads today. Come back tomorrow.")); return; }
+  btn.disabled = true; status.className = 'status-line'; status.textContent = T('Envoi…', 'Sending…');
+  const fin = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
+  const { error } = await supabaseClient.from('marche').insert({
+    titre: titre.slice(0, 80), description: desc.slice(0, 600) || null, prix: v('mp-prix').slice(0, 40) || null,
+    categorie: v('mp-cat') || null, ville: v('mp-ville').slice(0, 60) || null, vendeur: v('mp-vendeur').slice(0, 60) || null,
+    contact: contact.slice(0, 20), fin, actif: false, propose: true
+  });
+  btn.disabled = false;
+  if(error){ bad(T("Erreur d'envoi : ", 'Sending error: ') + error.message); return; }
+  markThrottled('marche');
+  try{ localStorage.setItem(dayKey, JSON.stringify({ d: today, n: n + 1 })); }catch(_){}
+  const ping = encodeURIComponent("Bonjour Alexi, j'ai proposé une annonce « " + titre.slice(0, 60) + " » dans le Marché ABUESA. Merci de la valider.");
+  status.className = 'status-line status-ok';
+  status.innerHTML = `${T('Merci ! Ton annonce sera visible après validation par Alexi ✓', 'Thank you! Your ad will appear after Alexi approves it ✓')}<br><a class="hc-note" target="_blank" rel="noopener" href="https://wa.me/22899619969?text=${ping}">💬 ${T('Prévenir Alexi sur WhatsApp (pour aller plus vite)', 'Tell Alexi on WhatsApp (to speed things up)')}</a>`;
+  ['mp-titre','mp-prix','mp-ville','mp-vendeur','mp-contact','mp-desc'].forEach(id=>{ document.getElementById(id).value = ''; });
+  document.getElementById('mp-ok').checked = false;
+  showToast(T('Annonce envoyée 🙏 (visible après validation)', 'Ad sent 🙏 (visible after approval)'));
 }
 renderHomeMarche();
 fetchCloudMarche().then(renderHomeMarche);
