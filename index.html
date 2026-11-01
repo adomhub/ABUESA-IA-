@@ -1691,7 +1691,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.60 · 1er nov. 2026 (💬 phrases parlées : la voix d’Alexi dans le Dico et dans le chat)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.61 · 1er nov. 2026 (🔊 mot ikposso du jour avec audio)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -3238,6 +3238,7 @@ function renderWordOfDay(){
   }
   const w = dict[idx] || dict[0];
   el.innerHTML = `<div class="label">Mot du jour</div><div class="word">${w.ak}</div><div class="meaning">${w.fr}</div>`;
+  try{ if(window.__wodAudio) window.__wodAudio(el); }catch(_){}
 }
 renderWordOfDay();
 
@@ -6993,6 +6994,28 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     var b=e.target.closest('.lex-play'); if(!b) return;
     start(b,+b.getAttribute('data-i'));
   });
+  /* ===== Mot du jour parlé : un mot du lexique de la voix d'Alexi, le même pour tous, qui change chaque jour ===== */
+  (function(){
+    var ok=[]; LEX.forEach(function(w,i){ if(w[3]!==null && !/^\d+$/.test(w[1])) ok.push(i); });
+    if(!ok.length) return;
+    var day=Math.floor(Date.now()/86400000);
+    var i=ok[(day*7+3)%ok.length], w=LEX[i];
+    window.__wodAudio=function(el){
+      if(!el) return;
+      var url='https://adomhub.github.io/ABUESA-IA-/';
+      var msg='Mot ikposso du jour : '+w[2]+' = '+w[1]+'\nÉcoute-le sur ABUESA-IA : '+url;
+      el.innerHTML='<div class="label">Mot ikposso du jour</div>'
+        +'<div class="word" data-no-i18n>'+esc(w[2])+'</div>'
+        +'<div class="meaning" data-no-i18n>'+esc(w[1])+' <span style="opacity:.6">· '+esc(w[0])+'</span></div>'
+        +'<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">'
+        +'<button type="button" id="wod-play" style="border:0;border-radius:999px;padding:10px 16px;background:var(--forest);color:#fff;font:inherit;">▶ Écouter</button>'
+        +'<a href="https://wa.me/?text='+encodeURIComponent(msg)+'" target="_blank" rel="noopener" style="border-radius:999px;padding:10px 16px;background:#e8dfc9;color:#222;text-decoration:none;">📤 Partager</a></div>';
+      var b=document.getElementById('wod-play'); if(!b) return;
+      b.__idle='▶ Écouter';
+      b.onclick=function(){ start(b,i,'⏸ En lecture…'); };
+    };
+    window.__wodAudio(document.getElementById('word-of-day'));
+  })();
   /* ===== Chat : sous la réponse d'ABUESA-IA, un bouton ▶ par mot du lexique cité (voix d'Alexi) ===== */
   var MAT=[];
   LEX.forEach(function(w,i){
