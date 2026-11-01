@@ -1197,6 +1197,12 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <div id="lex-status" style="font-weight:700;color:var(--clay);"></div>
         <div id="lex-list"></div>
       </details>
+      <details style="margin-bottom:14px;border:1px solid var(--line);border-radius:14px;padding:10px 14px;">
+        <summary style="font-weight:800;cursor:pointer;">💬 Phrases parlées</summary>
+        <p style="font-size:.9em;opacity:.75;">Appuie sur ▶ pour entendre la phrase en français, puis en ikposso, avec la voix d'Alexi.</p>
+        <div id="phr-status" style="font-weight:700;color:var(--clay);"></div>
+        <div id="phr-list"></div>
+      </details>
       <input type="text" id="dict-search" placeholder="Chercher un mot…">
       <div class="dict-filter-row">
         <button id="dict-filter-all" class="active">Tous les mots</button>
@@ -1685,7 +1691,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.59 · 31 oct. 2026 (✍️ crédits et origine du savoir au nom d’Alexi)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.60 · 1er nov. 2026 (💬 phrases parlées : la voix d’Alexi dans le Dico et dans le chat)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -2537,6 +2543,47 @@ Faits vérifiés à ta disposition :
 - La préfecture de Wawa (chef-lieu Badou) compte 11 cantons : Badou, Tomégbé, Kpété-Bena, Gobé, Klabè-Efoukpa, Okou, Ekéto, Ounabé, Késsibo, Gbadi-N'Kugna, Doumé.
 - Le point culminant du territoire est le mont Djogbé.
 - Artistes contemporains notables : Zambé (Koffi Efa-Aboè Okouma, créateur du Regsaf), Rasta Lilo, et le regretté Itadi Bonney.
+
+PHRASES EN IKPOSSO ENREGISTRÉES PAR ALEXI (le visiteur peut les écouter avec sa voix) : quand c'est naturel, utilise EXACTEMENT ces formes, mot pour mot, avec leur sens en français :
+- Je m'appelle… = azɔnɔnu
+- Comment t'appelles-tu ? = azɔyɛ numɛ
+- D'où viens-tu ? = atuna
+- Je viens de Badou. = natu badou
+- Je suis Akposso. = nilɛ akpɔssɔ
+- Je suis content de te voir. = ediadunɔ mualɛnayɛ ku namuyɛ
+- Je ne comprends pas. = ninanu ayili
+- Répète, s'il te plaît. = tsɩzɔke
+- Parle doucement. = hɛssɛ nudɔ
+- Comment dit-on cela en ikposso ? = afɔnazɔ tɛssɛ numɛ nikpɔssɔ
+- Qu'est-ce que ça veut dire ? = ayili numɛ
+- Oui. = eɛ
+- Non. = oo
+- Je ne sais pas. = nɩneyi
+- C'est vrai. = ɛsɛsisɩ
+- J'ai faim. = uvlɛ-atsɩnɔ
+- J'ai soif. = ɔmɔawlɩnɔ
+- Je suis fatigué. = ɩdɔ-ewuinɔ
+- Viens ici. = ba-ɛmɛ
+- Assieds-toi. = zatɩ
+- Je vais au champ. = niyaha-ussɩ
+- Je vais au marché. = niyaha-udja
+- Où vas-tu ? = ɛyahana
+- Comment va ton père ? = ala-zamuani ou avlɛ muani
+- Comment va ta mère ? = ana-zamuani ou avlɛ muani
+- Salue ta famille. = munu-yanuluyɛ
+- Mes respects aux anciens. = naduɛlu kalukawa
+- Bonne année. = ilu-buɛ
+- Félicitations. = dɔkayɛ
+- Que Dieu te bénisse. = ɩwolowʋ kotsueyɛ-ɛbua
+- Que la paix soit avec toi. = ɛtululua-kayɛ
+- Aujourd'hui. = emie
+- Demain. = ɛtsɛ
+- Hier. = adja
+- Je suis ABUESA, je suis là pour toi. = nilɛ abuesa, nidukɛ
+- Pose-moi ta question. = bienɔ-ɛssɛ
+- Je ne connais pas encore ce mot, aide-moi. = nineyi tɛssɛzɔyɛ, yadunɔ
+- Merci de m'apprendre ce mot. = ewlessɛ muanɛ-ku yawanɔ tessɛzɔyɛ
+Ne fabrique jamais d'autres phrases en ikposso : si une phrase n'est ni dans cette liste ni dans le dictionnaire, dis honnêtement qu'elle n'est pas encore enregistrée.
 
 TON ORIGINE ET TES SOURCES :
 - Tout ce que tu sais, tu le dois au travail d'Alexi (Adom K. Alexi), ton créateur : il a rassemblé, vérifié et enrichi ce savoir, enregistré sa propre voix pour le lexique parlé, recueilli les contes, les proverbes, le calendrier et les mois avec les anciens.
@@ -7001,6 +7048,88 @@ document.getElementById('community-record').addEventListener('click', async ()=>
       btn.textContent='⏹ Arrêter'; ss.cancel(); ss.speak(u);
     }catch(_){ btn.textContent='🔈 Lire la réponse'; }
   }
+})();
+</script>
+<script>
+/* ===== Phrases parlées : la voix d'Alexi (38 phrases, un mp3 par phrase, fichier voix-phrases.js) ===== */
+(function(){
+  var PHR=[["Se présenter", "Je m'appelle…", "azɔnɔnu"], ["Se présenter", "Comment t'appelles-tu ?", "azɔyɛ numɛ"], ["Se présenter", "D'où viens-tu ?", "atuna"], ["Se présenter", "Je viens de Badou.", "natu badou"], ["Se présenter", "Je suis Akposso.", "nilɛ akpɔssɔ"], ["Se présenter", "Je suis content de te voir.", "ediadunɔ mualɛnayɛ ku namuyɛ"], ["Comprendre", "Je ne comprends pas.", "ninanu ayili"], ["Comprendre", "Répète, s'il te plaît.", "tsɩzɔke"], ["Comprendre", "Parle doucement.", "hɛssɛ nudɔ"], ["Comprendre", "Comment dit-on cela en ikposso ?", "afɔnazɔ tɛssɛ numɛ nikpɔssɔ"], ["Comprendre", "Qu'est-ce que ça veut dire ?", "ayili numɛ"], ["Réponses courtes", "Oui.", "eɛ"], ["Réponses courtes", "Non.", "oo"], ["Réponses courtes", "Je ne sais pas.", "nɩneyi"], ["Réponses courtes", "C'est vrai.", "ɛsɛsisɩ"], ["Vie de tous les jours", "J'ai faim.", "uvlɛ-atsɩnɔ"], ["Vie de tous les jours", "J'ai soif.", "ɔmɔawlɩnɔ"], ["Vie de tous les jours", "Je suis fatigué.", "ɩdɔ-ewuinɔ"], ["Vie de tous les jours", "Viens ici.", "ba-ɛmɛ"], ["Vie de tous les jours", "Assieds-toi.", "zatɩ"], ["Vie de tous les jours", "Je vais au champ.", "niyaha-ussɩ"], ["Vie de tous les jours", "Je vais au marché.", "niyaha-udja"], ["Vie de tous les jours", "Où vas-tu ?", "ɛyahana"], ["Famille et anciens", "Comment va ton père ?", "ala-zamuani ou avlɛ muani"], ["Famille et anciens", "Comment va ta mère ?", "ana-zamuani ou avlɛ muani"], ["Famille et anciens", "Salue ta famille.", "munu-yanuluyɛ"], ["Famille et anciens", "Mes respects aux anciens.", "naduɛlu kalukawa"], ["Fêtes et vœux", "Bonne année.", "ilu-buɛ"], ["Fêtes et vœux", "Félicitations.", "dɔkayɛ"], ["Fêtes et vœux", "Que Dieu te bénisse.", "ɩwolowʋ kotsueyɛ-ɛbua"], ["Fêtes et vœux", "Que la paix soit avec toi.", "ɛtululua-kayɛ"], ["Le temps", "Aujourd'hui.", "emie"], ["Le temps", "Demain.", "ɛtsɛ"], ["Le temps", "Hier.", "adja"], ["Phrases d'ABUESA", "Je suis ABUESA, je suis là pour toi.", "nilɛ abuesa, nidukɛ"], ["Phrases d'ABUESA", "Pose-moi ta question.", "bienɔ-ɛssɛ"], ["Phrases d'ABUESA", "Je ne connais pas encore ce mot, aide-moi.", "nineyi tɛssɛzɔyɛ, yadunɔ"], ["Phrases d'ABUESA", "Merci de m'apprendre ce mot.", "ewlessɛ muanɛ-ku yawanɔ tessɛzɔyɛ"]];
+  var box=document.getElementById('phr-list'); if(!box) return;
+  var st=document.getElementById('phr-status');
+  function say(t){ if(st) st.textContent=t||''; }
+  var cur=null, au=null, loading=null;
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  function reset(){ if(cur){ cur.textContent=cur.__idle||'▶'; cur=null; } }
+  function halt(){ if(au){ try{ au.pause(); }catch(_){} au=null; } }
+  function load(){
+    if(window.ABUESA_PHRASES) return Promise.resolve(window.ABUESA_PHRASES);
+    if(loading) return loading;
+    say('Chargement de la voix…');
+    loading=new Promise(function(ok,ko){
+      var s=document.createElement('script'); s.src='voix-phrases.js';
+      s.onload=function(){ say(''); window.ABUESA_PHRASES?ok(window.ABUESA_PHRASES):ko(new Error('vide')); };
+      s.onerror=function(){ loading=null; say('Voix introuvable. Vérifie que voix-phrases.js est bien sur GitHub.'); ko(new Error('404')); };
+      document.head.appendChild(s);
+    });
+    return loading;
+  }
+  function start(b,i,playLabel){
+    if(cur===b){ halt(); reset(); return; }
+    halt(); reset(); cur=b; b.textContent=playLabel||'⏸'; say('');
+    load().then(function(P){
+      if(cur!==b) return;
+      var a=new Audio('data:audio/mpeg;base64,'+P[i]);
+      au=a; a.onended=function(){ if(au===a){ au=null; if(cur===b) reset(); } };
+      a.onerror=function(){ if(cur===b){ reset(); say('Cette phrase ne peut pas être lue sur ce téléphone.'); } };
+      var p=a.play(); if(p&&p.catch) p.catch(function(){ if(cur===b) reset(); });
+    }).catch(function(){ reset(); });
+  }
+  var html='', lastCat='';
+  PHR.forEach(function(w,i){
+    if(w[0]!==lastCat){ lastCat=w[0]; html+='<div style="font-weight:800;margin:14px 0 6px;color:var(--forest);">'+esc(lastCat)+'</div>'; }
+    html+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);">'
+      +'<button type="button" class="phr-play" data-i="'+i+'" aria-label="Écouter" style="flex:none;width:44px;height:44px;border-radius:50%;border:0;background:var(--forest);color:#fff;font-size:18px;">▶</button>'
+      +'<div data-no-i18n><div style="opacity:.7;font-size:.9em;">'+esc(w[1])+'</div><div style="font-weight:700;">'+esc(w[2])+'</div></div></div>';
+  });
+  box.innerHTML=html;
+  box.addEventListener('click',function(e){
+    var b=e.target.closest('.phr-play'); if(!b) return;
+    start(b,+b.getAttribute('data-i'));
+  });
+  /* Chat : sous la réponse d'ABUESA-IA, un bouton ▶ par phrase enregistrée qu'il a citée en ikposso */
+  var MAT=[];
+  PHR.forEach(function(w,i){
+    var parts=String(w[2]).split(/\s+ou\s+/);
+    if(i===23||i===24) parts=[parts[0]];   /* père / mère : on évite de confondre la variante commune */
+    parts.forEach(function(f){
+      f=f.replace(/[?!.]/g,'').trim().normalize('NFC');
+      if(f.length<4) return;
+      try{ MAT.push({i:i,re:new RegExp('(?<![\\p{L}\\p{M}-])'+f.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![\\p{L}\\p{M}-])','iu')}); }catch(_){}
+    });
+  });
+  var prev=window.abuesaVoix&&window.abuesaVoix.attach;
+  window.abuesaVoix=window.abuesaVoix||{};
+  window.abuesaVoix.attach=function(div,text){
+    try{ if(prev) prev(div,text); }catch(_){}
+    try{
+      var t=String(text||'').normalize('NFC'), seen={}, hits=[];
+      MAT.forEach(function(m){ if(!seen[m.i] && m.re.test(t)){ seen[m.i]=1; hits.push(m.i); } });
+      if(!hits.length) return;
+      hits=hits.slice(0,4);
+      var row=document.createElement('div');
+      row.setAttribute('data-no-i18n','');
+      row.style.cssText='margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;';
+      var lab=document.createElement('span'); lab.textContent='💬 Écouter la phrase :'; lab.style.cssText='font-weight:700;'; row.appendChild(lab);
+      hits.forEach(function(i){
+        var b=document.createElement('button'); b.type='button'; b.className='chat-voix';
+        b.__idle='▶ '+PHR[i][1]+' · '+PHR[i][2]; b.textContent=b.__idle;
+        b.style.cssText='border:0;border-radius:999px;padding:8px 12px;background:var(--forest);color:#fff;font:inherit;font-size:.9em;';
+        b.onclick=function(){ start(b,i,'⏸ '+PHR[i][1]+' · '+PHR[i][2]); };
+        row.appendChild(b);
+      });
+      div.appendChild(row);
+    }catch(_){}
+  };
 })();
 </script>
 <script>
