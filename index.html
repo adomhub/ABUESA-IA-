@@ -961,13 +961,13 @@
         <p>La culture du peuple akposso, dans ton téléphone : notre langue, nos mots, nos anciens, notre village.</p>
       </div>
 
+      <div id="home-parcours" style="margin:6px 16px 14px;"></div>
+
       <div id="home-3cards" style="display:grid;gap:10px;margin:6px 16px 14px;">
         <div class="home-card"><div class="home-card-text"><h3>🔊 Écoute ta langue</h3><p>Appuie sur ▶ et entends l'ikposso avec la voix d'Alexi.</p></div><button class="home-visit" id="home-open-phr" data-view="dict-view">Écouter →</button></div>
         <div class="home-card"><div class="home-card-text"><h3>🎧 Apprends et joue</h3><p>Le dictionnaire et le quiz d'écoute : 10 questions, un score à battre.</p></div><button class="home-visit" id="home-open-quiz" data-view="quiz-view">Jouer →</button></div>
         <div class="home-card"><div class="home-card-text"><h3>🤝 Participe</h3><p>Propose un mot que tu connais : il rejoint le dictionnaire après vérification.</p></div><button class="home-visit" id="home-open-wp" data-view="dict-view">Participer →</button></div>
       </div>
-
-      <div id="home-parcours"></div>
 
       <div id="home-wa-group">
         <div class="home-calendar-card" style="border:2px solid #25D366;">
@@ -1713,7 +1713,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.66 · 2 nov. 2026 (🧭 parcours d'apprentissage : niveaux, étoiles, flamme du jour, badges)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.67 · 2 nov. 2026 (🧭 parcours d'apprentissage en haut de l'accueil)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -7346,6 +7346,9 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   /* ---------- carte d'accueil ---------- */
   window.renderHomeParcours=function(){
     var el=document.getElementById('home-parcours'); if(!el) return;
+    try{ renderCard(el); }catch(e){ el.innerHTML='<div class="home-calendar-card"><div class="hc-label">🧭 Parcours</div><div class="hc-note">Erreur : '+esc(e&&e.message||e)+'</div></div>'; }
+  };
+  function renderCard(el){
     var L=buildLevels();
     if(!L.length){ el.innerHTML=''; return; }
     var s=load(), st=liveStreak(s), done=L.filter(function(l){ return (+s.stars[l.id]||0)>=1; }).length;
@@ -7361,7 +7364,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
       +'<button type="button" class="share-card-btn" id="pc-open-home">▶ '+(done?T('Continuer','Continue'):T('Commencer','Start'))+'</button>'
       +'</div>';
     var b=document.getElementById('pc-open-home'); if(b) b.addEventListener('click', window.openParcours);
-  };
+  }
 
   /* ---------- fenêtre du parcours ---------- */
   var ov=null, body=null, S={screen:'map'};
@@ -7552,6 +7555,9 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     ensureOv(); S={screen:'map'}; ov.style.display='flex'; draw();
   };
   window.renderHomeParcours();
+  document.addEventListener('DOMContentLoaded', window.renderHomeParcours);
+  window.addEventListener('load', window.renderHomeParcours);
+  setTimeout(window.renderHomeParcours,1500); setTimeout(window.renderHomeParcours,4000);
 })();
 </script>
 <script>
