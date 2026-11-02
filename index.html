@@ -967,6 +967,8 @@
         <div class="home-card"><div class="home-card-text"><h3>🤝 Participe</h3><p>Propose un mot que tu connais : il rejoint le dictionnaire après vérification.</p></div><button class="home-visit" id="home-open-wp" data-view="dict-view">Participer →</button></div>
       </div>
 
+      <div id="home-parcours"></div>
+
       <div id="home-wa-group">
         <div class="home-calendar-card" style="border:2px solid #25D366;">
           <div class="hc-label">💬 Groupe WhatsApp ABUESA-IA</div>
@@ -1711,7 +1713,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.65 · 2 nov. 2026 (🏠 accueil plus clair : la culture akposso dans ton téléphone)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.66 · 2 nov. 2026 (🧭 parcours d'apprentissage : niveaux, étoiles, flamme du jour, badges)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1937,6 +1939,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
     try{ if(typeof renderHomePharmaco === 'function') renderHomePharmaco(); }catch(_){}
     try{ if(typeof renderHomeTransfert === 'function') renderHomeTransfert(); }catch(_){}
     try{ if(typeof renderHomeCercles === 'function') renderHomeCercles(); }catch(_){}
+    try{ if(typeof renderHomeParcours === 'function') renderHomeParcours(); }catch(_){}
     try{ if(typeof renderHomeMarkets === 'function') renderHomeMarkets(); }catch(_){}
     run(document.body); applyUT(document);
     if(!silent && typeof showToast === 'function') showToast(l === 'en' ? 'Language: English' : 'Langue : Français');
@@ -7019,6 +7022,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     var b=e.target.closest('.lex-play'); if(!b) return;
     start(b,+b.getAttribute('data-i'));
   });
+  window.ABUESA_LEXDATA=LEX; window.__abuesaVoice=window.__abuesaVoice||{}; window.__abuesaVoice.word=start; window.__abuesaVoice.stopW=function(){ halt(); reset(); };
   /* ===== Proposer un mot : le message part vers le WhatsApp d'Alexi, qui vérifie avant d'ajouter ===== */
   (function(){
     var b=document.getElementById('wp-send'); if(!b) return;
@@ -7210,6 +7214,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     var b=e.target.closest('.phr-play'); if(!b) return;
     start(b,+b.getAttribute('data-i'));
   });
+  window.ABUESA_PHRDATA=PHR; window.__abuesaVoice=window.__abuesaVoice||{}; window.__abuesaVoice.phr=start; window.__abuesaVoice.stopP=function(){ halt(); reset(); };
   /* Chat : sous la réponse d'ABUESA-IA, un bouton ▶ par phrase enregistrée qu'il a citée en ikposso */
   var MAT=[];
   PHR.forEach(function(w,i){
@@ -7262,6 +7267,291 @@ document.getElementById('community-record').addEventListener('click', async ()=>
       },120);
     });
   });
+})();
+</script>
+<script>
+/* ===== PARCOURS D'APPRENTISSAGE (v4.66) : niveaux, étoiles, flamme du jour, badges. Tout reste sur le téléphone. ===== */
+(function(){
+  var KEY='abuesa_parcours_v1', SITE='https://adomhub.github.io/ABUESA-IA-/';
+  function en(){ return !!(window.ABUESA_I18N && ABUESA_I18N.lang()==='en'); }
+  function T(fr,e){ return en()?e:fr; }
+  function tr(x){ return (en() && window.ABUESA_I18N) ? ABUESA_I18N.t(x) : x; }
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function two(n){ return String(n).padStart(2,'0'); }
+  function today(){ var d=new Date(); return d.getFullYear()+'-'+two(d.getMonth()+1)+'-'+two(d.getDate()); }
+  function dayNum(s){ var p=s.split('-'); return Math.round(Date.UTC(+p[0],+p[1]-1,+p[2])/86400000); }
+  function shuffle(a){ for(var k=a.length-1;k>0;k--){ var j=Math.floor(Math.random()*(k+1)); var t=a[k];a[k]=a[j];a[j]=t; } return a; }
+
+  function load(){
+    var s={stars:{},xp:0,streak:0,last:'',best:0,badges:{}};
+    try{ var r=JSON.parse(localStorage.getItem(KEY)||'null'); if(r&&typeof r==='object'){ s.stars=r.stars||{}; s.xp=+r.xp||0; s.streak=+r.streak||0; s.last=r.last||''; s.best=+r.best||0; s.badges=r.badges||{}; } }catch(_){}
+    return s;
+  }
+  function save(s){ try{ localStorage.setItem(KEY,JSON.stringify(s)); }catch(_){} }
+  function liveStreak(s){ if(!s.last) return 0; return (dayNum(today())-dayNum(s.last))<=1 ? s.streak : 0; }
+  function totalStars(s){ var n=0; Object.keys(s.stars).forEach(function(k){ n+=+s.stars[k]||0; }); return n; }
+
+  var ICON={'w:Salutations':'👋','w:Famille':'👨‍👩‍👧','w:Nature':'🌿','w:Sagesse':'🕊️','w:Vie quotidienne':'🏡','w:Corps humain':'🧍','w:Nombres':'🔢','w:Couleurs':'🎨','p:Se présenter':'🙋','p:Comprendre':'💡','p:Réponses courtes':'✅','p:Vie de tous les jours':'🌾','p:Famille et anciens':'👴','p:Fêtes et vœux':'🎉','p:Le temps':'⏳',"p:Phrases d'ABUESA":'🤖'};
+  var BADGES={
+    first:['🌱','Premier pas','First step'],
+    flame3:['🔥','Flamme de 3 jours','3-day flame'],
+    flame7:['🔥','Flamme de 7 jours','7-day flame'],
+    stars3:['🌟','Trois étoiles sur un niveau','Three stars on a level'],
+    words:['📖','Tous les mots réussis','All words completed'],
+    phrases:['💬','Toutes les phrases réussies','All phrases completed']
+  };
+
+  var LV=null;
+  function buildLevels(){
+    if(LV) return LV;
+    var LEX=window.ABUESA_LEXDATA||[], PHR=window.ABUESA_PHRDATA||[];
+    var out=[], map={};
+    function put(k,cat,it){
+      var id=k+':'+cat, lv=map[id];
+      if(!lv){ lv={id:id,kind:k,cat:cat,icon:ICON[id]||'⭐',items:[]}; map[id]=lv; out.push(lv); }
+      if(lv.items.some(function(x){ return x.fr===it.fr; })) return;
+      lv.items.push(it);
+    }
+    LEX.forEach(function(w,i){ if(w[3]===null) return; put('w',w[0],{k:'w',i:i,fr:w[1],ak:w[2]}); });
+    PHR.forEach(function(w,i){ put('p',w[0],{k:'p',i:i,fr:w[1],ak:w[2]}); });
+    LV=out; return out;
+  }
+  function track(kind){ return buildLevels().filter(function(l){ return l.kind===kind; }); }
+  function isOpen(s,lv){ var L=track(lv.kind), k=L.indexOf(lv); return k<=0 || (+s.stars[L[k-1].id]||0)>=1; }
+  function title(lv){ return (lv.kind==='w'?T('Mots : ','Words: '):T('Phrases : ','Phrases: '))+tr(lv.cat); }
+  function nextLevel(s){
+    var L=buildLevels(), i, best=null;
+    for(i=0;i<L.length;i++){ if(isOpen(s,L[i]) && !(+s.stars[L[i].id]>0)) return L[i]; }
+    for(i=0;i<L.length;i++){ if(isOpen(s,L[i]) && (+s.stars[L[i].id]||0)<3){ best=L[i]; break; } }
+    return best;
+  }
+  function stars(n,big){ var o=''; for(var i=0;i<3;i++) o+= i<n?'★':'☆'; return '<span style="color:#B8860B;'+(big?'font-size:1.8em;letter-spacing:4px;':'')+'">'+o+'</span>'; }
+
+  function checkBadges(s){
+    var L=buildLevels(), got=[];
+    var passed=L.filter(function(l){ return (+s.stars[l.id]||0)>=1; });
+    var wl=L.filter(function(l){ return l.kind==='w'; }), pl=L.filter(function(l){ return l.kind==='p'; });
+    var cond={
+      first: passed.length>=1,
+      flame3: s.streak>=3,
+      flame7: s.streak>=7,
+      stars3: L.some(function(l){ return (+s.stars[l.id]||0)>=3; }),
+      words: wl.length>0 && wl.every(function(l){ return (+s.stars[l.id]||0)>=1; }),
+      phrases: pl.length>0 && pl.every(function(l){ return (+s.stars[l.id]||0)>=1; })
+    };
+    Object.keys(cond).forEach(function(k){ if(cond[k] && !s.badges[k]){ s.badges[k]=today(); got.push(k); } });
+    return got;
+  }
+
+  /* ---------- carte d'accueil ---------- */
+  window.renderHomeParcours=function(){
+    var el=document.getElementById('home-parcours'); if(!el) return;
+    var L=buildLevels();
+    if(!L.length){ el.innerHTML=''; return; }
+    var s=load(), st=liveStreak(s), done=L.filter(function(l){ return (+s.stars[l.id]||0)>=1; }).length;
+    var nx=nextLevel(s), doneToday=(s.last===today());
+    var flame = st>0
+      ? (doneToday ? T('✅ Flamme gardée aujourd’hui','✅ Flame kept today') : T('⏳ Fais une leçon aujourd’hui pour garder ta flamme','⏳ Do a lesson today to keep your flame'))
+      : T('Fais ta première leçon pour allumer ta flamme','Do your first lesson to light your flame');
+    el.innerHTML='<div class="home-calendar-card">'
+      +'<div class="hc-label">🧭 '+T('Parcours d’apprentissage','Learning path')+'</div>'
+      +'<div class="hc-day">🔥 '+st+' '+T(st>1?'jours':'jour',st>1?'days':'day')+' · ⭐ '+totalStars(s)+' · '+done+'/'+L.length+' '+T('niveaux','levels')+'</div>'
+      +'<div class="hc-note">'+flame+'</div>'
+      +(nx?'<div class="hc-note" style="margin-top:4px;">'+T('Prochain niveau : ','Next level: ')+esc(nx.icon+' '+title(nx))+'</div>':'<div class="hc-note" style="margin-top:4px;">🎉 '+T('Tu as tout réussi. Refais des niveaux pour viser trois étoiles.','You completed everything. Replay levels to aim for three stars.')+'</div>')
+      +'<button type="button" class="share-card-btn" id="pc-open-home">▶ '+(done?T('Continuer','Continue'):T('Commencer','Start'))+'</button>'
+      +'</div>';
+    var b=document.getElementById('pc-open-home'); if(b) b.addEventListener('click', window.openParcours);
+  };
+
+  /* ---------- fenêtre du parcours ---------- */
+  var ov=null, body=null, S={screen:'map'};
+  function stopAudio(){ var V=window.__abuesaVoice||{}; try{ if(V.stopW) V.stopW(); }catch(_){} try{ if(V.stopP) V.stopP(); }catch(_){} }
+  function playItem(b,it){
+    var V=window.__abuesaVoice||{}, f=(it.k==='w')?V.word:V.phr;
+    if(!f) return;
+    b.__idle=b.getAttribute('data-idle')||'▶';
+    f(b,it.i,'⏸');
+  }
+  function hearBtn(attr,label){ return '<button type="button" '+attr+' data-idle="▶ '+esc(label)+'" class="share-card-btn" style="margin:8px 0;">▶ '+esc(label)+'</button>'; }
+
+  function pickQs(lv){
+    var items=shuffle(lv.items.slice()).slice(0,Math.min(8,lv.items.length));
+    var all=[]; track(lv.kind).forEach(function(l){ all=all.concat(l.items); });
+    return items.map(function(it,n){
+      var opts=[], pools=[shuffle(lv.items.slice()), shuffle(all.slice())];
+      pools.forEach(function(p){
+        p.forEach(function(x){
+          if(opts.length>=2) return;
+          if(x===it||x.fr===it.fr||x.ak===it.ak) return;
+          if(opts.some(function(o){ return o.fr===x.fr||o.ak===x.ak; })) return;
+          opts.push(x);
+        });
+      });
+      return {item:it, type:(n%2===0?'A':'B'), opts:shuffle([it].concat(opts))};
+    });
+  }
+
+  function mapHtml(){
+    var s=load(), L=buildLevels(), st=liveStreak(s), h='';
+    var earned=Object.keys(BADGES).filter(function(k){ return s.badges[k]; });
+    h+='<div class="home-calendar-card" style="margin:0 0 12px;">'
+      +'<div class="hc-day">🔥 '+st+' '+T(st>1?'jours':'jour',st>1?'days':'day')+' · ⭐ '+totalStars(s)+' · '+s.xp+' XP</div>'
+      +'<div class="hc-note">'+(s.last===today()?T('✅ Flamme gardée aujourd’hui','✅ Flame kept today'):T('⏳ Termine un test aujourd’hui pour garder ta flamme','⏳ Finish a test today to keep your flame'))+'</div>'
+      +(s.best>1?'<div class="hc-note">'+T('Meilleure série : ','Best streak: ')+s.best+'</div>':'')
+      +'<div style="margin-top:8px;">'+(earned.length?earned.map(function(k){ return '<span style="display:inline-block;margin:3px 6px 3px 0;padding:4px 10px;border:1px solid var(--line);border-radius:14px;background:#fff;">'+BADGES[k][0]+' '+T(BADGES[k][1],BADGES[k][2])+'</span>'; }).join(''):'<span class="hc-note">'+T('Aucun badge pour l’instant. Réussis ton premier test !','No badge yet. Pass your first test!')+'</span>')+'</div>'
+      +'</div>';
+    ['w','p'].forEach(function(k){
+      h+='<div style="font-weight:800;margin:14px 0 6px;color:var(--forest-deep);">'+(k==='w'?T('📖 Les mots','📖 Words'):T('💬 Les phrases','💬 Phrases'))+'</div>';
+      track(k).forEach(function(lv){
+        var open=isOpen(s,lv), n=+s.stars[lv.id]||0;
+        h+='<div data-act="open" data-lv="'+esc(lv.id)+'" style="display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:8px;cursor:pointer;'+(open?'':'opacity:.55;')+'">'
+          +'<div style="font-size:1.6em;">'+(open?lv.icon:'🔒')+'</div>'
+          +'<div style="flex:1;"><div style="font-weight:700;">'+esc(title(lv))+'</div><div class="hc-note" style="margin:0;">'+lv.items.length+' '+T(k==='w'?'mots':'phrases',k==='w'?'words':'phrases')+'</div></div>'
+          +'<div>'+stars(n,false)+'</div></div>';
+      });
+    });
+    h+='<button type="button" class="share-card-btn" data-act="share" style="margin-top:10px;">📤 '+T('Partager mes progrès','Share my progress')+'</button>';
+    return h;
+  }
+  function learnHtml(lv){
+    var h='<button type="button" data-act="map" style="border:none;background:none;text-decoration:underline;font:inherit;cursor:pointer;padding:0;margin-bottom:8px;">← '+T('Retour au parcours','Back to the path')+'</button>'
+      +'<div style="font-weight:800;font-size:1.15em;">'+esc(lv.icon+' '+title(lv))+'</div>'
+      +'<div class="hc-note" style="margin:4px 0 10px;">'+T('Écoute chaque '+(lv.kind==='w'?'mot':'phrase')+' avec ▶, puis passe le test.','Listen to each '+(lv.kind==='w'?'word':'phrase')+' with ▶, then take the test.')+'</div>';
+    lv.items.forEach(function(it,k){
+      h+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);">'
+        +'<button type="button" data-hear="'+k+'" data-idle="▶" style="flex:none;width:44px;height:44px;border-radius:50%;border:0;background:var(--forest);color:#fff;font-size:18px;">▶</button>'
+        +'<div><div style="opacity:.7;font-size:.9em;">'+esc(tr(it.fr))+'</div><div data-no-i18n style="font-weight:700;">'+esc(it.ak)+'</div></div></div>';
+    });
+    h+='<button type="button" class="quiz-option" data-act="quiz" style="text-align:center;font-weight:700;margin-top:14px;background:var(--clay);color:#fff;">🎯 '+T('Commencer le test','Start the test')+' ('+Math.min(8,lv.items.length)+' '+T('questions','questions')+')</button>';
+    return h;
+  }
+  function quizHtml(){
+    var q=S.qs[S.qi], it=q.item, N=S.qs.length;
+    var h='<div style="height:10px;background:var(--line);border-radius:6px;overflow:hidden;"><div style="height:100%;width:'+Math.round(S.qi/N*100)+'%;background:var(--forest);"></div></div>'
+      +'<div class="hc-note" style="margin:8px 0;">'+T('Question ','Question ')+(S.qi+1)+' / '+N+' · '+esc(title(S.level))+'</div>';
+    if(q.type==='A'){
+      h+='<div data-no-i18n style="font-family:Fraunces,serif;font-weight:700;font-size:1.5em;color:var(--clay);margin:6px 0;">'+esc(it.ak)+'</div>'
+        +hearBtn('id="pc-hear" data-hearq="1"',T('Écouter','Listen'))
+        +'<div style="margin-bottom:8px;">'+T('Que veut dire ce '+(it.k==='w'?'mot':'texte')+' ?','What does this '+(it.k==='w'?'word':'text')+' mean?')+'</div>';
+      q.opts.forEach(function(o,j){ h+='<button type="button" class="quiz-option" data-act="ans" data-j="'+j+'">'+esc(tr(o.fr))+'</button>'; });
+    } else {
+      h+='<div style="margin:6px 0 10px;">'+T('Comment dit-on « ','How do you say « ')+'<b>'+esc(tr(it.fr))+'</b>'+T(' » en ikposso ?',' » in Ikposso?')+'</div>';
+      q.opts.forEach(function(o,j){ h+='<button type="button" class="quiz-option" data-act="ans" data-j="'+j+'" data-no-i18n>'+esc(o.ak)+'</button>'; });
+    }
+    h+='<div id="pc-fb"></div>';
+    return h;
+  }
+  function resultHtml(r){
+    var pass=r.stars>=1, nx=null, L=track(S.level.kind), k=L.indexOf(S.level);
+    if(pass && k>=0 && k<L.length-1) nx=L[k+1];
+    var h='<div style="text-align:center;margin:10px 0;">'
+      +'<div style="font-size:1.3em;font-weight:800;">'+(r.stars===3?T('🌟 Parfait !','🌟 Perfect!'):pass?T('🎉 Bravo !','🎉 Well done!'):T('💪 Presque !','💪 Almost!'))+'</div>'
+      +'<div style="margin:6px 0;">'+stars(r.stars,true)+'</div>'
+      +'<div style="font-weight:700;">'+T('Score : ','Score: ')+r.score+' / '+r.N+' · +'+r.xp+' XP</div>'
+      +(pass?'':'<div class="hc-note">'+T('Il faut au moins '+r.need+' bonnes réponses pour réussir. Réécoute et réessaie !','You need at least '+r.need+' correct answers to pass. Listen again and retry!')+'</div>')
+      +(r.flame?'<div style="margin-top:6px;">🔥 '+T('Série : ','Streak: ')+r.flame+' '+T(r.flame>1?'jours':'jour',r.flame>1?'days':'day')+'</div>':'')
+      +'</div>';
+    if(r.newBadges.length){
+      h+='<div class="home-calendar-card" style="margin:8px 0;"><div class="hc-label">'+T('Nouveau badge !','New badge!')+'</div>'
+        +r.newBadges.map(function(k){ return '<div class="hc-day">'+BADGES[k][0]+' '+T(BADGES[k][1],BADGES[k][2])+'</div>'; }).join('')+'</div>';
+    }
+    if(nx) h+='<button type="button" class="quiz-option" data-act="open" data-lv="'+esc(nx.id)+'" style="text-align:center;font-weight:700;background:var(--forest);color:#fff;">'+T('Niveau suivant →','Next level →')+' '+esc(nx.icon+' '+title(nx))+'</button>';
+    h+='<button type="button" class="quiz-option" data-act="quiz" style="text-align:center;font-weight:600;">🔁 '+T('Rejouer ce niveau','Replay this level')+'</button>'
+      +'<button type="button" class="quiz-option" data-act="learn" style="text-align:center;">🔊 '+T('Réécouter les '+(S.level.kind==='w'?'mots':'phrases'),'Listen again')+'</button>'
+      +'<button type="button" class="quiz-option" data-act="map" style="text-align:center;">🧭 '+T('Retour au parcours','Back to the path')+'</button>';
+    return h;
+  }
+
+  function draw(){
+    stopAudio();
+    var tt=document.getElementById('pc-title');
+    if(tt) tt.textContent='🧭 '+T('Parcours d’apprentissage','Learning path');
+    if(S.screen==='map') body.innerHTML=mapHtml();
+    else if(S.screen==='learn') body.innerHTML=learnHtml(S.level);
+    else if(S.screen==='quiz'){
+      body.innerHTML=quizHtml();
+      var q=S.qs[S.qi];
+      if(q.type==='A') setTimeout(function(){ var b=document.getElementById('pc-hear'); if(b && S.screen==='quiz') b.click(); },250);
+    }
+    else if(S.screen==='result') body.innerHTML=resultHtml(S.result);
+    body.scrollTop=0;
+  }
+  function startQuiz(){ S.qs=pickQs(S.level); S.qi=0; S.score=0; S.answered=false; S.screen='quiz'; draw(); }
+  function finish(){
+    var N=S.qs.length, score=S.score, need=Math.ceil(N*0.7), st=0;
+    if(score>=N) st=3; else if(score>=N-1 && score>=need) st=2; else if(score>=need) st=1;
+    var s=load(), id=S.level.id, xp=score*10+(st>0?20:0);
+    s.xp+=xp;
+    if(st>(+s.stars[id]||0)) s.stars[id]=st;
+    var t=today();
+    if(s.last!==t){ s.streak=(s.last && dayNum(t)-dayNum(s.last)===1) ? (s.streak||0)+1 : 1; s.last=t; s.best=Math.max(s.best||0,s.streak); }
+    var nb=checkBadges(s);
+    save(s);
+    S.result={score:score,N:N,stars:st,xp:xp,need:need,flame:s.streak,newBadges:nb};
+    S.screen='result'; draw();
+  }
+  function shareProgress(){
+    var s=load(), L=buildLevels(), done=L.filter(function(l){ return (+s.stars[l.id]||0)>=1; }).length;
+    var msg=en()
+      ? ('🧭 I am learning Ikposso on ABUESA-IA: 🔥 '+liveStreak(s)+' day streak, ⭐ '+totalStars(s)+' stars, '+done+'/'+L.length+' levels. Try it: '+SITE)
+      : ('🧭 J’apprends l’ikposso sur ABUESA-IA : 🔥 '+liveStreak(s)+' jour(s) de suite, ⭐ '+totalStars(s)+' étoiles, '+done+'/'+L.length+' niveaux. Essaie : '+SITE);
+    var url='https://wa.me/?text='+encodeURIComponent(msg);
+    if(navigator.share){ navigator.share({text:msg}).catch(function(){ window.open(url,'_blank'); }); } else window.open(url,'_blank');
+  }
+  function findLevel(id){ return buildLevels().filter(function(l){ return l.id===id; })[0]; }
+
+  function onClick(e){
+    var h=e.target.closest('[data-hear]');
+    if(h){ var it=S.level && S.level.items[+h.getAttribute('data-hear')]; if(it) playItem(h,it); return; }
+    var hq=e.target.closest('[data-hearq]');
+    if(hq){ var q0=S.qs&&S.qs[S.qi]; if(q0) playItem(hq,q0.item); return; }
+    var a=e.target.closest('[data-act]'); if(!a) return;
+    var act=a.getAttribute('data-act');
+    if(act==='close'){ stopAudio(); ov.style.display='none'; window.renderHomeParcours(); return; }
+    if(act==='map'){ S={screen:'map'}; draw(); return; }
+    if(act==='open'){
+      var lv=findLevel(a.getAttribute('data-lv')); if(!lv) return;
+      if(!isOpen(load(),lv)){ showToast(T('Réussis le niveau précédent pour débloquer celui-ci.','Pass the previous level to unlock this one.')); return; }
+      S={screen:'learn',level:lv}; draw(); return;
+    }
+    if(act==='learn'){ S.screen='learn'; draw(); return; }
+    if(act==='quiz'){ startQuiz(); return; }
+    if(act==='share'){ shareProgress(); return; }
+    if(act==='next'){ S.qi++; S.answered=false; if(S.qi>=S.qs.length) finish(); else draw(); return; }
+    if(act==='ans'){
+      if(S.answered) return;
+      S.answered=true;
+      var q=S.qs[S.qi], j=+a.getAttribute('data-j'), good=(q.opts[j]===q.item);
+      if(good) S.score++;
+      body.querySelectorAll('[data-act="ans"]').forEach(function(b,k){
+        b.disabled=true;
+        if(q.opts[k]===q.item) b.classList.add('correct'); else if(k===j) b.classList.add('wrong');
+      });
+      var last=(S.qi+1>=S.qs.length), fb=document.getElementById('pc-fb');
+      fb.innerHTML='<div style="margin:10px 0;font-weight:700;">'+(good?T('✅ Bravo !','✅ Well done!'):T('❌ Pas tout à fait.','❌ Not quite.'))
+        +' <span data-no-i18n>'+esc(q.item.ak)+'</span> = '+esc(tr(q.item.fr))+'</div>'
+        +(q.type==='B'?hearBtn('id="pc-hear" data-hearq="1"',T('Écouter','Listen')):'')
+        +'<button type="button" class="quiz-option" data-act="next" style="text-align:center;font-weight:600;">'+(last?T('Voir mon score','See my score'):T('Question suivante →','Next question →'))+'</button>';
+      if(q.type==='B') setTimeout(function(){ var b=document.getElementById('pc-hear'); if(b && S.screen==='quiz') b.click(); },200);
+      return;
+    }
+  }
+  function ensureOv(){
+    if(ov) return;
+    ov=document.createElement('div');
+    ov.id='pc-ov';
+    ov.style.cssText='position:fixed;inset:0;z-index:99996;background:var(--paper,#F7F3E8);color:#000;display:none;flex-direction:column;font-size:calc(17.5px * var(--fs,1.15));';
+    ov.innerHTML='<div style="padding:12px 16px;background:var(--citron,#C7D92E);display:flex;align-items:center;gap:10px;font-weight:800;"><span id="pc-title" style="flex:1;"></span><button type="button" data-act="close" aria-label="Fermer" style="border:none;background:none;font-size:1.4em;cursor:pointer;">✕</button></div>'
+      +'<div id="pc-body" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px 30px;max-width:560px;width:100%;margin:0 auto;box-sizing:border-box;"></div>';
+    document.body.appendChild(ov);
+    body=ov.querySelector('#pc-body');
+    ov.addEventListener('click',onClick);
+  }
+  window.openParcours=function(){
+    if(!buildLevels().length){ showToast(T('Le parcours n’est pas encore prêt.','The path is not ready yet.')); return; }
+    ensureOv(); S={screen:'map'}; ov.style.display='flex'; draw();
+  };
+  window.renderHomeParcours();
 })();
 </script>
 <script>
