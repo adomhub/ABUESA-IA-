@@ -1203,6 +1203,15 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         <div id="phr-status" style="font-weight:700;color:var(--clay);"></div>
         <div id="phr-list"></div>
       </details>
+      <details id="mp-details" style="margin-bottom:14px;border:1px solid var(--line);border-radius:14px;padding:10px 14px;">
+        <summary style="font-weight:800;cursor:pointer;">➕ Je connais un mot qu'ABUESA ne connaît pas</summary>
+        <p style="font-size:.9em;opacity:.75;">Écris le mot en français et en ikposso. Ton message arrive à Alexi sur WhatsApp : il le vérifie avant de l'ajouter. Tu peux aussi lui envoyer ta voix pour qu'on entende la prononciation.</p>
+        <input type="text" id="mp-fr" placeholder="Le mot en français (ex : cuillère)" maxlength="60" style="width:100%;box-sizing:border-box;margin:4px 0;">
+        <input type="text" id="mp-ak" placeholder="Le mot en ikposso" maxlength="60" style="width:100%;box-sizing:border-box;margin:4px 0;">
+        <input type="text" id="mp-nom" placeholder="Ton prénom et ton village (facultatif)" maxlength="60" style="width:100%;box-sizing:border-box;margin:4px 0;">
+        <button type="button" id="mp-send" style="border:0;border-radius:999px;padding:12px 18px;background:var(--forest);color:#fff;font:inherit;margin-top:6px;">📤 Envoyer à Alexi</button>
+        <div id="mp-msg" style="margin-top:8px;font-weight:700;color:var(--clay);"></div>
+      </details>
       <input type="text" id="dict-search" placeholder="Chercher un mot…">
       <div class="dict-filter-row">
         <button id="dict-filter-all" class="active">Tous les mots</button>
@@ -1696,7 +1705,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.62 · 2 nov. 2026 (🎧 quiz d’écoute avec la voix d’Alexi)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.63 · 2 nov. 2026 (➕ les visiteurs proposent des mots)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -6999,6 +7008,18 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     var b=e.target.closest('.lex-play'); if(!b) return;
     start(b,+b.getAttribute('data-i'));
   });
+  /* ===== Proposer un mot : le message part vers le WhatsApp d'Alexi, qui vérifie avant d'ajouter ===== */
+  (function(){
+    var b=document.getElementById('mp-send'); if(!b) return;
+    b.addEventListener('click',function(){
+      var fr=(document.getElementById('mp-fr').value||'').trim(), ak=(document.getElementById('mp-ak').value||'').trim(), nom=(document.getElementById('mp-nom').value||'').trim();
+      var m=document.getElementById('mp-msg');
+      if(fr.length<2||ak.length<2){ m.textContent='Écris le mot en français ET en ikposso.'; return; }
+      var t='Mot proposé pour ABUESA-IA\nFrançais : '+fr+'\nIkposso : '+ak+(nom?'\nDe la part de : '+nom:'');
+      m.textContent='Merci ! WhatsApp s\'ouvre : appuie sur envoyer.';
+      window.open('https://wa.me/22899619969?text='+encodeURIComponent(t),'_blank');
+    });
+  })();
   /* ===== Quiz d'écoute : 10 mots du lexique, puis la prononciation d'Alexi pour retenir ===== */
   (function(){
     var box=document.getElementById('eq-box'); if(!box) return;
