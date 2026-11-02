@@ -963,6 +963,8 @@
 
       <div id="home-parcours" style="margin:6px 16px 14px;"></div>
 
+      <div id="home-arbre" style="margin:6px 16px 14px;"></div>
+
       <div id="home-3cards" style="display:grid;gap:10px;margin:6px 16px 14px;">
         <div class="home-card"><div class="home-card-text"><h3>🔊 Écoute ta langue</h3><p>Appuie sur ▶ et entends l'ikposso avec la voix d'Alexi.</p></div><button class="home-visit" id="home-open-phr" data-view="dict-view">Écouter →</button></div>
         <div class="home-card"><div class="home-card-text"><h3>🎧 Apprends et joue</h3><p>Le dictionnaire et le quiz d'écoute : 10 questions, un score à battre.</p></div><button class="home-visit" id="home-open-quiz" data-view="quiz-view">Jouer →</button></div>
@@ -1713,7 +1715,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.67 · 2 nov. 2026 (🧭 parcours d'apprentissage en haut de l'accueil)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.68 · 2 nov. 2026 (🌳 Mon arbre de famille : tes proches et leurs noms en ikposso)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1940,6 +1942,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
     try{ if(typeof renderHomeTransfert === 'function') renderHomeTransfert(); }catch(_){}
     try{ if(typeof renderHomeCercles === 'function') renderHomeCercles(); }catch(_){}
     try{ if(typeof renderHomeParcours === 'function') renderHomeParcours(); }catch(_){}
+    try{ if(typeof renderHomeArbre === 'function') renderHomeArbre(); }catch(_){}
     try{ if(typeof renderHomeMarkets === 'function') renderHomeMarkets(); }catch(_){}
     run(document.body); applyUT(document);
     if(!silent && typeof showToast === 'function') showToast(l === 'en' ? 'Language: English' : 'Langue : Français');
@@ -7558,6 +7561,135 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   document.addEventListener('DOMContentLoaded', window.renderHomeParcours);
   window.addEventListener('load', window.renderHomeParcours);
   setTimeout(window.renderHomeParcours,1500); setTimeout(window.renderHomeParcours,4000);
+})();
+</script>
+<script>
+/* ===== MON ARBRE DE FAMILLE (v4.68) : tes proches et leurs noms en ikposso, avec la voix d'Alexi. Tout reste sur le téléphone. ===== */
+(function(){
+  var KEY='abuesa_arbre_v1';
+  function en(){ return !!(window.ABUESA_I18N && ABUESA_I18N.lang()==='en'); }
+  function T(fr,e){ return en()?e:fr; }
+  function tr(x){ return (en() && window.ABUESA_I18N) ? ABUESA_I18N.t(x) : x; }
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function load(){
+    var s={moi:'',names:{}};
+    try{ var r=JSON.parse(localStorage.getItem(KEY)||'null'); if(r&&typeof r==='object'){ s.moi=String(r.moi||''); s.names=(r.names&&typeof r.names==='object')?r.names:{}; } }catch(_){}
+    return s;
+  }
+  function save(s){ try{ localStorage.setItem(KEY,JSON.stringify(s)); }catch(_){} }
+
+  var GROUPS=[
+    ['🕊️','Les anciens','The elders',['Ancêtre','Grand-père','Grand-mère','Chef de famille']],
+    ['👨‍👩‍👧','Mes parents et leur famille','My parents and their family',['Père','Mère','Oncle','Tante']],
+    ['🧑','Ma fratrie et mes cousins','My siblings and cousins',['Frère','Sœur','Cousin','Cousine (autre forme)']],
+    ['🏡','Mon foyer','My household',['Mari','Femme','Fils','Fille','Enfants','Bébé']],
+    ['🤝','La belle-famille','In-laws',['Beau-père','Belle-mère','Beau-frère','Belle-sœur']]
+  ];
+  function lexIndex(fr){
+    var L=window.ABUESA_LEXDATA||[];
+    for(var i=0;i<L.length;i++){ if(L[i][0]==='Famille' && L[i][1]===fr) return i; }
+    return -1;
+  }
+
+  window.renderHomeArbre=function(){
+    var el=document.getElementById('home-arbre'); if(!el) return;
+    try{
+      if(!(window.ABUESA_LEXDATA||[]).length){ el.innerHTML=''; return; }
+      var s=load(), n=0;
+      Object.keys(s.names).forEach(function(k){ if(String(s.names[k]||'').trim()) n++; });
+      el.innerHTML='<div class="home-calendar-card">'
+        +'<div class="hc-label">🌳 '+T('Mon arbre de famille','My family tree')+'</div>'
+        +'<div class="hc-day">'+(n?(n+' '+T(n>1?'proches placés':'proche placé',n>1?'relatives added':'relative added')):T('Place ta famille, entends ses noms en ikposso','Add your family, hear their Ikposso names'))+'</div>'
+        +'<div class="hc-note">'+T('Père, mère, frères, grands-parents… avec la voix d’Alexi.','Father, mother, siblings, grandparents… in Alexi’s voice.')+'</div>'
+        +'<button type="button" class="share-card-btn" id="ar-open-home">🌳 '+(n?T('Ouvrir mon arbre','Open my tree'):T('Commencer','Start'))+'</button>'
+        +'</div>';
+      var b=document.getElementById('ar-open-home'); if(b) b.addEventListener('click', window.openArbre);
+    }catch(e){ el.innerHTML=''; }
+  };
+
+  var ov=null, body=null;
+  function stopAudio(){ var V=window.__abuesaVoice||{}; try{ if(V.stopW) V.stopW(); }catch(_){} }
+  function ikOf(i){ var L=window.ABUESA_LEXDATA||[]; return L[i]?L[i][2]:''; }
+  function draw(){
+    var s=load(), L=window.ABUESA_LEXDATA||[], h='';
+    h+='<div style="text-align:center;margin-bottom:14px;">'
+      +'<div style="font-size:2.2em;">🌳</div>'
+      +'<div style="font-weight:800;font-size:1.15em;">'+T('Mon arbre de famille','My family tree')+'</div>'
+      +'<div style="opacity:.75;font-size:.9em;margin-top:4px;">'+T('Écris le nom de chaque proche. Appuie sur ▶ pour entendre le mot ikposso.','Type each relative’s name. Tap ▶ to hear the Ikposso word.')+'</div>'
+      +'</div>';
+    h+='<div style="background:#fff;border:2px solid var(--forest,#2F5233);border-radius:16px;padding:12px;text-align:center;margin-bottom:6px;">'
+      +'<div style="font-weight:800;">🙋 '+T('Moi','Me')+'</div>'
+      +'<input type="text" data-moi="1" value="'+esc(s.moi)+'" placeholder="'+esc(T('Mon prénom','My first name'))+'" style="margin-top:6px;width:100%;box-sizing:border-box;border:1px solid var(--line,#ccc);border-radius:10px;padding:10px;font:inherit;text-align:center;">'
+      +'</div>';
+    GROUPS.forEach(function(g){
+      h+='<div style="text-align:center;color:var(--forest,#2F5233);line-height:1;margin:2px 0;">│</div>';
+      h+='<div style="font-weight:800;margin:6px 0 8px;color:#B8860B;">'+g[0]+' '+T(g[1],g[2])+'</div>';
+      g[3].forEach(function(fr){
+        var i=lexIndex(fr); if(i<0) return;
+        var lab=fr.replace(' (autre forme)','');
+        h+='<div style="background:#fff;border:1px solid var(--line,#ddd);border-radius:14px;padding:10px 12px;margin-bottom:8px;">'
+          +'<div style="display:flex;align-items:center;gap:10px;">'
+          +(L[i][3]===null?'<span style="flex:none;width:44px;text-align:center;opacity:.4;">🔇</span>':'<button type="button" data-play="'+i+'" data-idle="▶" aria-label="'+esc(T('Écouter','Listen'))+'" style="flex:none;width:44px;height:44px;border:0;border-radius:50%;background:var(--forest,#2F5233);color:#fff;font-size:1em;">▶</button>')
+          +'<div style="flex:1;min-width:0;"><div style="opacity:.7;font-size:.9em;">'+esc(tr(lab))+'</div>'
+          +'<div data-no-i18n style="font-weight:800;font-size:1.1em;word-break:break-word;">'+esc(ikOf(i))+'</div></div></div>'
+          +'<input type="text" data-rel="'+esc(fr)+'" value="'+esc(s.names[fr]||'')+'" placeholder="'+esc(T('Qui est-ce ? (ex. : Papa Kofi)','Who is it? (e.g. Papa Kofi)'))+'" style="margin-top:8px;width:100%;box-sizing:border-box;border:1px solid var(--line,#ccc);border-radius:10px;padding:10px;font:inherit;">'
+          +'</div>';
+      });
+    });
+    h+='<button type="button" data-act="share" class="share-card-btn" style="width:100%;margin-top:10px;">📤 '+T('Partager mon arbre','Share my tree')+'</button>';
+    h+='<button type="button" data-act="close" class="share-card-btn" style="width:100%;margin-top:8px;">'+T('Fermer','Close')+'</button>';
+    body.innerHTML=h;
+    body.scrollTop=0;
+  }
+  function shareText(){
+    var s=load(), t='🌳 '+T('Mon arbre de famille en ikposso','My family tree in Ikposso')+(s.moi?' — '+s.moi:'')+'\n';
+    GROUPS.forEach(function(g){ g[3].forEach(function(fr){
+      var nm=String(s.names[fr]||'').trim(); if(!nm) return;
+      var i=lexIndex(fr); if(i<0) return;
+      t+='• '+tr(fr.replace(' (autre forme)',''))+' ('+ikOf(i)+') : '+nm+'\n';
+    }); });
+    t+='\nABUESA-IA : https://adomhub.github.io/ABUESA-IA-/';
+    return t;
+  }
+  function onClick(e){
+    var p=e.target.closest('[data-play]');
+    if(p){
+      var V=window.__abuesaVoice||{}; if(V.word) V.word(p,+p.getAttribute('data-play'),'⏸');
+      return;
+    }
+    var a=e.target.closest('[data-act]'); if(!a) return;
+    var act=a.getAttribute('data-act');
+    if(act==='close'){ stopAudio(); ov.style.display='none'; window.renderHomeArbre(); return; }
+    if(act==='share'){
+      var txt=shareText();
+      if(navigator.share){ navigator.share({text:txt}).catch(function(){}); }
+      else { window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank'); }
+    }
+  }
+  function onInput(e){
+    var t=e.target, s;
+    if(t.hasAttribute('data-moi')){ s=load(); s.moi=t.value.slice(0,60); save(s); return; }
+    if(t.hasAttribute('data-rel')){ s=load(); s.names[t.getAttribute('data-rel')]=t.value.slice(0,80); save(s); }
+  }
+  function ensureOv(){
+    if(ov) return;
+    ov=document.createElement('div'); ov.id='ar-ov';
+    ov.style.cssText='position:fixed;inset:0;z-index:99995;background:var(--paper,#F7F3E8);color:#000;display:none;flex-direction:column;font-size:calc(17.5px * var(--fs,1.15));';
+    ov.innerHTML='<div style="padding:12px 16px;background:var(--citron,#C7D92E);display:flex;align-items:center;gap:10px;font-weight:800;"><span style="flex:1;">🌳 '+esc(T('Mon arbre de famille','My family tree'))+'</span><button type="button" data-act="close" aria-label="Fermer" style="border:none;background:transparent;font-size:1.6em;line-height:1;padding:4px 8px;">✕</button></div>'
+      +'<div id="ar-body" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px 40px;max-width:560px;width:100%;margin:0 auto;box-sizing:border-box;"></div>';
+    document.body.appendChild(ov);
+    body=ov.querySelector('#ar-body');
+    ov.addEventListener('click',onClick);
+    ov.addEventListener('input',onInput);
+  }
+  window.openArbre=function(){
+    if(!(window.ABUESA_LEXDATA||[]).length){ try{ showToast(T('L’arbre n’est pas encore prêt.','The tree is not ready yet.')); }catch(_){} return; }
+    ensureOv(); ov.style.display='flex'; draw();
+  };
+  window.renderHomeArbre();
+  document.addEventListener('DOMContentLoaded', window.renderHomeArbre);
+  window.addEventListener('load', window.renderHomeArbre);
+  setTimeout(window.renderHomeArbre,1500);
 })();
 </script>
 <script>
