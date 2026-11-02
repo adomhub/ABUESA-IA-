@@ -1251,6 +1251,11 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
       <p class="section-desc">Teste ce que tu sais de la langue et de la culture.</p>
       <div class="quiz-card" id="quiz-card"></div>
       <div class="quiz-score" id="quiz-score"></div>
+      <details id="eq-details" style="margin-top:18px;border:1px solid var(--line);border-radius:14px;padding:10px 14px;">
+        <summary style="font-weight:800;cursor:pointer;">🎧 Quiz d'écoute : mots parlés</summary>
+        <p style="font-size:.9em;opacity:.75;">Lis le mot ikposso, choisis son sens, puis écoute-le prononcé par Alexi. 10 questions.</p>
+        <div id="eq-box"></div>
+      </details>
     </div>
   </main>
 
@@ -1691,7 +1696,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.61 · 1er nov. 2026 (🔊 mot ikposso du jour avec audio)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.62 · 2 nov. 2026 (🎧 quiz d’écoute avec la voix d’Alexi)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -6994,6 +6999,59 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     var b=e.target.closest('.lex-play'); if(!b) return;
     start(b,+b.getAttribute('data-i'));
   });
+  /* ===== Quiz d'écoute : 10 mots du lexique, puis la prononciation d'Alexi pour retenir ===== */
+  (function(){
+    var box=document.getElementById('eq-box'); if(!box) return;
+    var pool=[], seenFr={};
+    LEX.forEach(function(w,i){ if(w[3]===null||seenFr[w[1]]) return; seenFr[w[1]]=1; pool.push(i); });
+    var Q=[], qi=0, score=0, best=0;
+    try{ best=+localStorage.getItem('abuesa_eq_best')||0; }catch(_){}
+    function shuffle(a){ for(var k=a.length-1;k>0;k--){ var j=Math.floor(Math.random()*(k+1)); var t=a[k];a[k]=a[j];a[j]=t; } return a; }
+    function newRound(){
+      var ids=shuffle(pool.slice()).slice(0,10);
+      Q=ids.map(function(i){
+        var same=pool.filter(function(j){ return j!==i && LEX[j][0]===LEX[i][0]; });
+        var other=pool.filter(function(j){ return j!==i && LEX[j][0]!==LEX[i][0]; });
+        var wrong=shuffle(same).slice(0,2);
+        if(wrong.length<2) wrong=wrong.concat(shuffle(other).slice(0,2-wrong.length));
+        return {i:i,opts:shuffle([i].concat(wrong))};
+      });
+      qi=0; score=0; draw();
+    }
+    function draw(){
+      if(qi>=Q.length){
+        if(score>best){ best=score; try{ localStorage.setItem('abuesa_eq_best',String(best)); }catch(_){} }
+        box.innerHTML='<div style="font-weight:800;font-size:1.1em;margin:10px 0;">Score : '+score+' / '+Q.length+'</div>'
+          +'<div style="opacity:.75;margin-bottom:10px;">Meilleur score : '+best+' / '+Q.length+'</div>'
+          +'<button type="button" id="eq-again" class="quiz-option" style="text-align:center;font-weight:600;">🔁 Rejouer</button>';
+        document.getElementById('eq-again').onclick=newRound; return;
+      }
+      var q=Q[qi], w=LEX[q.i];
+      box.innerHTML='<div style="opacity:.7;margin-top:10px;">Question '+(qi+1)+' / '+Q.length+' · '+esc(w[0])+'</div>'
+        +'<div data-no-i18n style="font-family:Fraunces,serif;font-weight:700;font-size:1.6em;color:var(--clay);margin:8px 0;">'+esc(w[2])+'</div>'
+        +'<div style="margin-bottom:8px;">Que veut dire ce mot ?</div>'
+        +q.opts.map(function(j,k){ return '<button type="button" class="quiz-option eq-opt" data-j="'+j+'">'+esc(LEX[j][1])+'</button>'; }).join('')
+        +'<div id="eq-after"></div>';
+    }
+    box.addEventListener('click',function(e){
+      var b=e.target.closest('.eq-opt'); if(!b||b.disabled) return;
+      var q=Q[qi], j=+b.getAttribute('data-j'), good=(j===q.i);
+      box.querySelectorAll('.eq-opt').forEach(function(x){ x.disabled=true; if(+x.getAttribute('data-j')===q.i) x.classList.add('correct'); });
+      if(good) score++; else b.classList.add('wrong');
+      var w=LEX[q.i];
+      var after=document.getElementById('eq-after');
+      after.innerHTML='<div style="margin:10px 0;font-weight:700;">'+(good?'✅ Bravo !':'❌ Pas tout à fait.')+' <span data-no-i18n>'+esc(w[2])+'</span> = '+esc(w[1])+'</div>'
+        +'<button type="button" id="eq-hear" class="quiz-option" style="text-align:center;">▶ Écouter</button>'
+        +'<button type="button" id="eq-next" class="quiz-option" style="text-align:center;font-weight:600;">'+(qi+1>=Q.length?'Voir mon score':'Question suivante →')+'</button>';
+      var h=document.getElementById('eq-hear'); h.__idle='▶ Écouter';
+      h.onclick=function(){ start(h,q.i,'⏸ En lecture…'); };
+      document.getElementById('eq-next').onclick=function(){ halt(); reset(); qi++; draw(); };
+      start(h,q.i,'⏸ En lecture…');
+    });
+    var det=document.getElementById('eq-details');
+    var started=false;
+    if(det) det.addEventListener('toggle',function(){ if(det.open&&!started){ started=true; newRound(); } });
+  })();
   /* ===== Mot du jour parlé : un mot du lexique de la voix d'Alexi, le même pour tous, qui change chaque jour ===== */
   (function(){
     var ok=[]; LEX.forEach(function(w,i){ if(w[3]!==null && !/^\d+$/.test(w[1])) ok.push(i); });
