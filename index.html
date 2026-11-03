@@ -1719,7 +1719,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.77 · 3 nov. 2026 (🌾 Ovazu : tout savoir · 🎓 formations et métiers)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.78 · 3 nov. 2026 (🗺️ la carte s'ouvre aussi depuis la barre du bas)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -3433,16 +3433,27 @@ async function loadWawaMap(map){
     }
   }catch(_){}
 }
-document.querySelector('[data-view="map-view"]').addEventListener('click', ()=>{
-  if(mapInitialized) return;
+/* v4.78 : la carte se lance dès que l'onglet Carte s'affiche, quel que soit le bouton
+   (barre du bas, « Visiter → » de l'accueil, recherche). Avant, seul « Visiter → » marchait. */
+let wawaMap = null;
+function initWawaMap(){
+  if(mapInitialized){ if(wawaMap) setTimeout(()=> wawaMap.invalidateSize(), 150); return; }
+  if(typeof L === 'undefined') return;
   mapInitialized = true;
   setTimeout(()=>{
-    const map = L.map('map', { zoomControl:false }).setView([7.53, 0.72], 10.3);
+    const map = wawaMap = L.map('map', { zoomControl:false }).setView([7.53, 0.72], 10.3);
     L.control.zoom({ position:'bottomright' }).addTo(map);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'&copy; OpenStreetMap' }).addTo(map);
     loadWawaMap(map);
   }, 150);
-});
+}
+(function(){
+  const view = document.getElementById('map-view');
+  if(!view) return;
+  new MutationObserver(()=>{ if(view.classList.contains('active')) initWawaMap(); })
+    .observe(view, { attributes:true, attributeFilter:['class'] });
+  if(view.classList.contains('active')) initWawaMap();
+})();
 
 /* ---------- Quiz ---------- */
 const QUIZ_LENGTH = 10;
