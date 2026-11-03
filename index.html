@@ -967,6 +967,8 @@
 
       <div id="home-ancien" style="margin:6px 16px 14px;"></div>
 
+      <div id="home-formations" style="margin:6px 16px 14px;"></div>
+
       <div id="home-3cards" style="display:grid;gap:10px;margin:6px 16px 14px;">
         <div class="home-card"><div class="home-card-text"><h3>🔊 Écoute ta langue</h3><p>Appuie sur ▶ et entends l'ikposso avec la voix d'Alexi.</p></div><button class="home-visit" id="home-open-phr" data-view="dict-view">Écouter →</button></div>
         <div class="home-card"><div class="home-card-text"><h3>🎧 Apprends et joue</h3><p>Le dictionnaire et le quiz d'écoute : 10 questions, un score à battre.</p></div><button class="home-visit" id="home-open-quiz" data-view="quiz-view">Jouer →</button></div>
@@ -1717,7 +1719,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.76 · 3 nov. 2026 (🍌 abidjo = banane plantain)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.77 · 3 nov. 2026 (🌾 Ovazu : tout savoir · 🎓 formations et métiers)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1946,6 +1948,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
     try{ if(typeof renderHomeParcours === 'function') renderHomeParcours(); }catch(_){}
     try{ if(typeof renderHomeArbre === 'function') renderHomeArbre(); }catch(_){}
     try{ if(typeof renderHomeAncien === 'function') renderHomeAncien(); }catch(_){}
+    try{ if(typeof renderHomeFormations === 'function') renderHomeFormations(); }catch(_){}
     try{ if(typeof renderHomeMarkets === 'function') renderHomeMarkets(); }catch(_){}
     run(document.body); applyUT(document);
     if(!silent && typeof showToast === 'function') showToast(l === 'en' ? 'Language: English' : 'Langue : Français');
@@ -5339,12 +5342,12 @@ function renderHomeOvazu(){
   const el = document.getElementById('home-ovazu');
   if(!el) return;
   const { o, dateStr } = ovazuTexts();
-  const when = o.days === 0 ? "C'est aujourd'hui !" : o.days === 1 ? 'Demain !' : 'Dans ' + o.days + ' jours';
+  const when = o.days === 0 ? "C'est aujourd'hui !" : o.days === 1 ? 'Demain !' : 'Dans environ ' + o.days + ' jours';
   el.innerHTML = `<div class="home-calendar-card">
     <div class="hc-label">🌾 Fête OVAZU</div>
     <div class="hc-day">${when}</div>
-    <div class="hc-note">Fête des moissons du fonio · 2e samedi de décembre</div>
-    <div class="hc-note" style="margin-top:2px;"><b>${dateStr}</b></div>
+    <div class="hc-note">Fête des moissons du fonio · en décembre (date officielle à confirmer)</div>
+    <div class="hc-note" style="margin-top:2px;">Vers le <b>${dateStr}</b></div>
     <button class="share-card-btn" onclick="shareOvazuCard()">📲 Partager la carte OVAZU</button>
   </div>`;
 }
@@ -8000,6 +8003,90 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     }).catch(function(){ if(navigator.share){ navigator.share({title:'Image créée avec ABUESA-IA',url:lastUrl}).catch(function(){}); } else { window.open(lastUrl,'_blank'); } });
   }
   btn.onclick=make;
+})();
+</script>
+<script>
+/* ===== OVAZU 2026 (page d'information) + FORMATIONS ET MÉTIERS (v4.77) ===== */
+(function(){
+  var NUM='22899619969';
+  function en(){ return !!(window.ABUESA_I18N && ABUESA_I18N.lang()==='en'); }
+  function T(fr,e){ return en()?e:fr; }
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function wa(t){ return 'https://wa.me/'+NUM+'?text='+encodeURIComponent(t); }
+  function lnk(u,l){ return '<a href="'+esc(u)+'" target="_blank" rel="noopener" style="color:var(--forest,#2F5233);font-weight:700;">'+esc(l)+'</a>'; }
+  var CARD='background:#fff;border:1px solid var(--line,#ddd);border-radius:14px;padding:12px 14px;margin-bottom:10px;line-height:1.45;';
+  function card(title,html){ return '<div style="'+CARD+'"><div style="font-weight:800;margin-bottom:4px;">'+title+'</div><div style="font-size:.95em;">'+html+'</div></div>'; }
+  function btn(u,l){ return '<a class="share-card-btn" style="display:block;text-align:center;text-decoration:none;margin:8px 0;" target="_blank" rel="noopener" href="'+esc(u)+'">'+l+'</a>'; }
+
+  var ovs={};
+  function overlay(id,title,build){
+    if(!ovs[id]){
+      var ov=document.createElement('div'); ov.id=id;
+      ov.style.cssText='position:fixed;inset:0;z-index:99995;background:var(--paper,#F7F3E8);color:#000;display:none;flex-direction:column;font-size:calc(17.5px * var(--fs,1.15));';
+      ov.innerHTML='<div style="padding:12px 16px;background:var(--citron,#C7D92E);display:flex;align-items:center;gap:10px;font-weight:800;"><span class="op-t" style="flex:1;"></span><button type="button" data-close="1" aria-label="Fermer" style="border:none;background:transparent;font-size:1.6em;line-height:1;padding:4px 8px;">✕</button></div><div class="op-b" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px 40px;max-width:560px;width:100%;margin:0 auto;box-sizing:border-box;"></div>';
+      ov.addEventListener('click',function(e){ if(e.target.closest('[data-close]')) ov.style.display='none'; });
+      document.body.appendChild(ov); ovs[id]=ov;
+    }
+    var o=ovs[id]; o.querySelector('.op-t').textContent=title; o.querySelector('.op-b').innerHTML=build(); o.style.display='flex'; o.querySelector('.op-b').scrollTop=0;
+  }
+
+  /* ---------- OVAZU : tout savoir ---------- */
+  window.openOvazuInfo=function(){
+    overlay('ov-ovazu','🌾 '+T('Tout savoir sur l’Ovazu','All about the Ovazu'),function(){
+      var h='';
+      h+=card('🌾 '+T('Qu’est-ce que c’est ?','What is it?'),T('La fête des peuples Akposso et Akébou, centrée sur le fonio, leur céréale principale. C’est une fête de retrouvailles, de fraternité et de cohésion sociale, avec la diaspora et des délégations du Ghana.','The festival of the Akposso and Akébou peoples, centred on fonio, their main grain. A celebration of reunion, brotherhood and social cohesion, with the diaspora and delegations from Ghana.'));
+      h+=card('📖 '+T('Son histoire','Its story'),T('Selon le comité d’organisation cité par la presse en 2013, le fonio servait autrefois de poudre à canon pour repousser les envahisseurs. Après les guerres, les Akposso et les Akébou ont décidé de se réunir chaque année autour de plats de fonio pour célébrer la paix.','According to the organising committee quoted in the press in 2013, fonio was once used as gunpowder to repel invaders. After the wars, the Akposso and Akébou decided to gather each year around fonio dishes to celebrate peace.'));
+      h+=card('🕯️ '+T('Ce qui se passe','What happens'),T('Libation et appel aux ancêtres, mise en scène de la culture du fonio, repas rituel, sortie des guerriers Assafo, musiques et danses, conférence-débat, et des actions sociales pour le village.','Libation and call to the ancestors, a staging of fonio farming, a ritual meal, the Assafo warriors, music and dances, a conference-debate, and social actions for the community.'));
+      h+=card('📍 '+T('Où et quand','Where and when'),T('En décembre, un samedi. La fête tourne entre <b>Amlamé</b>, <b>Badou</b> et <b>Kougnohou</b> : 2024 à Badou (43e édition), 2025 à Kougnohou (44e). <b>Lieu et date de 2026 : à confirmer</b> auprès de la préfecture ou du comité.','In December, on a Saturday. The festival rotates between <b>Amlamé</b>, <b>Badou</b> and <b>Kougnohou</b>: 2024 in Badou (43rd edition), 2025 in Kougnohou (44th). <b>Place and date for 2026: to be confirmed</b> with the prefecture or the committee.'));
+      h+=card('🌱 '+T('Ton fonio à l’Ovazu','Your fonio at the Ovazu'),T('Tu cultives du fonio ou du riz ? Écris à Alexi : on veut présenter les producteurs d’ici pendant la fête.','Do you grow fonio or rice? Write to Alexi: we want to introduce local producers during the festival.')+btn(wa('Bonjour Alexi, je cultive du fonio / du riz à ______ (village). Je voudrais être présenté pendant l’Ovazu.'),'💬 '+T('Je suis producteur','I am a producer')));
+      h+='<div style="font-size:.8em;opacity:.7;margin-top:6px;">'+T('Sources : presse togolaise (Le Temps 2013, ATOP 2024, République Togolaise 2025). Les dates et lieux officiels sont annoncés par le comité local.','Sources: Togolese press (Le Temps 2013, ATOP 2024, République Togolaise 2025). Official dates and places are announced by the local committee.')+'</div>';
+      h+='<button type="button" data-close="1" class="share-card-btn" style="width:100%;margin-top:14px;">'+T('Fermer','Close')+'</button>';
+      return h;
+    });
+  };
+  function addOvazuBtn(){
+    var el=document.getElementById('home-ovazu'); if(!el) return;
+    var c=el.querySelector('.home-calendar-card'); if(!c||c.querySelector('#ov-info-btn')) return;
+    var b=document.createElement('button'); b.type='button'; b.id='ov-info-btn'; b.className='share-card-btn'; b.style.marginLeft='6px'; b.textContent='ℹ️ '+T('Tout savoir','Learn more');
+    b.addEventListener('click',window.openOvazuInfo); c.appendChild(b);
+  }
+  if(typeof window.renderHomeOvazu==='function'){
+    var _r=window.renderHomeOvazu;
+    window.renderHomeOvazu=function(){ try{ _r.apply(this,arguments); }catch(_){} try{ addOvazuBtn(); }catch(_){} };
+    window.renderHomeOvazu();
+  }
+
+  /* ---------- FORMATIONS ET MÉTIERS ---------- */
+  window.openFormations=function(){
+    overlay('ov-form','🎓 '+T('Formations et métiers','Training and jobs'),function(){
+      var h='<div style="font-size:.95em;margin-bottom:12px;line-height:1.45;">'+T('Apprendre un métier sans quitter le pays. Vérifie toujours les conditions sur le site officiel avant de t’inscrire.','Learn a trade without leaving the country. Always check the conditions on the official site before signing up.')+'</div>';
+      h+=card('💻 SIFA Togo — '+T('gratuit','free'),T('Pour les jeunes Togolais de <b>18 à 35 ans</b>. Cours en ligne (développement web, marketing digital, design, assistanat virtuel, annotation de données) avec des centres à <b>Kpalimé</b> et <b>Atakpamé</b>. Inscription sur ','For young Togolese aged <b>18 to 35</b>. Online courses (web development, digital marketing, design, virtual assistance, data annotation) with centres in <b>Kpalimé</b> and <b>Atakpamé</b>. Sign up at ')+lnk('https://app.sayna.io','app.sayna.io'));
+      h+=card('🌱 FAIEJ — '+T('jeunes entrepreneurs','young entrepreneurs'),T('Formation en création d’entreprise, aide pour monter le dossier, garantie de prêts. Contact : info@faiej.tg · 22 25 39 39 (Lomé). Les montants ne sont pas publiés : demande-les.','Business-creation training, help with your file, loan guarantees. Contact: info@faiej.tg · 22 25 39 39 (Lomé). Amounts are not published: ask them.')+' '+lnk('https://www.faiej.tg','faiej.tg'));
+      h+=card('🏅 '+T('Fondation Tony Elumelu','Tony Elumelu Foundation'),T('Capital de départ de 5 000 $ (non remboursable) avec formation, ouvert aux jeunes entrepreneurs de 54 pays africains dont le Togo. Candidatures en début d’année (2026 : du 1er janvier au 1er mars). Prochaine ouverture : à surveiller sur ','Seed capital of $5,000 (non-refundable) with training, open to young entrepreneurs from 54 African countries including Togo. Applications early in the year (2026: 1 January to 1 March). Next opening: watch ')+lnk('https://www.tefconnect.com','TEFConnect'));
+      h+=card('🟠 Orange Digital Center & Coursera',T('Formations numériques gratuites et certifiantes (intelligence artificielle, marketing digital, entrepreneuriat). La langue et les conditions ne sont pas confirmées : cherche « Orange Digital Center » pour ton pays.','Free certified digital courses (artificial intelligence, digital marketing, entrepreneurship). Language and conditions are not confirmed: search “Orange Digital Center” for your country.'));
+      h+='<div style="font-weight:800;margin:14px 0 6px;">🛠️ '+T('Des métiers avec ABUESA','Jobs with ABUESA')+'</div>';
+      h+=card('🎙️ '+T('Ambassadeur de village','Village ambassador'),T('Enregistrer les anciens, aider les producteurs à publier leurs annonces. Payé si un financement arrive.','Record the elders, help producers publish their ads. Paid if funding comes.'));
+      h+=card('📷 '+T('Créateur d’images','Image maker'),T('Faire des affiches et des photos pour les vendeurs avec l’atelier d’ABUESA.','Make posters and photos for sellers with the ABUESA workshop.'));
+      h+=card('🌾 '+T('Vendre le fonio et le riz','Sell fonio and rice'),T('Présenter sa récolte, recevoir des commandes à l’avance.','Present your harvest, receive advance orders.'));
+      h+=card('🔋 '+T('Recharge solaire','Solar charging'),T('Un petit point de recharge de téléphones, tenu par un jeune. À étudier avec un partenaire solaire.','A small phone-charging point run by a young person. To be studied with a solar partner.'));
+      h+=card('🗣️ '+T('Données de la langue','Language data'),T('Écouter et écrire l’ikposso pour entraîner de futurs outils. Un métier possible, si un financement arrive.','Listen to and write Ikposso to train future tools. A possible job, if funding comes.'));
+      h+=btn(wa('Bonjour Alexi, je suis jeune à ______ (village). Je voudrais me former / travailler avec ABUESA-IA.'),'💬 '+T('Je veux me former ou travailler avec ABUESA','I want training or work with ABUESA'));
+      h+='<button type="button" data-close="1" class="share-card-btn" style="width:100%;margin-top:6px;">'+T('Fermer','Close')+'</button>';
+      return h;
+    });
+  };
+  window.renderHomeFormations=function(){
+    var el=document.getElementById('home-formations'); if(!el) return;
+    el.innerHTML='<div class="home-calendar-card"><div class="hc-label">🎓 '+T('Formations et métiers','Training and jobs')+'</div>'
+      +'<div class="hc-day">'+T('Apprendre, gagner sa vie, rester au pays','Learn, earn a living, stay home')+'</div>'
+      +'<div class="hc-note">'+T('Des formations gratuites pour les jeunes et des métiers autour d’ABUESA.','Free training for young people and jobs around ABUESA.')+'</div>'
+      +'<button type="button" class="share-card-btn" id="fm-open-home">🎓 '+T('Voir','See')+'</button></div>';
+    var b=document.getElementById('fm-open-home'); if(b) b.addEventListener('click',window.openFormations);
+  };
+  window.renderHomeFormations();
+  document.addEventListener('DOMContentLoaded',window.renderHomeFormations);
+  window.addEventListener('load',function(){ window.renderHomeFormations(); addOvazuBtn(); });
+  setTimeout(function(){ window.renderHomeFormations(); addOvazuBtn(); },1500);
 })();
 </script>
 <script>
