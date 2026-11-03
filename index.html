@@ -1717,7 +1717,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.71 · 3 nov. 2026 (📷 l'atelier crée de vraies images)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.72 · 3 nov. 2026 (📷 les images comprennent le fonio et les plats d'ici)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -7893,17 +7893,47 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   status.parentNode.insertBefore(box,status.nextSibling);
   var BAD=/(porn|sexe\b|sexuel|nu\b|nue\b|nudité|erotique|érotique|naked|nude|xxx|enfant.*(nu|sexy)|viol\b|suicide|bombe|arme à feu)/i;
   var last=0, lastUrl='', lastPrompt='', COOL=8000;
+  /* Le générateur d'images ne connaît pas bien les plats et choses d'Afrique de l'Ouest : on lui explique à quoi ils ressemblent. */
+  var GLOSS=[
+    [/fonio/ig,'fonio (fonio millet: tiny pale golden-beige grains, fluffy and steamed like couscous)'],
+    [/akoum[ée]|p[âa]te de ma[ïi]s/ig,'akoumé (smooth soft ball of maize dough, pale beige, West African staple)'],
+    [/foufou|fufu|igname pil[ée]e?/ig,'fufu (smooth stretchy white ball of pounded yam or cassava)'],
+    [/sauce graine/ig,'palm nut soup (rich orange-red soup)'],
+    [/gombo/ig,'okra'],
+    [/harico(?:ts?)?\b|haricots?/ig,'cooked beans'],
+    [/manioc/ig,'cassava'],
+    [/\bigname/ig,'yam'],
+    [/\bgari\b/ig,'gari (toasted cassava granules)']
+  ];
+  function gloss(v){ var o=v; GLOSS.forEach(function(g){ o=o.replace(g[0],g[1]); }); return o; }
+  function enrich(v){
+    var base=gloss(v);
+    return new Promise(function(ok){
+      var done=false, fin=function(t){ if(!done){ done=true; ok(t); } };
+      setTimeout(function(){ fin(base); },12000);
+      try{
+        var url=localStorage.getItem(STORE_KEYS.supabaseUrl)||DEFAULT_SUPABASE_URL;
+        var key=localStorage.getItem(STORE_KEYS.supabaseKey)||DEFAULT_SUPABASE_KEY;
+        var sys="Tu écris des descriptions pour un générateur de photos. Traduis la demande en anglais en une seule phrase très visuelle (sujet, plat ou objet exact, contenant, décor, lumière), sans rien inventer d'autre. Réponds UNIQUEMENT avec la phrase en anglais, sans guillemets ni explication. La demande contient déjà des précisions entre parenthèses sur les plats africains : respecte-les.";
+        fetch(url+'/functions/v1/smooth-task',{method:'POST',headers:{'Content-Type':'application/json','apikey':key,'Authorization':'Bearer '+key},body:JSON.stringify({messages:[{role:'system',content:sys},{role:'user',content:base}]})})
+        .then(function(r){ return r.ok?r.json():null; })
+        .then(function(d){ var t=d&&d.reply?String(d.reply).replace(/["\n]+/g,' ').trim():''; fin(t&&t.length>8&&t.length<600&&!/blocked/i.test(d.error||'')?t:base); })
+        .catch(function(){ fin(base); });
+      }catch(_){ fin(base); }
+    });
+  }
   function make(){
     var v=String(prompt.value||'').trim();
     if(v.length<4){ status.textContent='Décris l’image : par exemple « un bol de fonio fumant sur une natte, lumière du matin ».'; return; }
     if(BAD.test(v)){ status.textContent='Cette demande n’est pas autorisée.'; return; }
     var w=Math.ceil((last+COOL-Date.now())/1000); if(w>0){ status.textContent='Patiente '+w+' s 🙏'; return; }
     last=Date.now(); lastPrompt=v;
-    var full=v+', photographie réaliste, haute qualité, lumière naturelle, très détaillé';
-    var seed=Math.floor(Math.random()*1e6);
-    lastUrl='https://image.pollinations.ai/prompt/'+encodeURIComponent(full)+'?width=768&height=768&nologo=true&seed='+seed;
     status.textContent='⏳ Création de l’image… (10 à 40 secondes)'; btn.disabled=true;
     box.style.display='block'; box.innerHTML='';
+    enrich(v).then(function(en){
+    var full=en+', close-up realistic photograph, high quality, natural light, very detailed, appetizing if food';
+    var seed=Math.floor(Math.random()*1e6);
+    lastUrl='https://image.pollinations.ai/prompt/'+encodeURIComponent(full)+'?width=768&height=768&nologo=true&seed='+seed;
     var img=new Image(); img.alt=v; img.style.cssText='width:100%;max-width:520px;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.2);';
     img.onload=function(){
       btn.disabled=false; status.textContent='✅ Voilà ! Tu peux la refaire, la télécharger ou la partager.';
@@ -7920,6 +7950,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
       status.textContent='⚠ L’image n’a pas pu être créée (service occupé ou pas de connexion). Réessaie dans une minute.';
     };
     img.src=lastUrl;
+    });
   }
   function getBlob(){ return fetch(lastUrl).then(function(r){ if(!r.ok) throw 0; return r.blob(); }); }
   function dl(){
