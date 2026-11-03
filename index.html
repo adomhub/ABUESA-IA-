@@ -965,6 +965,8 @@
 
       <div id="home-arbre" style="margin:6px 16px 14px;"></div>
 
+      <div id="home-ancien" style="margin:6px 16px 14px;"></div>
+
       <div id="home-3cards" style="display:grid;gap:10px;margin:6px 16px 14px;">
         <div class="home-card"><div class="home-card-text"><h3>🔊 Écoute ta langue</h3><p>Appuie sur ▶ et entends l'ikposso avec la voix d'Alexi.</p></div><button class="home-visit" id="home-open-phr" data-view="dict-view">Écouter →</button></div>
         <div class="home-card"><div class="home-card-text"><h3>🎧 Apprends et joue</h3><p>Le dictionnaire et le quiz d'écoute : 10 questions, un score à battre.</p></div><button class="home-visit" id="home-open-quiz" data-view="quiz-view">Jouer →</button></div>
@@ -1715,7 +1717,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.68 · 2 nov. 2026 (🌳 Mon arbre de famille : tes proches et leurs noms en ikposso)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.69 · 3 nov. 2026 (🎙️ Enregistre un ancien : proverbes, contes et souvenirs en ikposso)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1943,6 +1945,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
     try{ if(typeof renderHomeCercles === 'function') renderHomeCercles(); }catch(_){}
     try{ if(typeof renderHomeParcours === 'function') renderHomeParcours(); }catch(_){}
     try{ if(typeof renderHomeArbre === 'function') renderHomeArbre(); }catch(_){}
+    try{ if(typeof renderHomeAncien === 'function') renderHomeAncien(); }catch(_){}
     try{ if(typeof renderHomeMarkets === 'function') renderHomeMarkets(); }catch(_){}
     run(document.body); applyUT(document);
     if(!silent && typeof showToast === 'function') showToast(l === 'en' ? 'Language: English' : 'Langue : Français');
@@ -7690,6 +7693,132 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   document.addEventListener('DOMContentLoaded', window.renderHomeArbre);
   window.addEventListener('load', window.renderHomeArbre);
   setTimeout(window.renderHomeArbre,1500);
+})();
+</script>
+<script>
+/* ===== ENREGISTRE UN ANCIEN (v4.69) : un proverbe, un conte, un souvenir en ikposso. L'enregistrement part vers Alexi (WhatsApp), qui vérifie avant tout ajout. ===== */
+(function(){
+  var NUM='22899619969', MAXS=120;
+  function en(){ return !!(window.ABUESA_I18N && ABUESA_I18N.lang()==='en'); }
+  function T(fr,e){ return en()?e:fr; }
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  var KINDS=[['proverbe','Proverbe','Proverb'],['conte','Conte','Tale'],['souvenir','Souvenir','Memory'],['chanson','Chanson','Song'],['mots','Mots ou phrases','Words or phrases']];
+
+  window.renderHomeAncien=function(){
+    var el=document.getElementById('home-ancien'); if(!el) return;
+    el.innerHTML='<div class="home-calendar-card">'
+      +'<div class="hc-label">🎙️ '+T('Enregistre un ancien','Record an elder')+'</div>'
+      +'<div class="hc-day">'+T('Sa voix, notre trésor','Their voice, our treasure')+'</div>'
+      +'<div class="hc-note">'+T('Un proverbe, un conte, un souvenir en ikposso. Alexi vérifie avant d’ajouter.','A proverb, a tale, a memory in Ikposso. Alexi checks before adding.')+'</div>'
+      +'<button type="button" class="share-card-btn" id="an-open-home">🎙️ '+T('Enregistrer','Record')+'</button>'
+      +'</div>';
+    var b=document.getElementById('an-open-home'); if(b) b.addEventListener('click', window.openAncien);
+  };
+
+  var ov=null, body=null, rec=null, stream=null, chunks=[], blob=null, mime='', tmr=null, secs=0, url=null;
+  function pickMime(){
+    var c=['audio/mp4','audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus'];
+    if(!window.MediaRecorder) return '';
+    for(var i=0;i<c.length;i++){ try{ if(MediaRecorder.isTypeSupported(c[i])) return c[i]; }catch(_){} }
+    return '';
+  }
+  function ext(m){ return /mp4/.test(m)?'m4a':(/ogg/.test(m)?'ogg':'webm'); }
+  function fmt(s){ var m=Math.floor(s/60), r=s%60; return m+':'+(r<10?'0':'')+r; }
+  function stopTracks(){ try{ if(stream) stream.getTracks().forEach(function(t){ t.stop(); }); }catch(_){} stream=null; }
+  function clearTimer(){ if(tmr){ clearInterval(tmr); tmr=null; } }
+  function reset(){ clearTimer(); stopTracks(); try{ if(rec&&rec.state!=='inactive') rec.stop(); }catch(_){} rec=null; chunks=[]; blob=null; secs=0; if(url){ try{ URL.revokeObjectURL(url); }catch(_){} url=null; } }
+
+  function draw(){
+    var h='';
+    h+='<div style="text-align:center;margin-bottom:12px;"><div style="font-size:2.2em;">🎙️</div>'
+      +'<div style="font-weight:800;font-size:1.15em;">'+T('Enregistre un ancien','Record an elder')+'</div></div>';
+    h+='<div style="background:#fff;border:1px solid var(--line,#ddd);border-radius:14px;padding:12px;margin-bottom:12px;font-size:.92em;line-height:1.45;">'
+      +'🤝 '+T('Demande d’abord la permission à la personne. Ce que tu enregistres est envoyé à Alexi, qui l’écoute et vérifie avant tout ajout à ABUESA-IA.','Ask the person for permission first. What you record is sent to Alexi, who listens and checks before anything is added to ABUESA-IA.')
+      +'</div>';
+    h+='<div style="font-weight:700;margin:8px 0 4px;">'+T('Qu’est-ce que c’est ?','What is it?')+'</div><select id="an-kind" style="width:100%;box-sizing:border-box;border:1px solid var(--line,#ccc);border-radius:10px;padding:10px;font:inherit;background:#fff;">';
+    KINDS.forEach(function(k){ h+='<option value="'+k[0]+'">'+esc(T(k[1],k[2]))+'</option>'; });
+    h+='</select>';
+    h+='<div style="font-weight:700;margin:12px 0 4px;">'+T('Qui parle ? (nom ou « grand-père de… »)','Who is speaking? (name or “grandfather of…”)')+'</div><input id="an-who" type="text" maxlength="80" style="width:100%;box-sizing:border-box;border:1px solid var(--line,#ccc);border-radius:10px;padding:10px;font:inherit;">';
+    h+='<div style="font-weight:700;margin:12px 0 4px;">'+T('Village','Village')+'</div><input id="an-vil" type="text" maxlength="60" style="width:100%;box-sizing:border-box;border:1px solid var(--line,#ccc);border-radius:10px;padding:10px;font:inherit;">';
+    h+='<div style="font-weight:700;margin:12px 0 4px;">'+T('Ce que ça veut dire, en français','What it means, in French')+'</div><textarea id="an-tr" rows="3" maxlength="500" style="width:100%;box-sizing:border-box;border:1px solid var(--line,#ccc);border-radius:10px;padding:10px;font:inherit;"></textarea>';
+    h+='<div id="an-rec" style="margin-top:16px;text-align:center;"></div>';
+    h+='<div id="an-msg" style="margin-top:10px;text-align:center;font-size:.92em;"></div>';
+    h+='<button type="button" data-act="close" class="share-card-btn" style="width:100%;margin-top:14px;">'+T('Fermer','Close')+'</button>';
+    body.innerHTML=h; body.scrollTop=0; drawRec();
+  }
+  function say(t){ var m=body&&body.querySelector('#an-msg'); if(m) m.innerHTML=t||''; }
+  function drawRec(){
+    var box=body.querySelector('#an-rec'); if(!box) return;
+    var supported=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder);
+    if(!supported){ box.innerHTML='<div class="hc-note">'+T('Ton navigateur ne peut pas enregistrer ici. Ouvre ABUESA-IA dans Chrome, ou envoie un message vocal WhatsApp à Alexi.','Your browser cannot record here. Open ABUESA-IA in Chrome, or send Alexi a WhatsApp voice message.')+'</div><a class="share-card-btn" style="display:inline-block;text-decoration:none;margin-top:8px;" target="_blank" rel="noopener" href="https://wa.me/'+NUM+'">💬 WhatsApp</a>'; return; }
+    if(rec&&rec.state==='recording'){
+      box.innerHTML='<div style="font-size:1.6em;font-weight:800;color:#B00020;" id="an-time">● '+fmt(secs)+'</div><button type="button" data-act="stop" class="share-card-btn" style="margin-top:8px;">⏹ '+T('Arrêter','Stop')+'</button>';
+    } else if(blob){
+      box.innerHTML='<audio controls src="'+url+'" style="width:100%;"></audio>'
+        +'<button type="button" data-act="send" class="share-card-btn" style="width:100%;margin-top:10px;">📤 '+T('Envoyer à Alexi','Send to Alexi')+'</button>'
+        +'<button type="button" data-act="again" class="share-card-btn" style="width:100%;margin-top:8px;">🔁 '+T('Recommencer','Record again')+'</button>';
+    } else {
+      box.innerHTML='<button type="button" data-act="start" class="share-card-btn" style="width:100%;font-size:1.1em;">⏺ '+T('Commencer l’enregistrement','Start recording')+'</button><div class="hc-note" style="margin-top:6px;">'+T('Maximum 2 minutes. Parle près du micro, dans un endroit calme.','Maximum 2 minutes. Speak close to the mic, in a quiet place.')+'</div>';
+    }
+  }
+  function start(){
+    say('');
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(s){
+      stream=s; mime=pickMime(); chunks=[]; blob=null;
+      try{ rec=mime?new MediaRecorder(s,{mimeType:mime}):new MediaRecorder(s); }catch(e){ stopTracks(); say(T('Impossible de démarrer l’enregistrement.','Could not start recording.')); return; }
+      mime=rec.mimeType||mime||'audio/webm';
+      rec.ondataavailable=function(e){ if(e.data&&e.data.size) chunks.push(e.data); };
+      rec.onstop=function(){
+        clearTimer(); stopTracks();
+        if(chunks.length){ blob=new Blob(chunks,{type:mime}); url=URL.createObjectURL(blob); }
+        drawRec();
+      };
+      secs=0; rec.start(); drawRec();
+      tmr=setInterval(function(){ secs++; var t=body.querySelector('#an-time'); if(t) t.textContent='● '+fmt(secs); if(secs>=MAXS) stop(); },1000);
+    }).catch(function(){ say(T('Le micro est refusé. Autorise le micro pour ce site dans les réglages de ton navigateur.','Microphone denied. Allow the mic for this site in your browser settings.')); });
+  }
+  function stop(){ try{ if(rec&&rec.state==='recording') rec.stop(); }catch(_){} }
+  function info(){
+    var g=function(id){ var e=body.querySelector(id); return e?String(e.value||'').trim():''; };
+    var k=g('#an-kind'), kl=k; KINDS.forEach(function(x){ if(x[0]===k) kl=x[1]; });
+    return '🎙️ ABUESA-IA — '+kl+'\n'+T('Qui parle : ','Speaker: ')+(g('#an-who')||'—')+'\n'+T('Village : ','Village: ')+(g('#an-vil')||'—')+'\n'+T('En français : ','In French: ')+(g('#an-tr')||'—')+'\n'+T('J’ai la permission de la personne.','I have the person’s permission.');
+  }
+  function send(){
+    if(!blob) return;
+    var txt=info(), name='abuesa-ancien-'+Date.now()+'.'+ext(mime), file=null;
+    try{ file=new File([blob],name,{type:mime}); }catch(_){}
+    if(file&&navigator.canShare&&navigator.canShare({files:[file]})&&navigator.share){
+      navigator.share({files:[file],text:txt,title:'ABUESA-IA'}).then(function(){ say('✅ '+T('Merci ! Choisis Alexi (ou le groupe) dans WhatsApp.','Thank you! Pick Alexi (or the group) in WhatsApp.')); }).catch(function(){});
+      return;
+    }
+    var a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
+    say(T('Ton téléphone a gardé l’enregistrement. Ouvre WhatsApp et envoie-le à Alexi avec ce message :','Your phone saved the recording. Open WhatsApp and send it to Alexi with this message:')
+      +'<br><a class="share-card-btn" style="display:inline-block;text-decoration:none;margin-top:8px;" target="_blank" rel="noopener" href="https://wa.me/'+NUM+'?text='+encodeURIComponent(txt)+'">💬 '+T('Ouvrir WhatsApp','Open WhatsApp')+'</a>');
+  }
+  function onClick(e){
+    var a=e.target.closest('[data-act]'); if(!a) return;
+    var act=a.getAttribute('data-act');
+    if(act==='close'){ reset(); ov.style.display='none'; return; }
+    if(act==='start') start();
+    else if(act==='stop') stop();
+    else if(act==='again'){ reset(); drawRec(); say(''); }
+    else if(act==='send') send();
+  }
+  function ensureOv(){
+    if(ov) return;
+    ov=document.createElement('div'); ov.id='an-ov';
+    ov.style.cssText='position:fixed;inset:0;z-index:99995;background:var(--paper,#F7F3E8);color:#000;display:none;flex-direction:column;font-size:calc(17.5px * var(--fs,1.15));';
+    ov.innerHTML='<div style="padding:12px 16px;background:var(--citron,#C7D92E);display:flex;align-items:center;gap:10px;font-weight:800;"><span style="flex:1;">🎙️ '+esc(T('Enregistre un ancien','Record an elder'))+'</span><button type="button" data-act="close" aria-label="Fermer" style="border:none;background:transparent;font-size:1.6em;line-height:1;padding:4px 8px;">✕</button></div>'
+      +'<div id="an-body" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px 40px;max-width:560px;width:100%;margin:0 auto;box-sizing:border-box;"></div>';
+    document.body.appendChild(ov);
+    body=ov.querySelector('#an-body');
+    ov.addEventListener('click',onClick);
+  }
+  window.openAncien=function(){ ensureOv(); reset(); ov.style.display='flex'; draw(); };
+  window.renderHomeAncien();
+  document.addEventListener('DOMContentLoaded', window.renderHomeAncien);
+  window.addEventListener('load', window.renderHomeAncien);
+  setTimeout(window.renderHomeAncien,1500);
 })();
 </script>
 <script>
