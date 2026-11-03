@@ -1717,7 +1717,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.74 · 3 nov. 2026 (🍲 akoumé = ēzu : premier mot de la catégorie Nourriture)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.75 · 3 nov. 2026 (📷 les images montrent aussi le lieu : salon, cuisine, village…)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -7947,7 +7947,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
       try{
         var url=localStorage.getItem(STORE_KEYS.supabaseUrl)||DEFAULT_SUPABASE_URL;
         var key=localStorage.getItem(STORE_KEYS.supabaseKey)||DEFAULT_SUPABASE_KEY;
-        var sys="Tu écris des descriptions pour un générateur de photos. Traduis la demande en anglais en une seule phrase très visuelle (sujet, plat ou objet exact, contenant, décor, lumière), sans rien inventer d'autre. Réponds UNIQUEMENT avec la phrase en anglais, sans guillemets ni explication. La demande contient déjà des précisions entre parenthèses sur les plats africains : respecte-les.";
+        var sys="Tu écris des descriptions pour un générateur de photos. Traduis la demande en anglais en une seule phrase très visuelle (sujet, plat ou objet exact, contenant, décor, lumière), sans rien inventer d'autre. Garde TOUS les éléments demandés, y compris le lieu et le décor (salon, cuisine, village, marché…) qui doivent rester bien visibles autour du sujet. Réponds UNIQUEMENT avec la phrase en anglais, sans guillemets ni explication. La demande contient déjà des précisions entre parenthèses sur les plats africains : respecte-les.";
         fetch(url+'/functions/v1/smooth-task',{method:'POST',headers:{'Content-Type':'application/json','apikey':key,'Authorization':'Bearer '+key},body:JSON.stringify({messages:[{role:'system',content:sys},{role:'user',content:base}]})})
         .then(function(r){ return r.ok?r.json():null; })
         .then(function(d){ var t=d&&d.reply?String(d.reply).replace(/["\n]+/g,' ').trim():''; fin(t&&t.length>8&&t.length<600&&!/blocked/i.test(d.error||'')?t:base); })
@@ -7964,7 +7964,8 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     status.textContent='⏳ Création de l’image… (10 à 40 secondes)'; btn.disabled=true;
     box.style.display='block'; box.innerHTML='';
     enrich(v).then(function(en){
-    var full=en+', close-up realistic photograph, high quality, natural light, very detailed, appetizing if food';
+    var scene=/salon|chambre|cuisine|maison|village|march[ée]|\bcase\b|cour\b|rue\b|jardin|d[ée]cor|paysage|pi[èe]ce|restaurant|table|famille|autour|living room|kitchen|house|street|garden|room/i.test(v);
+    var full=en+(scene?', wide shot showing the whole scene and its setting with the room or place clearly visible around the subject, realistic photograph, high quality, natural light, very detailed':', realistic photograph, high quality, natural light, very detailed, appetizing if food');
     var seed=Math.floor(Math.random()*1e6);
     lastUrl='https://image.pollinations.ai/prompt/'+encodeURIComponent(full)+'?width=768&height=768&nologo=true&seed='+seed;
     var img=new Image(); img.alt=v; img.style.cssText='width:100%;max-width:520px;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.2);';
