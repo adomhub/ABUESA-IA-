@@ -2,7 +2,10 @@
 // 1) Garde l'app en cache pour un fonctionnement hors-ligne (réseau d'abord, cache en secours)
 // 2) Reçoit les notifications push et ouvre l'app quand on touche la notification
 // Alexi : change le numéro de CACHE_NAME à chaque nouvelle version pour forcer la mise à jour.
-const CACHE_NAME = 'abuesa-v11';
+const CACHE_NAME = 'abuesa-v12';
+// v4.86 : les photos venant de Supabase sont gardées sur le téléphone (pour ne pas les retélécharger à chaque visite)
+const MEDIA_CACHE = 'abuesa-media-v1';
+const MEDIA_MAX = 150;
 const APP_SHELL = [
   './',
   './index.html',
@@ -21,7 +24,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+      Promise.all(keys.filter((k) => k !== CACHE_NAME && k !== MEDIA_CACHE).map((k) => caches.delete(k)))
     ).then(() => self.clients.claim())
   );
 });
@@ -31,7 +34,13 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  if (url.origin !== self.location.origin) return; // Supabase, Jitsi, etc. : on ne touche pas
+  // Photos publiques de Supabase (galerie, fil, partenaires) : cache d'abord. Une photo ne change jamais une fois envoyée.
+  if (url.hostname.endsWith('.supabase.co') && url.pathname.indexOf('/storage/v1/object/public/') !== -1
+      && req.destination === 'image' && !req.headers.has('range')) {
+    event.respondWith(mediaFirst(url.href, req));
+    return;
+  }
+  if (url.origin !== self.location.origin) return; // Supabase (données), Jitsi, etc. : on ne touche pas
   event.respondWith(
     fetch(req)
       .then((res) => {
@@ -75,3 +84,20 @@ self.addEventListener('notificationclick', (event) => {
     })
   );
 });
+
+async function mediaFirst(href, req) {
+  try {
+    const cache = await caches.open(MEDIA_CACHE);
+    const hit = await cache.match(href);
+    if (hit) return hit;
+    const res = await fetch(href, { mode: 'cors', credentials: 'omit' });
+    if (res && res.status === 200) {
+      await cache.put(href, res.clone());
+      const keys = await cache.keys();
+      if (keys.length > MEDIA_MAX) await Promise.all(keys.slice(0, keys.length - MEDIA_MAX).map((k) => cache.delete(k)));
+    }
+    return res;
+  } catch (e) {
+    return fetch(req);
+  }
+}

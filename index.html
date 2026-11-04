@@ -1726,7 +1726,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.85 · 4 nov. 2026 (🏆 gagnant(e) du mini-quiz)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.86 · 4 nov. 2026 (économie de données Supabase)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -4666,7 +4666,7 @@ function shrinkImage(file, maxSide){
       c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
       c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
       URL.revokeObjectURL(url);
-      c.toBlob(b => resolve(b || file), 'image/jpeg', 0.82);
+      c.toBlob(b => resolve(b || file), 'image/jpeg', 0.75);
     };
     img.onerror = ()=>{ URL.revokeObjectURL(url); resolve(file); };
     img.src = url;
@@ -5063,7 +5063,7 @@ function compressVideo(file, onProgress){
   });
 }
 
-function compressImage(file, maxDim = 1600, quality = 0.8){
+function compressImage(file, maxDim = 1280, quality = 0.75){
   return new Promise((resolve)=>{
     if(!file.type.startsWith('image')){ resolve(file); return; }
     const img = new Image();
@@ -5101,7 +5101,7 @@ function renderGalleryGrid(){
   const adminHint = isAdminUnlocked() ? '<div style="grid-column:1/-1;font-size:calc(17.5px * var(--fs,1.15));color:var(--clay);">🗑️ Admin : appui long sur une photo ou une vidéo pour la supprimer.</div>' : '';
   grid.innerHTML = adminHint + filtered.map(item=>{
     const media = item.media_type === 'video'
-      ? `<video src="${item.media_url}" controls muted playsinline></video>`
+      ? `<video src="${item.media_url}" controls muted playsinline preload="none" style="background:#1B4D2E;"></video>`
       : `<img src="${item.media_url}" alt="${item.caption || 'Photo ABUESA'}" loading="lazy">`;
     const badge = item.category ? `<span class="gi-badge">${item.category}</span>` : '';
     const lieuLine = item.lieu ? ` · 📍 ${item.lieu}` : '';
@@ -6545,7 +6545,7 @@ async function renderHomeFeed(){
   const cards = data.map(it=>{
     const when = new Date(it.created_at).toLocaleDateString(window.ABUESA_I18N ? ABUESA_I18N.locale() : 'fr-FR', { day:'numeric', month:'short' });
     const media = it.media_type === 'video'
-      ? `<video src="${escAll(it.media_url)}" controls muted playsinline preload="metadata" style="width:100%;max-height:320px;border-radius:10px;"></video>`
+      ? `<video src="${escAll(it.media_url)}" controls muted playsinline preload="none" style="width:100%;max-height:320px;border-radius:10px;background:#1B4D2E;min-height:160px;"></video>`
       : `<img src="${escAll(it.media_url)}" alt="" loading="lazy" style="width:100%;max-height:360px;object-fit:cover;border-radius:10px;">`;
     const who = [it.name || (en ? 'Anonymous' : 'Anonyme'), it.lieu ? '📍 ' + it.lieu : '', when].filter(Boolean).map(escAll).join(' · ');
     return `<div class="hc-day" style="margin-top:12px;">
@@ -6809,7 +6809,7 @@ async function loadHomeFeatured(){
   if(error || !data || data.length===0) return;
   const item = data[0];
   const media = item.media_type === 'video'
-    ? `<video src="${item.media_url}" muted playsinline></video>`
+    ? `<div style="display:flex;align-items:center;justify-content:center;min-height:160px;background:#1B4D2E;color:#fff;font-size:calc(20px * var(--fs,1.15));font-weight:800;border-radius:12px 12px 0 0;">🎥 ▶</div>`
     : `<img src="${item.media_url}" alt="${item.caption || 'Activité récente'}" loading="lazy">`;
   const lieuLine = item.lieu ? ` · 📍 ${item.lieu}` : '';
   el.innerHTML = `<div class="home-featured-card" id="home-featured-click">
@@ -7039,7 +7039,7 @@ function renderCommunityMessage(msg){
   const name = msg.name ? escapeHtmlSafe(msg.name) : 'Anonyme';
   const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString(window.ABUESA_I18N ? ABUESA_I18N.locale() : 'fr-FR', {hour:'2-digit', minute:'2-digit'}) : '';
   const body = msg.kind === 'audio'
-    ? `<audio controls src="${msg.audio_url}" style="width:100%;margin-top:3px;"></audio>`
+    ? `<audio controls preload="none" src="${msg.audio_url}" style="width:100%;margin-top:3px;"></audio>`
     : `<div style="font-size:calc(17.5px * var(--fs,1.15));color:var(--ink);margin-top:2px;">${escapeHtmlSafe(msg.content)}</div>`;
   div.innerHTML = `<div style="font-size:calc(17.5px * var(--fs,1.15));color:var(--gold);font-weight:700;">${name} <span style="color:var(--ink-soft);font-weight:400;">· ${time}</span></div>${body}`;
   if(!(typeof isAdminUnlocked==='function' && isAdminUnlocked())){
