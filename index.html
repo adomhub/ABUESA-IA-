@@ -973,6 +973,8 @@
 
       <div id="home-studio" style="margin:6px 16px 14px;"></div>
 
+      <div id="home-projet" style="margin:6px 16px 14px;"></div>
+
       <div id="home-3cards" style="display:grid;gap:10px;margin:6px 16px 14px;">
         <div class="home-card"><div class="home-card-text"><h3>🔊 Écoute ta langue</h3><p>Appuie sur ▶ et entends l'ikposso avec la voix d'Alexi.</p></div><button class="home-visit" id="home-open-phr" data-view="dict-view">Écouter →</button></div>
         <div class="home-card"><div class="home-card-text"><h3>🎧 Apprends et joue</h3><p>Le dictionnaire et le quiz d'écoute : 10 questions, un score à battre.</p></div><button class="home-visit" id="home-open-quiz" data-view="quiz-view">Jouer →</button></div>
@@ -1722,7 +1724,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.81 · 4 nov. 2026 (🏠 Maison de création · 🎙️ Voix akposso en une seule case)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.82 · 4 nov. 2026 (📁 Projet pour la région des Plateaux, accès par code)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -8600,6 +8602,74 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   window.renderHomeStudio();
   window.addEventListener('load',window.renderHomeStudio);
   window.abuesaGuessCreate=guess;
+})();
+</script>
+<script>
+/* ===== PROJET POUR LA RÉGION DES PLATEAUX (v4.82) : espace réservé. Les liens des documents sont chiffrés
+   avec le code d'accès (AES-GCM, clé tirée du code par PBKDF2) : sans le code, ils ne se lisent pas, même dans le code source. ===== */
+(function(){
+  var NUM='22899619969', BLOB={"s":"dzJ7pJYCf84kz9876pusww==","i":"OnTPxRifW1R8kqh5","c":"YQOQlslvo4i2inMphS3afdV1ifs1Kv9E89/JK1MoW0cuB/wButpGFxIp5taDQYTIQ6zkb4E2+3EdCsHNpda8IlKST0msqA5X50fsjLjIcHVM+pYyzUDG0f1t9BMcVJIAmgLqN6sSQklDCAlpKTddXDI5xXhcTW4YaG6Ufn3jwIuT8dom2H8MMREKpXUh/OetBULmpR20RZLFj8N4Xmu3AkSghHnO4hGdwuSdrfrBBl8wQhcSIKZ59jhfc9y4E7f1jRcJRGeOSHgXXW5n3aKmCzzzchJhPCTBwa/hmOxjsrkQs69yc7XiXnG4D6BIdNJN3DHNfaB1hDtF0TAK38Sa6h6a2WBDJVO1LH2e9gxscSedJxw+tsnVEzJR4R1HtdxZs2s9Xc+9stlQei7DvmgKFO2FIaYpbkd3M7FxMA+HIO8mGSyTVOGaA/bummga3/JArSjKTxbHeilSwl/+Y3AFzYpC/uq7F2HjyuaA4vqcQ1vIWXTEaqGZPPS8Zmhjy8cRsuBipDwuaghsahXmpsnHWW96eikLBr6Y6LgLjEBzFu7qg2JFa8dUViYfF20zdnA3XHoA2I3Q+g21WP0CwBk0"}, OK='abuesa_projet_ok';
+  function en(){ return !!(window.ABUESA_I18N && ABUESA_I18N.lang()==='en'); }
+  function T(fr,e){ return en()?e:fr; }
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function b64(s){ var r=atob(s), a=new Uint8Array(r.length); for(var i=0;i<r.length;i++) a[i]=r.charCodeAt(i); return a; }
+  async function open(code){
+    var base=await crypto.subtle.importKey('raw',new TextEncoder().encode(code),'PBKDF2',false,['deriveKey']);
+    var key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(BLOB.s),iterations:150000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+    var pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(BLOB.i)},key,b64(BLOB.c));
+    return JSON.parse(new TextDecoder().decode(pt));
+  }
+  var ov=null;
+  function shell(){
+    if(ov) return ov;
+    ov=document.createElement('div'); ov.id='ov-projet';
+    ov.style.cssText='position:fixed;inset:0;z-index:99995;background:var(--paper,#F7F3E8);color:#000;display:none;flex-direction:column;font-size:calc(17.5px * var(--fs,1.15));';
+    ov.innerHTML='<div style="padding:12px 16px;background:var(--citron,#C7D92E);display:flex;align-items:center;gap:10px;font-weight:800;"><span style="flex:1;">📁 '+T('Projet pour la région des Plateaux','Project for the Plateaux region')+'</span><button type="button" data-close="1" aria-label="Fermer" style="border:none;background:transparent;font-size:1.6em;line-height:1;padding:4px 8px;">✕</button></div><div class="pj-b" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 40px;"></div>';
+    ov.addEventListener('click',function(e){ if(e.target.closest('[data-close]')) ov.style.display='none'; });
+    document.body.appendChild(ov); return ov;
+  }
+  var CARD='background:#fff;border:1px solid var(--line,#ddd);border-radius:14px;padding:12px 14px;margin-bottom:10px;line-height:1.45;';
+  function showLocked(msg){
+    var b=shell().querySelector('.pj-b');
+    var wa='https://wa.me/'+NUM+'?text='+encodeURIComponent('Bonjour Alexi, je voudrais accéder au Projet pour la région des Plateaux sur ABUESA-IA.');
+    b.innerHTML='<div style="text-align:center;margin:10px 0 16px;"><div style="font-size:2.6em;">🔒</div><div style="font-weight:800;font-size:1.2em;margin-top:6px;">'+T('CONTACTEZ ALEXI POUR ACCÉDER À CE PROJET.','CONTACT ALEXI TO ACCESS THIS PROJECT.')+'</div></div>'
+      +'<a class="share-card-btn" style="display:block;text-align:center;text-decoration:none;" target="_blank" rel="noopener" href="'+wa+'">💬 '+T('Écrire à Alexi sur WhatsApp','Write to Alexi on WhatsApp')+'</a>'
+      +'<div style="'+CARD+'margin-top:18px;"><div style="font-weight:700;margin-bottom:6px;">'+T('Tu as reçu un code d’accès ?','Did you receive an access code?')+'</div>'
+      +'<input id="pj-code" type="password" autocomplete="off" placeholder="'+esc(T('Code d’accès','Access code'))+'" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid #ccc;font-size:inherit;font-family:inherit;">'
+      +'<button type="button" id="pj-go" class="share-card-btn" style="width:100%;margin-top:8px;">🔓 '+T('Ouvrir','Open')+'</button><div id="pj-msg" style="margin-top:8px;color:#B00020;">'+(msg||'')+'</div></div>';
+    var go=b.querySelector('#pj-go'), inp=b.querySelector('#pj-code');
+    var run=async function(){
+      var code=String(inp.value||'').trim().replace(/[.,;:\s]+$/,'');
+      if(!code){ b.querySelector('#pj-msg').textContent=T('Écris le code.','Enter the code.'); return; }
+      go.disabled=true; b.querySelector('#pj-msg').textContent='⏳';
+      try{ var docs=await open(code); try{ sessionStorage.setItem(OK,code); }catch(_){} showDocs(docs); }
+      catch(_){ go.disabled=false; b.querySelector('#pj-msg').textContent=T('Code incorrect.','Incorrect code.'); }
+    };
+    go.onclick=run; inp.addEventListener('keydown',function(e){ if(e.key==='Enter') run(); });
+  }
+  function showDocs(docs){
+    var b=shell().querySelector('.pj-b');
+    b.innerHTML='<div style="margin-bottom:12px;">'+T('Les documents du projet des jeunes de Wawa et de la région des Plateaux.','The documents of the Wawa and Plateaux region youth project.')+'</div>'
+      +docs.map(function(d){ return '<a href="'+esc(d.u)+'" target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit;'+CARD+'"><div style="font-weight:800;">📄 '+esc(d.t)+'</div><div style="font-size:.92em;margin-top:4px;">'+esc(d.d)+'</div><div style="margin-top:6px;font-weight:700;color:var(--forest,#2F5233);">'+T('Ouvrir le document →','Open the document →')+'</div></a>'; }).join('')
+      +'<button type="button" id="pj-lock" class="share-card-btn" style="width:100%;margin-top:10px;">🔒 '+T('Fermer l’accès sur ce téléphone','Lock access on this phone')+'</button>';
+    b.querySelector('#pj-lock').onclick=function(){ try{ sessionStorage.removeItem(OK); }catch(_){} showLocked(''); };
+  }
+  window.openProjetPlateaux=async function(){
+    shell().style.display='flex';
+    var saved=''; try{ saved=sessionStorage.getItem(OK)||''; }catch(_){}
+    if(saved){ try{ showDocs(await open(saved)); return; }catch(_){} }
+    showLocked('');
+  };
+  window.renderHomeProjet=function(){
+    var el=document.getElementById('home-projet'); if(!el) return;
+    el.innerHTML='<div class="home-calendar-card"><div class="hc-label">📁 '+T('Projet pour la région des Plateaux','Project for the Plateaux region')+'</div>'
+      +'<div class="hc-day">'+T('Jeunes de Wawa, produits de Wawa','Wawa youth, Wawa products')+'</div>'
+      +'<div class="hc-note">🔒 '+T('Espace réservé : les documents du projet.','Restricted area: the project documents.')+'</div>'
+      +'<button type="button" class="share-card-btn" id="pj-open-home">'+T('Visiter →','Visit →')+'</button></div>';
+    var bt=document.getElementById('pj-open-home'); if(bt) bt.addEventListener('click',window.openProjetPlateaux);
+  };
+  window.renderHomeProjet();
+  window.addEventListener('load',window.renderHomeProjet);
 })();
 </script>
 <script>
