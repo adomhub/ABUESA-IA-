@@ -486,7 +486,7 @@
     font-size:calc(17.5px * var(--fs,1.15));
     background:var(--paper);
   }
-  .modal-sheet .save-btn{
+  #ov-studio .save-btn, #home-studio .save-btn, .modal-sheet .save-btn{
     width:100%;
     background:var(--clay);
     color:var(--white);
@@ -967,6 +967,8 @@
 
       <div id="home-ancien" style="margin:6px 16px 14px;"></div>
 
+      <div id="home-voix" style="margin:6px 16px 14px;"></div>
+
       <div id="home-formations" style="margin:6px 16px 14px;"></div>
 
       <div id="home-studio" style="margin:6px 16px 14px;"></div>
@@ -990,7 +992,6 @@
 
       <div id="home-akkeys"></div>
 
-      <div id="home-voix"></div>
 
       <div id="home-song">
         <div class="home-calendar-card">
@@ -1079,7 +1080,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
         </div>
       </div>
 
-      <div id="home-atelier">
+      <div id="home-atelier" style="display:none;">
         <div class="home-calendar-card">
           <div class="hc-label">🛠️ Atelier ABUESA</div>
           <div class="hc-note">Décris ce que tu veux en quelques mots (application, jeu, site, affiche, animation, musique…) : ABUESA-IA le crée pour toi. Tu le testes, tu le modifies, tu le télécharges.</div>
@@ -1586,7 +1587,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
   <div id="atelier-modal">
     <div class="modal-sheet">
       <div class="close-row"><button id="close-atelier">×</button></div>
-      <h3 class="serif">🛠️ Atelier de création</h3>
+      <h3 class="serif">🏠 Maison de création · 📱 🖼️</h3>
       <p class="section-desc" style="margin-top:-6px;">Demande tout ce que tu veux : application, jeu, site, affiche, document, animation, musique… <span id="at-left"></span></p>
       <textarea id="at-prompt" rows="3" placeholder="Décris ce que tu veux créer..."></textarea>
       <div class="at-row" id="at-examples"></div>
@@ -1721,7 +1722,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.80 · 4 nov. 2026 (🗺️ carte de la région des Plateaux · 🎬 Studio ABUESA)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.81 · 4 nov. 2026 (🏠 Maison de création · 🎙️ Voix akposso en une seule case)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -6053,13 +6054,17 @@ function renderHomeVoix(){
     </div>`;
   }).join('');
   el.innerHTML = `<div class="home-calendar-card">
-    <div class="hc-label">🎙️ Banque vocale ikposso</div>
-    <div class="hc-note">Écoute la langue des anciens, et garde-la en enregistrant un mot ou une phrase. Chaque voix est enregistrée avec l’accord de la personne et validée avant d’être publiée.</div>
-    ${list}
-    <button type="button" class="share-card-btn" id="voix-open">🎤 Enregistrer un mot ou une phrase</button>
+    <div class="hc-label">🎙️ Voix akposso</div>
+    <div class="hc-day">Sa voix, notre trésor</div>
+    <div class="hc-note">Garde la langue vivante. Qui va parler ? Chaque voix est enregistrée avec l’accord de la personne et vérifiée par Alexi avant d’être publiée.</div>
+    <button type="button" class="share-card-btn" id="voix-open" style="width:100%;">🗣️ Je dis un mot ou une phrase</button>
+    <button type="button" class="share-card-btn" id="voix-ancien" style="width:100%;">👴🏾 J’enregistre un ancien (proverbe, conte, souvenir, chant)</button>
+    ${list ? '<div class="hc-label" style="margin-top:12px;">🔊 Déjà enregistrés</div>' + list : ''}
   </div>`;
   const b = document.getElementById('voix-open');
   if(b) b.addEventListener('click', ()=> document.getElementById('voix-modal').classList.add('active'));
+  const b2 = document.getElementById('voix-ancien');
+  if(b2) b2.addEventListener('click', ()=>{ if(typeof window.openAncien==='function') window.openAncien(); });
 }
 renderHomeVoix();
 fetchCloudVoix().then(renderHomeVoix);
@@ -7861,6 +7866,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
 
   window.renderHomeAncien=function(){
     var el=document.getElementById('home-ancien'); if(!el) return;
+    el.innerHTML=''; el.style.display='none'; return; /* v4.81 : fusionné dans la case « 🎙️ Voix akposso » */
     el.innerHTML='<div class="home-calendar-card">'
       +'<div class="hc-label">🎙️ '+T('Enregistre un ancien','Record an elder')+'</div>'
       +'<div class="hc-day">'+T('Sa voix, notre trésor','Their voice, our treasure')+'</div>'
@@ -8525,7 +8531,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     if(!ov){
       ov=document.createElement('div'); ov.id='ov-studio';
       ov.style.cssText='position:fixed;inset:0;z-index:99995;background:var(--paper,#F7F3E8);color:#000;display:none;flex-direction:column;font-size:calc(17.5px * var(--fs,1.15));';
-      ov.innerHTML='<div style="padding:12px 16px;background:var(--citron,#C7D92E);display:flex;align-items:center;gap:10px;font-weight:800;"><span style="flex:1;">🎬 Studio ABUESA</span><button type="button" data-close="1" aria-label="Fermer" style="border:none;background:transparent;font-size:1.6em;line-height:1;padding:4px 8px;">✕</button></div><div class="st-b" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px 40px;"></div>';
+      ov.innerHTML='<div style="padding:12px 16px;background:var(--citron,#C7D92E);display:flex;align-items:center;gap:10px;font-weight:800;"><span style="flex:1;">🏠 Maison de création</span><button type="button" data-close="1" aria-label="Fermer" style="border:none;background:transparent;font-size:1.6em;line-height:1;padding:4px 8px;">✕</button></div><div class="st-b" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px 40px;"></div>';
       document.body.appendChild(ov);
       ov.querySelector('.st-b').innerHTML=build();
       ov.addEventListener('click',function(e){
@@ -8544,16 +8550,56 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     }
     ov.style.display='flex'; setTab(tab||'ideas');
   };
+  /* ===== 🏠 MAISON DE CRÉATION (v4.81) : une seule case, ABUESA-IA comprend la demande et livre (Atelier + Studio réunis) ===== */
+  function guess(t){
+    var x=String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+    if(/\bfilm|\bconte|histoire|recit|dessin anime|legende/.test(x)) return 'film';
+    if(/\bvideo|\bclip|\bstatut|diaporama|tiktok/.test(x)) return 'video';
+    if(/appli|\bapp\b|\bjeu\b|\bjeux\b|site web|\bsite\b|calculat|outil|logiciel|programme|\bquiz/.test(x)) return 'app';
+    if(/image|photo|affiche|dessin|\blogo|portrait|illustration|flyer|tableau/.test(x)) return 'image';
+    if(/\bidee|gagner|argent|business|service|projet|metier|commerce|vendre|revenu/.test(x)) return 'ideas';
+    return '';
+  }
+  function deliver(kind,txt){
+    var st=document.getElementById('mc-st'); if(st) st.textContent='';
+    if(kind==='app'||kind==='image'){
+      var m=document.getElementById('atelier-modal'), op=document.getElementById('open-atelier');
+      if(op) op.click(); else if(m) m.classList.add('active');
+      var pr=document.getElementById('at-prompt'); if(pr&&txt) pr.value=txt;
+      if(txt){ var go=document.getElementById(kind==='image'?'at-photo-go':'at-go'); if(go) setTimeout(function(){ go.click(); },200); }
+      return;
+    }
+    window.openStudio(kind);
+    var map={ideas:'st-idea-txt',video:'st-vid-txt',film:'st-film-txt'}, btn={ideas:'st-idea-go',video:'st-vid-go',film:'st-film-go'};
+    if(txt){ var f=document.getElementById(map[kind]); if(f) f.value=txt; var g=document.getElementById(btn[kind]); if(g) setTimeout(function(){ g.click(); },200); }
+  }
   window.renderHomeStudio=function(){
     var el=document.getElementById('home-studio'); if(!el) return;
-    el.innerHTML='<div class="home-calendar-card"><div class="hc-label">🎬 Studio ABUESA</div>'
-      +'<div class="hc-day">'+T('Crée tes idées, tes vidéos et tes films','Create your ideas, videos and films')+'</div>'
-      +'<div class="hc-note">'+T('Des idées de services pour gagner ta vie, des vidéos pour ton statut, des contes en film.','Business ideas to earn a living, videos for your status, tales as films.')+'</div>'
-      +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;"><button type="button" class="share-card-btn" data-st="ideas">💡 '+T('Idées','Ideas')+'</button><button type="button" class="share-card-btn" data-st="video">🎬 '+T('Vidéo','Video')+'</button><button type="button" class="share-card-btn" data-st="film">🎥 Film</button></div></div>';
-    el.querySelectorAll('[data-st]').forEach(function(b){ b.addEventListener('click',function(){ window.openStudio(b.dataset.st); }); });
+    if(el.querySelector('#mc-txt')) return;
+    var at=document.getElementById('home-atelier'); if(at) at.style.display='none';
+    var sc=[['ideas','💡',T('Idée','Idea')],['image','🖼️','Image'],['video','🎬',T('Vidéo','Video')],['film','🎥','Film'],['app','📱','Application']];
+    el.innerHTML='<div class="home-calendar-card"><div class="hc-label">🏠 '+T('Maison de création','Creation house')+'</div>'
+      +'<div class="hc-day">'+T('Qu’est-ce que tu veux créer ?','What do you want to create?')+'</div>'
+      +'<div class="hc-note">'+T('Écris ta demande : ABUESA-IA comprend et te livre une idée, une image, une vidéo, un film ou une application.','Write your request: ABUESA-IA understands and delivers an idea, an image, a video, a film or an app.')+'</div>'
+      +'<textarea id="mc-txt" rows="2" placeholder="'+esc(T('Ex : une vidéo du marché de Badou · le conte de la souris en film · une image de fonio','E.g. a video of Badou market · the mouse tale as a film · an image of fonio'))+'" style="width:100%;box-sizing:border-box;margin-top:8px;font-size:inherit;font-family:inherit;border-radius:10px;border:1px solid #ccc;padding:8px;"></textarea>'
+      +'<button type="button" class="save-btn" id="mc-go" style="width:100%;margin-top:6px;">✨ '+T('Créer','Create')+'</button>'
+      +'<div id="mc-st" style="margin:6px 0;font-weight:600;"></div>'
+      +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">'+sc.map(function(c){ return '<button type="button" class="share-card-btn" data-mc="'+c[0]+'" style="margin-top:0;">'+c[1]+' '+c[2]+'</button>'; }).join('')+'</div></div>';
+    document.getElementById('mc-go').onclick=function(){
+      var t=document.getElementById('mc-txt').value.trim();
+      if(t.length<4){ document.getElementById('mc-st').textContent=T('Écris ce que tu veux créer, ou touche un raccourci.','Write what you want to create, or tap a shortcut.'); return; }
+      var k=guess(t);
+      if(!k){ document.getElementById('mc-st').textContent=T('Je n’ai pas compris le type. Touche ce que tu veux : 👇','I did not understand the type. Tap what you want: 👇'); el.dataset.pending=t; return; }
+      deliver(k,t);
+    };
+    el.querySelectorAll('[data-mc]').forEach(function(b){ b.addEventListener('click',function(){
+      var t=el.dataset.pending||document.getElementById('mc-txt').value.trim(); el.dataset.pending='';
+      deliver(b.dataset.mc,t.length>=4?t:'');
+    }); });
   };
   window.renderHomeStudio();
   window.addEventListener('load',window.renderHomeStudio);
+  window.abuesaGuessCreate=guess;
 })();
 </script>
 <script>
