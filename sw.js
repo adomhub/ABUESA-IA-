@@ -2,7 +2,7 @@
 // 1) Garde l'app en cache pour un fonctionnement hors-ligne (réseau d'abord, cache en secours)
 // 2) Reçoit les notifications push et ouvre l'app quand on touche la notification
 // Alexi : change le numéro de CACHE_NAME à chaque nouvelle version pour forcer la mise à jour.
-const CACHE_NAME = 'abuesa-v5';
+const CACHE_NAME = 'abuesa-v6';
 const APP_SHELL = [
   './',
   './index.html',
