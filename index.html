@@ -969,6 +969,8 @@
 
       <div id="home-formations" style="margin:6px 16px 14px;"></div>
 
+      <div id="home-studio" style="margin:6px 16px 14px;"></div>
+
       <div id="home-3cards" style="display:grid;gap:10px;margin:6px 16px 14px;">
         <div class="home-card"><div class="home-card-text"><h3>🔊 Écoute ta langue</h3><p>Appuie sur ▶ et entends l'ikposso avec la voix d'Alexi.</p></div><button class="home-visit" id="home-open-phr" data-view="dict-view">Écouter →</button></div>
         <div class="home-card"><div class="home-card-text"><h3>🎧 Apprends et joue</h3><p>Le dictionnaire et le quiz d'écoute : 10 questions, un score à battre.</p></div><button class="home-visit" id="home-open-quiz" data-view="quiz-view">Jouer →</button></div>
@@ -1719,7 +1721,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.78 · 3 nov. 2026 (🗺️ la carte s'ouvre aussi depuis la barre du bas)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.79 · 3 nov. 2026 (🎬 Studio ABUESA : idées, vidéos, films · 🗺️ carte réparée)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -8098,6 +8100,321 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   document.addEventListener('DOMContentLoaded',window.renderHomeFormations);
   window.addEventListener('load',function(){ window.renderHomeFormations(); addOvazuBtn(); });
   setTimeout(function(){ window.renderHomeFormations(); addOvazuBtn(); },1500);
+})();
+</script>
+<script>
+/* ===== STUDIO ABUESA (v4.79) : 💡 idées et services · 🎬 vidéo diaporama · 🎥 film en scènes.
+   Texte : fonction Supabase smooth-task. Images : Pollinations (gratuit). Vidéo : fabriquée DANS le téléphone (canvas + MediaRecorder). ===== */
+(function(){
+  function en(){ return !!(window.ABUESA_I18N && ABUESA_I18N.lang()==='en'); }
+  function T(fr,e){ return en()?e:fr; }
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function $(id){ return document.getElementById(id); }
+  var BAD=/(porn|sexe\b|sexuel|nu\b|nue\b|nudité|erotique|érotique|naked|nude|xxx|viol\b|suicide|bombe|arme à feu)/i;
+  var CONTE_SOURIS="Il était une fois, la souris et l'arachide étaient de bons amis. Elles se sont dit de faire de l'entraide pour faire le champ. Le jour est arrivé. Puis l'arachide est allée dans le champ de la souris. Avant d'arriver dans le champ de la souris elles devaient traverser la rivière. Elles ont bien travaillé, mais ce jour-là il avait plu. Le soir est arrivé et elles sont retournées au village, alors que la rivière était pleine. La souris a sauté et a traversé la rivière. L'arachide aussi a sauté, et quelque chose a remué dans son ventre. La souris a demandé : « C'est quoi qui a remué dans ton ventre ? » L'arachide a répondu : « C'est l'eau que nous avons bue dans le champ. » Elles ont continué le chemin et l'arachide est tombée. La souris a entendu quelque chose remuer. Elle a attrapé l'arachide, l'a tuée et partagée en deux, a vu les graines dedans et les a mangées. Arrivée au village, elle a dit à la femme de l'arachide que son mari s'était noyé dans la rivière. Morale des anciens : on ne peut pas être ami et se cacher des choses.";
+
+  /* ---------- appel à l'IA (texte) ---------- */
+  var lastAsk=0;
+  async function ask(sys,user){
+    var w=Math.ceil((lastAsk+6000-Date.now())/1000); if(w>0) throw new Error(T('Patiente ','Wait ')+w+' s 🙏');
+    lastAsk=Date.now();
+    var url=localStorage.getItem(STORE_KEYS.supabaseUrl)||DEFAULT_SUPABASE_URL;
+    var key=localStorage.getItem(STORE_KEYS.supabaseKey)||DEFAULT_SUPABASE_KEY;
+    var ctl=new AbortController(), tm=setTimeout(function(){ ctl.abort(); },90000);
+    try{
+      var r=await fetch(url+'/functions/v1/smooth-task',{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','apikey':key,'Authorization':'Bearer '+key},body:JSON.stringify({messages:[{role:'system',content:sys},{role:'user',content:user}]})});
+      if(!r.ok) throw new Error(r.status===429?T('Beaucoup de monde, réessaie dans une minute.','Busy, try again in a minute.'):T('Service indisponible (','Service unavailable (')+r.status+')');
+      var d=await r.json();
+      if(d.error==='blocked') throw new Error(d.reply||T('Demande non autorisée.','Request not allowed.'));
+      return String(d.reply||'');
+    }catch(e){ if(e&&e.name==='AbortError') throw new Error(T('Trop long, réessaie.','Too long, try again.')); throw e; }
+    finally{ clearTimeout(tm); }
+  }
+  function parseJSON(t){
+    t=String(t).replace(/```json|```/g,'');
+    var a=t.indexOf('{'), b=t.lastIndexOf('}');
+    if(a<0||b<=a) throw new Error(T('Réponse illisible, réessaie.','Unreadable answer, try again.'));
+    return JSON.parse(t.slice(a,b+1));
+  }
+  var BASE_RULES="Tu es ABUESA-IA, tu es Akposso et conçu pour les Akposso (préfecture de Wawa, Badou, région des Plateaux, Togo). N'invente jamais de mots en ikposso, de proverbes, de chiffres précis, de lois ni de noms d'organisations. Aucun contenu sexuel ou violent explicite.";
+
+  /* ---------- 💡 IDÉES ---------- */
+  var DOMAINS=[['agri','🌾','Agriculture (fonio, riz, cacao, café)','Farming (fonio, rice, cocoa, coffee)'],['com','🛒','Commerce et marché','Trade and markets'],['jeunes','🧑🏾‍💻','Emplois pour les jeunes','Jobs for young people'],['culture','🪘','Culture et tourisme','Culture and tourism'],['num','📱','Services sur téléphone','Phone-based services'],['diaspora','🌍','Diaspora et village','Diaspora and village']];
+  async function makeIdeas(){
+    var dom=document.querySelector('#st-dom .sel'); var extra=$('st-idea-txt').value.trim();
+    if(!dom&&extra.length<4){ $('st-idea-st').textContent=T('Choisis un domaine ou écris ton idée.','Choose a field or write your idea.'); return; }
+    if(BAD.test(extra)){ $('st-idea-st').textContent=T('Cette demande n’est pas autorisée.','This request is not allowed.'); return; }
+    var subject=(dom?dom.dataset.l:'')+(extra?(' — '+extra):'');
+    $('st-idea-st').textContent=T('⏳ ABUESA-IA réfléchit… (10 à 30 secondes)','⏳ ABUESA-IA is thinking… (10 to 30 seconds)'); $('st-idea-out').innerHTML='';
+    try{
+      var sys=BASE_RULES+" Tu proposes des idées de services ou d'activités réalistes pour une zone rurale du Togo : connexion mobile parfois faible, paiement par Mobile Money (Flooz, T-Money), peu de capital de départ. Propose 5 idées. Pour chacune : **Nom de l'idée** sur une ligne, puis À quoi ça sert, Pour qui, Comment démarrer (3 petites étapes avec peu d'argent), Comment ça rapporte, et Le risque à surveiller. Phrases simples et courtes. Termine par une ligne « 👉 Par où commencer : » avec l'idée la plus facile. Réponds "+(en()?'en anglais.':'en français.');
+      var t=await ask(sys,'Domaine : '+subject);
+      var h=esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^#+\s*/gm,'').replace(/\n/g,'<br>');
+      $('st-idea-out').innerHTML='<div style="background:#fff;border:1px solid var(--line,#ddd);border-radius:14px;padding:12px 14px;line-height:1.5;">'+h+'</div>'
+        +'<div class="at-row" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;"><button class="share-card-btn" id="st-idea-wa">📤 WhatsApp</button><button class="share-card-btn" id="st-idea-cp">📋 '+T('Copier','Copy')+'</button><button class="share-card-btn" id="st-idea-again">🔁 '+T('D’autres idées','More ideas')+'</button></div>';
+      $('st-idea-st').textContent='✅ '+T('Voilà des idées. Vérifie toujours les prix et les règles sur place avant de te lancer.','Here are some ideas. Always check prices and rules locally before starting.');
+      var plain='💡 Idées ABUESA-IA — '+subject+'\n\n'+t.replace(/\*\*/g,'*')+'\n\nhttps://adomhub.github.io/ABUESA-IA-/';
+      $('st-idea-wa').onclick=function(){ window.open('https://wa.me/?text='+encodeURIComponent(plain.slice(0,3500)),'_blank'); };
+      $('st-idea-cp').onclick=function(){ try{ navigator.clipboard.writeText(plain); showToast(T('Copié ✓','Copied ✓')); }catch(_){} };
+      $('st-idea-again').onclick=makeIdeas;
+    }catch(e){ $('st-idea-st').textContent='⚠ '+(e.message||'Erreur'); }
+  }
+
+  /* ---------- SCÈNES (partagées par Vidéo et Film) ---------- */
+  var scenes=[], title='', mode='video';
+  function imgUrl(p){ return 'https://image.pollinations.ai/prompt/'+encodeURIComponent(p+', realistic photograph, West Africa, Togo, natural light, detailed')+'?width=720&height=1280&nologo=true&seed='+Math.floor(Math.random()*1e6); }
+  function loadImg(src){
+    return new Promise(function(ok,ko){
+      var go=function(u,cors){ var i=new Image(); if(cors) i.crossOrigin='anonymous'; i.onload=function(){ ok(i); }; i.onerror=ko; i.src=u; };
+      if(/^blob:|^data:/.test(src)) return go(src,false);
+      fetch(src).then(function(r){ if(!r.ok) throw 0; return r.blob(); }).then(function(b){ go(URL.createObjectURL(b),false); }).catch(function(){ go(src,true); });
+    });
+  }
+  async function fillImages(){
+    var todo=scenes.filter(function(s){ return !s.img && s.prompt; });
+    for(var k=0;k<todo.length;k++){
+      var s=todo[k]; s.loading=true; drawScenes();
+      $('st-sc-st').textContent='🖼️ '+T('Création des images ','Creating images ')+(k+1)+' / '+todo.length+'…';
+      for(var tr=0;tr<3&&!s.img;tr++){
+        try{ s.img=await loadImg(imgUrl(s.prompt)); }catch(_){ await new Promise(function(r){ setTimeout(r,4000); }); }
+      }
+      s.loading=false; drawScenes();
+    }
+    var miss=scenes.filter(function(s){ return !s.img; }).length;
+    $('st-sc-st').textContent=miss?('⚠ '+miss+T(' image(s) manquante(s) : touche 🔁 sur la scène.',' missing image(s): tap 🔁 on the scene.')):('✅ '+T('Tout est prêt. Modifie les textes si tu veux, puis fabrique la vidéo.','All ready. Edit the texts if you want, then make the video.'));
+  }
+  function drawScenes(){
+    var box=$('st-scenes'); if(!box) return;
+    $('st-make-box').style.display=scenes.length?'block':'none';
+    box.innerHTML=(title?'<div style="font-weight:800;font-size:1.1em;margin:6px 0;">🎞️ '+esc(title)+'</div>':'')+scenes.map(function(s,i){
+      var th=s.img?'<img src="'+esc(s.img.src)+'" style="width:72px;height:128px;object-fit:cover;border-radius:8px;">':'<div style="width:72px;height:128px;border-radius:8px;background:#e8e2d2;display:flex;align-items:center;justify-content:center;font-size:12px;text-align:center;">'+(s.loading?'⏳':'—')+'</div>';
+      return '<div style="display:flex;gap:8px;background:#fff;border:1px solid var(--line,#ddd);border-radius:12px;padding:8px;margin-bottom:8px;" data-i="'+i+'">'+th
+        +'<div style="flex:1;min-width:0;"><div style="font-weight:700;">'+T('Scène ','Scene ')+(i+1)+'</div><textarea data-t="'+i+'" rows="3" style="width:100%;font-size:inherit;font-family:inherit;border-radius:8px;border:1px solid #ccc;padding:6px;">'+esc(s.text)+'</textarea>'
+        +'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;">'+(s.prompt?'<button class="at-ex" data-re="'+i+'">🔁 '+T('image','image')+'</button>':'')+'<button class="at-ex" data-up="'+i+'">⬆</button><button class="at-ex" data-dn="'+i+'">⬇</button><button class="at-ex" data-rm="'+i+'">✕</button></div></div></div>';
+    }).join('');
+  }
+  function onScenesClick(e){
+    var b=e.target.closest('button'); if(!b) return; var d=b.dataset, i;
+    if(d.re!=null){ i=+d.re; scenes[i].img=null; fillImages(); }
+    else if(d.up!=null){ i=+d.up; if(i>0){ var t=scenes[i]; scenes[i]=scenes[i-1]; scenes[i-1]=t; drawScenes(); } }
+    else if(d.dn!=null){ i=+d.dn; if(i<scenes.length-1){ var t2=scenes[i]; scenes[i]=scenes[i+1]; scenes[i+1]=t2; drawScenes(); } }
+    else if(d.rm!=null){ scenes.splice(+d.rm,1); drawScenes(); }
+  }
+  async function aiScenes(kind){
+    var subj=$(kind==='film'?'st-film-txt':'st-vid-txt').value.trim();
+    if(subj.length<4){ $('st-sc-st').textContent=T('Écris d’abord le sujet ou l’histoire.','Write the subject or story first.'); return; }
+    if(BAD.test(subj)){ $('st-sc-st').textContent=T('Cette demande n’est pas autorisée.','This request is not allowed.'); return; }
+    mode=kind; $('st-sc-st').textContent=T('⏳ ABUESA-IA écrit les scènes… (10 à 40 secondes)','⏳ ABUESA-IA is writing the scenes… (10 to 40 seconds)');
+    var lang=en()?'anglais':'français';
+    var sys=BASE_RULES+(kind==='film'
+      ? " Tu es scénariste. Découpe l'histoire en 6 à 8 scènes de film. Si un texte d'histoire est fourni, suis-le fidèlement sans rien ajouter d'important. Pour chaque scène : \"texte\" = la narration, 1 à 3 phrases simples en "+lang+", et \"image\" = une description visuelle EN ANGLAIS pour un générateur d'images (personnages, décor de village akposso, rivière, champ, forêt tropicale vallonnée, lumière). Garde les mêmes personnages d'une scène à l'autre (décris-les pareil). Pour un conte d'animaux, demande un style illustration de livre pour enfants, sans texte écrit dans l'image."
+      : " Tu fais une courte vidéo de 5 à 6 images pour WhatsApp ou TikTok. Pour chaque image : \"texte\" = une phrase courte (12 mots maximum) en "+lang+" écrite sur l'image, et \"image\" = une description visuelle EN ANGLAIS pour un générateur de photos réalistes (Togo, Afrique de l'Ouest, collines vertes de Wawa), sans texte écrit dans l'image.")
+      +" Réponds UNIQUEMENT avec ce JSON, sans rien d'autre : {\"titre\":\"titre court\",\"scenes\":[{\"texte\":\"...\",\"image\":\"...\"}]}";
+    try{
+      var j=parseJSON(await ask(sys,subj));
+      var list=(j.scenes||[]).filter(function(s){ return s&&s.texte; }).slice(0,10);
+      if(!list.length) throw new Error(T('Aucune scène reçue, réessaie.','No scenes received, try again.'));
+      title=String(j.titre||'').slice(0,80);
+      scenes=list.map(function(s){ return { text:String(s.texte).slice(0,400), prompt:String(s.image||s.texte).slice(0,400)+(kind==='film'&&/conte|tale|souris|lièvre|araignée|animal/i.test(subj)?', children\'s book illustration, warm colours':''), img:null }; });
+      drawScenes(); fillImages();
+    }catch(e){ $('st-sc-st').textContent='⚠ '+(e.message||'Erreur'); }
+  }
+  function addPhotos(files){
+    [].slice.call(files||[]).slice(0,12).forEach(function(f){
+      if(!/^image\//.test(f.type)) return;
+      var sc={ text:'', prompt:'', img:null }; scenes.push(sc);
+      loadImg(URL.createObjectURL(f)).then(function(i){ sc.img=i; drawScenes(); });
+    });
+    drawScenes();
+  }
+
+  /* ---------- 🎞️ FABRICATION DE LA VIDÉO (dans le téléphone) ---------- */
+  var W=720, H=1280, busy=false, lastBlob=null, lastExt='webm';
+  function wrap(ctx,text,maxW){
+    var words=String(text).split(/\s+/), lines=[], cur='';
+    words.forEach(function(w){ var t=cur?cur+' '+w:w; if(ctx.measureText(t).width>maxW&&cur){ lines.push(cur); cur=w; } else cur=t; });
+    if(cur) lines.push(cur); return lines;
+  }
+  function cover(ctx,img,zoom,px,py){
+    var r=Math.max(W/img.width,H/img.height)*zoom, w=img.width*r, h=img.height*r;
+    ctx.drawImage(img,(W-w)/2+px,(H-h)/2+py,w,h);
+  }
+  function caption(ctx,text,alpha){
+    if(!text) return;
+    ctx.save(); ctx.globalAlpha=alpha;
+    ctx.font='600 38px system-ui, sans-serif';
+    var lines=wrap(ctx,text,W-90).slice(0,7), lh=50, bh=lines.length*lh+40, y0=H-bh-70;
+    ctx.fillStyle='rgba(0,0,0,.62)'; ctx.beginPath(); if(ctx.roundRect) ctx.roundRect(24,y0,W-48,bh,22); else ctx.rect(24,y0,W-48,bh); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='top';
+    lines.forEach(function(l,i){ ctx.fillText(l,W/2,y0+20+i*lh); });
+    ctx.restore();
+  }
+  function card(ctx,big,small){
+    var g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,'#2F5233'); g.addColorStop(1,'#1b2e1d');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='#C7D92E'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.font='800 60px Georgia, serif';
+    wrap(ctx,big,W-100).slice(0,4).forEach(function(l,i,a){ ctx.fillText(l,W/2,H/2-((a.length-1)*72)/2+i*72); });
+    ctx.fillStyle='#fff'; ctx.font='500 32px system-ui, sans-serif'; ctx.fillText(small,W/2,H-140);
+  }
+  function pickMime(){
+    var c=['video/mp4;codecs=avc1,mp4a','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];
+    for(var i=0;i<c.length;i++){ try{ if(MediaRecorder.isTypeSupported(c[i])) return c[i]; }catch(_){} }
+    return '';
+  }
+  async function makeVideo(){
+    if(busy) return;
+    scenes.forEach(function(s,i){ var ta=document.querySelector('#st-scenes textarea[data-t="'+i+'"]'); if(ta) s.text=ta.value.trim(); });
+    var ok=scenes.filter(function(s){ return s.img; });
+    if(!ok.length){ $('st-mk-st').textContent=T('Il faut au moins une image.','You need at least one image.'); return; }
+    if(typeof MediaRecorder==='undefined'){ $('st-mk-st').textContent=T('Ce navigateur ne sait pas fabriquer de vidéo. Essaie avec Chrome.','This browser cannot make videos. Try Chrome.'); return; }
+    busy=true; $('st-make').disabled=true;
+    var cv=$('st-canvas'); cv.width=W; cv.height=H; cv.style.display='block';
+    var ctx=cv.getContext('2d');
+    var music=$('st-music').value, voice=$('st-voice').checked;
+    var actx=null, dest=null, audio=null, gain=null, mic=null;
+    try{
+      if(music||voice){
+        actx=new (window.AudioContext||window.webkitAudioContext)(); dest=actx.createMediaStreamDestination();
+        if(music){
+          audio=new Audio(music); audio.loop=true; audio.crossOrigin='anonymous';
+          var src=actx.createMediaElementSource(audio); gain=actx.createGain(); gain.gain.value=voice?0.25:0.9;
+          src.connect(gain); gain.connect(dest); gain.connect(actx.destination);
+        }
+        if(voice){
+          try{ mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}); actx.createMediaStreamSource(mic).connect(dest); }
+          catch(_){ $('st-mk-st').textContent=T('Micro refusé : la vidéo sera faite sans ta voix.','Microphone denied: the video will be made without your voice.'); mic=null; }
+        }
+      }
+      var stream=cv.captureStream(30);
+      if(dest) dest.stream.getAudioTracks().forEach(function(t){ stream.addTrack(t); });
+      var mime=pickMime(); lastExt=/mp4/.test(mime)?'mp4':'webm';
+      var rec=new MediaRecorder(stream,mime?{mimeType:mime,videoBitsPerSecond:2500000}:undefined), chunks=[];
+      rec.ondataavailable=function(e){ if(e.data&&e.data.size) chunks.push(e.data); };
+      var done=new Promise(function(r){ rec.onstop=r; });
+
+      /* compte à rebours si on raconte avec sa voix */
+      var tl=title||(mode==='film'?T('Un film ABUESA-IA','An ABUESA-IA film'):T('ABUESA-IA','ABUESA-IA'));
+      if(mic){ for(var c=3;c>0;c--){ card(ctx,String(c),T('Prépare-toi à lire le texte à voix haute','Get ready to read the text aloud')); await new Promise(function(r){ setTimeout(r,1000); }); } }
+
+      var plan=[{kind:'card',dur:2.5}];
+      ok.forEach(function(s){ var words=(s.text||'').split(/\s+/).filter(Boolean).length; plan.push({kind:'img',s:s,dur:mode==='film'?Math.max(5,Math.min(14,words/2.3+1.5)):Math.max(3.5,Math.min(7,words/2.6+2))}); });
+      plan.push({kind:'end',dur:2.5});
+      var total=plan.reduce(function(a,p){ return a+p.dur; },0), FADE=0.6;
+      rec.start(500); if(audio){ try{ await actx.resume(); await audio.play(); }catch(_){} }
+      $('st-mk-st').textContent='🔴 '+T('Fabrication en cours… garde l’écran allumé (','Recording… keep the screen on (')+Math.round(total)+' s)';
+      var t0=performance.now();
+      await new Promise(function(fin){
+        function frame(){
+          var t=(performance.now()-t0)/1000;
+          if(t>=total){ fin(); return; }
+          var acc=0, idx=0; while(idx<plan.length-1&&t>=acc+plan[idx].dur){ acc+=plan[idx].dur; idx++; }
+          var p=plan[idx], lt=t-acc, k=lt/p.dur;
+          function paint(pp,kk,a){
+            ctx.globalAlpha=a;
+            if(pp.kind==='card') card(ctx,tl,'ABUESA-IA · Culture Akposso');
+            else if(pp.kind==='end') card(ctx,T('Créé avec ABUESA-IA','Made with ABUESA-IA'),'adomhub.github.io/ABUESA-IA-');
+            else { ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H); var dir=(plan.indexOf(pp)%2)?1:-1; cover(ctx,pp.s.img,1.04+0.10*kk,dir*30*(kk-0.5),-20*(kk-0.5)); caption(ctx,pp.s.text,Math.min(1,kk*p.dur/0.5)); }
+            ctx.globalAlpha=1;
+          }
+          paint(p,k,1);
+          if(lt<FADE&&idx>0){ var prev=plan[idx-1]; paint(prev,1,1-lt/FADE); }
+          if(gain&&total-t<1.5) gain.gain.value=Math.max(0,(total-t)/1.5)*(voice?0.25:0.9);
+          requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      });
+      rec.stop(); await done;
+      lastBlob=new Blob(chunks,{type:mime||'video/webm'});
+      var v=$('st-video'); v.src=URL.createObjectURL(lastBlob); v.style.display='block'; cv.style.display='none';
+      $('st-out-row').style.display='flex';
+      $('st-mk-st').textContent='✅ '+T('Ta vidéo est prête ! ','Your video is ready! ')+(lastExt==='webm'?T('(format WebM : si WhatsApp la refuse, publie-la sur TikTok ou YouTube, ou mets Chrome à jour.)','(WebM format: if WhatsApp refuses it, post it on TikTok or YouTube, or update Chrome.)'):'');
+    }catch(e){ $('st-mk-st').textContent='⚠ '+T('La vidéo n’a pas pu être faite : ','The video could not be made: ')+(e.message||e); }
+    finally{
+      try{ if(audio){ audio.pause(); } }catch(_){}
+      try{ if(mic) mic.getTracks().forEach(function(t){ t.stop(); }); }catch(_){}
+      try{ if(actx) actx.close(); }catch(_){}
+      busy=false; $('st-make').disabled=false;
+    }
+  }
+  function vFile(){ return new File([lastBlob],'video-abuesa.'+lastExt,{type:lastBlob.type}); }
+  function dlVideo(){ if(!lastBlob) return; var a=document.createElement('a'); a.href=URL.createObjectURL(lastBlob); a.download='video-abuesa.'+lastExt; document.body.appendChild(a); a.click(); a.remove(); }
+  async function shareVideo(){ if(!lastBlob) return; try{ var f=vFile(); if(navigator.canShare&&navigator.canShare({files:[f]})) await navigator.share({files:[f],title:title||'ABUESA-IA'}); else dlVideo(); }catch(_){} }
+
+  /* ---------- FENÊTRE DU STUDIO ---------- */
+  var ov=null;
+  function tabBtn(id,l,on){ return '<button type="button" data-tab="'+id+'" style="flex:1;padding:10px 4px;border:none;border-bottom:3px solid '+(on?'var(--clay,#9a3d22)':'transparent')+';background:transparent;font-weight:800;font-size:inherit;">'+l+'</button>'; }
+  function build(){
+    var chips=DOMAINS.map(function(d){ return '<button type="button" class="at-ex" data-l="'+esc(T(d[2],d[3]))+'" style="margin:3px;">'+d[1]+' '+esc(T(d[2],d[3]))+'</button>'; }).join('');
+    var mp3=[['', T('Sans musique','No music')],['abuesa-ova-zu.mp3','🎶 Ova Zu est arrivé'],['abuesa-memoire.mp3','🎶 Mémoire du peuple Akposso'],['abuesa-ia.mp3','🎶 ABUESA-IA']];
+    return '<div style="display:flex;border-bottom:1px solid var(--line,#ddd);margin-bottom:12px;" id="st-tabs">'+tabBtn('ideas','💡 '+T('Idées','Ideas'),true)+tabBtn('video','🎬 '+T('Vidéo','Video'))+tabBtn('film','🎥 Film')+'</div>'
+      /* idées */
+      +'<div data-pane="ideas"><div style="margin-bottom:6px;">'+T('Choisis un domaine : ABUESA-IA te propose des idées de services et d’activités pour gagner ta vie au pays.','Choose a field: ABUESA-IA suggests service and business ideas to earn a living at home.')+'</div>'
+      +'<div id="st-dom">'+chips+'</div>'
+      +'<textarea id="st-idea-txt" rows="2" placeholder="'+esc(T('Ou écris ton idée ou ta question (facultatif)…','Or write your idea or question (optional)…'))+'" style="width:100%;margin-top:6px;font-size:inherit;font-family:inherit;border-radius:10px;border:1px solid #ccc;padding:8px;"></textarea>'
+      +'<button type="button" class="save-btn" id="st-idea-go" style="width:100%;margin-top:6px;">💡 '+T('Trouve-moi des idées','Find me ideas')+'</button>'
+      +'<div id="st-idea-st" style="margin:8px 0;"></div><div id="st-idea-out"></div></div>'
+      /* vidéo */
+      +'<div data-pane="video" style="display:none;"><div style="margin-bottom:6px;">'+T('Une courte vidéo (images qui défilent, texte et musique) pour ton statut WhatsApp ou TikTok. Écris le sujet, ou mets tes propres photos.','A short video (moving images, text and music) for your WhatsApp status or TikTok. Write the subject, or add your own photos.')+'</div>'
+      +'<textarea id="st-vid-txt" rows="2" placeholder="'+esc(T('Ex : le marché de Badou un jeudi matin','E.g. Badou market on a Thursday morning'))+'" style="width:100%;font-size:inherit;font-family:inherit;border-radius:10px;border:1px solid #ccc;padding:8px;"></textarea>'
+      +'<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;"><button type="button" class="save-btn" id="st-vid-go" style="flex:1;">✨ '+T('Créer les images','Create the images')+'</button><label class="share-card-btn" style="flex:1;text-align:center;cursor:pointer;">📷 '+T('Mes photos','My photos')+'<input type="file" id="st-photos" accept="image/*" multiple style="display:none;"></label></div></div>'
+      /* film */
+      +'<div data-pane="film" style="display:none;"><div style="margin-bottom:6px;">'+T('Raconte une histoire : ABUESA-IA la découpe en scènes, crée une image par scène et en fait un petit film avec la narration en sous-titres. Tu peux aussi le raconter avec ta voix.','Tell a story: ABUESA-IA splits it into scenes, creates an image for each and makes a short film with the narration as subtitles. You can also narrate it with your voice.')+'</div>'
+      +'<button type="button" class="at-ex" id="st-film-souris" style="margin-bottom:6px;">🐭🥜 '+T('Conte : La souris et l’arachide','Tale: The mouse and the peanut')+'</button>'
+      +'<textarea id="st-film-txt" rows="5" placeholder="'+esc(T('Écris ton histoire, ou juste l’idée : « un jeune de Badou qui revient au village pour l’Ovazu »','Write your story, or just the idea: “a young man from Badou who comes home for the Ovazu”'))+'" style="width:100%;font-size:inherit;font-family:inherit;border-radius:10px;border:1px solid #ccc;padding:8px;"></textarea>'
+      +'<button type="button" class="save-btn" id="st-film-go" style="width:100%;margin-top:6px;">🎥 '+T('Écrire les scènes et créer les images','Write the scenes and create the images')+'</button></div>'
+      /* scènes + montage (vidéo et film) */
+      +'<div id="st-common" style="display:none;"><div id="st-sc-st" style="margin:10px 0;"></div><div id="st-scenes"></div>'
+      +'<div id="st-make-box" style="display:none;background:#fff;border:1px solid var(--line,#ddd);border-radius:14px;padding:10px 12px;margin-top:8px;">'
+      +'<div style="font-weight:800;margin-bottom:6px;">🎞️ '+T('Montage','Editing')+'</div>'
+      +'<label>'+T('Musique :','Music:')+' <select id="st-music" style="font-size:inherit;max-width:100%;">'+mp3.map(function(m){ return '<option value="'+m[0]+'">'+esc(m[1])+'</option>'; }).join('')+'</select></label>'
+      +'<label style="display:block;margin-top:8px;"><input type="checkbox" id="st-voice"> 🎙️ '+T('Raconter avec ma voix (je lis les textes pendant la fabrication)','Narrate with my voice (I read the texts while it records)')+'</label>'
+      +'<button type="button" class="save-btn" id="st-make" style="width:100%;margin-top:8px;">🎬 '+T('Fabriquer la vidéo','Make the video')+'</button>'
+      +'<div id="st-mk-st" style="margin:8px 0;"></div>'
+      +'<canvas id="st-canvas" style="display:none;width:100%;max-width:300px;margin:0 auto;border-radius:12px;background:#000;"></canvas>'
+      +'<video id="st-video" controls playsinline style="display:none;width:100%;max-width:300px;margin:0 auto;border-radius:12px;background:#000;"></video>'
+      +'<div id="st-out-row" style="display:none;gap:6px;justify-content:center;margin-top:8px;flex-wrap:wrap;"><button class="share-card-btn" id="st-v-dl">⬇️ '+T('Télécharger','Download')+'</button><button class="share-card-btn" id="st-v-sh">📤 '+T('Partager','Share')+'</button></div>'
+      +'</div></div>'
+      +'<button type="button" data-close="1" class="share-card-btn" style="width:100%;margin-top:14px;">'+T('Fermer','Close')+'</button>';
+  }
+  function setTab(id){
+    ov.querySelectorAll('[data-tab]').forEach(function(b){ b.style.borderBottomColor=b.dataset.tab===id?'var(--clay,#9a3d22)':'transparent'; });
+    ov.querySelectorAll('[data-pane]').forEach(function(p){ p.style.display=p.dataset.pane===id?'block':'none'; });
+    $('st-common').style.display=id==='ideas'?'none':'block';
+  }
+  window.openStudio=function(tab){
+    if(!ov){
+      ov=document.createElement('div'); ov.id='ov-studio';
+      ov.style.cssText='position:fixed;inset:0;z-index:99995;background:var(--paper,#F7F3E8);color:#000;display:none;flex-direction:column;font-size:calc(17.5px * var(--fs,1.15));';
+      ov.innerHTML='<div style="padding:12px 16px;background:var(--citron,#C7D92E);display:flex;align-items:center;gap:10px;font-weight:800;"><span style="flex:1;">🎬 Studio ABUESA</span><button type="button" data-close="1" aria-label="Fermer" style="border:none;background:transparent;font-size:1.6em;line-height:1;padding:4px 8px;">✕</button></div><div class="st-b" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px 40px;"></div>';
+      document.body.appendChild(ov);
+      ov.querySelector('.st-b').innerHTML=build();
+      ov.addEventListener('click',function(e){
+        if(e.target.closest('[data-close]')){ if(!busy) ov.style.display='none'; return; }
+        var tb=e.target.closest('[data-tab]'); if(tb){ setTab(tb.dataset.tab); return; }
+        var ch=e.target.closest('#st-dom .at-ex'); if(ch){ ov.querySelectorAll('#st-dom .at-ex').forEach(function(x){ x.classList.remove('sel'); x.style.background=''; }); ch.classList.add('sel'); ch.style.background='#e8a33d'; }
+      });
+      $('st-idea-go').onclick=makeIdeas;
+      $('st-vid-go').onclick=function(){ aiScenes('video'); };
+      $('st-film-go').onclick=function(){ aiScenes('film'); };
+      $('st-film-souris').onclick=function(){ $('st-film-txt').value=CONTE_SOURIS; title=T('La souris et l’arachide','The mouse and the peanut'); };
+      $('st-photos').onchange=function(e){ mode='video'; addPhotos(e.target.files); e.target.value=''; $('st-sc-st').textContent=T('Photos ajoutées : écris un texte sous chacune si tu veux.','Photos added: write a text under each if you want.'); };
+      $('st-scenes').addEventListener('click',onScenesClick);
+      $('st-scenes').addEventListener('input',function(e){ var t=e.target.closest('textarea[data-t]'); if(t&&scenes[+t.dataset.t]) scenes[+t.dataset.t].text=t.value; });
+      $('st-make').onclick=makeVideo; $('st-v-dl').onclick=dlVideo; $('st-v-sh').onclick=shareVideo;
+    }
+    ov.style.display='flex'; setTab(tab||'ideas');
+  };
+  window.renderHomeStudio=function(){
+    var el=document.getElementById('home-studio'); if(!el) return;
+    el.innerHTML='<div class="home-calendar-card"><div class="hc-label">🎬 Studio ABUESA</div>'
+      +'<div class="hc-day">'+T('Crée tes idées, tes vidéos et tes films','Create your ideas, videos and films')+'</div>'
+      +'<div class="hc-note">'+T('Des idées de services pour gagner ta vie, des vidéos pour ton statut, des contes en film.','Business ideas to earn a living, videos for your status, tales as films.')+'</div>'
+      +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;"><button type="button" class="share-card-btn" data-st="ideas">💡 '+T('Idées','Ideas')+'</button><button type="button" class="share-card-btn" data-st="video">🎬 '+T('Vidéo','Video')+'</button><button type="button" class="share-card-btn" data-st="film">🎥 Film</button></div></div>';
+    el.querySelectorAll('[data-st]').forEach(function(b){ b.addEventListener('click',function(){ window.openStudio(b.dataset.st); }); });
+  };
+  window.renderHomeStudio();
+  window.addEventListener('load',window.renderHomeStudio);
 })();
 </script>
 <script>
