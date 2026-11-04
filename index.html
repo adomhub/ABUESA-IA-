@@ -961,6 +961,8 @@
         <p>La culture du peuple akposso, dans ton téléphone : notre langue, nos mots, nos anciens, notre village.</p>
       </div>
 
+      <div id="home-gagnant" style="margin:6px 16px 14px;"></div>
+
       <div id="home-parcours" style="margin:6px 16px 14px;"></div>
 
       <div id="home-arbre" style="margin:6px 16px 14px;"></div>
@@ -1724,7 +1726,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.84 · 4 nov. 2026 (traductions anglaises complétées)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.85 · 4 nov. 2026 (🏆 gagnant(e) du mini-quiz)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1946,6 +1948,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
     try{ if(typeof renderHomeOvazu === 'function') renderHomeOvazu(); }catch(_){}
     try{ if(typeof renderHomeEvents === 'function') renderHomeEvents(); }catch(_){}
     try{ if(typeof renderHomeCarnet === 'function') renderHomeCarnet(); }catch(_){}
+    try{ if(typeof renderHomeGagnant === 'function') renderHomeGagnant(); }catch(_){}
     try{ if(typeof renderHomeProverb === 'function') renderHomeProverb(); }catch(_){}
     try{ if(typeof renderHomePartners === 'function') renderHomePartners(); }catch(_){}
     try{ if(typeof renderHomeMarche === 'function') renderHomeMarche(); }catch(_){}
@@ -4045,6 +4048,20 @@ function renderAdminPanel(){
     <div class="admin-actions"><button id="admin-add-carnet">+ Ajouter au carnet</button></div>
     <div id="admin-carnet-status" class="status-line"></div>
 
+    <label>🏆 Gagnant(e) du mini-quiz du jour</label>
+    <div class="admin-row"><input type="text" id="admin-qg-prenom" placeholder="Prénom (ex : YDA)"></div>
+    <div class="admin-row"><input type="text" id="admin-qg-village" placeholder="Village (ex : Ebeva)"></div>
+    <div class="admin-row">
+      <select id="admin-qg-genre" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit;font-size:calc(17.5px * var(--fs,1.15));">
+        <option value="f">👩🏾 Une femme (gagnante)</option>
+        <option value="h">👨🏾 Un homme (gagnant)</option>
+      </select>
+    </div>
+    <div class="admin-row"><input type="text" id="admin-qg-reponse" placeholder="Bonne réponse (ex : B) — facultatif"></div>
+    <div class="admin-row"><input type="text" id="admin-qg-message" placeholder="Petit mot de félicitations — facultatif"></div>
+    <div class="admin-actions"><button id="admin-add-qg">🏆 Publier le gagnant du jour</button></div>
+    <div id="admin-qg-status" class="status-line"></div>
+
     <label>🛒 Marché : publier une annonce</label>
     <div class="admin-row"><input type="text" id="admin-m-titre" placeholder="Objet (ex : Téléphone Honor)"></div>
     <div class="admin-row">
@@ -4386,6 +4403,22 @@ function renderAdminPanel(){
     renderHomeCarnet();
   });
 
+  document.getElementById('admin-add-qg').addEventListener('click', async ()=>{
+    const v = id => document.getElementById(id).value.trim();
+    const prenom = v('admin-qg-prenom'), village = v('admin-qg-village'), genre = v('admin-qg-genre'), reponse = v('admin-qg-reponse'), message = v('admin-qg-message');
+    const status = document.getElementById('admin-qg-status');
+    if(!prenom){ status.textContent = 'Indique le prénom.'; status.className = 'status-line status-bad'; return; }
+    if(!supabaseClient){ status.textContent = 'Supabase non branché (Réglages).'; status.className = 'status-line status-bad'; return; }
+    const { error } = await supabaseClient.from('quiz_gagnants').insert({ prenom, village, genre, reponse, message });
+    if(error){
+      status.textContent = /quiz_gagnants|relation|schema cache/i.test(error.message) ? 'La table quiz_gagnants n\'existe pas encore : passe d\'abord le fichier supabase_quiz_gagnants.sql dans Supabase.' : 'Erreur : ' + error.message;
+      status.className = 'status-line status-bad'; return;
+    }
+    ['admin-qg-prenom','admin-qg-village','admin-qg-reponse','admin-qg-message'].forEach(id=> document.getElementById(id).value = '');
+    status.textContent = 'Publié sur l\'accueil ✓'; status.className = 'status-line status-ok';
+    await fetchQuizGagnant(); renderHomeGagnant();
+  });
+
   document.getElementById('admin-add-artist').addEventListener('click', ()=>{
     const name = document.getElementById('admin-artist-name').value.trim();
     const bio = document.getElementById('admin-artist-bio').value.trim();
@@ -4444,7 +4477,7 @@ function renderAdminPanel(){
     const st = document.getElementById('admin-backup-status');
     if(!supabaseClient){ st.textContent = 'Supabase non branché (Réglages).'; st.className = 'status-line status-bad'; return; }
     btn.disabled = true;
-    const TABLES = ['dictionary_words','proverbes','contes','hommages','evenements','carnet_village','app_personality','feedback','artist_submissions','gallery','community_messages','pronunciations','partenaires','marche','annuaire','pharmacopee','voix_banque','transfert_services','cercle_posts','commentaires'];
+    const TABLES = ['dictionary_words','proverbes','contes','hommages','evenements','carnet_village','app_personality','feedback','artist_submissions','gallery','community_messages','pronunciations','partenaires','marche','annuaire','pharmacopee','voix_banque','transfert_services','cercle_posts','commentaires','quiz_gagnants'];
     const backup = { app:'ABUESA-IA', version:'4.35', exportedAt:new Date().toISOString(), tables:{}, problemes:{}, local:{ extraWords:getExtraWords(), extraArtists:getExtraArtists() } };
     let done = 0;
     for(const t of TABLES){
@@ -5551,6 +5584,41 @@ function renderHomeEvents(){
   </div>`;
 }
 fetchCloudEvents().then(renderHomeEvents);
+
+/* ===== 🏆 Gagnant(e) du mini-quiz du jour (v4.85) : publié par l'admin, table quiz_gagnants.
+   Tant que la table n'existe pas, la première gagnante (Yda d'Ebeva, 4 nov. 2026) s'affiche. ===== */
+const QG_PREMIERE = { prenom:'YDA', village:'Ebeva', genre:'f', reponse:'B', message:'', created_at:'2026-11-04T20:00:00Z' };
+let quizGagnant = QG_PREMIERE;
+async function fetchQuizGagnant(){
+  if(!supabaseClient) return;
+  try{
+    const { data, error } = await supabaseClient.from('quiz_gagnants').select('prenom, village, genre, reponse, message, created_at').order('created_at', { ascending:false }).limit(1);
+    if(!error && data && data[0]) quizGagnant = data[0];
+  }catch(_){}
+}
+function renderHomeGagnant(){
+  const el = document.getElementById('home-gagnant'); if(!el) return;
+  const g = quizGagnant; if(!g || !g.prenom){ el.innerHTML = ''; return; }
+  const en = window.ABUESA_I18N && ABUESA_I18N.lang() === 'en';
+  const T = (fr, e)=> en ? e : fr;
+  const f = g.genre !== 'h';
+  const d = new Date(g.created_at);
+  const day = d.toLocaleDateString(en ? 'en-GB' : 'fr-FR', { weekday:'long', day:'numeric', month:'long' });
+  const today = d.toDateString() === new Date().toDateString();
+  const titre = T(f ? 'Gagnante du mini-quiz' : 'Gagnant du mini-quiz', 'Mini-quiz winner');
+  el.innerHTML = `<div class="home-calendar-card" data-no-i18n style="border:2px solid var(--gold,#B8860B);">
+    <div class="hc-label">🏆 ${titre}${today ? T(' du jour', ' of the day') : ''}</div>
+    <div class="hc-day">${T('Bravo', 'Well done')} <strong>${escAll(g.prenom)}</strong>${T(' !', '!')} 🎉</div>
+    ${g.village ? `<div class="hc-note">📍 ${T(/^[aeiouyéèêàâîôûh]/i.test(g.village) ? 'Village d’' : 'Village de ', 'Village of ')}<strong>${escAll(g.village)}</strong></div>` : ''}
+    <div class="hc-note" style="margin-top:4px;">${g.reponse ? T('Bonne réponse : ', 'Right answer: ') + '<strong>' + escAll(g.reponse) + '</strong> · ' : ''}${escAll(day)}</div>
+    <div class="hc-note" style="margin-top:6px;">${g.message ? escAll(g.message) : T(f ? 'Merci, félicitations et bénédictions à elle. Et toi, seras-tu le prochain ou la prochaine ?' : 'Merci, félicitations et bénédictions à lui. Et toi, seras-tu le prochain ou la prochaine ?', 'Thanks, congratulations and blessings. Will you be next?')}</div>
+    <button type="button" class="share-card-btn" id="qg-share">📲 ${T('Partager en statut', 'Share as status')}</button>
+  </div>`;
+  const b = document.getElementById('qg-share');
+  if(b) b.addEventListener('click', ()=> shareCard({ label: titre, title: '🏆 ' + T('Bravo', 'Well done') + ' ' + g.prenom + (g.village ? ' (' + g.village + ')' : '') + ' !', body: T(f ? 'Elle a trouvé la bonne réponse au mini-quiz d\'ABUESA-IA.' : 'Il a trouvé la bonne réponse au mini-quiz d\'ABUESA-IA.', 'Found the right answer to the ABUESA-IA mini-quiz.') + (g.reponse ? ' (' + g.reponse + ')' : '') }));
+}
+renderHomeGagnant();
+fetchQuizGagnant().then(renderHomeGagnant);
 
 let cloudCarnet = [];
 async function fetchCloudCarnet(){
