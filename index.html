@@ -1045,7 +1045,6 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
 
       <div id="home-proverb"></div>
 
-      <div id="home-events"></div>
 
       <div id="home-carnet"></div>
 
@@ -1726,7 +1725,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.86 · 4 nov. 2026 (économie de données Supabase)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.87 · 5 nov. 2026 (événements dans la case OVAZU)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -5541,7 +5540,9 @@ function renderHomeOvazu(){
     <div class="hc-note">Fête des moissons du fonio · en décembre (date officielle à confirmer)</div>
     <div class="hc-note" style="margin-top:2px;">Vers le <b>${dateStr}</b></div>
     <button class="share-card-btn" onclick="shareOvazuCard()">📲 Partager la carte OVAZU</button>
+    <div id="ovazu-events"></div>
   </div>`;
+  try{ renderHomeEvents(); }catch(_){ /* les événements ne sont pas encore chargés */ }
 }
 function shareOvazuCard(){
   const { o, en, dateStr } = ovazuTexts();
@@ -5560,28 +5561,23 @@ async function fetchCloudEvents(){
   const { data, error } = await supabaseClient.from('evenements').select('titre, date_evenement, description').order('date_evenement', { ascending:true });
   if(!error && data) cloudEvents = data;
 }
+/* v4.87 : les événements à venir s'affichent dans la case OVAZU (plus de case séparée) */
 function renderHomeEvents(){
-  const el = document.getElementById('home-events');
+  const el = document.getElementById('ovazu-events');
   if(!el) return;
   const todayStr = new Date().toISOString().slice(0,10);
   const upcoming = cloudEvents.filter(e => e.date_evenement >= todayStr);
-  if(upcoming.length === 0){
-    el.innerHTML = `<div class="home-calendar-card">
-      <div class="hc-label">📅 Événements à venir</div>
-      <div class="hc-note">Aucun événement annoncé pour l'instant. Ajoutes-en un depuis le panneau admin pour qu'il apparaisse ici.</div>
-    </div>`;
-    return;
-  }
-  const next = upcoming[0];
-  const d = new Date(next.date_evenement + 'T00:00:00');
-  const dateStr = d.toLocaleDateString(window.ABUESA_I18N ? ABUESA_I18N.locale() : 'fr-FR', { day:'numeric', month:'long', year:'numeric' });
-  const more = upcoming.length > 1 ? `<div class="hc-note" style="margin-top:6px;">+ ${upcoming.length - 1} autre${upcoming.length > 2 ? 's' : ''} événement${upcoming.length > 2 ? 's' : ''} à venir</div>` : '';
-  el.innerHTML = `<div class="home-calendar-card">
-    <div class="hc-label">📅 Événements à venir</div>
-    <div class="hc-day"><span data-ut>${next.titre}</span> — ${dateStr}</div>
-    ${next.description ? `<div class="hc-note"><span data-ut>${next.description}</span></div>` : ''}
-    ${more}
-  </div>`;
+  if(upcoming.length === 0){ el.innerHTML = ''; return; }
+  const loc = window.ABUESA_I18N ? ABUESA_I18N.locale() : 'fr-FR';
+  const items = upcoming.slice(0, 3).map(ev => {
+    const d = new Date(ev.date_evenement + 'T00:00:00');
+    const dateStr = d.toLocaleDateString(loc, { day:'numeric', month:'long', year:'numeric' });
+    return `<div class="hc-note" style="margin-top:8px;"><b><span data-ut>${ev.titre}</span></b> — ${dateStr}</div>`
+      + (ev.description ? `<div class="hc-note"><span data-ut>${ev.description}</span></div>` : '');
+  }).join('');
+  const more = upcoming.length > 3 ? `<div class="hc-note" style="margin-top:6px;">+ ${upcoming.length - 3} autre${upcoming.length > 4 ? 's' : ''} événement${upcoming.length > 4 ? 's' : ''} à venir</div>` : '';
+  el.innerHTML = `<div style="border-top:1px solid var(--line);margin-top:14px;padding-top:10px;">
+    <div class="hc-label">📅 Événements à venir</div>${items}${more}</div>`;
 }
 fetchCloudEvents().then(renderHomeEvents);
 
@@ -8280,7 +8276,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     var el=document.getElementById('home-ovazu'); if(!el) return;
     var c=el.querySelector('.home-calendar-card'); if(!c||c.querySelector('#ov-info-btn')) return;
     var b=document.createElement('button'); b.type='button'; b.id='ov-info-btn'; b.className='share-card-btn'; b.style.marginLeft='6px'; b.textContent='ℹ️ '+T('Tout savoir','Learn more');
-    b.addEventListener('click',window.openOvazuInfo); c.appendChild(b);
+    b.addEventListener('click',window.openOvazuInfo); var evb=c.querySelector('#ovazu-events'); if(evb) c.insertBefore(b,evb); else c.appendChild(b);
   }
   if(typeof window.renderHomeOvazu==='function'){
     var _r=window.renderHomeOvazu;
