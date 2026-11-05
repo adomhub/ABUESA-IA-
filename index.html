@@ -1727,7 +1727,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.90 · 5 nov. 2026 (🎓 Examens et concours, mis à jour chaque matin par l’IA)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.91 · 5 nov. 2026 (🎓 Examens et concours, mis à jour chaque matin par l’IA)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -5812,7 +5812,7 @@ function openExamens(){
 renderHomeExamens();
 fetchInfosUtiles().then(renderHomeExamens);
 /* Appel à la fonction Supabase « infos-auto » (recherche automatique / suppression), réservé à l'admin */
-const INFOS_AUTO_FN = 'infos-auto';
+const INFOS_AUTO_FN = 'bright-action'; /* nom imposé par Supabase pour la fonction infos-auto */
 async function infosAutoCall(payload){
   let code = null; try{ code = sessionStorage.getItem('abuesa_admin_code'); }catch(_){}
   if(!code && typeof askAdminCodeOnce === 'function'){ code = await askAdminCodeOnce(); try{ code = sessionStorage.getItem('abuesa_admin_code') || code; }catch(_){} }
@@ -5821,7 +5821,7 @@ async function infosAutoCall(payload){
   try{
     const res = await fetch(base + '/functions/v1/' + INFOS_AUTO_FN, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ ...payload, code }) });
     const out = await res.json().catch(()=>({}));
-    if(!res.ok){ showToast(res.status === 404 ? 'La fonction infos-auto n’existe pas encore dans Supabase.' : (out.error || 'Action impossible')); return null; }
+    if(!res.ok){ showToast(res.status === 404 ? 'La fonction bright-action (infos-auto) n’existe pas encore dans Supabase.' : (out.error || 'Action impossible')); return null; }
     return out;
   }catch(_){ showToast('Erreur réseau, réessaie'); return null; }
 }
