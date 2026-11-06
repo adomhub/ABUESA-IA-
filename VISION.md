@@ -1,0 +1,66 @@
+# ABUESA-IA — Vision, conseils et plan de développement
+
+> **ABUESA IA, la voix et la mémoire du peuple Akposso.**
+> Notre langue, notre identité, notre héritage, notre avenir.
+
+Porteur du projet : **Adom K. Alexi** (Wawa / Badou, Togo) — https://adomhub.github.io/ABUESA-IA-/
+
+## 1. Notre vision
+
+ABUESA-IA est un projet technologique destiné à **préserver, valoriser, enseigner et faire connaître** la langue et la culture Ikposso (Akposso), au Togo et dans le monde. L'ambition : faire d'ABUESA une véritable **référence numérique pour la langue Akposso**.
+
+## 2. Projets à étudier (s'en inspirer, sans copier)
+
+- **Yodi** : traduction des langues africaines.
+- **Language Roots Hub** : dictionnaires numériques.
+- **Tanalé** : sauvegarde des langues et du patrimoine oral.
+- **AfricanGPT** : intelligence artificielle multilingue.
+- **Khaya AI** (Ghana NLP) : traduction et reconnaissance vocale. Leçon retenue : leurs outils progressent grâce aux corrections envoyées par les locuteurs eux-mêmes.
+
+## 3. Les fonctionnalités à développer (état au 6 novembre 2026)
+
+| # | Fonctionnalité | État dans ABUESA-IA |
+|---|---|---|
+| 1 | Traducteur Ikposso ↔ Français | 🟡 **Traducteur vérifié** (v4.96) : uniquement des traductions vérifiées, propositions des locuteurs |
+| 2 | Traducteur Ikposso ↔ Anglais | 🟡 Même traducteur, en anglais pour les mots qui ont une traduction anglaise |
+| 3 | Dictionnaire de milliers de mots | 🟡 Environ 300 traductions vérifiées ; objectif : des milliers |
+| 4 | Prononciation audio | ✅ 106 mots et 38 phrases avec la voix d'Alexi ; banque vocale avec consentement |
+| 5 | Apprentissage par dialogues | ❌ À construire (petites scènes avec les phrases enregistrées) |
+| 6 | Phrases courantes | 🟡 38 phrases enregistrées |
+| 7 | Proverbes et expressions | 🟡 Quelques proverbes ; « proverbe du jour » à remplir |
+| 8 | Histoires, coutumes, traditions | 🟡 Conte « La souris et l'arachide », Ovazu, danses, jeux, vivres |
+| 9 | Contributions des locuteurs | ✅ Proposer un mot, banque vocale, enregistrer un ancien |
+| 10 | IA qui comprend et explique l'ikposso | ✅ Chat ABUESA-IA avec le lexique vérifié, conversation à voix haute |
+
+## 4. Notre méthode de travail
+
+- Avancer **progressivement**, une étape testée à la fois, avec des **solutions gratuites ou accessibles**.
+- Étudier les plateformes comparables.
+- Organiser le vocabulaire Ikposso.
+- **Vérifier les traductions avec des locuteurs compétents** (les anciens).
+- Construire une base de données linguistique fiable.
+- Améliorer l'interface et les fonctionnalités.
+- Ajouter progressivement l'intelligence artificielle et les fonctions vocales.
+- Préparer une version installable sur Android, puis la publication sur les boutiques d'applications.
+
+## 5. Notre priorité
+
+Donner une véritable **place numérique à la langue Ikposso**. Pas seulement un traducteur : un outil de **transmission linguistique, culturelle et éducative** pour les générations présentes et futures.
+
+## 6. Règles pour l'assistant IA qui aide au développement
+
+- Guider étape par étape, avec des mots simples.
+- Proposer des solutions gratuites ou accessibles.
+- Aider à écrire et améliorer le code et les fonctionnalités.
+- Signaler les erreurs et les faiblesses du projet.
+- **Ne jamais inventer de traductions Ikposso.**
+- **Toujours privilégier la fiabilité linguistique.**
+
+## 7. Prochaines étapes
+
+1. 🔄 Traducteur vérifié — **fait (v4.96)** ; il grandit avec chaque proposition validée.
+2. 💬 Dialogues de la vie courante (au marché, saluer un ancien…) avec les phrases enregistrées.
+3. 📜 Page Proverbes et contes, remplie avec les anciens.
+4. 📱 Application Android installable, puis Play Store.
+
+**Objectif final** : faire d'ABUESA-IA une plateforme de référence pour la langue et la culture Akposso, accessible au Togo et partout dans le monde.
