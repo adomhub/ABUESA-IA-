@@ -25,7 +25,7 @@ ABUESA-IA est un projet technologique destiné à **préserver, valoriser, ensei
 | 2 | Traducteur Ikposso ↔ Anglais | 🟡 Même traducteur, en anglais pour les mots qui ont une traduction anglaise |
 | 3 | Dictionnaire de milliers de mots | 🟡 Environ 300 traductions vérifiées ; objectif : des milliers |
 | 4 | Prononciation audio | ✅ 106 mots et 38 phrases avec la voix d'Alexi ; banque vocale avec consentement |
-| 5 | Apprentissage par dialogues | ❌ À construire (petites scènes avec les phrases enregistrées) |
+| 5 | Apprentissage par dialogues | 🟡 **6 dialogues** (v4.97) construits uniquement avec les enregistrements d'Alexi, mode « jouer mon rôle » |
 | 6 | Phrases courantes | 🟡 38 phrases enregistrées |
 | 7 | Proverbes et expressions | 🟡 Quelques proverbes ; « proverbe du jour » à remplir |
 | 8 | Histoires, coutumes, traditions | 🟡 Conte « La souris et l'arachide », Ovazu, danses, jeux, vivres |
@@ -59,7 +59,7 @@ Donner une véritable **place numérique à la langue Ikposso**. Pas seulement u
 ## 7. Prochaines étapes
 
 1. 🔄 Traducteur vérifié — **fait (v4.96)** ; il grandit avec chaque proposition validée.
-2. 💬 Dialogues de la vie courante (au marché, saluer un ancien…) avec les phrases enregistrées.
+2. 💬 Dialogues de la vie courante — **fait (v4.97)** : 6 scènes ; d'autres viendront avec de nouveaux enregistrements.
 3. 📜 Page Proverbes et contes, remplie avec les anciens.
 4. 📱 Application Android installable, puis Play Store.
 
