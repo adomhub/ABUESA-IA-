@@ -1728,7 +1728,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.93 · 6 nov. 2026 (🎓 Examens et concours, mis à jour chaque matin par l’IA)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.94 · 6 nov. 2026 (🎓 Examens et concours, mis à jour chaque matin par l’IA)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -9198,13 +9198,40 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     x = x.replace(/\s+/g, ' ').trim();
     var next = function(){ if(on) playRealWord(div, function(){ if(on) setTimeout(listen, 350); }); };
     if(!x){ next(); return; }
+    status('speak', T('🔊 ABUESA-IA parle… (Stop pour l’interrompre)', '🔊 ABUESA-IA is speaking… (Stop to interrupt)'));
+    // 1) voix naturelle (MeloTTS, fonction Supabase) ; 2) si elle ne répond pas, voix du téléphone
+    cloudSay(x, function(ok){ if(!ok && on) phoneSay(x, next); else if(ok) next(); });
+  }
+  var VOICE_FN = 'voix-ia'; /* nom de la fonction Supabase de la voix naturelle */
+  var cloudAudio = null;
+  function cloudSay(x, done){
+    var base = '';
+    try{ base = localStorage.getItem(STORE_KEYS.supabaseUrl) || DEFAULT_SUPABASE_URL; }catch(_){ base = (typeof DEFAULT_SUPABASE_URL !== 'undefined') ? DEFAULT_SUPABASE_URL : ''; }
+    if(!base){ done(false); return; }
+    var ctl = ('AbortController' in window) ? new AbortController() : null;
+    var timer = setTimeout(function(){ try{ ctl && ctl.abort(); }catch(_){} }, 20000);
+    fetch(base + '/functions/v1/' + VOICE_FN, { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ text: x, lang: en() ? 'en' : 'fr' }), signal: ctl ? ctl.signal : undefined })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){
+        clearTimeout(timer);
+        if(!on){ done(true); return; }
+        if(!d || !d.audio){ done(false); return; }
+        cloudAudio = new Audio('data:audio/mpeg;base64,' + d.audio);
+        var finished = false;
+        var end = function(ok){ if(finished) return; finished = true; cloudAudio = null; done(ok); };
+        cloudAudio.onended = function(){ end(true); };
+        cloudAudio.onerror = function(){ end(false); };
+        var pr = cloudAudio.play(); if(pr && pr.catch) pr.catch(function(){ end(false); });
+      })
+      .catch(function(){ clearTimeout(timer); done(false); });
+  }
+  function phoneSay(x, next){
     var u = new SpeechSynthesisUtterance(x);
     u.lang = en() ? 'en-US' : 'fr-FR';
     var v = pickVoice(en() ? 'en' : 'fr'); if(v) u.voice = v;
     u.rate = 0.98; u.pitch = 1.1;
     u.onend = u.onerror = function(){ next(); };
-    status('speak', T('🔊 ABUESA-IA parle… (Stop pour l’interrompre)', '🔊 ABUESA-IA is speaking… (Stop to interrupt)'));
-    try{ speechSynthesis.cancel(); speechSynthesis.speak(u); }catch(_){ listen(); }
+    try{ speechSynthesis.cancel(); speechSynthesis.speak(u); }catch(_){ next(); }
   }
 
   // quand une réponse arrive dans le chat pendant une conversation à voix haute, on la lit
@@ -9212,7 +9239,14 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   window.abuesaVoix = window.abuesaVoix || {};
   window.abuesaVoix.attach = function(div, text){
     if(prev) try{ prev(div, text); }catch(_){}
-    if(on && waiting){ waiting = false; say(text, div); }
+    if(on && waiting){
+      waiting = false;
+      if(/^(Erreur|Error|⏳)/.test(String(text || '').trim())){
+        stop(); try{ showToast(T('Le chat ne répond pas pour le moment. Réessaie dans quelques minutes.', 'The chat is not answering right now. Try again in a few minutes.')); }catch(_){}
+        return;
+      }
+      say(text, div);
+    }
   };
 
   function startMode(){
@@ -9225,6 +9259,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     try{ if(rec) rec.abort(); }catch(_){}
     rec = null;
     try{ speechSynthesis.cancel(); }catch(_){}
+    try{ if(cloudAudio){ cloudAudio.pause(); cloudAudio = null; } }catch(_){}
     status('', '');
   }
   window.abuesaVoiceStart = startMode;
