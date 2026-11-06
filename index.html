@@ -1202,6 +1202,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
     </div>
     <form id="chat-form">
       <textarea id="chat-input" rows="1" placeholder="Écris ton message..."></textarea>
+      <button type="button" id="chat-voice" aria-label="Parler avec ABUESA-IA" title="Parler avec ABUESA-IA" style="background:var(--forest,#1B4D2E);">🎙️</button>
       <button type="submit" id="chat-send" aria-label="Envoyer">➤</button>
     </form>
   </main>
@@ -1727,7 +1728,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.92 · 6 nov. 2026 (🎓 Examens et concours, mis à jour chaque matin par l’IA)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.93 · 6 nov. 2026 (🎓 Examens et concours, mis à jour chaque matin par l’IA)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -9088,6 +9089,148 @@ document.getElementById('community-record').addEventListener('click', async ()=>
       try{ reg.showNotification('ABUESA-IA',{body:'Notifications activées ✓',icon:'icon-192.png'}); }catch(_){}
     }catch(e){ note.textContent='Impossible d\'activer les notifications : '+((e&&e.message)||'erreur'); }
   };
+})();
+</script>
+<script>
+/* ===== 🎙️ CONVERSATION À VOIX HAUTE (v4.93) =====
+   On touche 🎙️ : ABUESA-IA écoute (français ou anglais), envoie la question, lit sa réponse avec une voix de femme,
+   puis écoute de nouveau. Les mots ikposso cités gardent leurs boutons ▶ (vraie voix enregistrée). */
+(function(){
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var btn = document.getElementById('chat-voice');
+  var input = document.getElementById('chat-input');
+  var form = document.getElementById('chat-form');
+  if(!btn || !input || !form) return;
+  if(!SR || !('speechSynthesis' in window)){ btn.style.display = 'none'; return; }
+
+  var on = false, rec = null, silent = 0, waiting = false, voices = [];
+  function en(){ return !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en'); }
+  function T(fr, e){ return en() ? e : fr; }
+  function loadVoices(){ try{ voices = speechSynthesis.getVoices() || []; }catch(_){ voices = []; } }
+  loadVoices(); try{ speechSynthesis.addEventListener('voiceschanged', loadVoices); }catch(_){}
+  var FEMALE = /(female|femme|amelie|amélie|audrey|aurelie|aurélie|celine|céline|denise|eloise|elise|julie|marie|virginie|hortense|chantal|sylvie|léa|samantha|karen|victoria|zira|susan|serena|moira|tessa|fiona|allison|ava|joanna)/i;
+  var MALE = /(\bmale\b|homme|thomas|daniel|nicolas|paul|henri|claude|fred|david|mark|george|guy|jacques|mathieu)/i;
+  function pickVoice(lang){
+    var list = voices.filter(function(v){ return String(v.lang || '').toLowerCase().replace('_', '-').indexOf(lang) === 0; });
+    var f = list.filter(function(v){ return FEMALE.test(v.name) && !/\bmale\b/i.test(v.name); });
+    if(f.length) return f[0];
+    var n = list.filter(function(v){ return !MALE.test(v.name); });
+    return n[0] || list[0] || null;
+  }
+
+  // barre d'état au-dessus du formulaire
+  var bar = document.createElement('div');
+  bar.id = 'voice-bar'; bar.setAttribute('data-no-i18n', '');
+  bar.style.cssText = 'display:none;align-items:center;gap:10px;padding:10px 14px;background:#1B4D2E;color:#fff;font-weight:700;font-size:calc(16px * var(--fs,1.15));';
+  bar.innerHTML = '<span id="voice-dot" style="width:14px;height:14px;border-radius:50%;background:#C7D92E;flex:0 0 auto;"></span><span id="voice-txt" style="flex:1;"></span><button type="button" id="voice-stop" style="background:#fff;color:#1B4D2E;border:0;border-radius:999px;padding:8px 14px;font:inherit;font-weight:800;">⏹ Stop</button>';
+  form.parentNode.insertBefore(bar, form);
+  var st = document.createElement('style');
+  st.textContent = '@keyframes vpulse{0%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.5}100%{transform:scale(1);opacity:1}} #voice-bar.listen #voice-dot{animation:vpulse 1s infinite;background:#ff6b6b}';
+  document.head.appendChild(st);
+  function status(mode, txt){
+    bar.style.display = on ? 'flex' : 'none';
+    bar.className = mode === 'listen' ? 'listen' : '';
+    document.getElementById('voice-txt').textContent = txt;
+    btn.textContent = on ? '⏹' : '🎙️';
+  }
+
+  function listen(){
+    if(!on) return;
+    try{ speechSynthesis.cancel(); }catch(_){}
+    rec = new SR();
+    rec.lang = en() ? 'en-US' : 'fr-FR';
+    rec.interimResults = true; rec.maxAlternatives = 1; rec.continuous = false;
+    var finalText = '';
+    rec.onresult = function(e){
+      var txt = '';
+      for(var i = 0; i < e.results.length; i++){ txt += e.results[i][0].transcript; if(e.results[i].isFinal) finalText = txt; }
+      input.value = txt;
+      status('listen', '🎙️ ' + txt);
+    };
+    rec.onerror = function(e){
+      if(e && (e.error === 'not-allowed' || e.error === 'service-not-allowed')){
+        stop(); try{ showToast(T('Autorise le micro pour parler avec ABUESA-IA.', 'Allow the microphone to talk with ABUESA-IA.')); }catch(_){}
+      }
+    };
+    rec.onend = function(){
+      rec = null;
+      if(!on) return;
+      var q = (finalText || input.value || '').trim();
+      if(!q){
+        silent++;
+        if(silent >= 2){ stop(); return; }
+        listen(); return;
+      }
+      silent = 0; waiting = true;
+      input.value = q;
+      status('think', T('⏳ ABUESA-IA réfléchit…', '⏳ ABUESA-IA is thinking…'));
+      form.dispatchEvent(new Event('submit', { cancelable:true }));
+    };
+    status('listen', T('🎙️ Je t’écoute… parle en français', '🎙️ I’m listening… speak in English'));
+    try{ rec.start(); }catch(_){ setTimeout(listen, 400); }
+  }
+
+  function clean(text){
+    var x = String(text || '').replace(/\[\[[^\]]*\]\]/g, ' ').replace(/\*\*([^*]+)\*\*/g, '$1').replace(/[*_#`>|]/g, ' ').replace(/https?:\/\/\S+/g, ' ');
+    // les mots ikposso (lettres spéciales) ne sont pas lus par la voix de synthèse : ils ont leurs boutons ▶
+    x = x.replace(/\S*[ɛɔɩʋɣŋǝʉɨɖƒɓɗɲƐƆƖƲĒēõ]\S*/g, ' ');
+    return x.replace(/\s+/g, ' ').trim();
+  }
+  // après la phrase lue, le premier mot ikposso cité est joué avec la vraie voix enregistrée (bouton ▶ de la réponse)
+  function playRealWord(div, done){
+    var b = div && div.querySelector('.chat-voix');
+    if(!b){ done(); return; }
+    status('speak', T('🔊 La vraie voix : ', '🔊 The real voice: ') + String(b.__idle || '').replace(/^▶\s*/, ''));
+    try{ b.click(); }catch(_){ done(); return; }
+    var t0 = Date.now();
+    var iv = setInterval(function(){
+      var idle = b.textContent === b.__idle;
+      if((idle && Date.now() - t0 > 800) || Date.now() - t0 > 15000 || !on){ clearInterval(iv); done(); }
+    }, 300);
+  }
+  function say(text, div){
+    var x = clean(text);
+    // on retire aussi les mots ikposso qui ont un bouton ▶ (ils seront joués avec la vraie voix)
+    if(div) div.querySelectorAll('.chat-voix').forEach(function(b){
+      var ak = String(b.__idle || '').split(' · ')[1] || '';
+      ak.split(/\s+ou\s+/).forEach(function(w){ w = w.replace(/[?!.]/g, '').trim(); if(w.length > 2) x = x.split(w).join(' '); });
+    });
+    x = x.replace(/\s+/g, ' ').trim();
+    var next = function(){ if(on) playRealWord(div, function(){ if(on) setTimeout(listen, 350); }); };
+    if(!x){ next(); return; }
+    var u = new SpeechSynthesisUtterance(x);
+    u.lang = en() ? 'en-US' : 'fr-FR';
+    var v = pickVoice(en() ? 'en' : 'fr'); if(v) u.voice = v;
+    u.rate = 0.98; u.pitch = 1.1;
+    u.onend = u.onerror = function(){ next(); };
+    status('speak', T('🔊 ABUESA-IA parle… (Stop pour l’interrompre)', '🔊 ABUESA-IA is speaking… (Stop to interrupt)'));
+    try{ speechSynthesis.cancel(); speechSynthesis.speak(u); }catch(_){ listen(); }
+  }
+
+  // quand une réponse arrive dans le chat pendant une conversation à voix haute, on la lit
+  var prev = window.abuesaVoix && window.abuesaVoix.attach;
+  window.abuesaVoix = window.abuesaVoix || {};
+  window.abuesaVoix.attach = function(div, text){
+    if(prev) try{ prev(div, text); }catch(_){}
+    if(on && waiting){ waiting = false; say(text, div); }
+  };
+
+  function startMode(){
+    on = true; silent = 0; waiting = false;
+    loadVoices();
+    listen();
+  }
+  function stop(){
+    on = false; waiting = false;
+    try{ if(rec) rec.abort(); }catch(_){}
+    rec = null;
+    try{ speechSynthesis.cancel(); }catch(_){}
+    status('', '');
+  }
+  window.abuesaVoiceStart = startMode;
+  btn.addEventListener('click', function(){ if(on) stop(); else startMode(); });
+  bar.querySelector('#voice-stop').addEventListener('click', stop);
+  document.addEventListener('visibilitychange', function(){ if(document.hidden && on) stop(); });
 })();
 </script>
 </body>
