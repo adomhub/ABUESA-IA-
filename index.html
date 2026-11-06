@@ -1728,7 +1728,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.94 · 6 nov. 2026 (🎓 Examens et concours, mis à jour chaque matin par l’IA)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.95 · 6 nov. 2026 (🎓 Examens et concours, mis à jour chaque matin par l’IA)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -9202,7 +9202,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     // 1) voix naturelle (MeloTTS, fonction Supabase) ; 2) si elle ne répond pas, voix du téléphone
     cloudSay(x, function(ok){ if(!ok && on) phoneSay(x, next); else if(ok) next(); });
   }
-  var VOICE_FN = 'voix-ia'; /* nom de la fonction Supabase de la voix naturelle */
+  var VOICE_FN = 'quick-function'; /* nom imposé par Supabase pour la fonction voix-ia (voix naturelle) */
   var cloudAudio = null;
   function cloudSay(x, done){
     var base = '';
