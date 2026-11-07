@@ -2,7 +2,7 @@
 // 1) Garde l'app en cache pour un fonctionnement hors-ligne (réseau d'abord, cache en secours)
 // 2) Reçoit les notifications push et ouvre l'app quand on touche la notification
 // Alexi : change le numéro de CACHE_NAME à chaque nouvelle version pour forcer la mise à jour.
-const CACHE_NAME = 'abuesa-v23';
+const CACHE_NAME = 'abuesa-v24';
 // v4.86 : les photos venant de Supabase sont gardées sur le téléphone (pour ne pas les retélécharger à chaque visite)
 const MEDIA_CACHE = 'abuesa-media-v1';
 const MEDIA_MAX = 150;
@@ -41,8 +41,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
   if (url.origin !== self.location.origin) return; // Supabase (données), Jitsi, etc. : on ne touche pas
+  // v4.98 : pour les pages et le code (html, js, json), on redemande toujours à GitHub s'il y a du nouveau
+  // (sinon le navigateur garde l'ancienne version jusqu'à 10 minutes après un dépôt).
+  const fresh = req.mode === 'navigate' || /\.(html|js|json)$/.test(url.pathname) || url.pathname.endsWith('/');
   event.respondWith(
-    fetch(req)
+    fetch(fresh ? new Request(req, { cache: 'no-cache' }) : req)
       .then((res) => {
         if (res && res.ok) {
           const copy = res.clone();
