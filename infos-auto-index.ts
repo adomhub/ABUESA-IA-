@@ -1,11 +1,11 @@
-// ABUESA-IA — fonction Supabase « infos-auto » / bright-action (v4.91 : moins de texte, attend et réessaie si Groq dit 429)
+// ABUESA-IA — fonction Supabase « infos-auto » / bright-action (v5.00 : + validation des mots proposés ; v4.91 : réessaie si Groq dit 429)
 // Chaque matin, l'IA cherche sur internet les nouvelles annonces publiques du Togo
 // (concours, examens, bourses, emplois publics), vérifie que chaque lien existe vraiment,
 // puis les ajoute dans la table infos_utiles avec auto = true.
 //
 // Appels acceptés :
 //   - par la tâche programmée (pg_cron) :  .../functions/v1/infos-auto?key=CODE_ADMIN
-//   - par l'espace admin du site :        POST { action: "run" | "delete", id?, code }
+//   - par l'espace admin du site :        POST { action: "run" | "delete" | "mots_list" | "mot_valider" | "mot_refuser", id?, code }
 // Secrets utilisés (déjà présents dans Supabase) : GROQ_API_KEY, ADMIN_CODE.
 // SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY sont fournis automatiquement par Supabase.
 
@@ -161,6 +161,34 @@ Deno.serve(async (req) => {
   if (code !== ADMIN) return json({ error: "Code incorrect" }, 403);
 
   try {
+    // --- Mots proposés par les visiteurs (table mots_proposes) ---
+    if (body.action === "mots_list") {
+      const r = await db("mots_proposes?select=id,ikposso,francais,anglais,exemple,origine,created_at&order=created_at.desc&limit=100");
+      if (!r.ok) return json({ error: r.status === 404 ? "La table mots_proposes n'existe pas encore : passe le fichier supabase_mots_proposes.sql." : "Lecture impossible (" + r.status + ")" }, 500);
+      return json({ ok: true, mots: await r.json() });
+    }
+    if (body.action === "mot_valider") {
+      const id = Number(body.id);
+      const cut = (x: unknown, n: number) => String(x ?? "").trim().slice(0, n);
+      const ak = cut(body.ak, 60), en = cut(body.en, 120);
+      const fr = cut(body.fr, 120) || en;
+      if (!Number.isFinite(id) || !ak || !fr) return json({ error: "Il faut le mot ikposso et son sens" }, 400);
+      let sans_anglais = false;
+      let ins = await db("dictionary_words", { method: "POST", headers: { Prefer: "return=minimal" }, body: JSON.stringify(en ? { fr, ak, en } : { fr, ak }) });
+      if (!ins.ok && en) {   // colonne « en » absente : on garde au moins le mot
+        ins = await db("dictionary_words", { method: "POST", headers: { Prefer: "return=minimal" }, body: JSON.stringify({ fr, ak }) });
+        sans_anglais = true;
+      }
+      if (!ins.ok) return json({ error: "Ajout au dictionnaire impossible (" + ins.status + ")" }, 500);
+      await db(`mots_proposes?id=eq.${id}`, { method: "DELETE" });
+      return json({ ok: true, sans_anglais });
+    }
+    if (body.action === "mot_refuser") {
+      const id = Number(body.id);
+      if (!Number.isFinite(id)) return json({ error: "id manquant" }, 400);
+      const r = await db(`mots_proposes?id=eq.${id}`, { method: "DELETE" });
+      return r.ok ? json({ ok: true }) : json({ error: "Suppression impossible" }, 500);
+    }
     if (body.action === "delete") {
       const id = Number(body.id);
       if (!Number.isFinite(id)) return json({ error: "id manquant" }, 400);
