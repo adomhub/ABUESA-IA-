@@ -2,7 +2,7 @@
 // 1) Garde l'app en cache pour un fonctionnement hors-ligne (réseau d'abord, cache en secours)
 // 2) Reçoit les notifications push et ouvre l'app quand on touche la notification
 // Alexi : change le numéro de CACHE_NAME à chaque nouvelle version pour forcer la mise à jour.
-const CACHE_NAME = 'abuesa-v26';
+const CACHE_NAME = 'abuesa-v27';
 // v4.86 : les photos venant de Supabase sont gardées sur le téléphone (pour ne pas les retélécharger à chaque visite)
 const MEDIA_CACHE = 'abuesa-media-v1';
 const MEDIA_MAX = 150;
