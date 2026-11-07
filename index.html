@@ -1735,7 +1735,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.98 · 7 nov. 2026 (📜 Proverbes et contes, 💬 dialogues, 🔄 traducteur vérifié)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 4.99 · 7 nov. 2026 (📜 Proverbes et contes, 💬 dialogues, 🔄 traducteur vérifié)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -3177,7 +3177,7 @@ const DICTIONARY = [
   { fr:'juillet', ak:'Nekuneku' }, { fr:'août', ak:'Ipuǝnǝ / Ipuatsyo' }, { fr:'septembre', ak:'Iwle / Ipuana' },
   { fr:'octobre', ak:'Iwletsɔ' }, { fr:'novembre', ak:'Ɔtɩɩ' }, { fr:'décembre', ak:'Ɛyɛbuele (mois de OVAZU, l\'abondance)' },
   // Tradition orale
-  { fr:'veillée au coin du feu (contes et proverbes)', ak:'Ɩkpa' }, { fr:'conte', ak:'UTÌ' }, { fr:'proverbe', ak:'Iyʋli' },
+  { fr:'conte', ak:'uti' }, { fr:'proverbe', ak:'ulo' },
   // Fêtes
   { fr:'Bonne fête de OVAZU à tous les Akposso', ak:'OVAZU AYU ĒYI ÖBUE KU KPOSSOVI EDI-NÉDI' },
 ];
@@ -9629,7 +9629,7 @@ window.abuesaEnOf = function(fr){ var k = String(fr||'').toLowerCase().trim(), g
 </script>
 <script>
 /* ===== 📜 PROVERBES ET CONTES (v4.98) =====
-   Contenu donné par Alexi (tradition orale akposso, racontée au coin du feu, Ɩkpa) + proverbes ajoutés depuis l'admin (table proverbes).
+   Contenu donné par Alexi (tradition orale akposso, racontée le soir au coin du feu — feu = ivu ; conte = uti ; proverbe = ulo, corrigé par Alexi le 7 nov. 2026) + proverbes ajoutés depuis l'admin (table proverbes).
    Rien n'est inventé : quand la forme ikposso n'a pas encore été donnée, c'est écrit « forme ikposso à recueillir ». */
 (function(){
   function en(){ return !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en'); }
@@ -9715,9 +9715,9 @@ window.abuesaEnOf = function(fr){ var k = String(fr||'').toLowerCase().trim(), g
       + ['proverbes', 'contes'].map(function(k){
           var on = k === tab;
           return '<button type="button" data-tab="' + k + '" style="flex:1;padding:10px;border-radius:999px;border:2px solid var(--forest,#1B4D2E);font:inherit;font-weight:800;background:' + (on ? 'var(--forest,#1B4D2E);color:#fff' : 'transparent;color:var(--forest,#1B4D2E)') + ';">'
-            + (k === 'proverbes' ? '💬 ' + T('Proverbes', 'Proverbs') + ' (Iyʋli)' : '📖 ' + T('Contes', 'Tales') + ' (UTÌ)') + '</button>';
+            + (k === 'proverbes' ? '💬 ' + T('Proverbes', 'Proverbs') + ' (ulo)' : '📖 ' + T('Contes', 'Tales') + ' (uti)') + '</button>';
         }).join('') + '</div>';
-    var intro = '<div style="' + CARD + 'background:#FFF7E0;border-color:#E8C96A;">🔥 ' + T('Chez les Akposso, les contes (UTÌ) et les proverbes (Iyʋli) se disent le soir, au coin du feu (Ɩkpa).', 'Among the Akposso, tales (UTÌ) and proverbs (Iyʋli) are told in the evening, by the fire (Ɩkpa).') + '<div class="hc-note" style="margin-top:6px;">🌱 ' + T('La formule d’ouverture des contes en ikposso est à recueillir auprès des anciens.', 'The Ikposso opening formula for tales is still to be collected from the elders.') + '</div></div>';
+    var intro = '<div style="' + CARD + 'background:#FFF7E0;border-color:#E8C96A;">🔥 ' + T('Chez les Akposso, les contes (uti) et les proverbes (ulo) se disent le soir, au coin du feu (ivu).', 'Among the Akposso, tales (uti) and proverbs (ulo) are told in the evening, by the fire (ivu).') + '<div class="hc-note" style="margin-top:6px;">🌱 ' + T('La formule d’ouverture des contes en ikposso est à recueillir auprès des anciens.', 'The Ikposso opening formula for tales is still to be collected from the elders.') + '</div></div>';
     var body = '';
     if(tab === 'proverbes'){
       body = '<div class="hc-note" style="margin-bottom:10px;">' + T('À l’Ovazu, les proverbes servent à régler les conflits sans accuser directement : on lance un proverbe, et l’autre comprend.', 'At Ovazu, proverbs are used to settle disputes without direct accusation: you say a proverb, and the other person understands.') + '</div>'
