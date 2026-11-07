@@ -62,6 +62,6 @@ Donner une véritable **place numérique à la langue Ikposso**. Pas seulement u
 2. 💬 Dialogues de la vie courante — **fait (v4.97)** : 6 scènes ; d'autres viendront avec de nouveaux enregistrements.
 3. 📜 Page Proverbes et contes — **faite (v4.98)** ; elle se remplit avec les anciens.
 3 bis. 🌱 Mots proposés validés depuis l'admin, avec le sens en anglais — **fait (v5.01)**.
-4. 📱 Application Android installable — **en cours** : icônes et captures prêtes (v5.02), paquet Android avec PWABuilder ; Play Store ensuite (25 $ une seule fois).
+4. 📱 Application Android — **faite le 7 nov. 2026** : paquet PWABuilder `io.github.adomhub.abuesa`, installée et testée (Play Protect : « semble sûre »), plein écran grâce à la preuve `adomhub.github.io/.well-known/assetlinks.json`. ⏳ Reste : publication sur le Play Store (25 $ une seule fois), avec le fichier .aab et la clé de signature gardés par Alexi (jamais sur GitHub).
 
 **Objectif final** : faire d'ABUESA-IA une plateforme de référence pour la langue et la culture Akposso, accessible au Togo et partout dans le monde.
