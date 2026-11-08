@@ -1743,7 +1743,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.05 · 8 nov. 2026 (✏️ corriger une traduction, 🗑️ retirer un mot)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.06 · 8 nov. 2026 (🍲 photo de l'ayē, ✏️ corriger une traduction)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -2608,6 +2608,7 @@ ACCÈS À INTERNET : tu disposes d'une recherche web en direct (et tu peux ouvri
 const SYSTEM_PROMPT_BASE = `Tu es ABUESA, un assistant culturel bilingue qui connaît en profondeur la culture, la langue et les traditions du peuple Akposso (Ikposso) du canton de Wawa, au Togo. Tu réponds toujours en français, de façon chaleureuse, précise et respectueuse, en intégrant des mots Akposso quand c'est pertinent (avec leur traduction). Tu ne connais que ce qui t'a été enseigné sur cette culture ; si tu n'es pas sûr d'un détail, dis-le honnêtement plutôt que d'inventer.
 
 Faits vérifiés à ta disposition :
+- AYĒ (ayē, aussi écrit AYÊ) = le fonio en ikposso (fact donné par Alexi). Quand on te parle d'ayē ou du fonio, ABUESA affiche automatiquement sous ta réponse une vraie photo d'un plat d'ayē envoyée par Alexi : tu peux dire « voici une photo d'ayē », mais n'écris jamais toi-même de lien ou de code d'image.
 - Les Akposso (Kpɔsɔ wanɩ) habitent la région des Plateaux au Togo, principalement les préfectures de Wawa, Amou et Ogou, avec une communauté aussi au Ghana voisin.
 - Leur langue, l'ikposso (ɩkpɔsɔ), est une langue kwa tonale à 10 voyelles et 24 consonnes (dont 5 digrammes : dz, ts, gb, kp, ny), standardisée sur le parler Uwi.
 - Ils suivent un calendrier traditionnel de 5 jours et célèbrent chaque année, le 2e samedi de décembre, la fête des moissons OVAZU, centrée sur le fonio, en alternance à Amlamé (préfecture de l'Amou) et à Badou/Kougnohou (Wawa/Akébou), rassemblant aussi les Akébou voisins.
@@ -3067,6 +3068,25 @@ async function handleMediaRequest(kind, text){
   }
 }
 
+
+/* v5.06 : vraies photos envoyées par Alexi, montrées dans le chat quand on en parle */
+const ABUESA_PHOTOS = [
+  { re: /(^|[^a-zà-ÿ])ay[eēêɛ](?![a-zà-ÿ])|fonio/i, src: 'aye-fonio.jpg',
+    fr: "🍲 AYĒ — le fonio. Un plat d'ayē, photo envoyée par Alexi.",
+    en: "🍲 AYĒ — fonio. A dish of ayē, photo sent by Alexi." }
+];
+function abuesaPhotoFor(text){ const t = String(text || ''); return ABUESA_PHOTOS.find(p => p.re.test(t)) || null; }
+function addPhotoMessage(ph){
+  const en = window.ABUESA_I18N && ABUESA_I18N.lang() === 'en';
+  const div = addMessage('', 'bot');
+  div.setAttribute('data-no-i18n','');
+  div.innerHTML = '<img alt="" loading="lazy" style="max-width:100%;border-radius:12px;display:block;"><div style="font-size:calc(14px * var(--fs,1.15));opacity:.8;margin-top:6px;"></div>';
+  div.querySelector('img').src = ph.src;
+  div.querySelector('img').alt = en ? ph.en : ph.fr;
+  div.querySelector('div').textContent = en ? ph.en : ph.fr;
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
 chatForm.addEventListener('submit', async (e)=>{
   e.preventDefault();
   const text = chatInput.value.trim();
@@ -3099,6 +3119,7 @@ chatForm.addEventListener('submit', async (e)=>{
     addMessage("Erreur : "+err.message, 'bot');
   }finally{
     sendBtn.disabled = false;
+    try{ const ph = abuesaPhotoFor(text); if(ph) addPhotoMessage(ph); }catch(_){}
   }
 });
 
@@ -3113,6 +3134,7 @@ const DICTIONARY = [
   { fr:'champ', ak:'usi' }, { fr:'savane', ak:'ugbe' }, { fr:'chemin', ak:'une' },
   { fr:'village', ak:'alɩ' }, { fr:'marigot', ak:'ɔbɛ' }, { fr:'trou', ak:'ɔtɔ' },
   { fr:'bois (matière)', ak:'itsu' },
+  { fr:'fonio', ak:'ayē' },
   // Famille
   { fr:'mère', ak:'ɩna' }, { fr:'mon père', ak:'anʋla' }, { fr:'ma mère', ak:'anʋna' },
   { fr:'ton fils', ak:'yanɩlɛ' }, { fr:'son frère', ak:'ɔvla' }, { fr:'ma sœur', ak:'anʋnedzǝ' },
@@ -3792,7 +3814,7 @@ CULTURE_NAMES.forEach((g, gi)=>{
   d.addEventListener('click', e=>{
     const c = e.target.closest('.cn-chip'); if(!c) return;
     const box = d.querySelector('.cn-desc'), n = c.dataset.n;
-    if(CULTURE_DESC[n]){ box.innerHTML = '<b>' + escAll(n) + '</b><br>' + escAll(cultureDescFor(n)); box.style.display = 'block'; }
+    if(CULTURE_DESC[n]){ box.innerHTML = '<b>' + escAll(n) + '</b><br>' + escAll(cultureDescFor(n)) + (n === 'AYÊ' ? '<img src="aye-fonio.jpg" alt="AYĒ" loading="lazy" style="display:block;max-width:100%;border-radius:12px;margin-top:10px;"><div style="font-size:.85em;opacity:.75;margin-top:4px;">' + escAll((window.ABUESA_I18N && ABUESA_I18N.lang() === 'en') ? 'A dish of ayē (fonio), photo by Alexi.' : "Un plat d'ayē (fonio), photo d'Alexi.") + '</div>' : ''); box.style.display = 'block'; }
     else { box.innerHTML = '<b>' + escAll(n) + '</b><br><i>La description sera ajoutée bientôt.</i>'; box.style.display = 'block'; }
   });
   cultureNames.appendChild(d);
