@@ -1743,7 +1743,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.07 · 8 nov. 2026 (💬 chat réparé, 🍲 photo de l'ayē)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.08 · 8 nov. 2026 (🛟 chat de secours Cloudflare, 🍲 photo de l'ayē)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -2568,11 +2568,13 @@ function addMessage(text, role){
 
 /* Recherche internet : fonction Supabase "groq-search" (Groq Compound). Si elle échoue, l'app retombe sur "groq-chat". */
 const SEARCH_FUNCTION_NAME = 'super-api';
+const CHAT_BACKUP_FN = 'rapid-worker'; /* v5.08 : secours Cloudflare quand Groq refuse */
 function showSearchErr(){
   const out = document.getElementById('search-test-out');
   out.style.display = 'block';
   let e = '', im = ''; try{ e = localStorage.getItem('abuesa_last_search_err') || ''; im = localStorage.getItem('abuesa_last_image_err') || ''; }catch(_){}
-  out.textContent = (e ? ('Dernière erreur de recherche :\n' + e + '\n\n') : 'Aucune erreur de recherche enregistrée.\n\n') + (im ? ('Dernière erreur d\'image :\n' + im) : 'Aucune erreur d\'image enregistrée.');
+  let bk = ''; try{ bk = localStorage.getItem('abuesa_last_backup_err') || ''; }catch(_){}
+  out.textContent = (e ? ('Dernière erreur de recherche :\n' + e + '\n\n') : 'Aucune erreur de recherche enregistrée.\n\n') + (im ? ('Dernière erreur d\'image :\n' + im) : 'Aucune erreur d\'image enregistrée.') + (bk ? ('\n\nDernière erreur du secours (Cloudflare) :\n' + bk) : '');
 }
 async function testSearch(){
   const out = document.getElementById('search-test-out');
@@ -2995,6 +2997,7 @@ async function callGroq(userText){
   }catch(e){ /* recherche indisponible : on utilise le chat habituel */
     try{ localStorage.setItem('abuesa_last_search_err', new Date().toLocaleString() + '\n' + (e && e.message ? e.message : e)); }catch(_){}
   }
+  let netFail = false;
   if(!res){
   try{
     res = await fetch(url + '/functions/v1/groq-chat', {
@@ -3002,20 +3005,32 @@ async function callGroq(userText){
       headers:{ 'Content-Type':'application/json', 'apikey': key, 'Authorization':'Bearer '+key },
       body: JSON.stringify({ messages })
     });
-  }catch(networkErr){
-    throw new Error("Impossible de joindre le serveur d'ABUESA. Vérifie ta connexion et réessaie.");
-  }
+  }catch(networkErr){ netFail = true; res = null; }
   }
 
-  if(!res.ok){
-    if(res.status === 429){
-      throw new Error("Beaucoup de monde utilise ABUESA en ce moment 🙏 Réessaie dans une minute.");
+  let data = null;
+  if(res && res.ok){ try{ data = await res.json(); }catch(_){ data = null; } }
+  if(!data || data.error){
+    /* v5.08 : roue de secours (Cloudflare Workers AI, fonction « rapid-worker ») quand Groq refuse */
+    const firstStatus = res ? res.status : 0;
+    try{
+      const ctl2 = new AbortController(); const tm2 = setTimeout(()=> ctl2.abort(), 60000);
+      const br = await fetch(url + '/functions/v1/' + CHAT_BACKUP_FN, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'apikey': key, 'Authorization':'Bearer '+key },
+        body: JSON.stringify({ messages }),
+        signal: ctl2.signal
+      });
+      clearTimeout(tm2);
+      const bd = await br.json().catch(()=> null);
+      if(br.ok && bd && bd.reply){ data = { reply: bd.reply }; viaSearch = false; }
+      else { try{ localStorage.setItem('abuesa_last_backup_err', new Date().toLocaleString() + '\nHTTP ' + br.status + '\n' + JSON.stringify(bd || {}).slice(0, 700)); }catch(_){} }
+    }catch(e){ try{ localStorage.setItem('abuesa_last_backup_err', new Date().toLocaleString() + '\n' + (e && e.message ? e.message : e)); }catch(_){} }
+    if(!data || data.error){
+      if(netFail) throw new Error("Impossible de joindre le serveur d'ABUESA. Vérifie ta connexion et réessaie.");
+      if(firstStatus === 429) throw new Error("Beaucoup de monde utilise ABUESA en ce moment 🙏 Réessaie dans une minute.");
+      throw new Error("Le service de discussion est momentanément indisponible. Réessaie un peu plus tard.");
     }
-    throw new Error("Le service de discussion est momentanément indisponible. Réessaie un peu plus tard.");
-  }
-  const data = await res.json();
-  if(data.error){
-    throw new Error("Le service de discussion est momentanément indisponible. Réessaie un peu plus tard.");
   }
   let reply = data.reply || "Je n'ai pas pu générer de réponse.";
   const learned = extractLearnedWords(reply);
