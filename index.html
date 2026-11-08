@@ -1743,7 +1743,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.03 · 8 nov. 2026 (📱 application Android, 🌱 mots proposés)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.04 · 8 nov. 2026 (🗑️ retirer un mot depuis l'admin, 📱 application Android)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -3217,7 +3217,7 @@ async function fetchCloudWords(){
   if(!supabaseClient){ cloudWords = []; return; }
   let { data, error } = await supabaseClient
     .from('dictionary_words')
-    .select('fr, ak, en, created_at')
+    .select('id, fr, ak, en, created_at')
     .order('created_at', { ascending:false });
   if(error){   /* colonne « en » pas encore créée : on lit sans elle */
     ({ data, error } = await supabaseClient.from('dictionary_words').select('fr, ak, created_at').order('created_at', { ascending:false }));
@@ -5025,15 +5025,30 @@ function renderAdminAddedList(){
   const words = getExtraWords();
   const artists = getExtraArtists();
   const cloudNote = supabaseClient
-    ? `<div style="margin:8px 0;color:var(--ink-soft);">🌍 ${cloudWords.length} mot(s) dans la mémoire partagée (Supabase) — pour en retirer un, utilise le Table Editor sur supabase.com.</div>`
+    ? `<details style="margin:8px 0;"><summary style="cursor:pointer;color:var(--ink-soft);">🌍 ${cloudWords.length} mot(s) dans le dictionnaire partagé — touche pour voir et retirer</summary>
+        <div style="margin-top:6px;">${cloudWords.map(w=> `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);"><span style="flex:1;">📖 <b>${escapeHtml(String(w.ak||''))}</b> — ${escapeHtml(String(w.fr||''))}${w.en ? ' · <i>' + escapeHtml(String(w.en)) + '</i>' : ''}</span>${w.id ? `<button type="button" data-cloud-del="${escapeHtml(String(w.id))}" data-cloud-ak="${escapeHtml(String(w.ak||''))}" style="border:none;background:none;color:var(--clay);cursor:pointer;font-size:1.1em;" title="Retirer">🗑️</button>` : ''}</div>`).join('')}</div></details>`
     : `<div style="margin:8px 0;color:var(--ink-soft);">Supabase non branché : les mots ajoutés restent sur cet appareil.</div>`;
+  const bindCloudDel = ()=> el.querySelectorAll('[data-cloud-del]').forEach(b=> b.addEventListener('click', async ()=>{
+    if(!confirm('Retirer « ' + b.dataset.cloudAk + ' » du dictionnaire ? Il disparaîtra aussi du traducteur et de l\'IA.')) return;
+    b.disabled = true;
+    const r = await infosAutoCall({ action:'mot_supprimer', id: b.dataset.cloudDel });
+    if(r && r.ok){
+      showToast('Mot retiré ✓');
+      await fetchCloudWords();
+      try{ renderDictionary(getFullDictionary()); }catch(_){}
+      renderAdminAddedList();
+      const d = el.querySelector('details'); if(d) d.open = true;
+    } else b.disabled = false;
+  }));
   if(words.length === 0 && artists.length === 0){
     el.innerHTML = cloudNote + 'Rien ajouté localement pour le moment.';
+    bindCloudDel();
     return;
   }
   const wordLines = words.map((w,i)=> `<div>📖 ${w.ak} — ${w.fr} <button data-type="word" data-i="${i}" style="border:none;background:none;color:var(--clay);cursor:pointer;">✕</button></div>`).join('');
   const artistLines = artists.map((a,i)=> `<div>🎤 ${a.name} <button data-type="artist" data-i="${i}" style="border:none;background:none;color:var(--clay);cursor:pointer;">✕</button></div>`).join('');
   el.innerHTML = cloudNote + wordLines + artistLines;
+  bindCloudDel();
   el.querySelectorAll('button[data-type]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const i = parseInt(btn.dataset.i, 10);
