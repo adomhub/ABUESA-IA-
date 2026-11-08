@@ -1,11 +1,11 @@
-// ABUESA-IA — fonction Supabase « infos-auto » / bright-action (v5.00 : + validation des mots proposés ; v4.91 : réessaie si Groq dit 429)
+// ABUESA-IA — fonction Supabase « infos-auto » / bright-action (v5.04 : + retirer un mot ; v5.00 : + validation des mots proposés ; v4.91 : réessaie si Groq dit 429)
 // Chaque matin, l'IA cherche sur internet les nouvelles annonces publiques du Togo
 // (concours, examens, bourses, emplois publics), vérifie que chaque lien existe vraiment,
 // puis les ajoute dans la table infos_utiles avec auto = true.
 //
 // Appels acceptés :
 //   - par la tâche programmée (pg_cron) :  .../functions/v1/infos-auto?key=CODE_ADMIN
-//   - par l'espace admin du site :        POST { action: "run" | "delete" | "mots_list" | "mot_valider" | "mot_refuser", id?, code }
+//   - par l'espace admin du site :        POST { action: "run" | "delete" | "mots_list" | "mot_valider" | "mot_refuser" | "mot_supprimer", id?, code }
 // Secrets utilisés (déjà présents dans Supabase) : GROQ_API_KEY, ADMIN_CODE.
 // SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY sont fournis automatiquement par Supabase.
 
@@ -182,6 +182,12 @@ Deno.serve(async (req) => {
       if (!ins.ok) return json({ error: "Ajout au dictionnaire impossible (" + ins.status + ")" }, 500);
       await db(`mots_proposes?id=eq.${id}`, { method: "DELETE" });
       return json({ ok: true, sans_anglais });
+    }
+    if (body.action === "mot_supprimer") {   // retirer un mot du dictionnaire partagé
+      const id = String(body.id ?? "");
+      if (!/^[0-9a-f-]{8,40}$/i.test(id)) return json({ error: "id manquant" }, 400);
+      const r = await db(`dictionary_words?id=eq.${id}`, { method: "DELETE" });
+      return r.ok ? json({ ok: true }) : json({ error: "Suppression impossible (" + r.status + ")" }, 500);
     }
     if (body.action === "mot_refuser") {
       const id = Number(body.id);
