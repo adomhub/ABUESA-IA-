@@ -1743,7 +1743,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.02 · 7 nov. 2026 (📱 prête pour Android, 🌱 mots proposés)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.03 · 8 nov. 2026 (📱 application Android, 🌱 mots proposés)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -2249,7 +2249,7 @@ document.getElementById('logo-tap-trigger').addEventListener('click', async ()=>
     const hash = await sha256Hex(entered.trim());
     if(hash === ADMIN_CODE_HASH){
       localStorage.setItem(STORE_KEYS.adminUnlocked, 'true');
-      try{ sessionStorage.setItem('abuesa_admin_code', entered.trim()); }catch(_){}
+      try{ sessionStorage.setItem('abuesa_admin_code', entered.trim()); }catch(_){} try{ localStorage.setItem('abuesa_no_count','1'); }catch(_){} /* le téléphone de l'admin n'est plus compté */
       showToast('Mode admin activé ✓');
       refreshAdminVisibility();
       document.getElementById('open-settings').click();
@@ -4679,7 +4679,7 @@ function renderAdminPanel(){
       + '🆕 <b>' + n(data.new_today) + '</b> nouveau(x) aujourd\'hui · <b>' + n(data.new_7d) + '</b> sur 7 jours<br>'
       + '🔁 <b>' + n(data.active_today) + '</b> visiteur(s) aujourd\'hui · <b>' + n(data.active_7d) + '</b> sur 7 jours</div>'
       + '<div style="margin-top:10px;font-weight:700;">Visiteurs par jour (14 derniers jours)</div>' + bars
-      + '<div style="margin-top:6px;opacity:.7;">Ton propre téléphone n\'est pas compté s\'il a été ouvert avec « ?moi=1 ».</div>';
+      + '<div style="margin-top:6px;opacity:.7;">Ton téléphone n\'est plus compté : chaque appareil où tu as ouvert l\'admin (site ou application Android) est mis de côté.</div>';
   }
   document.getElementById('admin-stats-refresh').addEventListener('click', loadAdminStats);
   loadAdminStats();
@@ -4745,7 +4745,7 @@ async function adminCall(payload, opts){
       showToast(out.error || 'Action impossible');
       return null;
     }
-    try{ sessionStorage.setItem('abuesa_admin_code', code); }catch(_){}
+    try{ sessionStorage.setItem('abuesa_admin_code', code); }catch(_){} try{ localStorage.setItem('abuesa_no_count','1'); }catch(_){} /* le téléphone de l'admin n'est plus compté */
     return out;
   }catch(_){ showToast('Erreur réseau, réessaie'); return null; }
 }
@@ -5223,7 +5223,7 @@ document.getElementById('gallery-grid').addEventListener('contextmenu', async (e
       showToast(out.error || 'Suppression impossible');
       return;
     }
-    try{ sessionStorage.setItem('abuesa_admin_code', code); }catch(_){}
+    try{ sessionStorage.setItem('abuesa_admin_code', code); }catch(_){} try{ localStorage.setItem('abuesa_no_count','1'); }catch(_){} /* le téléphone de l'admin n'est plus compté */
     galleryData = galleryData.filter(it => it.media_url !== url);
     renderGalleryGrid();
     showToast('Supprimé ✓');
