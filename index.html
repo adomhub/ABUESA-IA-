@@ -959,6 +959,7 @@
         <h2>YANASĒ-BA-ABUESA</h2>
         <div class="fr-translation">Bienvenue à ABUESA</div>
         <p>La culture du peuple akposso, dans ton téléphone : notre langue, nos mots, nos anciens, notre village.</p>
+        <button type="button" id="home-bienvenue-btn" style="margin-top:6px;padding:10px 18px;border-radius:999px;border:1px solid var(--line);background:var(--white);font:inherit;font-weight:700;cursor:pointer;">🔊 Écouter la bienvenue</button>
       </div>
 
       <div id="home-gagnant" style="margin:6px 16px 14px;"></div>
@@ -1744,7 +1745,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.09 · 8 nov. 2026 (🔊 repères culturels à écouter, 🛟 chat de secours)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.10 · 8 nov. 2026 (🔊 bienvenue et repères culturels à écouter)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1804,6 +1805,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
   (function(X){ Object.keys(X).forEach(function(k){ EN[k]=X[k]; }); })({"Son sens en anglais (facultatif)": "Its meaning in English", "Sens en anglais / English meaning": "Meaning in English", "Écris le mot ikposso et son sens (en français ou en anglais).": "Write the Ikposso word and its meaning (in English or French).", "Tu connais un mot ikposso qui manque ? Écris-le ici, avec son sens en français ou en anglais. Alexi le vérifie, puis il entre dans le dictionnaire et le traducteur.": "Do you know an Ikposso word that is missing? Write it here, with its meaning in English or French. Alexi checks it, then it enters the dictionary and the translator.", "Mot envoyé ✓ Alexi le vérifiera avant de l'ajouter au dictionnaire.": "Word sent ✓ Alexi will check it before adding it to the dictionary."});
   (function(X){ Object.keys(X).forEach(function(k){ EN[k]=X[k]; }); })({"🇫🇷 Le mot en français": "🇫🇷 The word in French (optional)", "🗣️ Le mot en ikposso": "🗣️ The word in Ikposso", "🇬🇧 Le mot en anglais (facultatif)": "🇬🇧 The word in English", "Ex : spoon": "E.g. spoon", "Écris le mot en ikposso et son sens en français ou en anglais. Ton mot arrive dans la liste d'Alexi, et WhatsApp s'ouvre pour le lui envoyer : il le vérifie avant de l'ajouter. Tu peux aussi lui envoyer ta voix pour qu'on entende la prononciation.": "Write the word in Ikposso and its meaning in English or French. Your word goes into Alexi's list, and WhatsApp opens to send it to him: he checks it before adding it. You can also send him your voice so we can hear the pronunciation.", "Écris le mot en ikposso ET son sens (en français ou en anglais).": "Write the word in Ikposso AND its meaning (in English or French).", "Merci ! Ton mot est gardé pour Alexi. WhatsApp s'ouvre : appuie sur envoyer.": "Thank you! Your word is kept for Alexi. WhatsApp opens: press send."});
   (function(X){ Object.keys(X).forEach(function(k){ EN[k]=X[k]; }); })({"L'Assafou est un rythme traditionnel exécuté autrefois par les guerriers Akposso et Akébou. Il inspire encore la musique actuelle : l'artiste Zambé l'a fusionné avec le reggae pour créer le « Regsaf ».": "The Assafou is a traditional rhythm once performed by Akposso and Akébou warriors. It still inspires today's music: the artist Zambé fused it with reggae to create the “Regsaf”.", "Le GBĒKÔ": "The GBĒKÔ", "Le GBĒKÔ est une danse frénétique des Akposso, exécutée lors des grandes occasions festives.": "The GBĒKÔ is a frenetic Akposso dance, performed on major festive occasions.", "Les Akposso vivent principalement dans les préfectures de Wawa, Amou et Ogou, dans la région des Plateaux au Togo, sur un plateau boisé et vallonné.": "The Akposso live mainly in the prefectures of Wawa, Amou and Ogou, in the Plateaux region of Togo, on a wooded and hilly plateau.", "🔊 Écouter": "🔊 Listen", "Voix : ElevenLabs": "Voice: ElevenLabs", "Voix des repères culturels :": "Voices of the cultural landmarks:", "ElevenLabs (elevenlabs.io), voix « Claire ».": "ElevenLabs (elevenlabs.io), “Claire” voice."});
+  (function(X){ Object.keys(X).forEach(function(k){ EN[k]=X[k]; }); })({"🔊 Écouter la bienvenue": "🔊 Listen to the welcome"});
   var EN_N = {}; Object.keys(EN).forEach(function(k){ EN_N[norm(k)] = EN[k]; });
   Object.keys(GL_EN).forEach(function(k){ if(!(k in EN_N)) EN_N[k] = GL_EN[k]; });
 
@@ -3891,6 +3893,22 @@ CULTURE_FACTS.forEach(f=>{
     + (f.id ? `<button type="button" class="cf-listen" data-cf="${f.id}" style="margin-top:4px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--white);font:inherit;font-weight:700;cursor:pointer;">🔊 Écouter</button> <span class="hc-note" style="font-size:.8em;">Voix : ElevenLabs</span>` : '');
   cultureList.appendChild(div);
 });
+/* v5.10 : mot de bienvenue à écouter sur l'accueil (même lecteur que les repères culturels) */
+(function(){
+  const hb = document.getElementById('home-bienvenue-btn');
+  if(!hb) return;
+  hb.addEventListener('click', ()=>{
+    if(cultureAudioBtn === hb){ stopCultureAudio(); return; }
+    stopCultureAudio();
+    const en = !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en');
+    hb.dataset.idle = hb.innerHTML; hb.innerHTML = '⏸ …';
+    const a = new Audio('voix-bienvenue-' + (en ? 'en' : 'fr') + '.mp3');
+    cultureAudio = a; cultureAudioBtn = hb;
+    a.onended = stopCultureAudio;
+    a.onerror = ()=>{ stopCultureAudio(); try{ showToast(en ? 'Audio not available right now' : 'Son indisponible pour le moment'); }catch(_){} };
+    a.play().catch(()=> stopCultureAudio());
+  });
+})();
 cultureList.addEventListener('click', e=>{
   const b = e.target.closest('.cf-listen'); if(!b) return;
   if(cultureAudioBtn === b){ stopCultureAudio(); return; }
