@@ -1743,7 +1743,7 @@ ABUESA! ABUESA! ABUESA hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.04 · 8 nov. 2026 (🗑️ retirer un mot depuis l'admin, 📱 application Android)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.05 · 8 nov. 2026 (✏️ corriger une traduction, 🗑️ retirer un mot)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -3299,9 +3299,11 @@ function renderDictionary(list){
       </div>
       <div class="word-actions">
         <button class="fav-btn" aria-label="Favori">${isFav ? '★' : '☆'}</button>
+        <button class="corr-btn" aria-label="Corriger" title="Corriger" style="background:none;border:none;font-size:1.15em;cursor:pointer;">✏️</button>
         <button class="play" aria-label="${hasAudio ? 'Écouter la prononciation' : 'Aucun enregistrement — appuie pour enregistrer'}" title="${hasAudio ? 'Écouter la prononciation' : "Pas encore de prononciation — appuie pour l'enregistrer"}">${hasAudio ? '🔊' : '🎙️'}</button>
       </div>`;
     card.querySelector('.play').addEventListener('click', ()=> speakWord(entry));
+    card.querySelector('.corr-btn').addEventListener('click', ()=>{ if(window.abuesaCorriger) window.abuesaCorriger({ ak: entry.ak, fr: entry.fr, en: entry.en || '' }); });
     card.querySelector('.fav-btn').addEventListener('click', (e)=>{
       toggleFavorite(key);
       renderDictionary(getFullDictionary());
@@ -9403,6 +9405,51 @@ window.ABUESA_FR_EN = {"je m'appelle…": "My name is…", "comment t'appelles-t
 window.abuesaEnOf = function(fr){ var k = String(fr||'').toLowerCase().trim(), g = window.ABUESA_FR_EN[k] || (window.ABUESA_CLOUD_EN && window.ABUESA_CLOUD_EN[k]) || ''; if(!g){ try{ g = (window.ABUESA_I18N && ABUESA_I18N.glossAlways) ? (ABUESA_I18N.glossAlways(k) || '') : ''; }catch(_){ g = ''; } } return (g && g.toLowerCase() !== k) ? g : ''; };
 </script>
 <script>
+/* ===== ✏️ CORRIGER UNE TRADUCTION (v5.05, idée reprise de Khaya / Ghana NLP) =====
+   Le visiteur propose la bonne version ; elle arrive dans « 🌱 Mots proposés » et Alexi décide. */
+(function(){
+  function en(){ return !!(window.ABUESA_I18N && ABUESA_I18N.lang() === 'en'); }
+  function T(fr, e){ return en() ? e : fr; }
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  var fld = 'width:100%;box-sizing:border-box;padding:10px 12px;border-radius:12px;border:1px solid var(--line,#ccc);font:inherit;margin:4px 0 10px;';
+  window.abuesaCorriger = function(w){
+    w = w || {};
+    var enOld = w.en || (window.abuesaEnOf ? window.abuesaEnOf(w.fr) : '') || '';
+    var ov = document.getElementById('ov-corr');
+    if(!ov){ ov = document.createElement('div'); ov.id = 'ov-corr'; ov.setAttribute('data-no-i18n', ''); document.body.appendChild(ov); }
+    ov.style.cssText = 'position:fixed;inset:0;z-index:99995;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;';
+    ov.innerHTML = '<div style="background:var(--paper,#F7F3E8);color:#000;width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px 24px;font-size:calc(17px * var(--fs,1.1));">'
+      + '<div style="display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.1em;margin-bottom:6px;"><span style="flex:1;">✏️ ' + T('Corriger cette traduction', 'Correct this translation') + '</span>'
+      + '<button type="button" data-cx="1" style="background:none;border:none;font-size:1.5em;cursor:pointer;">✕</button></div>'
+      + '<div class="hc-note" style="margin-bottom:10px;">' + T('Aujourd’hui ABUESA dit :', 'Today ABUESA says:') + ' <b>' + esc(w.ak) + '</b> = ' + esc(w.fr) + (enOld ? ' (' + esc(enOld) + ')' : '') + '<br>'
+      + T('Change ce qui est faux. Alexi vérifiera avant de modifier le dictionnaire.', 'Change what is wrong. Alexi will check before changing the dictionary.') + '</div>'
+      + '<label style="font-weight:700;">🗣️ ' + T('Ikposso', 'Ikposso') + '</label><input id="cx-ak" maxlength="60" style="' + fld + '" value="' + esc(w.ak) + '">'
+      + '<label style="font-weight:700;">🇫🇷 ' + T('Français', 'French') + '</label><input id="cx-fr" maxlength="120" style="' + fld + '" value="' + esc(w.fr) + '">'
+      + '<label style="font-weight:700;">🇬🇧 ' + T('Anglais', 'English') + '</label><input id="cx-en" maxlength="120" style="' + fld + '" value="' + esc(enOld) + '">'
+      + '<label style="font-weight:700;">💬 ' + T('Qu’est-ce qui ne va pas ? (facultatif)', 'What is wrong? (optional)') + '</label><input id="cx-note" maxlength="110" style="' + fld + '" placeholder="' + T('Ex : à Badou on dit plutôt…', 'E.g. in Badou we rather say…') + '">'
+      + '<button type="button" id="cx-send" style="width:100%;padding:14px;border:0;border-radius:14px;background:var(--forest,#1B4D2E);color:#fff;font:inherit;font-weight:800;cursor:pointer;">' + T('Envoyer la correction 🌱', 'Send the correction 🌱') + '</button>'
+      + '<div id="cx-msg" class="hc-note" style="margin-top:8px;"></div></div>';
+    ov.onclick = function(e){ if(e.target === ov || e.target.closest('[data-cx]')) ov.style.display = 'none'; };
+    ov.querySelector('#cx-send').onclick = async function(){
+      var v = function(id){ return (ov.querySelector('#' + id).value || '').trim(); };
+      var ak = v('cx-ak'), fr = v('cx-fr'), en2 = v('cx-en'), note = v('cx-note'), msg = ov.querySelector('#cx-msg');
+      if(!ak || !(fr || en2)){ msg.textContent = T('Il faut le mot ikposso et son sens.', 'The Ikposso word and its meaning are needed.'); return; }
+      if(ak === String(w.ak || '').trim() && fr === String(w.fr || '').trim() && en2 === enOld && !note){ msg.textContent = T('Tu n’as rien changé.', 'You have not changed anything.'); return; }
+      this.disabled = true;
+      var ex = ('✏️ ' + T('Correction de', 'Correction of') + ' « ' + (w.ak || '') + ' = ' + (w.fr || '') + ' »' + (note ? ' : ' + note : '')).slice(0, 200);
+      var ok = false;
+      try{ ok = window.ABUESA_proposeWord ? await window.ABUESA_proposeWord({ ikposso: ak, francais: fr, anglais: en2, exemple: ex }, 'formulaire') : false; }catch(_){}
+      this.disabled = false;
+      if(ok){
+        msg.textContent = T('Merci ! Ta correction est envoyée à Alexi ✓', 'Thank you! Your correction has been sent to Alexi ✓');
+        try{ showToast(T('Merci pour ta correction 🌱', 'Thank you for your correction 🌱')); }catch(_){}
+        setTimeout(function(){ ov.style.display = 'none'; }, 1400);
+      } else msg.textContent = T('Envoi impossible pour l’instant. Réessaie plus tard.', 'Unable to send right now. Try again later.');
+    };
+  };
+})();
+</script>
+<script>
 /* ===== 🔄 TRADUCTEUR VÉRIFIÉ (v4.96) =====
    Règle d'Alexi : ne jamais inventer une traduction ikposso.
    Le traducteur cherche UNIQUEMENT dans les sources vérifiées : phrases enregistrées (voix d'Alexi),
@@ -9476,7 +9523,8 @@ window.abuesaEnOf = function(fr){ var k = String(fr||'').toLowerCase().trim(), g
     var top = dir === 'ak' ? '<div style="font-size:1.25em;font-weight:800;color:var(--clay,#8B3A1E);">' + fr + '</div><div data-no-i18n style="opacity:.8;">' + esc(e.ak) + '</div>'
                            : '<div data-no-i18n style="font-size:1.35em;font-weight:800;color:var(--clay,#8B3A1E);">' + esc(e.ak) + '</div><div style="opacity:.8;">' + fr + '</div>';
     return '<div style="display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--line,#ddd);border-radius:14px;padding:12px 14px;margin-bottom:10px;">' + play
-      + '<div style="flex:1;">' + top + '<div style="font-size:.85em;margin-top:4px;color:#1B4D2E;">✅ ' + src + (e.cat ? ' · ' + esc(e.cat) : '') + '</div></div></div>';
+      + '<div style="flex:1;">' + top + '<div style="font-size:.85em;margin-top:4px;color:#1B4D2E;">✅ ' + src + (e.cat ? ' · ' + esc(e.cat) : '') + '</div></div>'
+      + '<button type="button" class="tr-corr" data-ak="' + esc(e.ak) + '" data-fr="' + esc(e.fr) + '" data-en="' + esc(e.en || '') + '" style="flex:none;background:none;border:1px solid var(--line,#ccc);border-radius:10px;padding:6px 8px;font-size:.85em;cursor:pointer;" aria-label="' + T('Corriger', 'Correct') + '">✏️ ' + T('Corriger', 'Correct') + '</button></div>';
   }
 
   var dir = 'fr';
@@ -9530,6 +9578,8 @@ window.abuesaEnOf = function(fr){ var k = String(fr||'').toLowerCase().trim(), g
           return;
         }
         if(e.target.closest('#tr-swap')){ dir = dir === 'fr' ? 'ak' : 'fr'; paint(); render(); }
+        var c = e.target.closest('.tr-corr');
+        if(c && window.abuesaCorriger) window.abuesaCorriger({ ak: c.getAttribute('data-ak'), fr: c.getAttribute('data-fr'), en: c.getAttribute('data-en') });
       });
     }
     var nPhr = BASE.filter(function(e){ return e.kind === 'phr'; }).length, nAll = BASE.length;
