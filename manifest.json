@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "ABUESA-IA — Culture Akposso",
-  "short_name": "ABUESA-IA",
+  "name": "WABOUÉ — Culture Akposso",
+  "short_name": "WABOUÉ",
   "description": "La voix et la mémoire du peuple Akposso : dictionnaire et traducteur ikposso (français et anglais), voix des anciens, proverbes, contes, chat IA et communauté.",
   "start_url": "./",
   "scope": "./",
@@ -48,7 +48,7 @@
       "sizes": "1082x1922",
       "type": "image/jpeg",
       "form_factor": "narrow",
-      "label": "Accueil d'ABUESA-IA"
+      "label": "Accueil de WABOUÉ"
     },
     {
       "src": "capture-2.jpg",
