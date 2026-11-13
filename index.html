@@ -4,13 +4,13 @@
 <meta name="google" content="notranslate">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ABUESA-IA — Dictionnaire et culture Akposso (Ikposso) | Wawa, Badou, Togo</title>
-<meta name="description" content="ABUESA-IA : dictionnaire français-ikposso, chat IA, carte, contes, proverbes et traditions du peuple Akposso (Ikposso) de Wawa, Badou, Togo. Festival OVAZU, carnet du village et vie quotidienne.">
+<title>WABOUÉ (WABUƐ) — Dictionnaire et culture Akposso (Ikposso) | Wawa, Badou, Togo</title>
+<meta name="description" content="WABOUÉ (anciennement ABUESA-IA) : dictionnaire français-ikposso, chat IA, carte, contes, proverbes et traditions du peuple Akposso (Ikposso) de Wawa, Badou, Togo. Festival OVAZU, carnet du village et vie quotidienne.">
 <meta name="keywords" content="akposso, ikposso, dictionnaire ikposso, langue ikposso, culture akposso, Wawa Togo, Badou Togo, OVAZU, akposokubi, atakpamé, ethnie togolaise">
 
 <!-- Aperçu de partage (WhatsApp, Facebook, Messenger...) -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="ABUESA-IA — Dictionnaire et culture Akposso (Ikposso)">
+<meta property="og:title" content="WABOUÉ — Dictionnaire et culture Akposso (Ikposso)">
 <meta property="og:description" content="Dictionnaire français-ikposso, chat IA, carte, contes, proverbes et traditions du peuple Akposso de Wawa, Badou, Togo.">
 <meta property="og:image" content="https://adomhub.github.io/ABUESA-IA-/og-image.jpg">
 <meta property="og:url" content="https://adomhub.github.io/ABUESA-IA-/">
@@ -18,8 +18,8 @@
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": "ABUESA-IA",
-  "alternateName": "ABUESA",
+  "name": "WABOUÉ",
+  "alternateName": ["WABUƐ", "ABUESA-IA", "ABUESA"],
   "description": "Le centre des informations culturelles du peuple Akposso (Ikposso) de Wawa, Badou, Togo : dictionnaire français-ikposso, carte, quiz, contes, proverbes, traditions, carnet du village et vie quotidienne.",
   "url": "https://adomhub.github.io/ABUESA-IA-/",
   "inLanguage": "fr",
@@ -32,7 +32,7 @@
 </script>
 <meta property="og:locale" content="fr_FR">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="ABUESA-IA — Dictionnaire et culture Akposso (Ikposso)">
+<meta name="twitter:title" content="WABOUÉ — Dictionnaire et culture Akposso (Ikposso)">
 <meta name="twitter:description" content="Dictionnaire français-ikposso, chat IA, carte, contes, proverbes et traditions du peuple Akposso de Wawa, Badou, Togo.">
 <meta name="twitter:image" content="https://adomhub.github.io/ABUESA-IA-/og-image.jpg">
 <link rel="manifest" href="manifest.json">
@@ -41,7 +41,7 @@
 <meta name="theme-color" content="#C7D92E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="ABUESA">
+<meta name="apple-mobile-web-app-title" content="WABOUÉ">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -133,6 +133,7 @@
     white-space:nowrap;
   }
   header.topbar .wordmark span{ color:var(--forest-deep); }
+  header.topbar .wordmark-sub{ font-family:'Fraunces',serif; font-weight:700; font-size:calc(15px * var(--fs,1.15)); letter-spacing:2px; color:var(--forest-deep); line-height:1.2; margin-top:3px; white-space:nowrap; }
   header.topbar .subtitle{
     font-size:calc(17.5px * var(--fs,1.15));
     color:var(--ink-soft);
@@ -923,7 +924,8 @@
           </svg>
         </div>
         <div>
-          <div class="wordmark">ABUESA<span>-IA</span></div>
+          <div class="wordmark" data-no-i18n>WABOUÉ</div>
+          <div class="wordmark-sub" data-no-i18n>WABUƐ</div>
         </div>
       </div>
       <button type="button" class="icon-btn" id="lang-quick" data-no-i18n aria-label="Language" style="margin-left:6px;font-weight:800;font-size:calc(15px * var(--fs,1.15));border:1px solid var(--line);border-radius:999px;padding:5px 11px;">EN</button>
@@ -2284,8 +2286,8 @@ document.getElementById('open-settings').addEventListener('click', ()=>{
 // Partage de l'app
 document.getElementById('share-app').addEventListener('click', async ()=>{
   const shareData = {
-    title: 'ABUESA — Culture Akposso',
-    text: 'Découvre ABUESA, le centre des informations culturelles Akposso (Wawa, Togo) !',
+    title: 'WABOUÉ — Culture Akposso',
+    text: 'Découvre WABOUÉ, le centre des informations culturelles Akposso (Wawa, Togo) !',
     url: window.location.href
   };
   try{
