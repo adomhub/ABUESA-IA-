@@ -1,7 +1,7 @@
 # WABOUÉ — Financements et soutiens
 
 > Liste tenue à jour pour trouver de l'argent et des partenaires pour WABOUÉ (anciennement ABUESA-IA).
-> Dernière mise à jour : 14 novembre 2026.
+> Dernière mise à jour : 14 novembre 2026 (soir).
 
 ## Où en est-on ?
 
@@ -16,6 +16,38 @@ La plupart des grands appels de 2026 sont **déjà fermés**. Mais plusieurs rev
 | **FEL** (Fondation pour les langues en danger) | jusqu'à 1 000 $ | Il faut d'abord devenir membre | L'appel précédent fermait fin décembre. Prochain : pas encore annoncé | **À surveiller en premier** : petit, mais plus facile à obtenir |
 | **AFCP** (Fonds des ambassadeurs américains pour la préservation culturelle) | variable | **Associations et institutions seulement**, pas les personnes seules | À vérifier | Présence du Togo dans la liste des pays non confirmée |
 | **OIF — A CAP Innovation** | 10 000 € | Jeunes entrepreneurs francophones (conditions d'âge) | Appel 2026 fermé en mai 2026 | Vérifier les conditions au prochain appel |
+
+## Partenaire à contacter en priorité : Voix du Togo
+
+**Voix du Togo** est un programme national lancé en octobre 2026 par le ministère de l'Efficacité du service public et de la Transformation numérique, avec le PNUD. Il collecte des voix et des textes en langues togolaises pour l'intelligence artificielle. Les participants sont **payés** pour lire, transcrire, traduire et vérifier.
+
+- Phase pilote : éwé, kabyè, moba. Objectif : **une cinquantaine de langues** sur une même plateforme.
+- L'ikposso n'est **pas encore** dans la liste. WABOUÉ, avec ses mots vérifiés auprès des anciens, peut proposer d'aider à l'y faire entrer.
+- Source : https://www.republicoftogo.com/toutes-les-rubriques/high-tech/le-togo-apprend-ses-langues-grace-a-l-ia
+
+## Projets semblables (pour se situer)
+
+Aucune application ni IA dédiée à l'ikposso n'a été trouvée en ligne (novembre 2026) : WABOUÉ semble être la première.
+
+| Langue(s) | Projet | Ce qu'il fait |
+|---|---|---|
+| Éwé | Google Traduction | Traduction automatique de l'éwé |
+| Éwé | Ewevi (2025) | Application pour enfants : mots, prononciation, jeux |
+| Éwé, kabyè, tém, mina | Yodi (start-up Umbaji, Lomé) | IA qui traduit, parle et dialogue en langues togolaises |
+| Mina (bientôt éwé) | Sègbé (2026) | Application gratuite ; le corpus appartient à une association |
+| Éwé, kabyè, moba | Voix du Togo (État + PNUD, 2026) | Collecte de données payée pour l'IA, vers 50 langues |
+
+Sources :
+- Ewevi : https://apps.apple.com/app/id6745527121
+- Google Traduction et l'éwé : https://www.afrique-sur7.fr/486666-google-traduction-ewe-bambara-lingala
+- Yodi : https://www.republicoftogo.com/toutes-les-rubriques/high-tech/l-ia-made-in-togo-qui-brise-les-barrieres-linguistiques
+- Sègbé : https://mwm.ai/apps/sgb-african-languages/6783450626
+- Voix du Togo (défi de données) : https://letsdatascience.com/news/togo-opens-local-language-data-challenge-for-ai-public-servi-2c905058
+
+## Chiffres utiles pour le dossier
+
+- Akposso : environ **2,7 % des Togolais en 2014, soit près de 196 000 personnes** (Université Laval, CEFAN : https://axl.cefan.ulaval.ca/afrique/togo.htm), sans compter le Ghana et la diaspora.
+- Le Togo compte entre 37 et une cinquantaine d'ethnies selon les sources, et environ 50 langues.
 
 ## Ce qu'il faut préparer dès maintenant
 
