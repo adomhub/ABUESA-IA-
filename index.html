@@ -2287,8 +2287,8 @@ document.getElementById('open-settings').addEventListener('click', ()=>{
 document.getElementById('share-app').addEventListener('click', async ()=>{
   const shareData = {
     title: 'WABOUÉ — Culture Akposso',
-    text: 'Découvre WABOUÉ, le centre des informations culturelles Akposso (Wawa, Togo et la diaspora) !',
-    url: window.location.href
+    text: 'Découvre WABOUÉ, le centre des informations culturelles Akposso (Wawa, Togo et la diaspora) !\n\n📘 Suivez-nous sur Facebook : https://www.facebook.com/share/1UvgwbjN4x/\n💬 Rejoignez notre groupe WhatsApp : https://chat.whatsapp.com/JHzoSRkxDvX62hcXfKQMwZ\n🌐 Application WABOUÉ :',
+    url: 'https://adomhub.github.io/ABUESA-IA-/'
   };
   try{
     if(navigator.share){
@@ -2299,10 +2299,10 @@ document.getElementById('share-app').addEventListener('click', async ()=>{
     if(e.name === 'AbortError') return;
   }
   try{
-    await navigator.clipboard.writeText(shareData.url);
-    alert('Lien copié ! Tu peux le coller dans WhatsApp ou ailleurs.');
+    await navigator.clipboard.writeText(shareData.text + ' ' + shareData.url);
+    alert('Message copié ! Tu peux le coller dans WhatsApp ou ailleurs.');
   } catch(e2){
-    prompt('Copie ce lien pour le partager :', shareData.url);
+    prompt('Copie ce message pour le partager :', shareData.text + ' ' + shareData.url);
   }
 });
 
