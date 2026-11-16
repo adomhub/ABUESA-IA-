@@ -9165,7 +9165,8 @@ document.getElementById('community-record').addEventListener('click', async ()=>
       +'<a class="share-card-btn" style="display:block;text-align:center;text-decoration:none;" target="_blank" rel="noopener" href="'+wa+'">💬 '+T('Écrire à Alexi sur WhatsApp','Write to Alexi on WhatsApp')+'</a>'
       +'<div style="'+CARD+'margin-top:18px;"><div style="font-weight:700;margin-bottom:6px;">'+T('Tu as reçu un code d’accès ?','Did you receive an access code?')+'</div>'
       +'<input id="pj-code" type="password" autocomplete="off" placeholder="'+esc(T('Code d’accès','Access code'))+'" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid #ccc;font-size:inherit;font-family:inherit;">'
-      +'<button type="button" id="pj-go" class="share-card-btn" style="width:100%;margin-top:8px;">🔓 '+T('Ouvrir','Open')+'</button><div id="pj-msg" style="margin-top:8px;color:#B00020;">'+(msg||'')+'</div></div>';
+      +'<button type="button" id="pj-go" class="share-card-btn" style="width:100%;margin-top:8px;">🔓 '+T('Ouvrir','Open')+'</button><div id="pj-msg" style="margin-top:8px;color:#B00020;">'+(msg||'')+'</div></div>'
+      +'<button type="button" class="share-card-btn" onclick="window.openBibliotheque&&window.openBibliotheque()" style="width:100%;margin-top:10px;">📚 '+T('Bibliothèque ikposso (Alexi)','Ikposso library (Alexi)')+'</button>';
     var go=b.querySelector('#pj-go'), inp=b.querySelector('#pj-code');
     var run=async function(){
       var code=String(inp.value||'').trim().replace(/[.,;:\s]+$/,'');
@@ -9205,6 +9206,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
     var b=shell().querySelector('.pj-b');
     b.innerHTML='<div style="margin-bottom:12px;">'+T('Les documents du projet des jeunes de Wawa et de la région des Plateaux. Ils sont gardés dans WABOUÉ : touche un document pour le lire.','The documents of the Wawa and Plateaux region youth project, kept inside WABOUÉ. Tap a document to read it.')+'</div>'
       +docs.map(function(d,i){ return '<button type="button" data-doc="'+i+'" style="display:block;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;'+CARD+'"><div style="font-weight:800;">📄 '+esc(d.t)+'</div><div style="font-size:.92em;margin-top:4px;">'+esc(d.d)+'</div><div style="margin-top:6px;font-weight:700;color:#1B4D2E;">'+T('Lire →','Read →')+'</div></button>'; }).join('')
+      +'<button type="button" class="share-card-btn" onclick="window.openBibliotheque&&window.openBibliotheque()" style="width:100%;margin-top:10px;">📚 '+T('Bibliothèque ikposso (Alexi)','Ikposso library (Alexi)')+'</button>'
       +'<button type="button" id="pj-lock" class="share-card-btn" style="width:100%;margin-top:10px;">🔒 '+T('Fermer l’accès sur ce téléphone','Lock access on this phone')+'</button>';
     b.querySelectorAll('[data-doc]').forEach(function(x){ x.onclick=function(){ showDoc(docs,+x.getAttribute('data-doc')); }; });
     b.querySelector('#pj-lock').onclick=function(){ try{ sessionStorage.removeItem(OK); }catch(_){} showLocked(''); };
@@ -9225,6 +9227,105 @@ document.getElementById('community-record').addEventListener('click', async ()=>
   };
   window.renderHomeProjet();
   window.addEventListener('load',window.renderHomeProjet);
+})();
+</script>
+<script>
+/* ===== BIBLIOTHÈQUE IKPOSSO (v4.90) : réservée à Alexi. Tous les mots et phrases ikposso de WABOUÉ
+   (dictionnaire, phrases, lexique, personnalité, proverbes, conte), chiffrés avec le code d'Alexi
+   (AES-GCM, clé tirée du code par PBKDF2) dans bibliotheque-ikposso.enc.json. ===== */
+(function(){
+  var OK='wabue_biblio_code', FILE='bibliotheque-ikposso.enc.json';
+  function en(){ return !!(window.ABUESA_I18N && ABUESA_I18N.lang()==='en'); }
+  function T(fr,e){ return en()?e:fr; }
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function nk(s){ return String(s||'').toLowerCase().replace(/ɛ/g,'e').replace(/ɔ/g,'o').replace(/ɩ/g,'i').replace(/ʋ/g,'u').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9ɣɖŋ]+/g,' ').trim(); }
+  function b64(s){ var r=atob(s), a=new Uint8Array(r.length); for(var i=0;i<r.length;i++) a[i]=r.charCodeAt(i); return a; }
+  var BLOB=null;
+  async function open(code){
+    if(!BLOB){ var r=await fetch(FILE,{cache:'no-cache'}); if(!r.ok) throw new Error('net'); BLOB=await r.json(); }
+    var base=await crypto.subtle.importKey('raw',new TextEncoder().encode(code),'PBKDF2',false,['deriveKey']);
+    var key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(BLOB.s),iterations:150000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+    var pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(BLOB.i)},key,b64(BLOB.c));
+    return JSON.parse(new TextDecoder().decode(pt));
+  }
+  /* ajoute les mots arrivés dans le dictionnaire après la création de la bibliothèque */
+  function merge(lib){
+    var seen={}; lib.items.forEach(function(i){ seen[nk(i.ak)+'|'+nk(i.fr)]=1; });
+    var full=[]; try{ full=(typeof getFullDictionary==='function')?getFullDictionary():[]; }catch(_){}
+    full.forEach(function(w){ if(!w||!w.ak||!w.fr) return; var k=nk(w.ak)+'|'+nk(w.fr); if(seen[k]) return; seen[k]=1;
+      lib.items.push({c:'Nouveaux mots du dictionnaire',ak:w.ak,fr:w.fr,en:w.en||'',s:'Dictionnaire en ligne',n:1}); });
+    return lib;
+  }
+  var ov=null, CARD='background:#fff;border:1px solid var(--line,#ddd);border-radius:14px;padding:10px 12px;margin-bottom:8px;line-height:1.4;';
+  function shell(){
+    if(ov) return ov;
+    ov=document.createElement('div'); ov.id='ov-biblio';
+    ov.style.cssText='position:fixed;inset:0;z-index:99996;background:var(--paper,#F7F3E8);color:#000;display:none;flex-direction:column;font-size:calc(17px * var(--fs,1.15));';
+    ov.innerHTML='<div style="padding:12px 16px;background:var(--citron,#C7D92E);display:flex;align-items:center;gap:10px;font-weight:800;"><span style="flex:1;">📚 '+T('Bibliothèque ikposso','Ikposso library')+'</span><button type="button" data-close="1" aria-label="Fermer" style="border:none;background:transparent;font-size:1.6em;line-height:1;padding:4px 8px;">✕</button></div><div class="bi-b" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 40px;"></div>';
+    ov.addEventListener('click',function(e){ if(e.target.closest('[data-close]')) ov.style.display='none'; });
+    document.body.appendChild(ov); return ov;
+  }
+  function locked(msg){
+    var b=shell().querySelector('.bi-b');
+    b.innerHTML='<div style="text-align:center;margin:10px 0 16px;"><div style="font-size:2.6em;">🔒</div><div style="font-weight:800;font-size:1.15em;margin-top:6px;">'+T('Réservé à Alexi.','Reserved for Alexi.')+'</div></div>'
+      +'<div style="'+CARD+'"><input id="bi-code" type="password" autocomplete="off" placeholder="'+esc(T('Code de la bibliothèque','Library code'))+'" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid #ccc;font-size:inherit;font-family:inherit;">'
+      +'<button type="button" id="bi-go" class="share-card-btn" style="width:100%;margin-top:8px;">🔓 '+T('Ouvrir','Open')+'</button><div id="bi-msg" style="margin-top:8px;color:#B00020;">'+(msg||'')+'</div></div>';
+    var go=b.querySelector('#bi-go'), inp=b.querySelector('#bi-code');
+    var run=async function(){
+      var code=String(inp.value||'').trim().toUpperCase();
+      if(!code) return; go.disabled=true; b.querySelector('#bi-msg').textContent='⏳';
+      try{ var lib=await open(code); try{ sessionStorage.setItem(OK,code); }catch(_){} show(merge(lib)); }
+      catch(e){ go.disabled=false; b.querySelector('#bi-msg').textContent=(e&&e.message==='net')?T('Pas de connexion. Réessaie.','No connection. Try again.'):T('Code incorrect.','Incorrect code.'); }
+    };
+    go.onclick=run; inp.addEventListener('keydown',function(e){ if(e.key==='Enter') run(); });
+  }
+  function row(i){
+    return '<div style="'+CARD+'"><div style="font-weight:800;color:#1B4D2E;" data-no-i18n>'+esc(i.ak)+(i.n?' <span style="font-size:.7em;background:#D7E89A;border-radius:6px;padding:1px 5px;">'+T('nouveau','new')+'</span>':'')+'</div>'
+      +'<div>'+esc(i.fr)+'</div>'+(i.en?'<div style="font-size:.88em;color:#555;">🇬🇧 '+esc(i.en)+'</div>':'')+'</div>';
+  }
+  function fileHtml(lib){
+    var cats={}; lib.items.forEach(function(i){ (cats[i.c]=cats[i.c]||[]).push(i); });
+    var h='<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bibliothèque ikposso — WABOUÉ</title><style>body{font-family:system-ui,Arial,sans-serif;max-width:900px;margin:0 auto;padding:16px;}table{border-collapse:collapse;width:100%;margin-bottom:18px;}td,th{border:1px solid #ccc;padding:5px 7px;text-align:left;vertical-align:top;}th{background:#EEF3D2;}h2{color:#1B4D2E;}</style></head><body><h1>📚 Bibliothèque ikposso — WABOUÉ</h1><p>'+lib.items.length+' mots et phrases.</p>'
+      +'<h2>Personnalité de WABOUÉ</h2><p style="white-space:pre-wrap;">'+esc(lib.regle)+'</p><table><tr><th>Ikposso</th><th>Quand l’utiliser</th></tr>'+lib.perso.map(function(p){ return '<tr><td><b>'+esc(p.ak)+'</b></td><td>'+esc(p.fr)+'</td></tr>'; }).join('')+'</table>';
+    Object.keys(cats).sort().forEach(function(c){ h+='<h2>'+esc(c)+' ('+cats[c].length+')</h2><table><tr><th>Ikposso</th><th>Français</th><th>Anglais</th></tr>'+cats[c].map(function(i){ return '<tr><td><b>'+esc(i.ak)+'</b></td><td>'+esc(i.fr)+'</td><td>'+esc(i.en)+'</td></tr>'; }).join('')+'</table>'; });
+    return h+'<p style="color:#555;">WABOUÉ · https://adomhub.github.io/ABUESA-IA-/</p></body></html>';
+  }
+  function show(lib){
+    var b=shell().querySelector('.bi-b');
+    var cats={}; lib.items.forEach(function(i){ cats[i.c]=(cats[i.c]||0)+1; });
+    var names=Object.keys(cats).sort(function(a,c){ return a.localeCompare(c,'fr'); });
+    b.innerHTML='<div style="margin-bottom:10px;"><b>'+lib.items.length+'</b> '+T('mots et phrases ikposso, rangés par thème.','Ikposso words and sentences, sorted by theme.')+'</div>'
+      +'<input id="bi-q" type="search" placeholder="🔍 '+esc(T('Chercher (ikposso, français ou anglais)','Search (Ikposso, French or English)'))+'" style="width:100%;box-sizing:border-box;padding:10px;border-radius:10px;border:1px solid #ccc;font-size:inherit;font-family:inherit;margin-bottom:8px;">'
+      +'<select id="bi-c" style="width:100%;padding:9px;border-radius:10px;border:1px solid #ccc;font-size:inherit;font-family:inherit;margin-bottom:10px;"><option value="">'+T('Tous les thèmes','All themes')+'</option><option value="__perso">🧠 '+T('Personnalité de WABOUÉ','WABOUÉ personality')+'</option>'
+      +names.map(function(n){ return '<option value="'+esc(n)+'">'+esc(n)+' ('+cats[n]+')</option>'; }).join('')+'</select>'
+      +'<div id="bi-list"></div>'
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;"><button type="button" id="bi-dl" class="share-card-btn">⬇️ '+T('Télécharger tout','Download all')+'</button><button type="button" id="bi-lock" class="share-card-btn">🔒 '+T('Fermer l’accès','Lock')+'</button></div>';
+    var q=b.querySelector('#bi-q'), sel=b.querySelector('#bi-c'), list=b.querySelector('#bi-list');
+    function draw(){
+      var s=nk(q.value), c=sel.value, html='';
+      if(c==='__perso'){
+        list.innerHTML='<div style="'+CARD+'white-space:pre-wrap;font-weight:700;">'+esc(lib.regle)+'</div>'+lib.perso.map(function(p){ return row({ak:p.ak,fr:p.fr}); }).join(''); return;
+      }
+      var res=lib.items.filter(function(i){ return (!c||i.c===c) && (!s || nk(i.ak+' '+i.fr+' '+i.en).indexOf(s)>=0); });
+      var last=null;
+      res.slice(0,400).forEach(function(i){ if(!c && !s && i.c!==last){ html+='<h3 style="margin:14px 0 6px;color:#1B4D2E;">'+esc(i.c)+'</h3>'; last=i.c; } html+=row(i); });
+      if(res.length>400) html+='<div style="text-align:center;color:#555;">… '+(res.length-400)+' '+T('autres : utilise la recherche ou choisis un thème.','more: search or pick a theme.')+'</div>';
+      list.innerHTML=html||'<div style="color:#555;">'+T('Rien trouvé.','Nothing found.')+'</div>';
+    }
+    lib.items.sort(function(a,c){ return a.c.localeCompare(c.c,'fr'); });
+    q.oninput=draw; sel.onchange=draw; draw();
+    b.querySelector('#bi-dl').onclick=function(){
+      var blob=new Blob([fileHtml(lib)],{type:'text/html;charset=utf-8'}), url=URL.createObjectURL(blob), a=document.createElement('a');
+      a.href=url; a.download='bibliotheque-ikposso-wabouee.html'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(url); },4000);
+    };
+    b.querySelector('#bi-lock').onclick=function(){ try{ sessionStorage.removeItem(OK); }catch(_){} locked(''); };
+  }
+  window.openBibliotheque=async function(){
+    shell().style.display='flex';
+    var saved=''; try{ saved=sessionStorage.getItem(OK)||''; }catch(_){}
+    if(saved){ try{ show(merge(await open(saved))); return; }catch(_){} }
+    locked('');
+  };
 })();
 </script>
 <script>
