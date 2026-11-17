@@ -3,7 +3,12 @@ on:
   push:
     paths:
       - 'clavier-ikposso/**'
+      - 'dictionnaire-ikposso/fabriquer_liste.py'
+      - 'dictionnaire-ikposso/source/*.ts'
+      - 'dictionnaire-ikposso/source/*.kps'
       - '.github/workflows/clavier-ikposso.yml'
+  schedule:
+    - cron: '17 3 * * 1'   # chaque lundi : reprend les nouveaux mots du dictionnaire
   workflow_dispatch:
 permissions:
   contents: write
@@ -18,16 +23,26 @@ jobs:
       - name: Compiler le clavier
         working-directory: clavier-ikposso
         run: npx -y @keymanapp/kmc build ikposso.kpj
+      - name: Fabriquer la liste de mots ikposso
+        run: python3 dictionnaire-ikposso/fabriquer_liste.py
+      - name: Compiler le dictionnaire de suggestions
+        working-directory: dictionnaire-ikposso
+        run: npx -y @keymanapp/kmc build dictionnaire.kpj
       - uses: actions/upload-artifact@v4
         with:
-          name: clavier-ikposso
-          path: clavier-ikposso/build/
-      - name: Publier ikposso.kmp dans le site
+          name: clavier-et-dictionnaire-ikposso
+          path: |
+            clavier-ikposso/build/
+            dictionnaire-ikposso/build/
+      - name: Publier dans le site
         run: |
           mkdir -p clavier
           cp clavier-ikposso/build/ikposso.kmp clavier/ikposso.kmp
+          cp dictionnaire-ikposso/build/alexi.kpo.wabue.model.kmp clavier/dictionnaire-ikposso.kmp
+          cp dictionnaire-ikposso/source/wordlist.tsv clavier/mots-ikposso.tsv
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
-          git add clavier/ikposso.kmp
-          git commit -m "Clavier ikposso : nouveau paquet" || echo "Rien de neuf"
+          git add clavier/
+          git commit -m "Clavier et dictionnaire ikposso : mise à jour" || echo "Rien de neuf"
+          git pull --rebase
           git push

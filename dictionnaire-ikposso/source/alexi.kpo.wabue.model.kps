@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package>
+  <System>
+    <KeymanDeveloperVersion>17.0.0.0</KeymanDeveloperVersion>
+    <FileVersion>12.0</FileVersion>
+  </System>
+  <Info>
+    <Name URL="">Dictionnaire ikposso (WABUƐ)</Name>
+    <Copyright URL="">© 2026 Adom K. Alexi</Copyright>
+    <Author URL="mailto:alexiadom64@gmail.com">Adom K. Alexi</Author>
+    <Version URL="">1.0</Version>
+    <Description>Suggestions de mots ikposso pendant qu'on écrit, tirées du dictionnaire vérifié de WABUƐ.</Description>
+    <WebSite URL="https://adomhub.github.io/ABUESA-IA-/">WABUƐ</WebSite>
+  </Info>
+  <Files>
+    <File>
+      <Name>..\build\alexi.kpo.wabue.model.js</Name>
+      <Description>Dictionnaire ikposso</Description>
+      <CopyLocation>0</CopyLocation>
+      <FileType>.model.js</FileType>
+    </File>
+  </Files>
+  <LexicalModels>
+    <LexicalModel>
+      <Name>Dictionnaire ikposso (WABUƐ)</Name>
+      <ID>alexi.kpo.wabue</ID>
+      <Languages>
+        <Language ID="kpo">Ikposso</Language>
+      </Languages>
+    </LexicalModel>
+  </LexicalModels>
+</Package>
