@@ -89,7 +89,11 @@ public class MainActivity extends Activity {
         corps.addView(espace(20));
         corps.addView(texte("Stickers WhatsApp", 15, WabueIME.OR, true));
         corps.addView(bouton("💬 Ajouter les 30 stickers ikposso à WhatsApp", new View.OnClickListener() {
-            @Override public void onClick(View v) { ajouterStickers(); }
+            @Override public void onClick(View v) { ajouterStickers(StickerProvider.PAQUET, StickerProvider.NOM); }
+        }));
+        corps.addView(espace(8));
+        corps.addView(bouton("👥 Ajouter les stickers « pour le groupe »", new View.OnClickListener() {
+            @Override public void onClick(View v) { ajouterStickers(StickerProvider.PAQUET2, StickerProvider.NOM2); }
         }));
         corps.addView(texte("Salutations, merci, bonne nuit… en ikposso, aux couleurs de WABUƐ.", 16, 0xFF444444, false));
 
@@ -116,11 +120,11 @@ public class MainActivity extends Activity {
         setContentView(sv);
     }
 
-    private void ajouterStickers() {
+    private void ajouterStickers(String id, String nom) {
         Intent i = new Intent("com.whatsapp.intent.action.ENABLE_STICKER_PACK");
-        i.putExtra("sticker_pack_id", StickerProvider.PAQUET);
+        i.putExtra("sticker_pack_id", id);
         i.putExtra("sticker_pack_authority", StickerProvider.AUTORITE);
-        i.putExtra("sticker_pack_name", StickerProvider.NOM);
+        i.putExtra("sticker_pack_name", nom);
         try {
             startActivityForResult(i, 200);
         } catch (android.content.ActivityNotFoundException e) {

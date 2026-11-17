@@ -17,6 +17,8 @@ public class StickerProvider extends ContentProvider {
     public static final String AUTORITE = "tg.wabue.clavier.stickers";
     public static final String PAQUET = "wabue1";
     public static final String NOM = "WABUƐ ikposso";
+    public static final String PAQUET2 = "wabue2";
+    public static final String NOM2 = "WABUƐ ikposso · groupe";
     static final String EDITEUR = "WABUƐ · Adom K. Alexi";
     static final String SITE = "https://adomhub.github.io/ABUESA-IA-/";
     static final String VIE_PRIVEE = "https://adomhub.github.io/ABUESA-IA-/confidentialite.html";
@@ -54,6 +56,13 @@ public class StickerProvider extends ContentProvider {
         {"s30.webp", "🙌", "Naduɛlu kalukawa · Respects aux anciens"},
     };
 
+    static final String[][] STICKERS_GROUPE = {
+        {"g01.webp", "👥", "Mi za muani ? · Comment allez-vous ?"},
+        {"g02.webp", "👋", "Mia vlɛɛɛ ! · Bonjour à tous"},
+        {"g03.webp", "🌇", "Mizaaa ! · Bonsoir à tous"},
+        {"g04.webp", "😴", "Ki zadɛɛo · Bonne nuit à tous"},
+    };
+
     private static final int METADONNEES = 1, METADONNEES_UN = 2, LISTE = 3, FICHIER = 4;
     private final UriMatcher m = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -76,14 +85,20 @@ public class StickerProvider extends ContentProvider {
                     "sticker_pack_publisher_email", "sticker_pack_publisher_website",
                     "sticker_pack_privacy_policy_website", "sticker_pack_license_agreement_website",
                     "image_data_version", "whatsapp_will_not_cache_stickers", "animated_sticker_pack"});
-            c.addRow(new Object[]{PAQUET, NOM, EDITEUR, "tray.png", "", "",
-                    "alexiadom64@gmail.com", SITE, VIE_PRIVEE, "", "1", 0, 0});
+            String seul = code == METADONNEES_UN ? uri.getLastPathSegment() : null;
+            if (seul == null || PAQUET.equals(seul))
+                c.addRow(new Object[]{PAQUET, NOM, EDITEUR, "tray.png", "", "",
+                        "alexiadom64@gmail.com", SITE, VIE_PRIVEE, "", "1", 0, 0});
+            if (seul == null || PAQUET2.equals(seul))
+                c.addRow(new Object[]{PAQUET2, NOM2, EDITEUR, "tray.png", "", "",
+                        "alexiadom64@gmail.com", SITE, VIE_PRIVEE, "", "1", 0, 0});
             c.setNotificationUri(getContext().getContentResolver(), uri);
             return c;
         }
         if (code == LISTE) {
             MatrixCursor c = new MatrixCursor(new String[]{"sticker_file_name", "sticker_emoji", "sticker_accessibility_text"});
-            for (String[] st : STICKERS) c.addRow(new Object[]{st[0], st[1], st[2]});
+            String[][] liste = PAQUET2.equals(uri.getLastPathSegment()) ? STICKERS_GROUPE : STICKERS;
+            for (String[] st : liste) c.addRow(new Object[]{st[0], st[1], st[2]});
             c.setNotificationUri(getContext().getContentResolver(), uri);
             return c;
         }
@@ -96,7 +111,7 @@ public class StickerProvider extends ContentProvider {
         List<String> seg = uri.getPathSegments();
         if (seg.size() != 3) return null;
         String paquet = seg.get(1), fichier = seg.get(2);
-        if (!PAQUET.equals(paquet) || fichier.contains("/") || fichier.contains("..")) return null;
+        if (!(PAQUET.equals(paquet) || PAQUET2.equals(paquet)) || fichier.contains("/") || fichier.contains("..")) return null;
         try {
             return getContext().getAssets().openFd(paquet + "/" + fichier);
         } catch (IOException e) {
