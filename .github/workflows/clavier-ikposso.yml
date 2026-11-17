@@ -44,7 +44,7 @@ jobs:
           cp dictionnaire-ikposso/source/wordlist.tsv clavier/mots-ikposso.tsv
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
-          git add clavier/
+          git add clavier/ dictionnaire-ikposso/source/wordlist.tsv
           git commit -m "Clavier et dictionnaire ikposso : mise à jour" || echo "Rien de neuf"
-          git pull --rebase
+          git pull --rebase --autostash
           git push
