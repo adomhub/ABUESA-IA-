@@ -9,10 +9,21 @@ android {
         versionCode((project.findProperty('vc') ?: '1') as Integer)
         versionName '1.0.' + (project.findProperty('vc') ?: '1')
     }
+    def cle = System.getenv('WABUE_CLE')
+    signingConfigs {
+        wabue {
+            storeFile rootProject.file('wabue-cle.p12')
+            storeType 'pkcs12'
+            storePassword cle ?: ''
+            keyAlias 'wabue'
+            keyPassword cle ?: ''
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
-            signingConfig signingConfigs.debug
+            // clé définitive WABUƐ si le secret WABUE_CLE existe, sinon clé de test
+            signingConfig cle ? signingConfigs.wabue : signingConfigs.debug
         }
     }
     compileOptions {

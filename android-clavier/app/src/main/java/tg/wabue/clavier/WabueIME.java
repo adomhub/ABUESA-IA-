@@ -406,8 +406,10 @@ public class WabueIME extends InputMethodService {
         defile.setBackgroundColor(CITRON);
         barre.removeAllViews();
         final boolean cap = Character.isUpperCase(debut.codePointAt(0));
+        final boolean toutMaj = couche == 2 || (debut.length() > 1 && debut.equals(debut.toUpperCase(Locale.ROOT)) && cap);
         for (String m : trouves) {
-            final String mot = cap ? m.substring(0, 1).toUpperCase(Locale.ROOT) + m.substring(1) : m;
+            final String mot = toutMaj ? m.toUpperCase(Locale.ROOT)
+                    : cap ? m.substring(0, 1).toUpperCase(Locale.ROOT) + m.substring(1) : m;
             TextView b = boutonBarre(mot, Color.BLACK, new View.OnClickListener() {
                 @Override public void onClick(View view) {
                     view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
