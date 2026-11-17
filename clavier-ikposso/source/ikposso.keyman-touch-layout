@@ -1026,13 +1026,19 @@
         "nextlayer": "default"
        },
        {
+        "id": "K_LOPT",
+        "text": "*Menu*",
+        "sp": "1",
+        "width": "110"
+       },
+       {
         "id": "U_002C",
         "text": ","
        },
        {
         "id": "K_SPACE",
         "text": "",
-        "width": "500"
+        "width": "390"
        },
        {
         "id": "U_002E",
@@ -2084,13 +2090,19 @@
         "nextlayer": "default"
        },
        {
+        "id": "K_LOPT",
+        "text": "*Menu*",
+        "sp": "1",
+        "width": "110"
+       },
+       {
         "id": "U_002C",
         "text": ","
        },
        {
         "id": "K_SPACE",
         "text": "",
-        "width": "500"
+        "width": "390"
        },
        {
         "id": "U_002E",
