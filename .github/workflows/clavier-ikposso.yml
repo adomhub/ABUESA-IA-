@@ -1,0 +1,33 @@
+name: Clavier ikposso (Keyman)
+on:
+  push:
+    paths:
+      - 'clavier-ikposso/**'
+      - '.github/workflows/clavier-ikposso.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Compiler le clavier
+        working-directory: clavier-ikposso
+        run: npx -y @keymanapp/kmc build ikposso.kpj
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clavier-ikposso
+          path: clavier-ikposso/build/
+      - name: Publier ikposso.kmp dans le site
+        run: |
+          mkdir -p clavier
+          cp clavier-ikposso/build/ikposso.kmp clavier/ikposso.kmp
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add clavier/ikposso.kmp
+          git commit -m "Clavier ikposso : nouveau paquet" || echo "Rien de neuf"
+          git push

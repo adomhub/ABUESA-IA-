@@ -1,0 +1,22 @@
+c Clavier ikposso (Akposso) - WABUƐ
+c Créé pour Adom K. Alexi, 2026
+store(&VERSION) '10.0'
+store(&NAME) 'Ikposso (WABUƐ)'
+store(&COPYRIGHT) '© 2026 Adom K. Alexi'
+store(&KEYBOARDVERSION) '1.0'
+store(&TARGETS) 'any'
+store(&LAYOUTFILE) 'ikposso.keyman-touch-layout'
+store(&MESSAGE) 'Clavier ikposso : touche ` puis une lettre (e o i u g d n z c) pour ɛ ɔ ɩ ʋ ɣ ɖ ŋ ǝ ʉ.'
+
+begin Unicode > use(main)
+
+c Sur ordinateur : la touche ` (à gauche du 1) sert de touche spéciale.
+c ` puis e = ɛ, ` puis o = ɔ, etc. ; ` puis 1 à 6 = les tons.
+store(base)    'eoiugdnzcEOIUGDNZC123456'
+store(special) 'ɛɔɩʋɣɖŋǝʉƐƆƖƲƔƉŊƏɄ' U+0301 U+0300 U+0302 U+030C U+0304 U+0303
+
+group(main) using keys
+
++ [K_BKQUOTE] > dk(spe)
+dk(spe) + any(base) > index(special, 2)
+dk(spe) + [K_BKQUOTE] > '`'
