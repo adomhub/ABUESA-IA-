@@ -87,6 +87,13 @@ public class MainActivity extends Activity {
         corps.addView(etat2);
 
         corps.addView(espace(20));
+        corps.addView(texte("Stickers WhatsApp", 15, WabueIME.OR, true));
+        corps.addView(bouton("💬 Ajouter les 30 stickers ikposso à WhatsApp", new View.OnClickListener() {
+            @Override public void onClick(View v) { ajouterStickers(); }
+        }));
+        corps.addView(texte("Salutations, merci, bonne nuit… en ikposso, aux couleurs de WABUƐ.", 16, 0xFF444444, false));
+
+        corps.addView(espace(20));
         corps.addView(texte("Essaie ici :", 17, Color.BLACK, true));
         EditText essai = new EditText(this);
         essai.setHint("Écris un mot en ikposso…");
@@ -107,6 +114,27 @@ public class MainActivity extends Activity {
         corps.addView(texte("🎁 Un cadeau de WABUƐ au peuple akposso. Soutiens-nous : 1000 FCFA par Flooz au +228 99 61 99 69. Ewlessɛ !", 16, 0xFF333333, false));
 
         setContentView(sv);
+    }
+
+    private void ajouterStickers() {
+        Intent i = new Intent("com.whatsapp.intent.action.ENABLE_STICKER_PACK");
+        i.putExtra("sticker_pack_id", StickerProvider.PAQUET);
+        i.putExtra("sticker_pack_authority", StickerProvider.AUTORITE);
+        i.putExtra("sticker_pack_name", StickerProvider.NOM);
+        try {
+            startActivityForResult(i, 200);
+        } catch (android.content.ActivityNotFoundException e) {
+            android.widget.Toast.makeText(this, "WhatsApp n'est pas installé sur ce téléphone.", android.widget.Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int code, int resultat, Intent data) {
+        super.onActivityResult(code, resultat, data);
+        if (code == 200 && resultat == RESULT_CANCELED && data != null) {
+            String err = data.getStringExtra("validation_error");
+            if (err != null) android.widget.Toast.makeText(this, "WhatsApp : " + err, android.widget.Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
