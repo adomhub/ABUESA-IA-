@@ -1,9 +1,9 @@
 c Clavier ikposso (Akposso) - WABUƐ
 c Créé pour Adom K. Alexi, 2026
-store(&VERSION) '10.0'
+store(&VERSION) '15.0'
 store(&NAME) 'Ikposso (WABUƐ)'
 store(&COPYRIGHT) '© 2026 Adom K. Alexi'
-store(&KEYBOARDVERSION) '1.2'
+store(&KEYBOARDVERSION) '1.3'
 store(&TARGETS) 'any'
 store(&LAYOUTFILE) 'ikposso.keyman-touch-layout'
 store(&MESSAGE) 'Clavier ikposso : touche ` puis une lettre (e o i u g d n z c) pour ɛ ɔ ɩ ʋ ɣ ɖ ŋ ǝ ʉ.'
