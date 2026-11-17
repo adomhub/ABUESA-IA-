@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WABUƐ CLAVIER IKPOSSO</string>
+    <string name="widget_nom">Calendrier akposso WABUƐ</string>
+    <string name="widget_desc">Le jour, le mois et le marché en ikposso, et le compte à rebours OVAZU.</string>
 </resources>

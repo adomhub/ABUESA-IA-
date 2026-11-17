@@ -87,6 +87,18 @@ public class MainActivity extends Activity {
         corps.addView(etat2);
 
         corps.addView(espace(20));
+        corps.addView(texte("Calendrier akposso", 15, WabueIME.OR, true));
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        int jj = cal.get(java.util.Calendar.DAY_OF_WEEK), mm = cal.get(java.util.Calendar.MONTH);
+        corps.addView(texte("Emie (aujourd'hui) : " + CalendrierWidget.JOURS_IK[jj] + " · "
+                + CalendrierWidget.MOIS_IK[mm] + " " + cal.get(java.util.Calendar.DAY_OF_MONTH)
+                + "\nOVAZU dans " + CalendrierWidget.joursAvantOvazu() + " jours", 18, Color.BLACK, true));
+        corps.addView(bouton("📅 Mettre le calendrier sur l'écran d'accueil", new View.OnClickListener() {
+            @Override public void onClick(View v) { epinglerWidget(); }
+        }));
+        corps.addView(texte("Sinon : appui long sur l'écran d'accueil → Widgets → WABUƐ.", 16, 0xFF444444, false));
+
+        corps.addView(espace(20));
         corps.addView(texte("Correction automatique", 15, WabueIME.OR, true));
         final android.content.SharedPreferences prefs = getSharedPreferences("reglages", MODE_PRIVATE);
         final android.widget.CheckBox cc = new android.widget.CheckBox(this);
@@ -132,6 +144,15 @@ public class MainActivity extends Activity {
         corps.addView(texte("🎁 Un cadeau de WABUƐ au peuple akposso. Soutiens-nous : 1000 FCFA par Flooz au +228 99 61 99 69. Ewlessɛ !", 16, 0xFF333333, false));
 
         setContentView(sv);
+    }
+
+    private void epinglerWidget() {
+        android.appwidget.AppWidgetManager mgr = android.appwidget.AppWidgetManager.getInstance(this);
+        boolean ok = false;
+        if (android.os.Build.VERSION.SDK_INT >= 26 && mgr.isRequestPinAppWidgetSupported()) {
+            ok = mgr.requestPinAppWidget(new android.content.ComponentName(this, CalendrierWidget.class), null, null);
+        }
+        if (!ok) android.widget.Toast.makeText(this, "Fais un appui long sur l'écran d'accueil → Widgets → WABUƐ.", android.widget.Toast.LENGTH_LONG).show();
     }
 
     private void ajouterStickers(String id, String nom) {
