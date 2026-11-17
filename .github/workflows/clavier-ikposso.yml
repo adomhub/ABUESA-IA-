@@ -27,7 +27,9 @@ jobs:
         run: python3 dictionnaire-ikposso/fabriquer_liste.py
       - name: Compiler le dictionnaire de suggestions
         working-directory: dictionnaire-ikposso
-        run: npx -y @keymanapp/kmc build dictionnaire.kpj
+        run: |
+          npx -y @keymanapp/kmc build source/alexi.kpo.wabue.model.ts --out-file build/alexi.kpo.wabue.model.js
+          npx -y @keymanapp/kmc build source/alexi.kpo.wabue.model.kps --out-file build/alexi.kpo.wabue.model.kmp
       - uses: actions/upload-artifact@v4
         with:
           name: clavier-et-dictionnaire-ikposso
