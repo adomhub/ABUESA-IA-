@@ -25,6 +25,8 @@ import java.io.InputStreamReader;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -93,6 +95,43 @@ public class WabueIME extends InputMethodService {
 
     private final List<String> mots = new ArrayList<>();
     private final List<String> motsPlis = new ArrayList<>();
+    // correction automatique : forme simple (sans lettres spéciales ni accents) -> mot ikposso
+    private final Map<String, String> corrections = new HashMap<>();
+    private boolean autoCorr = true, champSecret = false;
+    private String annulOrig = null, annulCorr = null, annulSep = null;
+
+    static final Set<String> FRANCAIS = new HashSet<>(java.util.Arrays.asList((
+            "avec pour dans mais elle elles nous vous sont tout tous toute bien fait faire plus comme cette cela être etre avoir "
+            + "merci bonjour bonsoir aussi alors quoi quand encore toujours rien chez sans sous leur leurs notre votre mon "
+            + "ton son mes tes ses aux une des les que qui est ont fois peut veux vais allez aller venir viens vient "
+            + "dire dit voir vois faut petit grand bonne bonne nuit jour jours mois annee année demain hier maman papa "
+            + "frere frère soeur sœur famille village maison travail argent temps ici voila voilà oui non peu beaucoup "
+            + "comment pourquoi depuis apres après avant entre contre vers selon parce donc ensuite enfin juste vrai "
+            + "même meme autre autres chose choses gens homme femme enfant enfants ami amis amie dieu prie priere prière "
+            + "salut ok okay merci bravo super trop tres très mieux moins encore alors "
+            + "akposso akpossos ikposso wabue waboue wawa badou togo ghana kougnohou amlame ovazu").split(" ")));
+
+    static String plierFort(String s) {
+        String n = s.toLowerCase(Locale.ROOT).replace('ē', 'e');
+        n = Normalizer.normalize(n, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < n.length(); i++) {
+            char c = n.charAt(i);
+            switch (c) {
+                case 'ɛ': case 'ǝ': case 'ə': b.append('e'); break;
+                case 'ɔ': b.append('o'); break;
+                case 'ɩ': case 'ɨ': b.append('i'); break;
+                case 'ʋ': case 'ʉ': b.append('u'); break;
+                case 'ɣ': b.append('g'); break;
+                case 'ɖ': case 'ɗ': b.append('d'); break;
+                case 'ŋ': b.append('n'); break;
+                case 'ɓ': b.append('b'); break;
+                case 'ƒ': b.append('f'); break;
+                default: b.append(c);
+            }
+        }
+        return b.toString();
+    }
 
     @Override
     public void onCreate() {
@@ -108,6 +147,13 @@ public class WabueIME extends InputMethodService {
                 if (m.isEmpty()) continue;
                 mots.add(m);              // déjà triés du plus fréquent au moins fréquent
                 motsPlis.add(plier(m));
+                if (m.length() >= 4) {
+                    String f = plierFort(m);
+                    if (FRANCAIS.contains(f)) continue;
+                    if (f.equals(m)) corrections.put(f, null);          // la forme simple existe déjà : ne rien corriger
+                    else if (corrections.containsKey(f)) corrections.put(f, null); // plusieurs formes : on ne choisit pas
+                    else corrections.put(f, m);
+                }
             }
         } catch (Exception ignore) { }
     }
@@ -150,6 +196,15 @@ public class WabueIME extends InputMethodService {
     public void onStartInputView(EditorInfo info, boolean restarting) {
         super.onStartInputView(info, restarting);
         couche = 0;
+        autoCorr = getSharedPreferences("reglages", MODE_PRIVATE).getBoolean("autocorrect", true);
+        int t = info.inputType & android.text.InputType.TYPE_MASK_VARIATION;
+        champSecret = t == android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
+                || t == android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                || t == android.text.InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD
+                || t == android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+                || t == android.text.InputType.TYPE_TEXT_VARIATION_URI
+                || t == android.text.InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS;
+        annulOrig = null;
         if (clavier != null) { dessiner(); majSuggestions(); }
     }
 
@@ -281,8 +336,8 @@ public class WabueIME extends InputMethodService {
             case NUM: couche = 3; dessiner(); return;
             case ABC: couche = 0; dessiner(); return;
             case GLOBE: changerClavier(); return;
-            case ESP: ic.commitText(" ", 1); majSuggestions(); return;
-            case ENT: entree(ic); return;
+            case ESP: if (!corriger(" ")) { ic.commitText(" ", 1); majSuggestions(); } return;
+            case ENT: corriger(""); entree(ic); return;
             case TON: ic.commitText(AIGU, 1); majSuggestions(); return;
         }
         ecrire(majuscule() ? k.toUpperCase(Locale.ROOT) : k);
@@ -291,6 +346,8 @@ public class WabueIME extends InputMethodService {
     private void ecrire(String s) {
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
+        if (",.;:!?…".contains(s) && s.length() == 1 && corriger(s)) { majSuggestions(); return; }
+        annulOrig = null;
         ic.commitText(s, 1);
         if (couche == 1 && Character.isLetter(s.codePointAt(0))) { couche = 0; dessiner(); }
         majSuggestions();
@@ -299,10 +356,54 @@ public class WabueIME extends InputMethodService {
     private void effacer() {
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
+        if (annulOrig != null) {          // annuler la dernière correction automatique
+            CharSequence avant = ic.getTextBeforeCursor(annulCorr.length() + annulSep.length(), 0);
+            if (avant != null && avant.toString().equals(annulCorr + annulSep)) {
+                ic.deleteSurroundingText(avant.length(), 0);
+                ic.commitText(annulOrig + annulSep, 1);
+                annulOrig = null;
+                majSuggestions();
+                return;
+            }
+            annulOrig = null;
+        }
         CharSequence sel = ic.getSelectedText(0);
         if (sel != null && sel.length() > 0) ic.commitText("", 1);
         else sendDownUpKeyEvents(KeyEvent.KEYCODE_DEL);
         majSuggestions();
+    }
+
+    /** Remplace le mot qu'on vient de taper par sa forme ikposso correcte, puis écrit le séparateur. */
+    private boolean corriger(String sep) {
+        annulOrig = null;
+        if (!autoCorr || champSecret) return false;
+        InputConnection ic = getCurrentInputConnection();
+        if (ic == null) return false;
+        String mot = motEnCours();
+        if (mot.length() < 4) return false;
+        String f = plierFort(mot);
+        if (FRANCAIS.contains(f)) return false;
+        String bon = corrections.get(f);
+        if (bon == null || bon.equals(mot.toLowerCase(Locale.ROOT))) return false;
+        boolean toutMaj = mot.length() > 1 && mot.equals(mot.toUpperCase(Locale.ROOT));
+        if (toutMaj) bon = bon.toUpperCase(Locale.ROOT);
+        else if (Character.isUpperCase(mot.codePointAt(0))) bon = bon.substring(0, 1).toUpperCase(Locale.ROOT) + bon.substring(1);
+        if (bon.equals(mot)) return false;
+        ic.beginBatchEdit();
+        ic.deleteSurroundingText(mot.length(), 0);
+        ic.commitText(bon + sep, 1);
+        ic.endBatchEdit();
+        annulOrig = mot; annulCorr = bon; annulSep = sep;
+        if (barre != null) {
+            defile.setBackgroundColor(CITRON);
+            barre.removeAllViews();
+            final String o = mot;
+            TextView b = boutonBarre("✓ " + bon + "   ·   ↶ " + o, 0xFF1E3A22, new View.OnClickListener() {
+                @Override public void onClick(View v) { effacer(); }
+            });
+            barre.addView(b);
+        }
+        return true;
     }
 
     private void entree(InputConnection ic) {
@@ -395,6 +496,7 @@ public class WabueIME extends InputMethodService {
 
     private void majSuggestions() {
         if (barre == null) return;
+        if (champSecret) { barreAccueil(); return; }
         final String debut = motEnCours();
         if (debut.isEmpty() || mots.isEmpty()) { barreAccueil(); return; }
         String p = plier(debut);

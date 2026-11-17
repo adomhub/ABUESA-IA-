@@ -87,6 +87,20 @@ public class MainActivity extends Activity {
         corps.addView(etat2);
 
         corps.addView(espace(20));
+        corps.addView(texte("Correction automatique", 15, WabueIME.OR, true));
+        final android.content.SharedPreferences prefs = getSharedPreferences("reglages", MODE_PRIVATE);
+        final android.widget.CheckBox cc = new android.widget.CheckBox(this);
+        cc.setText("Mettre les bonnes lettres ikposso (ewlesse → ewlessɛ). ⌫ juste après pour annuler.");
+        cc.setTextSize(17);
+        cc.setChecked(prefs.getBoolean("autocorrect", true));
+        cc.setOnCheckedChangeListener(new android.widget.CompoundButton.OnCheckedChangeListener() {
+            @Override public void onCheckedChanged(android.widget.CompoundButton b, boolean on) {
+                prefs.edit().putBoolean("autocorrect", on).apply();
+            }
+        });
+        corps.addView(cc);
+
+        corps.addView(espace(20));
         corps.addView(texte("Stickers WhatsApp", 15, WabueIME.OR, true));
         corps.addView(bouton("💬 Ajouter les 30 stickers ikposso à WhatsApp", new View.OnClickListener() {
             @Override public void onClick(View v) { ajouterStickers(StickerProvider.PAQUET, StickerProvider.NOM); }

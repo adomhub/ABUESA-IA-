@@ -14,6 +14,13 @@ def textes():
     fin = html.index('];', debut)
     for m in re.finditer(r"ak:\s*'((?:[^'\\]|\\.)*)'", html[debut:fin]):
         yield m.group(1)
+    # mots des stickers validés par Alexi (comptent 3 fois)
+    for nom in ('stickers-liste.json', 'stickers-liste-groupe.json'):
+        f = RACINE / 'android-clavier' / nom
+        if f.exists():
+            for ik, fr, em in json.loads(f.read_text(encoding='utf-8')):
+                for _ in range(3):
+                    yield ik
     try:
         req = urllib.request.Request(URL, headers={'apikey': CLE, 'Authorization': 'Bearer ' + CLE})
         for ligne in json.load(urllib.request.urlopen(req, timeout=30)):
