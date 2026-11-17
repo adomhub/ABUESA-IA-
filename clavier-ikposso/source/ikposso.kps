@@ -11,7 +11,7 @@
     <Name URL="">Clavier Ikposso (WABUƐ)</Name>
     <Copyright URL="">© 2026 Adom K. Alexi</Copyright>
     <Author URL="mailto:alexiadom64@gmail.com">Adom K. Alexi</Author>
-    <Version URL="">1.0</Version>
+    <Version URL="">1.1</Version>
     <Description>Clavier pour écrire l'ikposso (Akposso, Togo et Ghana) : ɛ ɔ ɩ ʋ ɣ ɖ ŋ et les tons.</Description>
     <WebSite URL="https://adomhub.github.io/ABUESA-IA-/">WABUƐ</WebSite>
   </Info>
@@ -39,7 +39,7 @@
     <Keyboard>
       <Name>Ikposso (WABUƐ)</Name>
       <ID>ikposso</ID>
-      <Version>1.0</Version>
+      <Version>1.1</Version>
       <Languages>
         <Language ID="kpo">Ikposso</Language>
       </Languages>
