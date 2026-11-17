@@ -24,6 +24,7 @@ jobs:
       - name: Liste des mots ikposso
         run: |
           python3 dictionnaire-ikposso/fabriquer_liste.py
+          mkdir -p android-clavier/app/src/main/assets
           cp dictionnaire-ikposso/source/wordlist.tsv android-clavier/app/src/main/assets/mots.tsv
       - name: Fabriquer l'application
         working-directory: android-clavier
