@@ -30,7 +30,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * CLAVIER IKPOSSO WABUƐ — clavier Android pour écrire l'ikposso.
+ * WABUƐ CLAVIER IKPOSSO — clavier Android pour écrire l'ikposso.
  * Disposition : lettres ikposso en haut, AZERTY, appui long pour les accents,
  * touche des tons, majuscules (1 appui) et verrouillage (2 appuis), suggestions.
  */

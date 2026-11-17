@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
         titres.setPadding(dp(14), 0, 0, 0);
         TextView t1 = texte("WABOUÉ", 34, Color.BLACK, true);
         t1.setTypeface(Typeface.SERIF, Typeface.BOLD);
-        TextView t2 = texte("CLAVIER IKPOSSO WABUƐ", 17, WabueIME.TOUCHE, true);
+        TextView t2 = texte("WABUƐ CLAVIER IKPOSSO", 17, WabueIME.TOUCHE, true);
         titres.addView(t1);
         titres.addView(t2);
         tete.addView(titres);
@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
                 startActivity(new Intent(Settings.ACTION_INPUT_METHOD_SETTINGS));
             }
         }));
-        corps.addView(texte("Allume « CLAVIER IKPOSSO WABUƐ », puis reviens ici.", 16, 0xFF444444, false));
+        corps.addView(texte("Allume « WABUƐ CLAVIER IKPOSSO », puis reviens ici.", 16, 0xFF444444, false));
         corps.addView(etat1);
 
         etat2 = texte("", 18, Color.BLACK, true);
@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
                 if (imm != null) imm.showInputMethodPicker();
             }
         }));
-        corps.addView(texte("Choisis « CLAVIER IKPOSSO WABUƐ » dans la liste.", 16, 0xFF444444, false));
+        corps.addView(texte("Choisis « WABUƐ CLAVIER IKPOSSO » dans la liste.", 16, 0xFF444444, false));
         corps.addView(etat2);
 
         corps.addView(espace(20));

@@ -1,4 +1,4 @@
-name: Application CLAVIER IKPOSSO WABUƐ (Android)
+name: Application WABUƐ CLAVIER IKPOSSO (Android)
 on:
   push:
     paths:
@@ -40,6 +40,6 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git add clavier/clavier-ikposso-wabue.apk
-          git commit -m "Application CLAVIER IKPOSSO WABUƐ : nouvelle version" || echo "Rien de neuf"
+          git commit -m "Application WABUƐ CLAVIER IKPOSSO : nouvelle version" || echo "Rien de neuf"
           git pull --rebase --autostash
           git push
