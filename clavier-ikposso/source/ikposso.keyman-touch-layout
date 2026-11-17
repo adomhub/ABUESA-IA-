@@ -1,7 +1,7 @@
 {
  "tablet": {
   "font": "Tahoma",
-  "fontsize": "1em",
+  "fontsize": "1.7em",
   "layer": [
    {
     "id": "default",
@@ -1065,7 +1065,7 @@
  },
  "phone": {
   "font": "Tahoma",
-  "fontsize": "1em",
+  "fontsize": "1.7em",
   "layer": [
    {
     "id": "default",
