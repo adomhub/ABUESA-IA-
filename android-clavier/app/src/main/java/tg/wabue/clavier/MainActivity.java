@@ -177,7 +177,7 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void onResume() { super.onResume(); majEtat(); }
+    protected void onResume() { super.onResume(); majEtat(); CalendrierWidget.toutMettreAJour(this); }
 
     @Override
     public void onWindowFocusChanged(boolean f) { super.onWindowFocusChanged(f); if (f) majEtat(); }

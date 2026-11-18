@@ -59,23 +59,48 @@ public class CalendrierWidget extends AppWidgetProvider {
         return v;
     }
 
+    static final String MAJ = "tg.wabue.clavier.MAJ_CALENDRIER";
+
     @Override
     public void onUpdate(Context ctx, AppWidgetManager mgr, int[] ids) {
         for (int id : ids) mgr.updateAppWidget(id, vue(ctx));
+        programmerMinuit(ctx);
+    }
+
+    @Override
+    public void onEnabled(Context ctx) { programmerMinuit(ctx); }
+
+    /** Réveil juste après minuit pour changer de jour, même si le téléphone économise la batterie. */
+    static void programmerMinuit(Context ctx) {
+        android.app.AlarmManager am = (android.app.AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+        if (am == null) return;
+        Intent i = new Intent(ctx, CalendrierWidget.class).setAction(MAJ);
+        int f = PendingIntent.FLAG_UPDATE_CURRENT | (android.os.Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0);
+        PendingIntent pi = PendingIntent.getBroadcast(ctx, 1, i, f);
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DAY_OF_MONTH, 1);
+        c.set(Calendar.HOUR_OF_DAY, 0); c.set(Calendar.MINUTE, 0); c.set(Calendar.SECOND, 30); c.set(Calendar.MILLISECOND, 0);
+        if (android.os.Build.VERSION.SDK_INT >= 23) am.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pi);
+        else am.set(android.app.AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pi);
     }
 
     /** Met à jour tous les widgets (appelé aussi au changement de date). */
     static void toutMettreAJour(Context ctx) {
-        AppWidgetManager mgr = AppWidgetManager.getInstance(ctx);
-        int[] ids = mgr.getAppWidgetIds(new ComponentName(ctx, CalendrierWidget.class));
-        for (int id : ids) mgr.updateAppWidget(id, vue(ctx));
+        try {
+            AppWidgetManager mgr = AppWidgetManager.getInstance(ctx);
+            int[] ids = mgr.getAppWidgetIds(new ComponentName(ctx, CalendrierWidget.class));
+            if (ids == null || ids.length == 0) return;
+            for (int id : ids) mgr.updateAppWidget(id, vue(ctx));
+            programmerMinuit(ctx);
+        } catch (Exception ignore) { }
     }
 
     @Override
     public void onReceive(Context ctx, Intent intent) {
         super.onReceive(ctx, intent);
         String a = intent.getAction();
-        if (Intent.ACTION_DATE_CHANGED.equals(a) || Intent.ACTION_TIME_CHANGED.equals(a)
-                || Intent.ACTION_TIMEZONE_CHANGED.equals(a)) toutMettreAJour(ctx);
+        if (MAJ.equals(a) || Intent.ACTION_DATE_CHANGED.equals(a) || Intent.ACTION_TIME_CHANGED.equals(a)
+                || Intent.ACTION_TIMEZONE_CHANGED.equals(a) || Intent.ACTION_BOOT_COMPLETED.equals(a)
+                || "android.intent.action.MY_PACKAGE_REPLACED".equals(a)) toutMettreAJour(ctx);
     }
 }

@@ -196,6 +196,7 @@ public class WabueIME extends InputMethodService {
     public void onStartInputView(EditorInfo info, boolean restarting) {
         super.onStartInputView(info, restarting);
         couche = 0;
+        CalendrierWidget.toutMettreAJour(this);
         autoCorr = getSharedPreferences("reglages", MODE_PRIVATE).getBoolean("autocorrect", true);
         int t = info.inputType & android.text.InputType.TYPE_MASK_VARIATION;
         champSecret = t == android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
