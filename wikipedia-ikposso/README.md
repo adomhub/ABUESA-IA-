@@ -17,6 +17,8 @@ Yanasɛ ba Wikipédia !
 
 (Français : Bienvenue sur Wikipédia en ikposso, que tout le monde peut améliorer.)
 
+Section « Ɛkuɛ wakutu ɣa nɛmɛ » (Articles) avec le lien vers Ikpɔssɔ.
+
 ### Ikpɔssɔ — 18/11/2026
 
 https://incubator.wikimedia.org/wiki/Wp/kpo/Ikpɔssɔ
@@ -30,3 +32,4 @@ Badou lɛ kpɔssɔ ayu ali ka, ku wafɔ namù ikpɔssɔ.
 ## Mots validés par Alexi
 
 - Ɛfussé = Accueil
+- Ɛkuɛ wakutu ɣa nɛmɛ = Articles (ce qu'on peut lire ici)
