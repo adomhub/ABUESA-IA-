@@ -16,7 +16,7 @@ public class CalendrierWidget extends AppWidgetProvider {
     // Calendar.DAY_OF_WEEK : 1 = dimanche … 7 = samedi
     static final String[] JOURS_IK = {"", "Ɛzawlayɩ", "Imle", "Ɛkpɛ", "Ɛwlɛ", "Ɛɣla", "Ɛva", "Ewleduyɩ"};
     static final String[] JOURS_FR = {"", "dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"};
-    static final String[] MARCHES = {"", "", "Agbo", "Zogbégan", "Doumé", "Badou", "Kougnohou", ""};
+    static final String[] MARCHES = {"", "", "Agbo", "Zogbégan", "Doumé", "Badou", "Kougnohou", "Agbo N'Kougna"};
     static final String[] MOIS_IK = {"Ɔlatʋ", "Ɔfʋtsɩ", "Zata", "Ɛvlɩlʋɩa", "Ʋlawlɩvɛ", "Inaglo",
             "Nekuneku", "Ipuǝnǝ", "Iwle", "Iwletsɔ", "Ɔtɩɩ", "Ɛyɛbuele"};
     static final String[] MOIS_FR = {"janvier", "février", "mars", "avril", "mai", "juin",
@@ -47,12 +47,13 @@ public class CalendrierWidget extends AppWidgetProvider {
         int j = c.get(Calendar.DAY_OF_WEEK), m = c.get(Calendar.MONTH), d = c.get(Calendar.DAY_OF_MONTH);
         RemoteViews v = new RemoteViews(ctx.getPackageName(), R.layout.widget_calendrier);
         v.setTextViewText(R.id.w_jour, JOURS_IK[j]);
-        v.setTextViewText(R.id.w_jour_fr, JOURS_FR[j] + " " + d + " " + MOIS_FR[m]);
-        v.setTextViewText(R.id.w_mois, MOIS_IK[m] + " · " + d);
-        String marche = MARCHES[j].isEmpty() ? "" : "🛒 Marché : " + MARCHES[j];
+        int an = c.get(Calendar.YEAR);
+        v.setTextViewText(R.id.w_jour_fr, JOURS_FR[j] + " " + d + " " + MOIS_FR[m] + " " + an);
+        v.setTextViewText(R.id.w_mois, "Ùtsi " + MOIS_IK[m] + " · " + d + "   Iluɛ " + an);
+        String marche = MARCHES[j].isEmpty() ? "🛒 Pas de marché aujourd'hui" : "🛒 Udzayi : " + MARCHES[j];
         v.setTextViewText(R.id.w_marche, marche);
         int n = joursAvantOvazu();
-        v.setTextViewText(R.id.w_ovazu, n == 0 ? "🎉 C'est OVAZU aujourd'hui !" : "🎉 OVAZU dans " + n + (n > 1 ? " jours" : " jour"));
+        v.setTextViewText(R.id.w_ovazu, n == 0 ? "🎉 Jour J : c'est OVAZU aujourd'hui !" : "🎉 OVAZU dans " + n + (n > 1 ? " jours" : " jour") + " (J-" + n + ")");
         Intent i = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://adomhub.github.io/ABUESA-IA-/"));
         int f = android.os.Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0;
         v.setOnClickPendingIntent(R.id.w_racine, PendingIntent.getActivity(ctx, 0, i, f));
