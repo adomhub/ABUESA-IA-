@@ -1,0 +1,75 @@
+# Common Voice — Spontaneous Speech en ikposso (kpo)
+
+Common Voice (Mozilla) demande **au moins 60 questions en ikposso**. Les gens y répondront à l'oral en 10 à 25 secondes.
+
+Règles :
+- Pas de questions qui font dire son nom, son adresse, son téléphone, sa santé, son argent ou son entreprise.
+- Une question par ligne.
+- Deux autres locuteurs de l'ikposso devront relire la liste avant l'envoi, car on ne pourra plus la modifier ensuite.
+
+Alexi traduit chaque question en ikposso (colonne « Ikposso »). Claude ne doit rien inventer en ikposso.
+
+| N° | Français | Ikposso (Alexi) |
+|---|---|---|
+| 1 | Que fait-on au village pendant la fête d'OVAZU ? | |
+| 2 | Comment prépare-t-on le fonio ? | |
+| 3 | Quel est ton plat préféré et pourquoi ? | |
+| 4 | Que vend-on le jour du marché ? | |
+| 5 | Que fais-tu quand il pleut beaucoup ? | |
+| 6 | Quelle saison préfères-tu et pourquoi ? | |
+| 7 | Comment salue-t-on une personne âgée ? | |
+| 8 | Raconte un conte que les anciens racontaient le soir. | |
+| 9 | Quel proverbe aimes-tu et que veut-il dire ? | |
+| 10 | À quels jeux jouaient les enfants autrefois ? | |
+| 11 | Que plante-t-on dans les champs ? | |
+| 12 | Comment se passe une journée au champ ? | |
+| 13 | Comment prépare-t-on la sauce arachide ? | |
+| 14 | Que fait-on quand un enfant naît ? | |
+| 15 | Comment se passe un mariage traditionnel ? | |
+| 16 | Pourquoi est-il important de parler ikposso aux enfants ? | |
+| 17 | Quelle musique ou quelle danse aimes-tu ? | |
+| 18 | Que fait-on le dimanche ? | |
+| 19 | Comment va-t-on au marché ? | |
+| 20 | Que trouve-t-on dans la forêt ? | |
+| 21 | Pourquoi les montagnes sont-elles importantes pour nous ? | |
+| 22 | Comment cultive-t-on le café ou le cacao ? | |
+| 23 | Que boit-on quand il fait très chaud ? | |
+| 24 | Comment accueille-t-on un visiteur à la maison ? | |
+| 25 | Que mange-t-on le matin ? | |
+| 26 | Que fait-on le soir après le travail ? | |
+| 27 | Comment les jeunes peuvent-ils aider le village ? | |
+| 28 | Que penses-tu du téléphone portable ? | |
+| 29 | Comment le village a-t-il changé ces dernières années ? | |
+| 30 | Quel animal aimes-tu et pourquoi ? | |
+| 31 | Comment élève-t-on les poules ou les chèvres ? | |
+| 32 | Que fait-on pour rester en bonne santé ? | |
+| 33 | Quel métier aimerais-tu apprendre et pourquoi ? | |
+| 34 | Que fait un bon chef de village ? | |
+| 35 | Comment se passe la rentrée des classes ? | |
+| 36 | Que fait-on pendant le nouvel an ? | |
+| 37 | Décris le chemin entre la maison et le champ. | |
+| 38 | Quels fruits mange-t-on au village ? | |
+| 39 | Comment fabrique-t-on un panier ou un objet traditionnel ? | |
+| 40 | Que racontent les anciens sur l'histoire des Akposso ? | |
+| 41 | Comment se passent les funérailles chez nous ? | |
+| 42 | Que fait-on quand il y a un conflit entre voisins ? | |
+| 43 | Pourquoi faut-il respecter les anciens ? | |
+| 44 | Qu'aimes-tu faire pendant ton temps libre ? | |
+| 45 | Comment lave-t-on le linge au village ? | |
+| 46 | Que porte-t-on les jours de fête ? | |
+| 47 | Quels conseils donnerais-tu à un enfant qui va à l'école ? | |
+| 48 | Comment prépare-t-on le vin de palme ? | |
+| 49 | Que fait-on quand il fait très froid le matin ? | |
+| 50 | Quelle est la plus belle chose dans notre région ? | |
+| 51 | Comment se passe le voyage de Badou à Lomé ? | |
+| 52 | Quel conseil donnerais-tu à quelqu'un qui veut apprendre l'ikposso ? | |
+| 53 | Que fait-on avec le maïs ? | |
+| 54 | Pourquoi aimes-tu ton village ? | |
+| 55 | Comment remercie-t-on quelqu'un qui nous a aidé ? | |
+| 56 | Que fait-on pour protéger la forêt et les rivières ? | |
+| 57 | Que chante-t-on pendant les fêtes ? | |
+| 58 | Comment se prépare-t-on pour aller au marché ? | |
+| 59 | Que veux-tu que les enfants gardent de notre culture ? | |
+| 60 | Comment imagines-tu le pays akposso dans vingt ans ? | |
+| 61 | Que fait-on quand un visiteur arrive de loin ? | |
+| 62 | Quel est le meilleur moment de la journée et pourquoi ? | |
