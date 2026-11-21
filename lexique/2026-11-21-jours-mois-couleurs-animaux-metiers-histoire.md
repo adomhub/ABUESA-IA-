@@ -9,7 +9,7 @@ Imle = Lundi
 Ɛwlɛ = Mercredi
 Ɛɣla = Jeudi
 Ɛva = Vendredi
-Ewledʋyɩ = Samedi
+Ewleduyɩ = Samedi (forme avec « u » confirmée par Alexi le 21 nov.)
 Ɛzawlayɩ = Dimanche
 
 Phrases :
