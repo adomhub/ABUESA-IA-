@@ -21,16 +21,16 @@ Alexi traduit chaque question en ikposso (colonne « Ikposso »). Claude ne doit
 | 8 | Raconte un conte que les anciens racontaient le soir. | du utiɣɛ bua ku ɔluwini wani akɔ na du nu íɖísena. |
 | 9 | Quel proverbe aimes-tu et que veut-il dire ? | awu ulo la akɔ na buɛyɛ, ku aɣili numɛ? |
 | 10 | À quels jeux jouaient les enfants autrefois ? | awu ibuélé la, évidjé wanɩ akɔ né buélé tsa? |
-| 11 | Que plante-t-on dans les champs ? | |
-| 12 | Comment se passe une journée au champ ? | |
-| 13 | Comment prépare-t-on la sauce arachide ? | |
-| 14 | Que fait-on quand un enfant naît ? | |
-| 15 | Comment se passe un mariage traditionnel ? | |
-| 16 | Pourquoi est-il important de parler ikposso aux enfants ? | |
-| 17 | Quelle musique ou quelle danse aimes-tu ? | |
-| 18 | Que fait-on le dimanche ? | |
-| 19 | Comment va-t-on au marché ? | |
-| 20 | Que trouve-t-on dans la forêt ? | |
+| 11 | Que plante-t-on dans les champs ? | akɔ na du mɛ la nu sili? |
+| 12 | Comment se passe une journée au champ ? | ɛɣui akɔ naha muani nu'sili? |
+| 13 | Comment prépare-t-on la sauce arachide ? | akɔ na kpɔ akitiwa ɖetsí muani? |
+| 14 | Que fait-on quand un enfant naît ? | akɔ na va ni nitiɛ kamâ évidzé di ? |
+| 15 | Comment se passe un mariage traditionnel ? | ali aɣu ɔsiaɣɔ akɔ naha muani ? |
+| 16 | Pourquoi est-il important de parler ikposso aux enfants ? | n'dɛ bua ku alɛ didi nu ka mu ikpɔssɔ ku evidzewani  ? |
+| 17 | Quelle musique ou quelle danse aimes-tu ? | awu ɔtsè ni awu ala, la akɔ nabuɛ yɛ ? |
+| 18 | Que fait-on le dimanche ? | akɔ na vani, nu ɛza wla ɣi? |
+| 19 | Comment va-t-on au marché ? | akɔ naha udja muani ? |
+| 20 | Que trouve-t-on dans la forêt ? | akɔ namu mɛ, la nɔfu li? |
 | 21 | Pourquoi les montagnes sont-elles importantes pour nous ? | |
 | 22 | Comment cultive-t-on le café ou le cacao ? | |
 | 23 | Que boit-on quand il fait très chaud ? | |
