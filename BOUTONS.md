@@ -19,7 +19,7 @@ Liste de tous les boutons du site, classés par endroit (version 5.21, 17 novemb
 - 📲 Partager en statut (proverbe, carte OVAZU) · 📅 Événement · 🏆 Gagnant du quiz
 - Marché : ➕ Vendre un objet · 💬 Envoyer de l'argent au pays
 - Fil d'actualité : 📸 Voir plus · 💬 Commentaires
-- ⌨️ Clavier ikposso : 📋 Copier le texte · ⬇️ Télécharger l'application WABUƐ CLAVIER IKPOSSO · ⬇️ Clavier Keyman · ⬇️ Dictionnaire de suggestions
+- ⌨️ Clavier ikposso : 📋 Copier le texte · ⬇️ Télécharger l'application WABUƐ CLAVIER IKPOSSO
 - Banque vocale : 🗣️ Je dis un mot ou une phrase · 👴🏾 J'enregistre un ancien
 - ✨ Créer avec l'IA (Atelier) · Studio (💡 idées, 🎬 vidéo, 🎥 film) · Maison de création
 - 📚 Bibliothèque ikposso · 🔔 Activer les notifications · 📋 Copier le numéro Flooz
