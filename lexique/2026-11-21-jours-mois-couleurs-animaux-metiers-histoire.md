@@ -19,7 +19,7 @@ Ne tsika ba nu imlé = je reviendrai lundi
 Ɛyi nɛyi = tous les jours
 Adza = hier
 Ɛtsɛ = demain
-Ɛmié = aujourd'hui
+Émié = aujourd'hui (forme « Émié » confirmée par Alexi le 21 nov.)
 
 ## 2. Les mois de l'année
 
