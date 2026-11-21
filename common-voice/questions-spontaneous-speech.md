@@ -32,10 +32,10 @@ Alexi traduit chaque question en ikposso (colonne « Ikposso »). Claude ne doit
 | 19 | Comment va-t-on au marché ? | akɔ naha udja muani ? |
 | 20 | Que trouve-t-on dans la forêt ? | akɔ namu mɛ, la nɔfu li? |
 | 21 | Pourquoi les montagnes sont-elles importantes pour nous ? | n'dɛ buaku itô wani alɛ kawu didi ? |
-| 22 | Comment cultive-t-on le café ou le cacao ? | akɔ na vli cocosɩ ni cɔfè aɣusi miani ? |
+| 22 | Comment cultive-t-on le café ou le cacao ? | akɔ na vli cocosɩ ni cɔfè aɣusi muani ? |
 | 23 | Que boit-on quand il fait très chaud ? | akɔ négnua mɛ ni tiɣɛ ku ɛfu kédjo fufua ? |
 | 24 | Comment accueille-t-on un visiteur à la maison ? | akɔ natɛ ɔlufi muani n'udunu ? |
-| 25 | Que mange-t-on le matin ? | akɔ naɣɛ mɛ n"idikadi ? |
+| 25 | Que mange-t-on le matin ? | akɔ naɣɛ mɛ n'idikadi ? |
 | 26 | Que fait-on le soir après le travail ? | akɔ na vani nidisena muana ɔlu bua ? |
 | 27 | Comment les jeunes peuvent-ils aider le village ? | alévi wani béyadu nʋ aliyɛ li muani ? |
 | 28 | Que penses-tu du téléphone portable ? | éké kélé  ɔlɔ nuwlu muani , nu ɛsɛmukuɛ ɛyɛtu ? |
