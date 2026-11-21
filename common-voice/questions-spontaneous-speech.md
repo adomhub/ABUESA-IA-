@@ -11,16 +11,16 @@ Alexi traduit chaque question en ikposso (colonne « Ikposso »). Claude ne doit
 
 | N° | Français | Ikposso (Alexi) |
 |---|---|---|
-| 1 | Que fait-on au village pendant la fête d'OVAZU ? | |
-| 2 | Comment prépare-t-on le fonio ? | |
-| 3 | Quel est ton plat préféré et pourquoi ? | |
-| 4 | Que vend-on le jour du marché ? | |
-| 5 | Que fais-tu quand il pleut beaucoup ? | |
-| 6 | Quelle saison préfères-tu et pourquoi ? | |
-| 7 | Comment salue-t-on une personne âgée ? | |
-| 8 | Raconte un conte que les anciens racontaient le soir. | |
-| 9 | Quel proverbe aimes-tu et que veut-il dire ? | |
-| 10 | À quels jeux jouaient les enfants autrefois ? | |
+| 1 | Que fait-on au village pendant la fête d'OVAZU ? | akɔ navani nu aliɛ li , nu ɔvazu ayu iɣuiɛ? |
+| 2 | Comment prépare-t-on le fonio ? | akɔ nésili aɣɛ muani ? |
+| 3 | Quel est ton plat préféré et pourquoi ? | ɣanɛ kuɣɛ fuɣɛ la nawa ku nudɛ ? |
+| 4 | Que vend-on le jour du marché ? | aké yimɛ nu udjaɣui? |
+| 5 | Que fais-tu quand il pleut beaucoup ? | akɔ navani ni tiɛ kadi kaluia nu bu na? |
+| 6 | Quelle saison préfères-tu et pourquoi ? | awu iti là akɔ na fusu, ku n'dɛ? |
+| 7 | Comment salue-t-on une personne âgée ? | akɔ na mu nu ɔluwini numɛ? |
+| 8 | Raconte un conte que les anciens racontaient le soir. | du utiɣɛ bua ku ɔluwini wani akɔ na du nu íɖísena. |
+| 9 | Quel proverbe aimes-tu et que veut-il dire ? | awu ulo la akɔ na buɛyɛ, ku aɣili numɛ? |
+| 10 | À quels jeux jouaient les enfants autrefois ? | awu ibuélé la, évidjé wanɩ akɔ né buélé tsa? |
 | 11 | Que plante-t-on dans les champs ? | |
 | 12 | Comment se passe une journée au champ ? | |
 | 13 | Comment prépare-t-on la sauce arachide ? | |
