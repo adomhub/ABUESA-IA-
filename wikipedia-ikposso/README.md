@@ -50,7 +50,7 @@ Badou ! Ékplétu nu Akrowa aɣu itôava ayɔbèe.
 
 https://incubator.wikimedia.org/wiki/Wp/kpo/Ɔvazʋ
 
-Ɔvazʋ lɛ kpɔsɔ wani aɣu ɛɣʋi aɣɛ bé ni ɛkikɛɣɛ. Akɔ naɣɛ ilu ɛdɩ nɛdi, nu utsi ɛyɛbuele.
+Ɔvazʋ lɛ kpɔsɔ wani aɣu ɛɣʋi aɣɛ bé ni ɛkikaɣɛ. Akɔ naɣɛ ilu ɛdɩ nɛdi, nu utsi ɛyɛbuele.
 
 Kpɔsɔ wani dja kéléé nu ali, nu imatsɛ akɔ n'ékualɛ mɛ adunɔ m'ala, mɛ akalɛ ɛkuyɛ mɛ akpɔ ahla ka iwolowu nu ilu yɛ.
 
