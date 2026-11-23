@@ -16,6 +16,8 @@ public class CalendrierWidget extends AppWidgetProvider {
     // Calendar.DAY_OF_WEEK : 1 = dimanche … 7 = samedi
     static final String[] JOURS_IK = {"", "Ɛzawlayɩ", "Imle", "Ɛkpɛ", "Ɛwlɛ", "Ɛɣla", "Ɛva", "Ewleduyɩ"};
     static final String[] JOURS_FR = {"", "dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"};
+    /** Marchés des Akposso du Ghana (donnés par Alexi le 23 nov. 2026), affichés sur les téléphones en anglais. */
+    static final String[] MARCHES_GH = {"", "", "", "Akpɔssɔ Cabo", "Akpɔssɔ Kubi", "", "Ɔclabɛ · Akpɔssɔ Cabo", ""};
     static final String[] MARCHES = {"", "", "Agbo", "Zogbégan", "Doumé", "Badou", "Kougnohou", "Agbo N'Kougna"};
     static final String[] MOIS_IK = {"Ɔlatʋ", "Ɔfʋtsɩ", "Zata", "Ɛvlɩlʋɩa", "Ʋlawlɩvɛ", "Inaglo",
             "Nekuneku", "Ipuǝnǝ", "Iwle", "Iwletsɔ", "Ɔtɩɩ", "Ɛyɛbuele"};
@@ -56,8 +58,9 @@ public class CalendrierWidget extends AppWidgetProvider {
         v.setTextViewText(R.id.w_jour_fr, fr ? JOURS_FR[j] + " " + d + " " + MOIS_FR[m] + " " + an
                                              : JOURS_EN[j] + ", " + d + " " + MOIS_EN[m] + " " + an);
         v.setTextViewText(R.id.w_mois, "Ùtsi " + MOIS_IK[m] + " · " + d + "   Iluɛ " + an);
-        String marche = MARCHES[j].isEmpty() ? (fr ? "🛒 Pas de marché aujourd'hui" : "🛒 No market today")
-                                             : "🛒 Udzayi : " + MARCHES[j];
+        String[] marches = fr ? MARCHES : MARCHES_GH;
+        String marche = marches[j].isEmpty() ? (fr ? "🛒 Pas de marché aujourd'hui" : "🛒 No market today")
+                                             : "🛒 Udzayi : " + marches[j];
         v.setTextViewText(R.id.w_marche, marche);
         int n = joursAvantOvazu();
         v.setTextViewText(R.id.w_ovazu, fr
