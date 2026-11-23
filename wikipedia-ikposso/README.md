@@ -55,3 +55,13 @@ https://incubator.wikimedia.org/wiki/Wp/kpo/Ɔvazʋ
 Kpɔsɔ wani dja kéléé nu ali, nu imatsɛ akɔ n'ékualɛ mɛ adunɔ m'ala, mɛ akalɛ ɛkuyɛ mɛ akpɔ ahla ka iwolowu nu ilu yɛ.
 
 (Français : OVAZU est la grande fête traditionnelle du peuple akposso. Elle a lieu chaque année en décembre. Les Akposso du pays et de l'étranger se retrouvent pour danser, chanter, partager les repas et remercier Dieu pour l'année.)
+
+### Wawa — 23/11/2026
+
+https://incubator.wikimedia.org/wiki/Wp/kpo/Wawa
+
+Wawa lɛ prefecture nu Togo, nu Plateaux wani nu region li. Aɣu ɛwliali ɣɛ la nu Badou.
+
+Ɔlɛ ito nu ɔfʋ ayu region, ɛfʋɛ ku kpɔsɔ wani du. Wa kɔ na vli coco, cofɛ, umoli nu ɔva a ɣusi.
+
+(Français : Wawa est une préfecture du Togo, dans la région des Plateaux. Son chef-lieu est Badou. C'est une région de montagnes et de forêts, où vivent surtout les Akposso. On y cultive le café, le cacao, le fonio et le riz.)
