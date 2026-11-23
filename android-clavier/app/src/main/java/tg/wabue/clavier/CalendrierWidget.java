@@ -19,6 +19,9 @@ public class CalendrierWidget extends AppWidgetProvider {
     static final String[] MARCHES = {"", "", "Agbo", "Zogbégan", "Doumé", "Badou", "Kougnohou", "Agbo N'Kougna"};
     static final String[] MOIS_IK = {"Ɔlatʋ", "Ɔfʋtsɩ", "Zata", "Ɛvlɩlʋɩa", "Ʋlawlɩvɛ", "Inaglo",
             "Nekuneku", "Ipuǝnǝ", "Iwle", "Iwletsɔ", "Ɔtɩɩ", "Ɛyɛbuele"};
+    static final String[] JOURS_EN = {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+    static final String[] MOIS_EN = {"January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"};
     static final String[] MOIS_FR = {"janvier", "février", "mars", "avril", "mai", "juin",
             "juillet", "août", "septembre", "octobre", "novembre", "décembre"};
 
@@ -48,12 +51,18 @@ public class CalendrierWidget extends AppWidgetProvider {
         RemoteViews v = new RemoteViews(ctx.getPackageName(), R.layout.widget_calendrier);
         v.setTextViewText(R.id.w_jour, JOURS_IK[j]);
         int an = c.get(Calendar.YEAR);
-        v.setTextViewText(R.id.w_jour_fr, JOURS_FR[j] + " " + d + " " + MOIS_FR[m] + " " + an);
+        boolean fr = "fr".equals(java.util.Locale.getDefault().getLanguage());
+        v.setTextViewText(R.id.w_titre, fr ? "ÉMIÉ · AUJOURD'HUI · WABUƐ" : "ÉMIÉ · TODAY · WABUƐ");
+        v.setTextViewText(R.id.w_jour_fr, fr ? JOURS_FR[j] + " " + d + " " + MOIS_FR[m] + " " + an
+                                             : JOURS_EN[j] + ", " + d + " " + MOIS_EN[m] + " " + an);
         v.setTextViewText(R.id.w_mois, "Ùtsi " + MOIS_IK[m] + " · " + d + "   Iluɛ " + an);
-        String marche = MARCHES[j].isEmpty() ? "🛒 Pas de marché aujourd'hui" : "🛒 Udzayi : " + MARCHES[j];
+        String marche = MARCHES[j].isEmpty() ? (fr ? "🛒 Pas de marché aujourd'hui" : "🛒 No market today")
+                                             : "🛒 Udzayi : " + MARCHES[j];
         v.setTextViewText(R.id.w_marche, marche);
         int n = joursAvantOvazu();
-        v.setTextViewText(R.id.w_ovazu, n == 0 ? "🎉 Jour J : c'est OVAZU aujourd'hui !" : "🎉 OVAZU dans " + n + (n > 1 ? " jours" : " jour") + " (J-" + n + ")");
+        v.setTextViewText(R.id.w_ovazu, fr
+            ? (n == 0 ? "🎉 Jour J : c'est OVAZU aujourd'hui !" : "🎉 OVAZU dans " + n + (n > 1 ? " jours" : " jour") + " (J-" + n + ")")
+            : (n == 0 ? "🎉 Today is OVAZU!" : "🎉 OVAZU in " + n + (n > 1 ? " days" : " day") + " (D-" + n + ")"));
         Intent i = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://adomhub.github.io/ABUESA-IA-/"));
         int f = android.os.Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0;
         v.setOnClickPendingIntent(R.id.w_racine, PendingIntent.getActivity(ctx, 0, i, f));
