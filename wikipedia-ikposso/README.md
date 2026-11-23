@@ -45,3 +45,13 @@ Wakɔ navli kɔfè nu coco aɣussi.
 Badou ! Ékplétu nu Akrowa aɣu itôava ayɔbèe.
 
 (Français : Badou est une ville du Togo. C'est le chef-lieu de la préfecture de Wawa, dans la région des Plateaux, près de la frontière du Ghana. On y cultive le café et le cacao. Près de Badou se trouve la cascade d'Akrowa.)
+
+### Ɔvazʋ — 23/11/2026
+
+https://incubator.wikimedia.org/wiki/Wp/kpo/Ɔvazʋ
+
+Ɔvazʋ lɛ kpɔsɔ wani aɣu ɛɣʋi aɣɛ bé ni ɛkikɛɣɛ. Akɔ naɣɛ ilu ɛdɩ nɛdi, nu utsi ɛyɛbuele.
+
+Kpɔsɔ wani dja kéléé nu ali, nu imatsɛ akɔ n'ékualɛ mɛ adunɔ m'ala, mɛ akalɛ ɛkuyɛ mɛ akpɔ ahla ka iwolowu nu ilu yɛ.
+
+(Français : OVAZU est la grande fête traditionnelle du peuple akposso. Elle a lieu chaque année en décembre. Les Akposso du pays et de l'étranger se retrouvent pour danser, chanter, partager les repas et remercier Dieu pour l'année.)
