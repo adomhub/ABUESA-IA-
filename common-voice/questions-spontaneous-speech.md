@@ -41,16 +41,16 @@ Alexi traduit chaque question en ikposso (colonne « Ikposso »). Claude ne doit
 | 28 | Que penses-tu du téléphone portable ? | éké kélé  ɔlɔ nuwlu muani , nu ɛsɛmukuɛ ɛyɛtu ? |
 | 29 | Comment le village a-t-il changé ces dernières années ? | aliyɛ li étsi kadu muani nu, tu ilu buadu ɣɛli ? |
 | 30 | Quel animal aimes-tu et pourquoi ? | awu iwoviu la akɔ nafù, ku n'dɛ? |
-| 31 | Comment élève-t-on les poules ou les chèvres ? | |
-| 32 | Que fait-on pour rester en bonne santé ? | |
-| 33 | Quel métier aimerais-tu apprendre et pourquoi ? | |
-| 34 | Que fait un bon chef de village ? | |
-| 35 | Comment se passe la rentrée des classes ? | |
-| 36 | Que fait-on pendant le nouvel an ? | |
-| 37 | Décris le chemin entre la maison et le champ. | |
-| 38 | Quels fruits mange-t-on au village ? | |
-| 39 | Comment fabrique-t-on un panier ou un objet traditionnel ? | |
-| 40 | Que racontent les anciens sur l'histoire des Akposso ? | |
+| 31 | Comment élève-t-on les poules ou les chèvres ? | akɔ na tu ɔwlɔ ni ítukpa muani? |
+| 32 | Que fait-on pour rester en bonne santé ? | akɔ né kélé muani kétu ésé alu?. |
+| 33 | Quel métier aimerais-tu apprendre et pourquoi ? | awu ɔluna la afu nu kɛsu, ku n'dɛ? |
+| 34 | Que fait un bon chef de village ? | mɛ la  ku ali wli buɛ akɔ né kélé ? |
+| 35 | Comment se passe la rentrée des classes ? | ɛsɛ mu bɛ aɣu édi nié ké zélé, lɛ muani ? |
+| 36 | Que fait-on pendant le nouvel an ? | akɔ néké lé mɛ nu ɩlu fɩ li?. |
+| 37 | Décris le chemin entre la maison et le champ. | zɔ alɛ naɣɛ ku udunu né nu usiné lɛ . |
+| 38 | Quels fruits mange-t-on au village ? | a wu itsu wʋ la akɔ né dji nu li?. |
+| 39 | Comment fabrique-t-on un panier ou un objet traditionnel ? | akɔ né ké lé kussi ni ukɔ ku muani ? |
+| 40 | Que racontent les anciens sur l'histoire des Akposso ? | mɛ la ku alu wini wani aka zɔ nu kpɔssɔ ayu ɛɣɛdi sɛ ayɛtu? |
 | 41 | Comment se passent les funérailles chez nous ? | |
 | 42 | Que fait-on quand il y a un conflit entre voisins ? | |
 | 43 | Pourquoi faut-il respecter les anciens ? | |
