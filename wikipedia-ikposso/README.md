@@ -33,3 +33,15 @@ Badou lɛ kpɔssɔ ayu ali ka, ku wafɔ namù ikpɔssɔ.
 
 - Ɛfussé = Accueil
 - Ɛkuɛ wakutu ɣa nɛmɛ = Articles (ce qu'on peut lire ici)
+
+### Badou — 23/11/2026
+
+https://incubator.wikimedia.org/wiki/Wp/kpo/Badou
+
+Badou lɛ ali ka nu Togo. Wawa aɣu ɛwli-ali lanu Badou nu Plató. Ékplé tu nu Ghana aɣɔlu.
+
+Wakɔ navli kɔfè nu coco aɣussi.
+
+Badou ! Ékplétu nu Akrowa aɣu itôava ayɔbèe.
+
+(Français : Badou est une ville du Togo. C'est le chef-lieu de la préfecture de Wawa, dans la région des Plateaux, près de la frontière du Ghana. On y cultive le café et le cacao. Près de Badou se trouve la cascade d'Akrowa.)
