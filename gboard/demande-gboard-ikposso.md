@@ -17,3 +17,8 @@ Available resources:
 
 I am a native speaker and I am happy to help test a keyboard layout.
 Alexi Adom, WABUƐ project, Badou, Togo
+
+
+## Envoi
+
+23 nov. 2026, 22 h 14 : demande envoyée par Alexi via Gboard > Aide > Envoyer des commentaires. Google a confirmé : « Merci pour votre commentaire ! ».
