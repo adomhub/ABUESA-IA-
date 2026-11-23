@@ -61,15 +61,15 @@ Alexi traduit chaque question en ikposso (colonne « Ikposso »). Claude ne doit
 | 48 | Comment prépare-t-on le vin de palme ? | akɔ na gbɔ éɖifí muani ? |
 | 49 | Que fait-on quand il fait très froid le matin ? | akɔ na vani  ni di kaɖɩ, mu klo kawʋ fufua ? |
 | 50 | Quelle est la plus belle chose dans notre région ? | mɛ la buɛ ba nu awi nétsé?. |
-| 51 | Comment se passe le voyage de Badou à Lomé ? | |
-| 52 | Quel conseil donnerais-tu à quelqu'un qui veut apprendre l'ikposso ? | |
-| 53 | Que fait-on avec le maïs ? | |
-| 54 | Pourquoi aimes-tu ton village ? | |
-| 55 | Comment remercie-t-on quelqu'un qui nous a aidé ? | |
-| 56 | Que fait-on pour protéger la forêt et les rivières ? | |
-| 57 | Que chante-t-on pendant les fêtes ? | |
-| 58 | Comment se prépare-t-on pour aller au marché ? | |
-| 59 | Que veux-tu que les enfants gardent de notre culture ? | |
-| 60 | Comment imagines-tu le pays akposso dans vingt ans ? | |
+| 51 | Comment se passe le voyage de Badou à Lomé ? | tu nu badou ɣɔha lomè lɛ muani ? |
+| 52 | Quel conseil donnerais-tu à quelqu'un qui veut apprendre l'ikposso ? | awuɛ sɛ la ɣa zɔ nu ɔluɛ bua ku afɔ su ikpɔssɔ diɣɛ? |
+| 53 | Que fait-on avec le maïs ? | akɔ na  vani nʋ djuklɔ? |
+| 54 | Pourquoi aimes-tu ton village ? | nu dɛ bua ku afu ɣa na liɣɛ? |
+| 55 | Comment remercie-t-on quelqu'un qui nous a aidé ? | ɣadʋ ewlessɛ ka  ɔluɛ kéɣa ɖuɣɛ muani ? |
+| 56 | Que fait-on pour protéger la forêt et les rivières ? | akɔ né kélé muani ka na kɔsu ɔfu nu ɔbɛ wani ? |
+| 57 | Que chante-t-on pendant les fêtes ? | akɔ nadu awu nɔ nu ɛɣui aɣɛ ? |
+| 58 | Comment se prépare-t-on pour aller au marché ? | akɔ né wlédu muani ku dja ha ? |
+| 59 | Que veux-tu que les enfants gardent de notre culture ? | afu k'évidzé wani kazɛ mɛ la lɛ nu awuɛ séwlé lɩ ? |
+| 60 | Comment imagines-tu le pays akposso dans vingt ans ? | nu, ɣa nɛ lu mɔyɛli mua, kpɔssɔ ali ba lɛ muani nu ilʋ ílié fua li? |
 | 61 | Que fait-on quand un visiteur arrive de loin ? | |
 | 62 | Quel est le meilleur moment de la journée et pourquoi ? | |
