@@ -114,3 +114,10 @@ Aku dit : « Le mariage est très beau ! Que Dieu vous bénisse ! »
 Son amie dit : « Merci beaucoup, Aku. »
 La nuit, Aku retourne à la maison.
 Elle dit à la maison : « À bientôt. Bonne nuit. »
+
+## Corrections confirmées par Alexi (23 nov. 2026)
+
+- « Na ɖuyɛ ɛha » → **Na duɣɛ ha** (désolé(e) / je t'en prie)
+- « Naɖuɛha zati » → **Naduɛha zati** (s'il te plaît, assieds-toi)
+- « Ɔluɛ kɔ bá » → **Ɔluɛ kɔ bà** (d'accord, entre)
+- Titre et première ligne de l'histoire : **Anuɣalɛ aɣu fi** (mon amie se marie)
