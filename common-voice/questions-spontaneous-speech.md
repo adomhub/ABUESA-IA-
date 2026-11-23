@@ -51,16 +51,16 @@ Alexi traduit chaque question en ikposso (colonne « Ikposso »). Claude ne doit
 | 38 | Quels fruits mange-t-on au village ? | a wu itsu wʋ la akɔ né dji nu li?. |
 | 39 | Comment fabrique-t-on un panier ou un objet traditionnel ? | akɔ né ké lé kussi ni ukɔ ku muani ? |
 | 40 | Que racontent les anciens sur l'histoire des Akposso ? | mɛ la ku alu wini wani aka zɔ nu kpɔssɔ ayu ɛɣɛdi sɛ ayɛtu? |
-| 41 | Comment se passent les funérailles chez nous ? | |
-| 42 | Que fait-on quand il y a un conflit entre voisins ? | |
-| 43 | Pourquoi faut-il respecter les anciens ? | |
-| 44 | Qu'aimes-tu faire pendant ton temps libre ? | |
-| 45 | Comment lave-t-on le linge au village ? | |
-| 46 | Que porte-t-on les jours de fête ? | |
-| 47 | Quels conseils donnerais-tu à un enfant qui va à l'école ? | |
-| 48 | Comment prépare-t-on le vin de palme ? | |
-| 49 | Que fait-on quand il fait très froid le matin ? | |
-| 50 | Quelle est la plus belle chose dans notre région ? | |
+| 41 | Comment se passent les funérailles chez nous ? | ɩgné vlɛ yɛ lɛ muani na wɛ fuɛ? |
+| 42 | Que fait-on quand il y a un conflit entre voisins ? | akɔ néké lé muani nu itiɛ bua ku unukuvio  du ɔluɛ du nu ɔluɛ ɖu aɣɛtu nafa ɩli?. |
+| 43 | Pourquoi faut-il respecter les anciens ? | nudɛ bua ku alɛ nʋ kudu ɛlu ku alu wɩni wa nutɩ? |
+| 44 | Qu'aimes-tu faire pendant ton temps libre ? | akɔ na fʋ ké né kélé mɛ nu ɣa nɛfu mu aɣɩti ? |
+| 45 | Comment lave-t-on le linge au village ? | akɔ néwé lé ɛku muani nu alî ? |
+| 46 | Que porte-t-on les jours de fête ? | akɔ na du mɛ nu ɛɣuiaɣɛ wa ni li? |
+| 47 | Quels conseils donnerais-tu à un enfant qui va à l'école ? | awu ɔsɛha la ɣaha nu evidzé kɔ kaha ɛsɛmubɛ ? |
+| 48 | Comment prépare-t-on le vin de palme ? | akɔ na gbɔ éɖifí muani ? |
+| 49 | Que fait-on quand il fait très froid le matin ? | akɔ na vani  ni di kaɖɩ, mu klo kawʋ fufua ? |
+| 50 | Quelle est la plus belle chose dans notre région ? | mɛ la buɛ ba nu awi nétsé?. |
 | 51 | Comment se passe le voyage de Badou à Lomé ? | |
 | 52 | Quel conseil donnerais-tu à quelqu'un qui veut apprendre l'ikposso ? | |
 | 53 | Que fait-on avec le maïs ? | |
