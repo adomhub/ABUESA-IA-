@@ -24,43 +24,43 @@ public class StickerProvider extends ContentProvider {
     static final String VIE_PRIVEE = "https://adomhub.github.io/WABOU-WAB-/confidentialite.html";
 
     static final String[][] STICKERS = {
-        {"s01.webp", "👋", "Ivuao ! · Bonjour"},
-        {"s02.webp", "🙂", "Ɛza muani ? · Comment vas-tu ?"},
-        {"s03.webp", "😊", "Niza ɔbɔɛ · Je vais bien"},
+        {"s01.webp", "👋", "Ɩvʋao ! · Bonjour"},
+        {"s02.webp", "🙂", "Ɛza mʋanɩ ? · Comment vas-tu ?"},
+        {"s03.webp", "😊", "Nɩza ɔbɔɛ · Je vais bien"},
         {"s04.webp", "🙏", "Ewlessɛ ! · Merci"},
-        {"s05.webp", "🤲", "Kʉkɔ · S'il te plaît"},
-        {"s06.webp", "🙇", "Ɛyadu · Pardon"},
-        {"s07.webp", "🤗", "Yanu asɛ ! · Bienvenue"},
-        {"s08.webp", "👋", "Ekualɛ · À bientôt"},
-        {"s09.webp", "🌇", "Izua ɛzaa · Bonsoir"},
+        {"s05.webp", "🤲", "Kʋkɔ · S'il te plaît"},
+        {"s06.webp", "🙇", "Ɛyadʋ · Pardon"},
+        {"s07.webp", "🤗", "Yanʋ asɛ ! · Bienvenue"},
+        {"s08.webp", "👋", "Ekʋalɛ · À bientôt"},
+        {"s09.webp", "🌇", "Ɩzʋa ɛzaa · Bonsoir"},
         {"s10.webp", "😴", "Zadɛ · Bonne nuit"},
         {"s11.webp", "👍", "Eɛ · Oui"},
         {"s12.webp", "🙅", "Oo · Non"},
-        {"s13.webp", "🤔", "Ninanu ayili · Je ne comprends pas"},
+        {"s13.webp", "🤔", "Nɩnanʋ ayɩlɩ · Je ne comprends pas"},
         {"s14.webp", "👉", "Ba-ɛmɛ ! · Viens ici"},
-        {"s15.webp", "🍲", "Uvlɛ-atsɩnɔ · J'ai faim"},
+        {"s15.webp", "🍲", "Ʋvlɛ-atsɩnɔ · J'ai faim"},
         {"s16.webp", "🎉", "Dɔkayɛ ! · Félicitations"},
-        {"s17.webp", "🎆", "Ilububuɛ ! · Bonne année"},
-        {"s18.webp", "🕊", "Ɛtululua-kayɛ · Paix à toi"},
-        {"s19.webp", "✨", "Ɩwolowʋ kotsueyɛ-ɛbua · Que Dieu te bénisse"},
-        {"s20.webp", "💚", "Nilɛ akpɔssɔ · Je suis Akposso"},
-        {"s21.webp", "🙋", "Azɔyɛ numɛ ? · Comment t'appelles-tu ?"},
-        {"s22.webp", "🧭", "Atuna ? · D'où viens-tu ?"},
+        {"s17.webp", "🎆", "Ɩlʋbʋbʋɛ ! · Bonne année"},
+        {"s18.webp", "🕊", "Ɛtʋlʋlʋa-kayɛ · Paix à toi"},
+        {"s19.webp", "✨", "Ɩwolowʋ kotsʋeyɛ-ɛbʋa · Que Dieu te bénisse"},
+        {"s20.webp", "💚", "Nɩlɛ akpɔssɔ · Je suis Akposso"},
+        {"s21.webp", "🙋", "Azɔyɛ nʋmɛ ? · Comment t'appelles-tu ?"},
+        {"s22.webp", "🧭", "Atʋna ? · D'où viens-tu ?"},
         {"s23.webp", "🚶", "Ɛyahana ? · Où vas-tu ?"},
-        {"s24.webp", "🛒", "Niyaha-udja · Je vais au marché"},
+        {"s24.webp", "🛒", "Nɩyaha-ʋdja · Je vais au marché"},
         {"s25.webp", "💧", "Ɔmɔawlɩnɔ · J'ai soif"},
-        {"s26.webp", "😩", "Ɩdɔ-ewuinɔ · Je suis fatigué"},
+        {"s26.webp", "😩", "Ɩdɔ-ewʋɩnɔ · Je suis fatigué"},
         {"s27.webp", "🪑", "Zatɩ · Assieds-toi"},
-        {"s28.webp", "✅", "Ɛsɛsisɩ · C'est vrai"},
-        {"s29.webp", "🤷", "Nɩneyi · Je ne sais pas"},
-        {"s30.webp", "🙌", "Naduɛlu kalukawa · Respects aux anciens"},
+        {"s28.webp", "✅", "Ɛsɛsɩsɩ · C'est vrai"},
+        {"s29.webp", "🤷", "Nɩneyɩ · Je ne sais pas"},
+        {"s30.webp", "🙌", "Nadʋɛlʋ kalʋkawa · Respects aux anciens"},
     };
 
     static final String[][] STICKERS_GROUPE = {
-        {"g01.webp", "👥", "Mi za muani ? · Comment allez-vous ?"},
-        {"g02.webp", "👋", "Mia vlɛɛɛ ! · Bonjour à tous"},
-        {"g03.webp", "🌇", "Mizaaa ! · Bonsoir à tous"},
-        {"g04.webp", "😴", "Ki zadɛɛo · Bonne nuit à tous"},
+        {"g01.webp", "👥", "Mɩ za mʋanɩ ? · Comment allez-vous ?"},
+        {"g02.webp", "👋", "Mɩa vlɛɛɛ ! · Bonjour à tous"},
+        {"g03.webp", "🌇", "Mɩzaaa ! · Bonsoir à tous"},
+        {"g04.webp", "😴", "Kɩ zadɛɛo · Bonne nuit à tous"},
     };
 
     private static final int METADONNEES = 1, METADONNEES_UN = 2, LISTE = 3, FICHIER = 4;
@@ -88,10 +88,10 @@ public class StickerProvider extends ContentProvider {
             String seul = code == METADONNEES_UN ? uri.getLastPathSegment() : null;
             if (seul == null || PAQUET.equals(seul))
                 c.addRow(new Object[]{PAQUET, NOM, EDITEUR, "tray.png", "", "",
-                        "alexiadom64@gmail.com", SITE, VIE_PRIVEE, "", "1", 0, 0});
+                        "alexiadom64@gmail.com", SITE, VIE_PRIVEE, "", "2", 0, 0});
             if (seul == null || PAQUET2.equals(seul))
                 c.addRow(new Object[]{PAQUET2, NOM2, EDITEUR, "tray.png", "", "",
-                        "alexiadom64@gmail.com", SITE, VIE_PRIVEE, "", "1", 0, 0});
+                        "alexiadom64@gmail.com", SITE, VIE_PRIVEE, "", "2", 0, 0});
             c.setNotificationUri(getContext().getContentResolver(), uri);
             return c;
         }

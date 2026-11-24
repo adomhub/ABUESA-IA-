@@ -1,14 +1,14 @@
 import json
-S=[("Ivuao !","Bonjour","👋"),("Ɛza muani ?","Comment vas-tu ?","🙂"),("Niza ɔbɔɛ","Je vais bien","😊"),
-("Ewlessɛ !","Merci","🙏"),("Kʉkɔ","S'il te plaît","🤲"),("Ɛyadu","Pardon","🙇"),
-("Yanu asɛ !","Bienvenue","🤗"),("Ekualɛ","À bientôt","👋"),("Izua ɛzaa","Bonsoir","🌇"),
+S=[("Ɩvʋao !","Bonjour","👋"),("Ɛza mʋanɩ ?","Comment vas-tu ?","🙂"),("Nɩza ɔbɔɛ","Je vais bien","😊"),
+("Ewlessɛ !","Merci","🙏"),("Kʋkɔ","S'il te plaît","🤲"),("Ɛyadʋ","Pardon","🙇"),
+("Yanʋ asɛ !","Bienvenue","🤗"),("Ekʋalɛ","À bientôt","👋"),("Ɩzʋa ɛzaa","Bonsoir","🌇"),
 ("Zadɛ","Bonne nuit","😴"),("Eɛ","Oui","👍"),("Oo","Non","🙅"),
-("Ninanu ayili","Je ne comprends pas","🤔"),("Ba-ɛmɛ !","Viens ici","👉"),("Uvlɛ-atsɩnɔ","J'ai faim","🍲"),
-("Dɔkayɛ !","Félicitations","🎉"),("Ilububuɛ !","Bonne année","🎆"),("Ɛtululua-kayɛ","Paix à toi","🕊️"),
-("Ɩwolowʋ kotsueyɛ-ɛbua","Que Dieu te bénisse","✨"),("Nilɛ akpɔssɔ","Je suis Akposso","💚"),
-("Azɔyɛ numɛ ?","Comment t'appelles-tu ?","🙋"),("Atuna ?","D'où viens-tu ?","🧭"),("Ɛyahana ?","Où vas-tu ?","🚶"),
-("Niyaha-udja","Je vais au marché","🛒"),("Ɔmɔawlɩnɔ","J'ai soif","💧"),("Ɩdɔ-ewuinɔ","Je suis fatigué","😩"),
-("Zatɩ","Assieds-toi","🪑"),("Ɛsɛsisɩ","C'est vrai","✅"),("Nɩneyi","Je ne sais pas","🤷"),("Naduɛlu kalukawa","Respects aux anciens","🙌")]
+("Nɩnanʋ ayɩlɩ","Je ne comprends pas","🤔"),("Ba-ɛmɛ !","Viens ici","👉"),("Ʋvlɛ-atsɩnɔ","J'ai faim","🍲"),
+("Dɔkayɛ !","Félicitations","🎉"),("Ɩlʋbʋbʋɛ !","Bonne année","🎆"),("Ɛtʋlʋlʋa-kayɛ","Paix à toi","🕊️"),
+("Ɩwolowʋ kotsʋeyɛ-ɛbʋa","Que Dieu te bénisse","✨"),("Nɩlɛ akpɔssɔ","Je suis Akposso","💚"),
+("Azɔyɛ nʋmɛ ?","Comment t'appelles-tu ?","🙋"),("Atʋna ?","D'où viens-tu ?","🧭"),("Ɛyahana ?","Où vas-tu ?","🚶"),
+("Nɩyaha-ʋdja","Je vais au marché","🛒"),("Ɔmɔawlɩnɔ","J'ai soif","💧"),("Ɩdɔ-ewʋɩnɔ","Je suis fatigué","😩"),
+("Zatɩ","Assieds-toi","🪑"),("Ɛsɛsɩsɩ","C'est vrai","✅"),("Nɩneyɩ","Je ne sais pas","🤷"),("Nadʋɛlʋ kalʋkawa","Respects aux anciens","🙌")]
 json.dump(S,open('liste.json','w'),ensure_ascii=False)
 cards=""
 for i,(ik,fr,em) in enumerate(S):
