@@ -1,0 +1,22 @@
+name: Mots ikposso WAXAL
+on:
+  workflow_dispatch:
+  push:
+    paths: [voix-ikposso/extraire_mots_waxal.py]
+permissions:
+  contents: write
+jobs:
+  mots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install -q huggingface_hub pyarrow
+      - run: python voix-ikposso/extraire_mots_waxal.py
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add dictionnaire-ikposso/source/waxal_kpo_frequences.tsv
+          git commit -m "Mots ikposso extraits de WAXAL" || true
+          git pull --rebase --autostash && git push

@@ -42,5 +42,14 @@ for t in textes():
         if len(mot) >= 2 and not mot.isdigit() and mot not in ('ou', 'abuesa'):
             compte[mot] += 1
 
+# Les mots validés par Alexi passent toujours devant
+for m in list(compte): compte[m] *= 50
+# Mots réels des locuteurs, tirés des transcriptions WAXAL (Google Research / Université du Ghana, CC-BY-4.0)
+WAXAL = SORTIE.parent / 'waxal_kpo_frequences.tsv'
+if WAXAL.exists():
+    for ligne in WAXAL.read_text(encoding='utf-8').splitlines():
+        m, _, n = ligne.partition('\t')
+        if m and n.isdigit(): compte[m] += int(n)
+
 SORTIE.write_text(''.join(f'{m}\t{n}\n' for m, n in sorted(compte.items(), key=lambda x: (-x[1], x[0]))), encoding='utf-8')
 print(len(compte), 'mots ikposso écrits dans', SORTIE.name)
