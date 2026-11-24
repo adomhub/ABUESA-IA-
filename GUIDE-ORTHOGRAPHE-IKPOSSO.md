@@ -30,3 +30,4 @@ Décisions prises par Alexi (locuteur natif), une par une, à partir des écritu
 - En majuscule, on écrit **Ɩ** (ex. Imle → **Ɩmle**) et **Ʋ**.
 - Les noms propres et mots étrangers (Badou, Togo, Wikipédia…) ne changent pas.
 - Exemple confirmé : samedi s'écrit **Ewledʋyɩ** (et non plus Ewleduyɩ).
+- Le nom de marque **WABUƐ** ne change pas (décision d'Alexi, 24 nov. 2026).
