@@ -28,3 +28,7 @@ Auxiliaire (mots étrangers) : c i j q u x
 - Joshua Project : Togo ~281 000, Ghana ~14 000
 - Wikipédia (Ethnologue/Kropp Dakubu) : 160 000 (2002)
 - Wikipédia : semaine traditionnelle de cinq jours (à vérifier avec Alexi pour CLDR)
+
+## Suivi
+- 24 nov. 2026 : formulaire « Core data needed for new CLDR locale » envoyé par Alexi (compte adomalexi64@gmail.com) — engagement Basic : Yes ; locuteurs Togo 281 000 / Ghana 14 000 (Joshua Project) ; 24 h ; gauche→droite ; haut→bas.
+- Prochaine étape : créer le compte CLDR Submitter ID (corp.unicode.org/reporting/cldr-id.html) pour le Survey Tool.
