@@ -15,6 +15,10 @@ Décisions prises par Alexi (locuteur natif), une par une, à partir des écritu
 - **Dans le corpus :** bɩ 5 281 / bi 6 675 ; ɛdɩnɩ 3 750 / ɛdini 5 764.
 - **Exemples :** bɩ, dɩ, ɛdɩnɩ, atanɩ, wanɩ.
 
+### 3. ɖ et d : les deux existent — 24 nov. 2026
+- **Règle :** **ɖ** et **d** sont deux lettres utiles. Certains mots s'écrivent avec **ɖ** (ex. **ɖetsí**, sauce), d'autres avec **d** (ex. **adu**).
+- **Conséquence :** pas de remplacement automatique entre ɖ et d ; l'écriture de chaque mot est vérifiée au cas par cas (dictionnaire validé par Alexi).
+- **Dans le corpus :** adu 3 734 / aɖu 635 ; di 6 150 / ɖi 210.
+
 ## À décider
-3. ɖ ou d (aɖu / adu)
 4. ɣ ou h (aɣla / ahla)
