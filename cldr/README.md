@@ -11,8 +11,20 @@ But : faire entrer l'ikposso dans CLDR (Unicode), la base qui fournit jours, moi
 2. Compte « Survey Tool » pour Alexi.
 3. Au cycle suivant : niveau « Basic » (jours, mois, hier/aujourd'hui/demain, noms de langues et pays, etc.).
 
-## Alphabet proposé (brouillon, à valider)
-a b d ɖ e ɛ f g ɣ h ɩ k l m n ŋ o ɔ p s t ʋ v w y z (+ ǝ ? r ?)
+## Alphabet validé par Alexi (24 nov. 2026)
+a b d ɖ e ǝ ɛ f g ɣ h ɩ k l m n ŋ o ɔ p r s t ʋ v w y z
 Digrammes : dz gb kp ny ts
 Tons (facultatifs) : á à · nasales ã ɛ̃ ɔ̃ ʋ̃
-Auxiliaire (mots étrangers) : c i j q r u x
+Auxiliaire (mots étrangers) : c i j q u x
+(ŋ, ǝ et r confirmés comme lettres de l'ikposso ; tons et nasales gardés comme accents facultatifs.)
+
+## Mots donnés par Alexi (niveau Basic)
+- hier : adja · aujourd'hui : Émɩé · demain : ɛtsɛ
+- semaine : ɛvalɩku · heure : ɩtɩɩ
+- jours : Ɩmle, Ɛkpɛ… (voir widget) · samedi : Ewledʋyɩ
+- mois : Ʋlatʋ… (voir widget)
+
+## Locuteurs (sources publiques)
+- Joshua Project : Togo ~281 000, Ghana ~14 000
+- Wikipédia (Ethnologue/Kropp Dakubu) : 160 000 (2002)
+- Wikipédia : semaine traditionnelle de cinq jours (à vérifier avec Alexi pour CLDR)
