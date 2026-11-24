@@ -25,5 +25,7 @@ Décisions prises par Alexi (locuteur natif), une par une, à partir des écritu
 - **Conséquence :** pas de remplacement automatique ; chaque mot est vérifié au cas par cas.
 - **Dans le corpus :** aɣla 2 185 / ahla 83 ; ɣa 463 / ha 83.
 
-## À vérifier avant d'appliquer
-- Règles 1 et 2 : est-ce que **tous** les u deviennent ʋ et **tous** les i deviennent ɩ (ex. Imle → Ɩmle, iwolowu → ɩwolowʋ) ? Dans le corpus, certains mots gardent presque toujours i (edigbo 4 735 / edɩgbo 80).
+### Précision sur les règles 1 et 2 — 24 nov. 2026
+- **Tous** les u deviennent **ʋ** et **tous** les i deviennent **ɩ**, sans exception (confirmé par Alexi).
+- En majuscule, on écrit **Ɩ** (ex. Imle → **Ɩmle**) et **Ʋ**.
+- Les noms propres et mots étrangers (Badou, Togo, Wikipédia…) ne changent pas.
