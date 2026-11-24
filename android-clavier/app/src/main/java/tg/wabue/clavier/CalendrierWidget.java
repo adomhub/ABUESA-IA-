@@ -66,7 +66,7 @@ public class CalendrierWidget extends AppWidgetProvider {
         v.setTextViewText(R.id.w_ovazu, fr
             ? (n == 0 ? "🎉 Jour J : c'est OVAZU aujourd'hui !" : "🎉 OVAZU dans " + n + (n > 1 ? " jours" : " jour") + " (J-" + n + ")")
             : (n == 0 ? "🎉 Today is OVAZU!" : "🎉 OVAZU in " + n + (n > 1 ? " days" : " day") + " (D-" + n + ")"));
-        Intent i = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://adomhub.github.io/ABUESA-IA-/"));
+        Intent i = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://adomhub.github.io/WABOU-WAB-/"));
         int f = android.os.Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0;
         v.setOnClickPendingIntent(R.id.w_racine, PendingIntent.getActivity(ctx, 0, i, f));
         return v;

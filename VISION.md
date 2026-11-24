@@ -5,7 +5,7 @@
 > **WABOUÉ, la voix et la mémoire du peuple Akposso.**
 > Notre langue, notre identité, notre héritage, notre avenir.
 
-Porteur du projet : **Adom K. Alexi** (Wawa / Badou, Togo) — https://adomhub.github.io/ABUESA-IA-/
+Porteur du projet : **Adom K. Alexi** (Wawa / Badou, Togo) — https://adomhub.github.io/WABOU-WAB-/
 
 ## 1. Notre vision
 

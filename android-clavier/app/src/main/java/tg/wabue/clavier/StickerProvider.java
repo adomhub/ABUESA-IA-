@@ -20,8 +20,8 @@ public class StickerProvider extends ContentProvider {
     public static final String PAQUET2 = "wabue2";
     public static final String NOM2 = "WABUƐ ikposso · groupe";
     static final String EDITEUR = "WABUƐ · Adom K. Alexi";
-    static final String SITE = "https://adomhub.github.io/ABUESA-IA-/";
-    static final String VIE_PRIVEE = "https://adomhub.github.io/ABUESA-IA-/confidentialite.html";
+    static final String SITE = "https://adomhub.github.io/WABOU-WAB-/";
+    static final String VIE_PRIVEE = "https://adomhub.github.io/WABOU-WAB-/confidentialite.html";
 
     static final String[][] STICKERS = {
         {"s01.webp", "👋", "Ivuao ! · Bonjour"},

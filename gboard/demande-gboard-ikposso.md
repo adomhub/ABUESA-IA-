@@ -12,8 +12,8 @@ Ikposso is spoken by the Akposso people in the Plateaux Region of Togo (Wawa and
 
 Available resources:
 - Ikposso Wikipedia (test wiki): https://incubator.wikimedia.org/wiki/Wp/kpo/Ɛfussé
-- WABUƐ community app and dictionary (450+ words): https://adomhub.github.io/ABUESA-IA-/
-- Our open keyboard layout and word list: https://github.com/adomhub/ABUESA-IA-
+- WABUƐ community app and dictionary (450+ words): https://adomhub.github.io/WABOU-WAB-/
+- Our open keyboard layout and word list: https://github.com/adomhub/WABOU-WAB-
 
 I am a native speaker and I am happy to help test a keyboard layout.
 Alexi Adom, WABUƐ project, Badou, Togo

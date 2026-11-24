@@ -69,7 +69,7 @@ Sources :
 
 ---
 
-🌐 Application WABOUÉ : https://adomhub.github.io/ABUESA-IA-/
+🌐 Application WABOUÉ : https://adomhub.github.io/WABOU-WAB-/
 📘 Facebook : https://www.facebook.com/share/1UvgwbjN4x/
 💬 WhatsApp : https://chat.whatsapp.com/JHzoSRkxDvX62hcXfKQMwZ
 🎵 TikTok : https://www.tiktok.com/@alexi.adom2

@@ -137,7 +137,7 @@ public class MainActivity extends Activity {
         corps.addView(espace(20));
         corps.addView(bouton("Visiter WABUƐ", new View.OnClickListener() {
             @Override public void onClick(View v) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://adomhub.github.io/ABUESA-IA-/")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://adomhub.github.io/WABOU-WAB-/")));
             }
         }));
         corps.addView(espace(12));

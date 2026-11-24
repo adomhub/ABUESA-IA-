@@ -73,4 +73,4 @@ nu, ɣa nɛ lu mɔyɛli mua, kpɔssɔ ali ba lɛ muani nu ilʋ ílié fua li?
 
 ### About this request
 
-This request is made on behalf of WABUƐ (https://adomhub.github.io/ABUESA-IA-/), a community project for the Ikposso language and Akposso culture, by Alexi (native speaker). The questions were written in Ikposso by a native speaker and reviewed by other speakers from our community. None of them asks for personal information.
+This request is made on behalf of WABUƐ (https://adomhub.github.io/WABOU-WAB-/), a community project for the Ikposso language and Akposso culture, by Alexi (native speaker). The questions were written in Ikposso by a native speaker and reviewed by other speakers from our community. None of them asks for personal information.
