@@ -29,3 +29,4 @@ Décisions prises par Alexi (locuteur natif), une par une, à partir des écritu
 - **Tous** les u deviennent **ʋ** et **tous** les i deviennent **ɩ**, sans exception (confirmé par Alexi).
 - En majuscule, on écrit **Ɩ** (ex. Imle → **Ɩmle**) et **Ʋ**.
 - Les noms propres et mots étrangers (Badou, Togo, Wikipédia…) ne changent pas.
+- Exemple confirmé : samedi s'écrit **Ewledʋyɩ** (et non plus Ewleduyɩ).
