@@ -38,3 +38,7 @@
 2. Guide d'orthographe avec 2–3 anciens.
 3. Lancer « 1000 phrases » dans l'appli.
 4. Demande CLDR.
+
+## Suivi
+- 24 nov. 2026 : licences vérifiées — WAXAL (Google, CC-BY-4.0, contient kpo) utilisable librement avec citation ; UGSpeechData complet (Univ. du Ghana) en CC BY-NC-ND 4.0 → accord nécessaire.
+- 24 nov. 2026 : e-mail de collaboration envoyé par Alexi au DCS HCI Lab de l'Université du Ghana (dcshcilab@ug.edu.gh). En attente de réponse.
