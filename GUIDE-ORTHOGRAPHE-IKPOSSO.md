@@ -31,3 +31,4 @@ Décisions prises par Alexi (locuteur natif), une par une, à partir des écritu
 - Les noms propres et mots étrangers (Badou, Togo, Wikipédia…) ne changent pas.
 - Exemple confirmé : samedi s'écrit **Ewledʋyɩ** (et non plus Ewleduyɩ).
 - Le nom de marque **WABUƐ** ne change pas (décision d'Alexi, 24 nov. 2026).
+- Les 4 premiers articles Wikipédia (Ikposso, Badou, Ovazu, Wawa) restent tels quels ; les prochaines publications suivent la nouvelle orthographe (décision d'Alexi, 24 nov. 2026).
