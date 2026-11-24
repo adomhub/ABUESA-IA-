@@ -31,4 +31,5 @@ Auxiliaire (mots étrangers) : c i j q u x
 
 ## Suivi
 - 24 nov. 2026 : formulaire « Core data needed for new CLDR locale » envoyé par Alexi (compte adomalexi64@gmail.com) — engagement Basic : Yes ; locuteurs Togo 281 000 / Ghana 14 000 (Joshua Project) ; 24 h ; gauche→droite ; haut→bas.
-- Prochaine étape : créer le compte CLDR Submitter ID (corp.unicode.org/reporting/cldr-id.html) pour le Survey Tool.
+- 24 nov. 2026 : demande de compte CLDR Submitter ID (Survey Tool) envoyée par Alexi ; réponse d'Unicode attendue sur adomalexi64@gmail.com.
+- Note : les chiffres de locuteurs sont arrivés dans la case « contenu par défaut » du formulaire Core Data (région TG bien indiquée).
