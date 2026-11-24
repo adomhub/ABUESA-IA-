@@ -10,7 +10,11 @@ Décisions prises par Alexi (locuteur natif), une par une, à partir des écritu
 - **Dans le corpus :** nʋ 28 685 fois / nu 7 895 ; kʋ 26 274 / ku 5 122.
 - **Exemples :** nʋ, kʋ, adʋ, dʋ, alʋ, awʋ, ɛkʋ.
 
+### 2. ɩ (et non i) — 24 nov. 2026
+- **Règle :** on écrit **ɩ**. Même cas que ʋ : « i » est la façon « française » d'écrire le même son.
+- **Dans le corpus :** bɩ 5 281 / bi 6 675 ; ɛdɩnɩ 3 750 / ɛdini 5 764.
+- **Exemples :** bɩ, dɩ, ɛdɩnɩ, atanɩ, wanɩ.
+
 ## À décider
-2. ɩ ou i (bɩ / bi, ɛdɩnɩ / ɛdini)
 3. ɖ ou d (aɖu / adu)
 4. ɣ ou h (aɣla / ahla)
