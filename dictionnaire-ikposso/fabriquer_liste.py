@@ -33,7 +33,11 @@ def nettoyer(t):
     t = re.sub(r'\([^)]*\)?', ' ', t)  # retire les notes en français entre parenthèses
     t = unicodedata.normalize('NFC', t).replace('ē', 'ɛ').replace('Ē', 'Ɛ')
     t = t.replace('ė', 'ɛ').replace('ä', 'a')
-    return t.lower()
+    # Guide d'orthographe (Alexi, 24 nov. 2026) : tous les i → ɩ et tous les u → ʋ
+    t = unicodedata.normalize('NFD', t.lower()).replace('ʊ', 'ʋ')
+    t = re.sub(r"\b(ou|abuesa)\b", lambda m: m.group(0).upper(), t)  # mots français protégés
+    t = t.translate(str.maketrans('iu', 'ɩʋ')).replace('OU', 'ou').replace('ABUESA', 'abuesa')
+    return unicodedata.normalize('NFC', t)
 
 compte = collections.Counter()
 for t in textes():
@@ -49,7 +53,9 @@ WAXAL = SORTIE.parent / 'waxal_kpo_frequences.tsv'
 if WAXAL.exists():
     for ligne in WAXAL.read_text(encoding='utf-8').splitlines():
         m, _, n = ligne.partition('\t')
-        if m and n.isdigit(): compte[m] += int(n)
+        if m and n.isdigit():
+            m = nettoyer(m)
+            if len(m) >= 2: compte[m] += int(n)
 
 SORTIE.write_text(''.join(f'{m}\t{n}\n' for m, n in sorted(compte.items(), key=lambda x: (-x[1], x[0]))), encoding='utf-8')
 print(len(compte), 'mots ikposso écrits dans', SORTIE.name)
