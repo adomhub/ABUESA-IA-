@@ -1748,7 +1748,7 @@ WABOUÉ! WABOUÉ! WABOUÉ hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.23 · 24 nov. 2026 (🔗 nouvelle adresse WABOU-WAB)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.24 · 24 nov. 2026 (🔗 nouvelle adresse WABOU-WAB)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -3187,102 +3187,102 @@ chatForm.addEventListener('submit', async (e)=>{
    Alexi : envoie-moi d'autres mots / corrections et j'enrichis encore. */
 const DICTIONARY = [
   // Nature, éléments
-  { fr:'eau', ak:'ivi' }, { fr:'feu', ak:'ivu' }, { fr:'pluie', ak:'adɩ' },
-  { fr:'ciel', ak:'ava' }, { fr:'montagne', ak:'ito' }, { fr:'terre (matière)', ak:'eti' },
-  { fr:'champ', ak:'usi' }, { fr:'savane', ak:'ugbe' }, { fr:'chemin', ak:'une' },
+  { fr:'eau', ak:'ɩvɩ' }, { fr:'feu', ak:'ɩvʋ' }, { fr:'pluie', ak:'adɩ' },
+  { fr:'ciel', ak:'ava' }, { fr:'montagne', ak:'ɩto' }, { fr:'terre (matière)', ak:'etɩ' },
+  { fr:'champ', ak:'ʋsɩ' }, { fr:'savane', ak:'ʋgbe' }, { fr:'chemin', ak:'ʋne' },
   { fr:'village', ak:'alɩ' }, { fr:'marigot', ak:'ɔbɛ' }, { fr:'trou', ak:'ɔtɔ' },
-  { fr:'bois (matière)', ak:'itsu' },
+  { fr:'bois (matière)', ak:'ɩtsʋ' },
   { fr:'fonio', ak:'ayē' },
   // Famille
   { fr:'mère', ak:'ɩna' }, { fr:'mon père', ak:'anʋla' }, { fr:'ma mère', ak:'anʋna' },
   { fr:'ton fils', ak:'yanɩlɛ' }, { fr:'son frère', ak:'ɔvla' }, { fr:'ma sœur', ak:'anʋnedzǝ' },
-  { fr:'femme', ak:'ɔsɩ' }, { fr:'enfant', ak:'evidze' }, { fr:'les enfants', ak:'emlo' },
-  { fr:'jeune fille', ak:'ovitsɔ' }, { fr:'jeune garçon', ak:'olevi' },
+  { fr:'femme', ak:'ɔsɩ' }, { fr:'enfant', ak:'evɩdze' }, { fr:'les enfants', ak:'emlo' },
+  { fr:'jeune fille', ak:'ovɩtsɔ' }, { fr:'jeune garçon', ak:'olevɩ' },
   // Corps
-  { fr:'visage', ak:'alɔ' }, { fr:'œil', ak:'emu' }, { fr:'bouche', ak:'unuku' },
+  { fr:'visage', ak:'alɔ' }, { fr:'œil', ak:'emʋ' }, { fr:'bouche', ak:'ʋnʋkʋ' },
   { fr:'main', ak:'aɣla' }, { fr:'poitrine', ak:'ɛgba' }, { fr:'épaule', ak:'agbatɛ' },
   // Animaux
-  { fr:'chien', ak:'ukpi' }, { fr:'poule', ak:'ɔwlɔ' }, { fr:'rat', ak:'oglo' },
-  { fr:'oiseau', ak:'ɩvlɔ' }, { fr:'éléphant', ak:'unyi' }, { fr:'serpent', ak:'ɔwɔ' },
-  { fr:'crabe', ak:'ikpǝ' }, { fr:'tortue', ak:'imlekpǝ' }, { fr:'lièvre', ak:'ɔta' },
+  { fr:'chien', ak:'ʋkpɩ' }, { fr:'poule', ak:'ɔwlɔ' }, { fr:'rat', ak:'oglo' },
+  { fr:'oiseau', ak:'ɩvlɔ' }, { fr:'éléphant', ak:'ʋnyɩ' }, { fr:'serpent', ak:'ɔwɔ' },
+  { fr:'crabe', ak:'ɩkpǝ' }, { fr:'tortue', ak:'ɩmlekpǝ' }, { fr:'lièvre', ak:'ɔta' },
   { fr:'fourmi', ak:'ʋvla' }, { fr:'bœuf', ak:'ʋlɛ' }, { fr:'scorpion', ak:'ɔlɩ' },
   // Nourriture / vie quotidienne
-  { fr:'igname', ak:'isi' }, { fr:'manioc', ak:'agbedi' }, { fr:'riz', ak:'umoli' },
-  { fr:'gombo', ak:'unoko' }, { fr:'nourriture', ak:'ɛkʋdzi' }, { fr:'boisson', ak:'ɔfɩ' },
-  { fr:'maison', ak:'udunu' }, { fr:'chaise', ak:'ikpoku' }, { fr:'habit', ak:'ɛkʋdʋ' },
-  { fr:'grenier', ak:'uli' }, { fr:'houe', ak:'elute' }, { fr:'sac', ak:'akpo' },
+  { fr:'igname', ak:'ɩsɩ' }, { fr:'manioc', ak:'agbedɩ' }, { fr:'riz', ak:'ʋmolɩ' },
+  { fr:'gombo', ak:'ʋnoko' }, { fr:'nourriture', ak:'ɛkʋdzɩ' }, { fr:'boisson', ak:'ɔfɩ' },
+  { fr:'maison', ak:'ʋdʋnʋ' }, { fr:'chaise', ak:'ɩkpokʋ' }, { fr:'habit', ak:'ɛkʋdʋ' },
+  { fr:'grenier', ak:'ʋlɩ' }, { fr:'houe', ak:'elʋte' }, { fr:'sac', ak:'akpo' },
   { fr:'couteau', ak:'ɩɣɛ' }, { fr:'marmite', ak:'awɛ' },
   // Verbes courants
   { fr:'venir', ak:'ba' }, { fr:'aller', ak:'ɣa' }, { fr:'manger', ak:'yɛ' },
-  { fr:'boire', ak:'nyuǝ' }, { fr:'acheter', ak:'vu' }, { fr:'vendre', ak:'yi' },
-  { fr:'savoir', ak:'yi' }, { fr:'marcher', ak:'sɛ' }, { fr:'prendre', ak:'yɔ' },
-  { fr:'voir', ak:'mʋ' }, { fr:'se lever', ak:'mli' }, { fr:'descendre', ak:'zi' },
+  { fr:'boire', ak:'nyʋǝ' }, { fr:'acheter', ak:'vʋ' }, { fr:'vendre', ak:'yɩ' },
+  { fr:'savoir', ak:'yɩ' }, { fr:'marcher', ak:'sɛ' }, { fr:'prendre', ak:'yɔ' },
+  { fr:'voir', ak:'mʋ' }, { fr:'se lever', ak:'mlɩ' }, { fr:'descendre', ak:'zɩ' },
   { fr:'rester', ak:'ya' }, { fr:'laver', ak:'wele' }, { fr:'coudre', ak:'wlɛ' },
   { fr:'écrire', ak:'ŋlo' }, { fr:'creuser', ak:'gbɔ' }, { fr:'faire / créer', ak:'kele' },
   // Nombres
-  { fr:'deux', ak:'ēfoi ou ēfua' }, { fr:'cinq', ak:'ɛtʋ' }, { fr:'six', ak:'ɛwlʋ' },
-  { fr:'sept', ak:'ɛwlʋdɩ' }, { fr:'neuf', ak:'ɛlɛdɩ' }, { fr:'dix', ak:'idzo' },
+  { fr:'deux', ak:'ēfoɩ ou ēfʋa' }, { fr:'cinq', ak:'ɛtʋ' }, { fr:'six', ak:'ɛwlʋ' },
+  { fr:'sept', ak:'ɛwlʋdɩ' }, { fr:'neuf', ak:'ɛlɛdɩ' }, { fr:'dix', ak:'ɩdzo' },
   { fr:'cent', ak:'gbɔwa' },
   // Notions / expressions
-  { fr:'Dieu', ak:'Uwolowu' }, { fr:'vérité', ak:'sisi' }, { fr:'joie', ak:'ɛdɩ' },
-  { fr:'bonheur', ak:'ɛdzɛ' }, { fr:'pauvreté', ak:'aga' }, { fr:'vie', ak:'inyeza' },
+  { fr:'Dieu', ak:'Ʋwolowʋ' }, { fr:'vérité', ak:'sɩsɩ' }, { fr:'joie', ak:'ɛdɩ' },
+  { fr:'bonheur', ak:'ɛdzɛ' }, { fr:'pauvreté', ak:'aga' }, { fr:'vie', ak:'ɩnyeza' },
   { fr:'peuple Akposso', ak:'Kpɔsɔ wanɩ' }, { fr:'langue Ikposso', ak:'ɩkpɔsɔ' },
-  { fr:"aujourd'hui", ak:'emie' }, { fr:'hier', ak:'adja' }, { fr:'demain', ak:'ɛtsɛ' },
-  { fr:'matin', ak:'ɩdɩkadɩ' }, { fr:'soir', ak:'idisenǝ' }, { fr:'alors', ak:'go' },
+  { fr:"aujourd'hui", ak:'emɩe' }, { fr:'hier', ak:'adja' }, { fr:'demain', ak:'ɛtsɛ' },
+  { fr:'matin', ak:'ɩdɩkadɩ' }, { fr:'soir', ak:'ɩdɩsenǝ' }, { fr:'alors', ak:'go' },
   // Famille (lexique personnel d'Alexi)
-  { fr:'père', ak:'ILA' }, { fr:'grand-père', ak:'ALÉVLÉ' }, { fr:'grand-mère', ak:'INAKA / INÉVLÉ' },
-  { fr:'fils', ak:'ika' }, { fr:'fille', ak:'Ovi' }, { fr:'frère', ak:'IVLA' },
-  { fr:'sœur', ak:'INÉDJA' }, { fr:'oncle', ak:'GNÉGNÉ' }, { fr:'tante', ak:'TSITSI' },
-  { fr:'cousin', ak:'ILAVLA VI' }, { fr:'mari', ak:'UGNI' }, { fr:'enfants', ak:'UVI' },
-  { fr:'bébé', ak:'ÉVIDJÉ-FIÙ' }, { fr:'ancêtres (2)', ak:'ILÉVLÉ' }, { fr:'doyen de famille', ak:'ULU LUKA / UDUNU LUKA' },
-  { fr:'beau-père', ak:'Ihala' }, { fr:'belle-mère', ak:'Ikona' }, { fr:'beau-frère', ak:'Ihele' },
-  { fr:'belle-sœur', ak:'Iheletsi' },
+  { fr:'père', ak:'ƖLA' }, { fr:'grand-père', ak:'ALÉVLÉ' }, { fr:'grand-mère', ak:'ƖNAKA / ƖNÉVLÉ' },
+  { fr:'fils', ak:'ɩka' }, { fr:'fille', ak:'Ovɩ' }, { fr:'frère', ak:'ƖVLA' },
+  { fr:'sœur', ak:'ƖNÉDJA' }, { fr:'oncle', ak:'GNÉGNÉ' }, { fr:'tante', ak:'TSƖTSƖ' },
+  { fr:'cousin', ak:'ƖLAVLA VƖ' }, { fr:'mari', ak:'ƲGNƖ' }, { fr:'enfants', ak:'ƲVƖ' },
+  { fr:'bébé', ak:'ÉVƖDJÉ-FƖƲ̀' }, { fr:'ancêtres (2)', ak:'ƖLÉVLÉ' }, { fr:'doyen de famille', ak:'ƲLƲ LƲKA / ƲDƲNƲ LƲKA' },
+  { fr:'beau-père', ak:'Ɩhala' }, { fr:'belle-mère', ak:'Ɩkona' }, { fr:'beau-frère', ak:'Ɩhele' },
+  { fr:'belle-sœur', ak:'Ɩheletsɩ' },
   // Salutations et politesse
-  { fr:'bonjour', ak:'Ivua adiɛ adiɛ avlɛɛɛɛ (pl. mia vlɛɛɛɛ)' }, { fr:'bonjour (après-midi)', ak:'Izua ɛfɛlɛɛɛ ɛfɛlɛdɛɛɛ ɛzaaa (pl. mi zaaa)' },
-  { fr:'bonsoir', ak:'Izua ɛzaa (pl. mi zaaa)' }, { fr:'bonne nuit', ak:'Zadɛ / ki zadɛɛ' },
-  { fr:'comment vas-tu', ak:'ɛza muani' }, { fr:'je vais bien', ak:'Niza ɔbɔɛ / nlza bubuɛ' },
-  { fr:'merci beaucoup', ak:'ewlesɛ' }, { fr:"je t'en prie", ak:'onesi aylakpɔ kpɔ' },
-  { fr:'pardon', ak:'Ɛyadu' }, { fr:'s\'il te plaît', ak:'Kʉkɔ' },
-  { fr:'bienvenue', ak:'ANASƐ / Yanu asɛ' }, { fr:'au revoir', ak:'kuna mu alɛ' },
-  { fr:'à bientôt', ak:'Ekualɛ' }, { fr:'bon courage', ak:'Dɔ kayɛ' },
+  { fr:'bonjour', ak:'Ɩvʋa adɩɛ adɩɛ avlɛɛɛɛ (pl. mɩa vlɛɛɛɛ)' }, { fr:'bonjour (après-midi)', ak:'Ɩzʋa ɛfɛlɛɛɛ ɛfɛlɛdɛɛɛ ɛzaaa (pl. mɩ zaaa)' },
+  { fr:'bonsoir', ak:'Ɩzʋa ɛzaa (pl. mɩ zaaa)' }, { fr:'bonne nuit', ak:'Zadɛ / kɩ zadɛɛ' },
+  { fr:'comment vas-tu', ak:'ɛza mʋanɩ' }, { fr:'je vais bien', ak:'Nɩza ɔbɔɛ / nlza bʋbʋɛ' },
+  { fr:'merci beaucoup', ak:'ewlesɛ' }, { fr:"je t'en prie", ak:'onesɩ aylakpɔ kpɔ' },
+  { fr:'pardon', ak:'Ɛyadʋ' }, { fr:'s\'il te plaît', ak:'Kʉkɔ' },
+  { fr:'bienvenue', ak:'ANASƐ / Yanʋ asɛ' }, { fr:'au revoir', ak:'kʋna mʋ alɛ' },
+  { fr:'à bientôt', ak:'Ekʋalɛ' }, { fr:'bon courage', ak:'Dɔ kayɛ' },
   // Nature et environnement
-  { fr:'soleil', ak:'ÔVÈ' }, { fr:'lune', ak:'UTSI' }, { fr:'étoile', ak:'ILÔ' },
-  { fr:'vent', ak:'ULÙ' }, { fr:'rivière', ak:'ÔBÈ' }, { fr:'forêt', ak:'ÔFU' },
-  { fr:'arbre', ak:'ITSU' }, { fr:'terre', ak:'utì ou utikpæ' }, { fr:'nuit', ak:'ÌYILI / ÍƔLI' },
-  { fr:'jour', ak:'ÈYI' }, { fr:'saison', ak:'Seazne' },
+  { fr:'soleil', ak:'ÔVÈ' }, { fr:'lune', ak:'ƲTSƖ' }, { fr:'étoile', ak:'ƖLÔ' },
+  { fr:'vent', ak:'ƲLƲ̀' }, { fr:'rivière', ak:'ÔBÈ' }, { fr:'forêt', ak:'ÔFƲ' },
+  { fr:'arbre', ak:'ƖTSƲ' }, { fr:'terre', ak:'ʋtɩ̀ ou ʋtɩkpæ' }, { fr:'nuit', ak:'Ɩ̀YƖLƖ / Ɩ́ƔLƖ' },
+  { fr:'jour', ak:'ÈYƖ' }, { fr:'saison', ak:'Seazne' },
   // Sagesse et spiritualité
-  { fr:'âme', ak:'ÔVƐ' }, { fr:'prière', ak:'AVITA' }, { fr:'bénédiction', ak:'ÈBUA' },
-  { fr:'sagesse', ak:'ASÈMÙ' }, { fr:'justice', ak:'ÈSÈ-ZADU' }, { fr:'respect', ak:'ƐLU ADU' },
-  { fr:'honneurs', ak:'UBÉ ADU' }, { fr:'force', ak:'IKPA' }, { fr:'courage', ak:'ƐTU-AZƐDU' },
-  { fr:'paix', ak:'ÈTU-LULUA' }, { fr:'amour', ak:'ƐFU ALUÈSÈ' }, { fr:'espoir', ak:'SU-UNE' },
-  { fr:'foi', ak:'ÈTÈNU' },
+  { fr:'âme', ak:'ÔVƐ' }, { fr:'prière', ak:'AVƖTA' }, { fr:'bénédiction', ak:'ÈBƲA' },
+  { fr:'sagesse', ak:'ASÈMƲ̀' }, { fr:'justice', ak:'ÈSÈ-ZADƲ' }, { fr:'respect', ak:'ƐLƲ ADƲ' },
+  { fr:'honneurs', ak:'ƲBÉ ADƲ' }, { fr:'force', ak:'ƖKPA' }, { fr:'courage', ak:'ƐTƲ-AZƐDƲ' },
+  { fr:'paix', ak:'ÈTƲ-LƲLƲA' }, { fr:'amour', ak:'ƐFƲ ALƲÈSÈ' }, { fr:'espoir', ak:'SƲ-ƲNE' },
+  { fr:'foi', ak:'ÈTÈNƲ' },
   // Vie quotidienne
-  { fr:'dormir', ak:'Ɛ LƐ' }, { fr:'travailler', ak:'ƆLUNA' }, { fr:'marche', ak:'ASƐ' },
-  { fr:'parler', ak:'ƆSƐYA' }, { fr:'écouter', ak:'KATU' }, { fr:'pensée', ak:'ƆLƆ-NUHLU' },
-  { fr:'donner', ak:'ƐKU KA' }, { fr:'recevoir', ak:'TƐƐ' }, { fr:'construire', ak:'KPƆ' },
+  { fr:'dormir', ak:'Ɛ LƐ' }, { fr:'travailler', ak:'ƆLƲNA' }, { fr:'marche', ak:'ASƐ' },
+  { fr:'parler', ak:'ƆSƐYA' }, { fr:'écouter', ak:'KATƲ' }, { fr:'pensée', ak:'ƆLƆ-NƲHLƲ' },
+  { fr:'donner', ak:'ƐKƲ KA' }, { fr:'recevoir', ak:'TƐƐ' }, { fr:'construire', ak:'KPƆ' },
   // Corps humain
-  { fr:'tête', ak:'ƐLU' }, { fr:'yeux', ak:'ÈMU' }, { fr:'oreilles', ak:'UTÛ' },
-  { fr:'nez', ak:'IYO' }, { fr:'mains', ak:'AHLÀ' }, { fr:'pieds', ak:'ÛVÛ' },
-  { fr:'cœur', ak:'ƆVÒ' }, { fr:'ventre', ak:'ÈMÈKU' }, { fr:'dos', ak:'IDÙ' },
+  { fr:'tête', ak:'ƐLƲ' }, { fr:'yeux', ak:'ÈMƲ' }, { fr:'oreilles', ak:'ƲTƲ̂' },
+  { fr:'nez', ak:'ƖYO' }, { fr:'mains', ak:'AHLÀ' }, { fr:'pieds', ak:'Ʋ̂VƲ̂' },
+  { fr:'cœur', ak:'ƆVÒ' }, { fr:'ventre', ak:'ÈMÈKƲ' }, { fr:'dos', ak:'ƖDƲ̀' },
   // Nombres (lexique personnel)
-  { fr:'un', ak:'ÈDI' }, { fr:'trois', ak:'ÈLA' }, { fr:'quatre', ak:'ÈNA' }, { fr:'huit', ak:'ÈLÈ' },
+  { fr:'un', ak:'ÈDƖ' }, { fr:'trois', ak:'ÈLA' }, { fr:'quatre', ak:'ÈNA' }, { fr:'huit', ak:'ÈLÈ' },
   // Couleurs
-  { fr:'rouge', ak:'ÔVÈ' }, { fr:'blanc', ak:'OFUÉ' }, { fr:'noir', ak:'OWÈ' },
-  { fr:'vert', ak:'UGBATAWLA' }, { fr:'bleu', ak:'BLÔ' },
+  { fr:'rouge', ak:'ÔVÈ' }, { fr:'blanc', ak:'OFƲÉ' }, { fr:'noir', ak:'OWÈ' },
+  { fr:'vert', ak:'ƲGBATAWLA' }, { fr:'bleu', ak:'BLÔ' },
   // Jours de la semaine (5 jours traditionnels du calendrier du marché + 2 jours modernes)
-  { fr:'semaine', ak:'ɛvaliku' },
-  { fr:'lundi', ak:'Imle' }, { fr:'mardi', ak:'Ɛkpɛ / Ekpé' }, { fr:'mercredi', ak:'Ɛwlɛ / Ewlé' },
+  { fr:'semaine', ak:'ɛvalɩkʋ' },
+  { fr:'lundi', ak:'Ɩmle' }, { fr:'mardi', ak:'Ɛkpɛ / Ekpé' }, { fr:'mercredi', ak:'Ɛwlɛ / Ewlé' },
   { fr:'jeudi', ak:'Ɛɣla / Eghla' }, { fr:'vendredi', ak:'Ɛva / Eva' },
-  { fr:'samedi', ak:'Ewleduyɩ (jour moderne, ajouté après)' }, { fr:'dimanche', ak:'Ɛzawlayɩ / Ezawlayi (jour moderne, ajouté après)' },
+  { fr:'samedi', ak:'Ewledʋyɩ (joʋr moderne, ajoʋté après)' }, { fr:'dimanche', ak:'Ɛzawlayɩ / Ezawlayɩ (joʋr moderne, ajoʋté après)' },
   // Mois de l'année (les jeunes utilisent souvent les mois français en parlant Ikposso, mais voici les noms authentiques)
-  { fr:'janvier', ak:'Ɔlatʋ / Ulatu' }, { fr:'février', ak:'Ɔfʋtsɩ / Gbagblawawa' }, { fr:'mars', ak:'Zata' },
-  { fr:'avril', ak:'Ɛvlɩlʋɩa / Ulawlive' }, { fr:'mai', ak:'Ʋlawlɩvɛ / Ukuluia' }, { fr:'juin', ak:'Inaglo' },
-  { fr:'juillet', ak:'Nekuneku' }, { fr:'août', ak:'Ipuǝnǝ / Ipuatsyo' }, { fr:'septembre', ak:'Iwle / Ipuana' },
-  { fr:'octobre', ak:'Iwletsɔ' }, { fr:'novembre', ak:'Ɔtɩɩ' }, { fr:'décembre', ak:'Ɛyɛbuele (mois de OVAZU, l\'abondance)' },
+  { fr:'janvier', ak:'Ɔlatʋ / Ʋlatʋ' }, { fr:'février', ak:'Ɔfʋtsɩ / Gbagblawawa' }, { fr:'mars', ak:'Zata' },
+  { fr:'avril', ak:'Ɛvlɩlʋɩa / Ʋlawlɩve' }, { fr:'mai', ak:'Ʋlawlɩvɛ / Ʋkʋlʋɩa' }, { fr:'juin', ak:'Ɩnaglo' },
+  { fr:'juillet', ak:'Nekʋnekʋ' }, { fr:'août', ak:'Ɩpʋǝnǝ / Ɩpʋatsyo' }, { fr:'septembre', ak:'Ɩwle / Ɩpʋana' },
+  { fr:'octobre', ak:'Ɩwletsɔ' }, { fr:'novembre', ak:'Ɔtɩɩ' }, { fr:'décembre', ak:'Ɛyɛbʋele (moɩs de OVAZƲ, l\'abondance)' },
   // Tradition orale
-  { fr:'conte', ak:'uti' }, { fr:'proverbe', ak:'ulo' },
+  { fr:'conte', ak:'ʋtɩ' }, { fr:'proverbe', ak:'ʋlo' },
   // Fêtes
-  { fr:'Bonne fête de OVAZU à tous les Akposso', ak:'OVAZU AYU ĒYI ÖBUE KU KPOSSOVI EDI-NÉDI' },
+  { fr:'Bonne fête de OVAZU à tous les Akposso', ak:'OVAZƲ AYƲ ĒYƖ ÖBƲE KƲ KPOSSOVƖ EDƖ-NÉDƖ' },
 ];
 
 function getExtraWords(){
@@ -7694,7 +7694,7 @@ document.getElementById('community-record').addEventListener('click', async ()=>
 <script>
 /* ===== Lexique parlé : la voix d'Alexi (audio-sprite) ===== */
 (function(){
-  var LEX=[["Salutations", "Bonjour", "ivuao", 0.0, 2.44], ["Salutations", "Comment vas-tu ?", "avlē muani", 3.04, 4.36], ["Salutations", "Je vais bien", "navlē bubuē", 4.96, 9.82], ["Salutations", "Bonsoir", "izuao ou izua", 10.42, 14.34], ["Salutations", "Comment ça va ? Ça va bien", "ezamu Ani ? Niza bubuē", 14.94, 16.16], ["Salutations", "Bonne nuit", "ïliē kôbuèkè", 16.76, 22.88], ["Salutations", "Comment vas-tu ? Je vais bien", "eza-muani ? nizakabuē", 23.48, 25.2], ["Salutations", "Merci beaucoup", "ewlesē põo", 25.8, 27.16], ["Salutations", "De rien", "onési-ahlakpô", 27.76, 30.38], ["Salutations", "Pardon", "kukô", 30.98, 33.16], ["Salutations", "S'il te plaît", "naduēyã ou naduyēyã", 33.76, 38.59], ["Salutations", "Bienvenue", "yanasē ou anasēo", 39.19, 41.82], ["Salutations", "Au revoir", "kunamualē", 42.42, 43.58], ["Salutations", "À bientôt", "ékualēo", 44.18, 48.84], ["Salutations", "Bon courage", "zētudu", 49.44, 51.29], ["Famille", "Père", "ila", 51.89, 53.29], ["Famille", "Mère", "ina", 53.89, 58.81], ["Famille", "Grand-père", "alévlé ou ilévlé", 59.41, 62.37], ["Famille", "Grand-mère", "kaka ou inévlé", 62.97, 63.81], ["Famille", "Fils", "ika", 64.41, 65.93], ["Famille", "Fille", "idjæ", 66.53, 69.65], ["Famille", "Frère", "ivla", 70.25, 72.95], ["Famille", "Sœur", "inédjæ", 73.55, 74.21], ["Famille", "Oncle", "gnegne", 74.81, 75.85], ["Famille", "Tante", "ilevletsi ou alévletsi ou tsitsi", 76.45, 78.07], ["Famille", "Cousin", "anu-lavla ayilē", 78.67, 79.59], ["Famille", "Cousine (autre forme)", "anu-navi ayilē ou anu-lavla ayuvi", 80.19, 81.07], ["Famille", "Mari", "ugni", 81.67, 83.27], ["Famille", "Femme", "ossifì", 83.87, 85.45], ["Famille", "Enfants", "uvi", 86.05, 87.77], ["Famille", "Bébé", "évidjé-fiu", 88.37, 89.35], ["Famille", "Ancêtre", "alevleni ou ilévlé", 89.95, 90.73], ["Famille", "Chef de famille", "uluwli ou udunu-wli", 91.33, 92.37], ["Famille", "Beau-père", "ihala", 92.97, 94.81], ["Famille", "Belle-mère", "ikôna", 95.41, 96.59], ["Famille", "Beau-frère", "ihēlē", 97.19, 98.15], ["Famille", "Belle-sœur", "iheletsi", 98.75, 100.15], ["Nature", "Soleil", "ovê", 100.75, 101.73], ["Nature", "Lune", "utsi", 102.33, 103.87], ["Nature", "Étoile", "ilô", 104.47, 105.87], ["Nature", "Pluie", "adî", 106.47, 107.95], ["Nature", "Vent", "ulu", 108.55, 110.55], ["Nature", "Rivière", "õbē", 111.15, 111.69], ["Nature", "Montagne", "ito", 112.29, 113.17], ["Nature", "Forêt", "ôfu", 113.77, 114.73], ["Nature", "Arbre", "itsu", 115.33, 116.49], ["Nature", "Terre", "utì ou utikpæ", 117.09, 118.03], ["Nature", "Feu", "ivu", 118.63, 119.63], ["Nature", "Eau", "ivi", 120.23, 121.27], ["Nature", "Ciel", "ava", 121.87, 122.85], ["Nature", "Nuit", "ihli", 123.45, 124.43], ["Nature", "Jour", "ēyui", 125.03, 127.12], ["Nature", "Saison", "itiniti", 127.72, 133.84], ["Sagesse", "Prière", "avitakpô ou avita", 134.44, 135.3], ["Sagesse", "Bénédiction", "ēbua", 135.9, 137.7], ["Sagesse", "Sagesse", "ēsēmù", 138.3, 139.36], ["Sagesse", "Vérité", "ēsēsisi", 139.96, 142.33], ["Sagesse", "Justice", "éssēzadu", 142.93, 143.97], ["Sagesse", "Respect", "duēlu nuti", 144.57, 145.85], ["Sagesse", "Honneurs", "dubēdu", 146.45, 148.63], ["Sagesse", "Courage", "ētuzēdu", 149.23, 150.53], ["Sagesse", "Paix", "ētēlulua", 151.13, 152.69], ["Sagesse", "Amour", "ôfualuēssē", 153.29, 154.65], ["Sagesse", "Espoir", "su-émununé", 155.25, 156.33], ["Sagesse", "Foi", "ētēnu", 156.93, 158.49], ["Vie quotidienne", "Manger", "yēku", 159.09, 162.15], ["Vie quotidienne", "Boire", "gnua", 162.75, 163.81], ["Vie quotidienne", "Dormir", "lē", 164.41, 165.23], ["Vie quotidienne", "Travailler", "na-ôlu", 165.83, 166.65], ["Vie quotidienne", "Marcher", "ssē", 167.25, 168.39], ["Vie quotidienne", "Parler", "yēssē", 168.99, 169.77], ["Vie quotidienne", "Écouter", "katu", 170.37, 172.68], ["Vie quotidienne", "Voir", "kôssu", 173.28, 177.1], ["Vie quotidienne", "Écouter", "katu", 177.7, 178.56], ["Vie quotidienne", "Penser", "ôlô-nuhlu", 179.16, 182.93], ["Vie quotidienne", "Aimer", "fualuēssē", 183.53, 184.69], ["Vie quotidienne", "Donner", "ka-ēku", 185.29, 186.53], ["Vie quotidienne", "Recevoir", "tē-ēku", 187.13, 187.93], ["Vie quotidienne", "Acheter", "vu", 188.53, 189.31], ["Vie quotidienne", "Vendre", "yi-ēku", 189.91, 190.97], ["Vie quotidienne", "Construire", "tsi-udunu", 191.57, 192.77], ["Corps humain", "Tête", "ēlu", 193.37, 194.01], ["Corps humain", "Yeux", "émû", 194.61, 197.19], ["Corps humain", "Oreille", "utu", 197.79, 199.37], ["Corps humain", "Nez", "iyo", 199.97, 200.75], ["Corps humain", "Bouche", "unuku", 201.35, 202.39], ["Corps humain", "Main", "ahla", 202.99, 203.85], ["Corps humain", "Pieds", "uvu", 204.45, 205.53], ["Corps humain", "Cœur", "ôvô", 206.13, 207.85], ["Corps humain", "Ventre", "ēmēku", 208.45, 210.97], ["Corps humain", "Dos", "idu", 211.57, 212.69], ["Nombres", "1", "ēdi", 213.29, 214.49], ["Nombres", "2", "ēfoi ou ēfua", 215.09, 219.45], ["Nombres", "3", "ēla", 220.05, 221.45], ["Nombres", "4", "ēna", 222.05, 223.21], ["Nombres", "5", "ētu", 223.81, 224.95], ["Nombres", "6", "ēwlu", 225.55, 226.37], ["Nombres", "7", "ēwludi", 226.97, 228.63], ["Nombres", "8", "ēlē", 229.23, 230.03], ["Nombres", "9", "ēlēdi", 230.63, 231.49], ["Nombres", "10", "idjo", 232.09, 233.03], ["Couleurs", "Rouge", "ôvē", 233.63, 234.47], ["Couleurs", "Blanc", "œfue", 235.07, 235.87], ["Couleurs", "Noir", "ôwē", 236.47, 238.15], ["Couleurs", "Vert", "ugbatawla", 238.75, 239.61], ["Couleurs", "Bleu", "blô ou ugbatawlawē", 240.21, 242.78], ["Nourriture", "Akoumé (pâte de maïs)", "ēzu ou ēzou", null, null], ["Nourriture", "Banane plantain", "abidjo", null, null]];
+  var LEX=[["Salutations", "Bonjour", "ivuao", 0.0, 2.44], ["Salutations", "Comment vas-tu ?", "avlē muani", 3.04, 4.36], ["Salutations", "Je vais bien", "navlē bubuē", 4.96, 9.82], ["Salutations", "Bonsoir", "izuao ou izua", 10.42, 14.34], ["Salutations", "Comment ça va ? Ça va bien", "ezamu Ani ? Niza bubuē", 14.94, 16.16], ["Salutations", "Bonne nuit", "ïliē kôbuèkè", 16.76, 22.88], ["Salutations", "Comment vas-tu ? Je vais bien", "eza-muani ? nizakabuē", 23.48, 25.2], ["Salutations", "Merci beaucoup", "ewlesē põo", 25.8, 27.16], ["Salutations", "De rien", "onési-ahlakpô", 27.76, 30.38], ["Salutations", "Pardon", "kukô", 30.98, 33.16], ["Salutations", "S'il te plaît", "naduēyã ou naduyēyã", 33.76, 38.59], ["Salutations", "Bienvenue", "yanasē ou anasēo", 39.19, 41.82], ["Salutations", "Au revoir", "kunamualē", 42.42, 43.58], ["Salutations", "À bientôt", "ékualēo", 44.18, 48.84], ["Salutations", "Bon courage", "zētudu", 49.44, 51.29], ["Famille", "Père", "ila", 51.89, 53.29], ["Famille", "Mère", "ina", 53.89, 58.81], ["Famille", "Grand-père", "alévlé ou ilévlé", 59.41, 62.37], ["Famille", "Grand-mère", "kaka ou inévlé", 62.97, 63.81], ["Famille", "Fils", "ika", 64.41, 65.93], ["Famille", "Fille", "idjæ", 66.53, 69.65], ["Famille", "Frère", "ivla", 70.25, 72.95], ["Famille", "Sœur", "inédjæ", 73.55, 74.21], ["Famille", "Oncle", "gnegne", 74.81, 75.85], ["Famille", "Tante", "ilevletsi ou alévletsi ou tsitsi", 76.45, 78.07], ["Famille", "Cousin", "anu-lavla ayilē", 78.67, 79.59], ["Famille", "Cousine (autre forme)", "anu-navi ayilē ou anu-lavla ayuvi", 80.19, 81.07], ["Famille", "Mari", "ugni", 81.67, 83.27], ["Famille", "Femme", "ossifì", 83.87, 85.45], ["Famille", "Enfants", "uvi", 86.05, 87.77], ["Famille", "Bébé", "évidjé-fiu", 88.37, 89.35], ["Famille", "Ancêtre", "alevleni ou ilévlé", 89.95, 90.73], ["Famille", "Chef de famille", "uluwli ou udunu-wli", 91.33, 92.37], ["Famille", "Beau-père", "ihala", 92.97, 94.81], ["Famille", "Belle-mère", "ikôna", 95.41, 96.59], ["Famille", "Beau-frère", "ihēlē", 97.19, 98.15], ["Famille", "Belle-sœur", "iheletsi", 98.75, 100.15], ["Nature", "Soleil", "ovê", 100.75, 101.73], ["Nature", "Lune", "utsi", 102.33, 103.87], ["Nature", "Étoile", "ilô", 104.47, 105.87], ["Nature", "Pluie", "adî", 106.47, 107.95], ["Nature", "Vent", "ulu", 108.55, 110.55], ["Nature", "Rivière", "õbē", 111.15, 111.69], ["Nature", "Montagne", "ito", 112.29, 113.17], ["Nature", "Forêt", "ôfu", 113.77, 114.73], ["Nature", "Arbre", "itsu", 115.33, 116.49], ["Nature", "Terre", "utì ou utikpæ", 117.09, 118.03], ["Nature", "Feu", "ivu", 118.63, 119.63], ["Nature", "Eau", "ivi", 120.23, 121.27], ["Nature", "Ciel", "ava", 121.87, 122.85], ["Nature", "Nuit", "ihli", 123.45, 124.43], ["Nature", "Jour", "ēyui", 125.03, 127.12], ["Nature", "Saison", "itiniti", 127.72, 133.84], ["Sagesse", "Prière", "avitakpô ou avita", 134.44, 135.3], ["Sagesse", "Bénédiction", "ēbua", 135.9, 137.7], ["Sagesse", "Sagesse", "ēsēmù", 138.3, 139.36], ["Sagesse", "Vérité", "ēsēsisi", 139.96, 142.33], ["Sagesse", "Justice", "éssēzadu", 142.93, 143.97], ["Sagesse", "Respect", "duēlu nuti", 144.57, 145.85], ["Sagesse", "Honneurs", "dubēdu", 146.45, 148.63], ["Sagesse", "Courage", "ētuzēdu", 149.23, 150.53], ["Sagesse", "Paix", "ētēlulua", 151.13, 152.69], ["Sagesse", "Amour", "ôfualuēssē", 153.29, 154.65], ["Sagesse", "Espoir", "su-émununé", 155.25, 156.33], ["Sagesse", "Foi", "ētēnu", 156.93, 158.49], ["Vie quotidienne", "Manger", "yēku", 159.09, 162.15], ["Vie quotidienne", "Boire", "gnua", 162.75, 163.81], ["Vie quotidienne", "Dormir", "lē", 164.41, 165.24], ["Vie quotidienne", "Travailler", "na-ôlu", 165.83, 166.65], ["Vie quotidienne", "Marcher", "ssē", 167.25, 168.39], ["Vie quotidienne", "Parler", "yēssē", 168.99, 169.77], ["Vie quotidienne", "Écouter", "katu", 170.37, 172.68], ["Vie quotidienne", "Voir", "kôssu", 173.28, 177.1], ["Vie quotidienne", "Écouter", "katu", 177.7, 178.56], ["Vie quotidienne", "Penser", "ôlô-nuhlu", 179.16, 182.93], ["Vie quotidienne", "Aimer", "fualuēssē", 183.53, 184.69], ["Vie quotidienne", "Donner", "ka-ēku", 185.29, 186.53], ["Vie quotidienne", "Recevoir", "tē-ēku", 187.13, 187.93], ["Vie quotidienne", "Acheter", "vu", 188.53, 189.31], ["Vie quotidienne", "Vendre", "yi-ēku", 189.91, 190.97], ["Vie quotidienne", "Construire", "tsi-udunu", 191.57, 192.77], ["Corps humain", "Tête", "ēlu", 193.37, 194.01], ["Corps humain", "Yeux", "émû", 194.61, 197.19], ["Corps humain", "Oreille", "utu", 197.79, 199.37], ["Corps humain", "Nez", "iyo", 199.97, 200.75], ["Corps humain", "Bouche", "unuku", 201.35, 202.39], ["Corps humain", "Main", "ahla", 202.99, 203.85], ["Corps humain", "Pieds", "uvu", 204.45, 205.53], ["Corps humain", "Cœur", "ôvô", 206.13, 207.85], ["Corps humain", "Ventre", "ēmēku", 208.45, 210.97], ["Corps humain", "Dos", "idu", 211.57, 212.69], ["Nombres", "1", "ēdi", 213.29, 214.49], ["Nombres", "2", "ēfoi ou ēfua", 215.09, 219.45], ["Nombres", "3", "ēla", 220.05, 221.45], ["Nombres", "4", "ēna", 222.05, 223.21], ["Nombres", "5", "ētu", 223.81, 224.95], ["Nombres", "6", "ēwlu", 225.55, 226.37], ["Nombres", "7", "ēwludi", 226.97, 228.63], ["Nombres", "8", "ēlē", 229.23, 230.03], ["Nombres", "9", "ēlēdi", 230.63, 231.49], ["Nombres", "10", "idjo", 232.09, 233.03], ["Couleurs", "Rouge", "ôvē", 233.63, 234.47], ["Couleurs", "Blanc", "œfue", 235.07, 235.87], ["Couleurs", "Noir", "ôwē", 236.47, 238.15], ["Couleurs", "Vert", "ugbatawla", 238.75, 239.61], ["Couleurs", "Bleu", "blô ou ugbatawlawē", 240.21, 242.78], ["Nourriture", "Akoumé (pâte de maïs)", "ēzu ou ēzou", null, null], ["Nourriture", "Banane plantain", "abidjo", null, null]];
   var box=document.getElementById('lex-list'); if(!box) return;
   var cur=null, au=null, loading=null;
   var st=document.getElementById('lex-status');
