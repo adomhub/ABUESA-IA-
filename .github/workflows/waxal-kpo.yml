@@ -1,0 +1,22 @@
+name: Explorer WAXAL ikposso
+on:
+  workflow_dispatch:
+  push:
+    paths: [voix-ikposso/explorer_waxal.py]
+permissions:
+  contents: write
+jobs:
+  explorer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install -q huggingface_hub pyarrow pandas
+      - run: python voix-ikposso/explorer_waxal.py
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add voix-ikposso/waxal-kpo-rapport.md
+          git commit -m "Rapport WAXAL ikposso" || true
+          git pull --rebase --autostash && git push
