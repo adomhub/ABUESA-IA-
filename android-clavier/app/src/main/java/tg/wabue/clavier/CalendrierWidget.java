@@ -14,13 +14,13 @@ import java.util.Calendar;
 public class CalendrierWidget extends AppWidgetProvider {
 
     // Calendar.DAY_OF_WEEK : 1 = dimanche … 7 = samedi
-    static final String[] JOURS_IK = {"", "Ɛzawlayɩ", "Imle", "Ɛkpɛ", "Ɛwlɛ", "Ɛɣla", "Ɛva", "Ewleduyɩ"};
+    static final String[] JOURS_IK = {"", "Ɛzawlayɩ", "Ɩmle", "Ɛkpɛ", "Ɛwlɛ", "Ɛɣla", "Ɛva", "Ewledʋyɩ"};
     static final String[] JOURS_FR = {"", "dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"};
     /** Marchés des Akposso du Ghana (donnés par Alexi le 23 nov. 2026), affichés sur les téléphones en anglais. */
     static final String[] MARCHES_GH = {"", "", "", "Akpɔssɔ Cabo", "Akpɔssɔ Kubi", "", "Ɔclabɛ · Akpɔssɔ Cabo", ""};
     static final String[] MARCHES = {"", "", "Agbo", "Zogbégan", "Doumé", "Badou", "Kougnohou", "Agbo N'Kougna"};
-    static final String[] MOIS_IK = {"Ɔlatʋ", "Ɔfʋtsɩ", "Zata", "Ɛvlɩlʋɩa", "Ʋlawlɩvɛ", "Inaglo",
-            "Nekuneku", "Ipuǝnǝ", "Iwle", "Iwletsɔ", "Ɔtɩɩ", "Ɛyɛbuele"};
+    static final String[] MOIS_IK = {"Ɔlatʋ", "Ɔfʋtsɩ", "Zata", "Ɛvlɩlʋɩa", "Ʋlawlɩvɛ", "Ɩnaglo",
+            "Nekʋnekʋ", "Ɩpʋǝnǝ", "Ɩwle", "Ɩwletsɔ", "Ɔtɩɩ", "Ɛyɛbʋele"};
     static final String[] JOURS_EN = {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
     static final String[] MOIS_EN = {"January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"};
@@ -54,13 +54,13 @@ public class CalendrierWidget extends AppWidgetProvider {
         v.setTextViewText(R.id.w_jour, JOURS_IK[j]);
         int an = c.get(Calendar.YEAR);
         boolean fr = "fr".equals(java.util.Locale.getDefault().getLanguage());
-        v.setTextViewText(R.id.w_titre, fr ? "ÉMIÉ · AUJOURD'HUI · WABUƐ" : "ÉMIÉ · TODAY · WABUƐ");
+        v.setTextViewText(R.id.w_titre, fr ? "ÉMƖÉ · AUJOURD'HUI · WABUƐ" : "ÉMƖÉ · TODAY · WABUƐ");
         v.setTextViewText(R.id.w_jour_fr, fr ? JOURS_FR[j] + " " + d + " " + MOIS_FR[m] + " " + an
                                              : JOURS_EN[j] + ", " + d + " " + MOIS_EN[m] + " " + an);
-        v.setTextViewText(R.id.w_mois, "Ùtsi " + MOIS_IK[m] + " · " + d + "   Iluɛ " + an);
+        v.setTextViewText(R.id.w_mois, "Ʋ̀tsɩ " + MOIS_IK[m] + " · " + d + "   Ɩlʋɛ " + an);
         String[] marches = fr ? MARCHES : MARCHES_GH;
         String marche = marches[j].isEmpty() ? (fr ? "🛒 Pas de marché aujourd'hui" : "🛒 No market today")
-                                             : "🛒 Udzayi : " + marches[j];
+                                             : "🛒 Ʋdzayɩ : " + marches[j];
         v.setTextViewText(R.id.w_marche, marche);
         int n = joursAvantOvazu();
         v.setTextViewText(R.id.w_ovazu, fr

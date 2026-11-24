@@ -5,15 +5,15 @@
     android:orientation="vertical" android:padding="12dp" android:gravity="center_vertical"
     android:background="@drawable/fond_widget">
     <TextView android:id="@+id/w_titre" android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="ÉMIÉ · AUJOURD'HUI · WABUƐ" android:textColor="#FFC7D92E"
+        android:text="ÉMƖÉ · AUJOURD'HUI · WABUƐ" android:textColor="#FFC7D92E"
         android:textSize="11sp" android:textStyle="bold" />
     <TextView android:id="@+id/w_jour" android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="Imle" android:textColor="#FFFFFFFF" android:textSize="32sp" android:textStyle="bold"
+        android:text="Ɩmle" android:textColor="#FFFFFFFF" android:textSize="32sp" android:textStyle="bold"
         android:includeFontPadding="false" />
     <TextView android:id="@+id/w_jour_fr" android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:text="lundi" android:textColor="#CCFFFFFF" android:textSize="14sp" />
     <TextView android:id="@+id/w_mois" android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="Ùtsi Ɔtɩɩ" android:textColor="#FFC7D92E" android:textSize="16sp" android:textStyle="bold" />
+        android:text="Ʋ̀tsɩ Ɔtɩɩ" android:textColor="#FFC7D92E" android:textSize="16sp" android:textStyle="bold" />
     <TextView android:id="@+id/w_marche" android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:text="" android:textColor="#FFFFFFFF" android:textSize="14sp" />
     <TextView android:id="@+id/w_ovazu" android:layout_width="wrap_content" android:layout_height="wrap_content"

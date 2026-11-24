@@ -90,7 +90,7 @@ public class MainActivity extends Activity {
         corps.addView(texte("Calendrier akposso", 15, WabueIME.OR, true));
         java.util.Calendar cal = java.util.Calendar.getInstance();
         int jj = cal.get(java.util.Calendar.DAY_OF_WEEK), mm = cal.get(java.util.Calendar.MONTH);
-        corps.addView(texte("Emie (aujourd'hui) : " + CalendrierWidget.JOURS_IK[jj] + " · "
+        corps.addView(texte("Émɩé (aujourd'hui) : " + CalendrierWidget.JOURS_IK[jj] + " · "
                 + CalendrierWidget.MOIS_IK[mm] + " " + cal.get(java.util.Calendar.DAY_OF_MONTH)
                 + "\nOVAZU dans " + CalendrierWidget.joursAvantOvazu() + " jours", 18, Color.BLACK, true));
         corps.addView(bouton("📅 Mettre le calendrier sur l'écran d'accueil", new View.OnClickListener() {
