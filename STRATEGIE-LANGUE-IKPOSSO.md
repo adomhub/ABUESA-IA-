@@ -4,7 +4,7 @@
 
 | Besoin | État pour l'ikposso |
 |---|---|
-| Écriture normalisée (une seule orthographe) | ⚠️ Variantes (kpɔsɔ / kpɔssɔ, u / ʋ, h / ɣ) |
+| Écriture normalisée (une seule orthographe) | ✅ Guide décidé par Alexi (ɩ, ʋ, ɖ/d, ɣ/h) et appliqué partout le 24 nov. |
 | Lettres dans Unicode | ✅ |
 | Clavier | ✅ Appli WABUƐ (Gboard : demande envoyée) |
 | Dictionnaire | 🟡 ~450 mots |
@@ -42,3 +42,4 @@
 ## Suivi
 - 24 nov. 2026 : licences vérifiées — WAXAL (Google, CC-BY-4.0, contient kpo) utilisable librement avec citation ; UGSpeechData complet (Univ. du Ghana) en CC BY-NC-ND 4.0 → accord nécessaire.
 - 24 nov. 2026 : e-mail de collaboration envoyé par Alexi au DCS HCI Lab de l'Université du Ghana (dcshcilab@ug.edu.gh). En attente de réponse.
+- 24 nov. 2026 : priorité 2 faite — orthographe décidée (ɩ, ʋ) et appliquée au dictionnaire, site, lexique audio, clavier, widget, stickers.
