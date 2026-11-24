@@ -20,5 +20,10 @@ Décisions prises par Alexi (locuteur natif), une par une, à partir des écritu
 - **Conséquence :** pas de remplacement automatique entre ɖ et d ; l'écriture de chaque mot est vérifiée au cas par cas (dictionnaire validé par Alexi).
 - **Dans le corpus :** adu 3 734 / aɖu 635 ; di 6 150 / ɖi 210.
 
-## À décider
-4. ɣ ou h (aɣla / ahla)
+### 4. ɣ et h : les deux existent — 24 nov. 2026
+- **Règle :** **ɣ** et **h** sont utilisés dans des mots différents (comme ɖ et d).
+- **Conséquence :** pas de remplacement automatique ; chaque mot est vérifié au cas par cas.
+- **Dans le corpus :** aɣla 2 185 / ahla 83 ; ɣa 463 / ha 83.
+
+## À vérifier avant d'appliquer
+- Règles 1 et 2 : est-ce que **tous** les u deviennent ʋ et **tous** les i deviennent ɩ (ex. Imle → Ɩmle, iwolowu → ɩwolowʋ) ? Dans le corpus, certains mots gardent presque toujours i (edigbo 4 735 / edɩgbo 80).
