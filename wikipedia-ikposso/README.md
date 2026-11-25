@@ -66,13 +66,15 @@ Wawa lɛ prefecture nu Togo, nu Plateaux wani nu region li. Aɣu ɛwliali ɣɛ l
 
 (Français : Wawa est une préfecture du Togo, dans la région des Plateaux. Son chef-lieu est Badou. C'est une région de montagnes et de forêts, où vivent surtout les Akposso. On y cultive le café, le cacao, le fonio et le riz.)
 
-### Ʋdzalɩ — texte d'Alexi du 25/11/2026 (à publier)
+### Ʋdja — texte d'Alexi du 25/11/2026 (à publier)
 
 nʋ awʋfʋɛ akpɔssɔ lɩ mʋa, ʋdja akɔ né tsɩ ka dʋ, tʋ nʋ alɩdɩ ha alɩdɩ.
 ɛɣɩ nɛ ɣɩ nʋ aɣʋɖja.
-akɔ naɣɛ adja nu alɩ ɛdɩ nɛdɩ.
+akɔ naɣɛ adja nʋ alɩ ɛdɩ nɛdɩ.
 wakɔ néɣɩ ʋvalɩ, ʋmolɩ ,ɩssɩ nʋ ʋssɩlɩ aɣʋ ɛkʋ wanɩ.
 
 (Français : Chez nous en Akposso, le marché tourne de village en village : chaque jour a son marché. On y vend le fonio, le riz, l'igname et les produits des champs.)
 
 Tableaux : jours (Ɩmle… Ɛzawlayɩ) et marchés du Togo (Agbo, Zogbégan, Doumé, Badou, Kougnohou, Agbo N'Kougna) et du Ghana (Akpɔssɔ Kabo, Akpɔssɔ Kubi, Ɔclabɛ).
+
+Mots validés par Alexi (25/11/2026) : marché = ʋdja · dans le marché = ʋɖjalɩ · son marché = aɣʋɖja.
