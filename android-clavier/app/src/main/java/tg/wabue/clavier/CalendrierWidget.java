@@ -17,7 +17,7 @@ public class CalendrierWidget extends AppWidgetProvider {
     static final String[] JOURS_IK = {"", "Ɛzawlayɩ", "Ɩmle", "Ɛkpɛ", "Ɛwlɛ", "Ɛɣla", "Ɛva", "Ewledʋyɩ"};
     static final String[] JOURS_FR = {"", "dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"};
     /** Marchés des Akposso du Ghana (donnés par Alexi le 23 nov. 2026), affichés sur les téléphones en anglais. */
-    static final String[] MARCHES_GH = {"", "", "", "Akpɔssɔ Cabo", "Akpɔssɔ Kubi", "", "Ɔclabɛ · Akpɔssɔ Cabo", ""};
+    static final String[] MARCHES_GH = {"", "", "", "Akpɔssɔ Kabo", "Akpɔssɔ Kubi", "", "Ɔclabɛ · Akpɔssɔ Kabo", ""};
     static final String[] MARCHES = {"", "", "Agbo", "Zogbégan", "Doumé", "Badou", "Kougnohou", "Agbo N'Kougna"};
     static final String[] MOIS_IK = {"Ɔlatʋ", "Ɔfʋtsɩ", "Zata", "Ɛvlɩlʋɩa", "Ʋlawlɩvɛ", "Ɩnaglo",
             "Nekʋnekʋ", "Ɩpʋǝnǝ", "Ɩwle", "Ɩwletsɔ", "Ɔtɩɩ", "Ɛyɛbʋele"};

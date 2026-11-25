@@ -10,6 +10,6 @@
 - Dimanche : pas de marché
 
 ## Ghana (téléphones en anglais) — donné par Alexi le 23 nov. 2026
-- Mardi : Akpɔssɔ Cabo
+- Mardi : Akpɔssɔ Kabo
 - Mercredi : Akpɔssɔ Kubi
-- Vendredi : Ɔclabɛ, Akpɔssɔ Cabo
+- Vendredi : Ɔclabɛ, Akpɔssɔ Kabo
