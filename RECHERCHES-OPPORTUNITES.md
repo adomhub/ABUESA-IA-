@@ -58,3 +58,20 @@
 4. Petits livres/coloriages ikposso pour enfants (PDF payants).
 5. Traductions ikposso payantes (faire-part, annonces, chansons).
 6. Tableau admin « Caisse WABUƐ » : noter entrées et sorties.
+
+## Financements pour la Solidarité akposso — recherche du 25/11/2026 (soir)
+| Source | Ce que c'est | Pour WABUƐ |
+|---|---|---|
+| Diaspora (cagnottes type HelloAsso) | Des associations collectent en ligne pour des kits scolaires au Togo (ex. 50 € par élève, objectif chiffré) | Possible tout de suite : petite campagne avec un objectif précis |
+| Fonds canadien d'initiatives locales (FCIL) Togo | 30 000 à 45 000 $ CA par projet, ONG et associations locales ; thème 2026 : gouvernance et jeunes ; appel 2026 fermé (limite 10 mai 2026) | Surveiller l'appel 2027 ; il faut une association |
+| Union européenne, délégation au Togo | Appels « Droits de l'Homme et Société civile » 2026 : enfants de rue et orphelins, mais dans le Grand Lomé | Pas pour Wawa cette fois ; à surveiller |
+| Fondation Roi Baudouin (Fonds Yaguine et Fodé) | A soutenu en 2025 un projet communautaire pour orphelins au Togo (10 000 €) | Piste sérieuse quand l'association existera |
+| Yas Togo / Fondation Axian | RSE : a construit un bâtiment dans un lycée de la Kara (avril 2026) | Lettre de partenariat pour une école du pays akposso |
+| Moov Africa | RSE active dans la région (écoles, dons) | Lettre de partenariat |
+| HelpAge International | Réseau pour les personnes âgées ; membre au Togo : UNI.SOL.D (Kpalimé) | Contacter UNI.SOL.D pour les anciens |
+| État (ministère de la Santé + « Nos Années de Vie ») | Campagne médicale gratuite pour personnes âgées (déc. 2025) | Faire venir la campagne à Badou |
+
+### Conclusion
+- Les entreprises, l'État et les fondations demandent presque tous une association déclarée → priorité : association WABUƐ.
+- En attendant : une campagne courte et concrète avec la diaspora, avec un objectif chiffré et un bilan publié.
+- Idée de saison : « Noël des anciens et des enfants akposso » (décembre).
