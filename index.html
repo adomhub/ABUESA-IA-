@@ -133,6 +133,7 @@
     white-space:nowrap;
   }
   header.topbar .wordmark span{ color:var(--forest-deep); }
+  header.topbar .wordmark.wm-gold{ display:inline-block; font-family:system-ui,'Noto Sans','DejaVu Sans',Arial,sans-serif; font-weight:900; letter-spacing:1px; color:#f2c14e; background:#1f3a24; padding:4px 12px 6px; border-radius:12px; }
   header.topbar .wordmark-sub{ font-family:'Fraunces',serif; font-weight:700; font-size:calc(15px * var(--fs,1.15)); letter-spacing:2px; color:var(--forest-deep); line-height:1.2; margin-top:3px; white-space:nowrap; }
   header.topbar .subtitle{
     font-size:calc(17.5px * var(--fs,1.15));
@@ -925,11 +926,12 @@
               <path fill="url(#landGrad)" d="M36 4 C46 1 56 3 61 9 C69 6 80 12 77 21 C84 26 82 37 75 42 C80 50 75 61 67 63 C71 73 65 85 57 89 C59 99 51 113 45 117 C43 109 41 99 39 91 C31 87 27 77 31 69 C23 65 21 55 27 49 C19 45 17 35 23 29 C17 23 19 13 29 9 C31 6 34 5 36 4 Z"/>
             </g>
             <ellipse cx="34" cy="28" rx="26" ry="15" fill="#FFFFFF" opacity="0.16"/>
+            <text x="50" y="93" text-anchor="middle" font-family="system-ui,'DejaVu Sans',Arial,sans-serif" font-size="27" font-weight="900" fill="#FFFFFF" stroke="#0F3F58" stroke-width="4" paint-order="stroke" stroke-linejoin="round">W</text>
           </svg>
         </div>
         <div>
-          <div class="wordmark" data-no-i18n>WABOUÉ</div>
-          <div class="wordmark-sub" data-no-i18n>WABUƐ</div>
+          <div class="wordmark wm-gold" data-no-i18n>WABƲƐ</div>
+          <div class="wordmark-sub" data-no-i18n>WABOUÉ</div>
         </div>
       </div>
       <button type="button" class="icon-btn" id="lang-quick" data-no-i18n aria-label="Language" style="margin-left:6px;font-weight:800;font-size:calc(15px * var(--fs,1.15));border:1px solid var(--line);border-radius:999px;padding:5px 11px;">EN</button>
@@ -1788,7 +1790,7 @@ WABOUÉ! WABOUÉ! WABOUÉ hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.29 · 25 nov. 2026 (🤝 Solidarité akposso)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.30 · 25 nov. 2026 (🌍 nouveau logo WABƲƐ)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
