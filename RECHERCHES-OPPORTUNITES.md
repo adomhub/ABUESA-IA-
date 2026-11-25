@@ -40,3 +40,21 @@
 1. Ajouter une licence libre au dossier android-clavier (si Alexi est d'accord) → demande d'inclusion F-Droid.
 2. Proposer l'APK directement sur le site (bouton « Télécharger le clavier »).
 3. Plus tard : écrire à Transsion/Palm Store comme application culturelle africaine.
+
+## Ce que les gens cherchent (marché des langues africaines) — 25/11/2026
+- Diaspora : les jeunes veulent renouer avec la langue des parents et parler aux anciens (AP, sept. 2026).
+- Modèles qui marchent : abonnement (Nkenne 9,99 $/mois), cours 1-à-1 avec un locuteur natif (Nkenne LiiVE, Lingawa), concours de langue avec prix (Yoruba), livres/jeux pour enfants en langue locale.
+- Kukubela (Angola) : 35 000 inscrits, ~220 abonnés payants → la plupart des gens restent gratuits ; il faut plusieurs petites sources de revenus.
+- Aucune offre ikposso n'existe.
+
+## Encaisser avec FedaPay sans programmer
+- « Page de paiement » (FedaPay Me) : une page avec un lien unique, créée dans le tableau de bord, sans site web. Mobile Money Togo (Moov, T-Money).
+- Dès que le compte est validé : créer « Soutenir WABUƐ » et « Membre WABUƐ », puis mettre le lien sur le site.
+
+## Idées à construire dans WABUƐ
+1. Espace « 💰 Soutenir & services » : Membre WABUƐ, dons, services payants.
+2. Cours ikposso en ligne avec un locuteur (diaspora, enfants) — WABUƐ prend une petite part.
+3. Concours ikposso avec prix (quiz du mois).
+4. Petits livres/coloriages ikposso pour enfants (PDF payants).
+5. Traductions ikposso payantes (faire-part, annonces, chansons).
+6. Tableau admin « Caisse WABUƐ » : noter entrées et sorties.
