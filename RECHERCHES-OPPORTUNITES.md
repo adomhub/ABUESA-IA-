@@ -23,3 +23,20 @@
 1. Créer l'association WABUƐ (débloque LINGUA, Wikimedia, ONG).
 2. Préparer dès décembre le dossier Tony Elumelu 2027.
 3. Préparer une demande ELF Language Legacies (dictionnaire + voix + 1000 phrases).
+
+## Diffusion du clavier WABUƐ (Android) sans Google Play — recherche du 25/11/2026
+| Boutique | Coût | Compte individuel ? | Verdict |
+|---|---|---|---|
+| Google Play | 25 $ (carte) | oui | bloqué pour l'instant (paiement) |
+| Samsung Galaxy Store | gratuit | non : vendeur commercial vérifié DUNS | impossible pour l'instant |
+| Huawei AppGallery | gratuit | oui (pièce d'identité + copie carte bancaire) | possible, mais la carte bancaire peut bloquer |
+| F-Droid | gratuit | oui (code open source, licence libre, pas de Firebase/pub) | bonne piste si on met une licence libre (GPL/Apache) sur le clavier |
+| Palm Store (Tecno/Itel/Infinix) | partenariat | via Transsion | très bien placé en Afrique (près de la moitié des smartphones vendus en Afrique), contact partenaire à tenter plus tard |
+| Site WABUƐ (APK direct) | gratuit | — | déjà possible : lien de téléchargement sur le site |
+
+- Pas de dictionnaire ikposso sur Webonary (SIL/GILLBT) : WABUƐ peut devenir la référence en ligne.
+
+### Action proposée
+1. Ajouter une licence libre au dossier android-clavier (si Alexi est d'accord) → demande d'inclusion F-Droid.
+2. Proposer l'APK directement sur le site (bouton « Télécharger le clavier »).
+3. Plus tard : écrire à Transsion/Palm Store comme application culturelle africaine.
