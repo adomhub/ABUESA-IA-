@@ -66,7 +66,9 @@ Wawa lɛ prefecture nu Togo, nu Plateaux wani nu region li. Aɣu ɛwliali ɣɛ l
 
 (Français : Wawa est une préfecture du Togo, dans la région des Plateaux. Son chef-lieu est Badou. C'est une région de montagnes et de forêts, où vivent surtout les Akposso. On y cultive le café, le cacao, le fonio et le riz.)
 
-### Ʋdja — texte d'Alexi du 25/11/2026 (à publier)
+### Ʋdja — publié le 25/11/2026
+
+https://incubator.wikimedia.org/wiki/Wp/kpo/Ʋdja
 
 nʋ awʋfʋɛ akpɔssɔ lɩ mʋa, ʋdja akɔ né tsɩ ka dʋ, tʋ nʋ alɩdɩ ha alɩdɩ.
 ɛɣɩ nɛ ɣɩ nʋ aɣʋɖja.
