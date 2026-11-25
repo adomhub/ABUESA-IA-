@@ -81,3 +81,4 @@
 - Nom proche : « WaBu » (États-Unis) : application de marche pour les plus de 50 ans, et marque déposée WABU (logiciels, WaBu Safety Technologies). Domaine et pays différents, risque faible ; ne jamais raccourcir notre nom en « WABU ».
 - Visibilité : le site (nouvelle adresse depuis le 24/11) n'apparaît pas encore dans les recherches → il faut le déclarer à Google (Search Console) avec le sitemap.
 - Places libres pour l'ikposso : Wikitongues (page kpo vide : 0 vidéo, 0 lexique), lughayangu.com (page Ikposo participative).
+- 25/11/2026 : la nouvelle adresse est validée dans Google Search Console grâce au fichier googlea42cebcca9c9ce8b.html. ⚠️ Ne jamais supprimer ce fichier du dépôt.
