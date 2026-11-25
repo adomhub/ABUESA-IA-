@@ -1,0 +1,21 @@
+name: Bibliothèque 1000 phrases
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 21 * * *'
+  push:
+    paths: ['scripts/exporter_phrases.py', '.github/workflows/phrases-1000.yml']
+permissions:
+  contents: write
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: python scripts/exporter_phrases.py
+      - run: |
+          git config user.name "wabue-bot"; git config user.email "actions@github.com"
+          git add lexique/1000-phrases.md
+          git diff --cached --quiet || (git commit -m "Bibliothèque : 1000 phrases mise à jour" && git push)

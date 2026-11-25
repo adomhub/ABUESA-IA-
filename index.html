@@ -6078,7 +6078,7 @@ async function refreshAdminMotsProposes(ask){
   const inp = 'style="width:100%;box-sizing:border-box;margin:3px 0;padding:8px;border-radius:8px;border:1px solid var(--line);font-family:inherit;"';
   box.innerHTML = out.mots.map(m=> `
     <div class="admin-item" data-mp="${m.id}" style="display:block;padding:10px;border:1px solid var(--line);border-radius:12px;margin:8px 0;">
-      <div style="font-size:.85em;opacity:.75;">${m.origine === 'conversation' ? '💬 Appris dans le chat' : '➕ Formulaire'} · ${e(String(m.created_at || '').slice(0,10))}</div>
+      <div style="font-size:.85em;opacity:.75;">${m.origine === 'conversation' ? '💬 Appris dans le chat' : m.origine === 'phrase-1000' ? '🎯 Objectif 1000 phrases' : '➕ Formulaire'} · ${e(String(m.created_at || '').slice(0,10))}</div>
       <input ${inp} data-f="ak" value="${e(m.ikposso)}" placeholder="Ikposso">
       <input ${inp} data-f="fr" value="${e(m.francais)}" placeholder="Français">
       <input ${inp} data-f="en" value="${e(m.anglais)}" placeholder="English">
