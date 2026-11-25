@@ -893,6 +893,10 @@
   .live-card{ background:var(--cream,#f7f3e8); border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin:10px 0; }
   .live-btn{ display:block; width:100%; text-align:center; text-decoration:none; border:0; border-radius:12px; padding:14px; margin-top:10px; font:inherit; font-weight:800; background:var(--forest,#2e5a2e); color:#fff; }
   .live-btn.alt{ background:transparent; color:inherit; border:1px solid var(--line); font-weight:700; }
+.sv-item{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);}
+.sv-t{font-weight:800;font-size:calc(17px * var(--fs,1.15));}
+.sv-d{margin:3px 0 8px;opacity:.85;}
+.sv-item .share-card-btn{display:inline-block;margin-top:2px;text-decoration:none;}
 </style>
 </head>
 <body>
@@ -1071,11 +1075,24 @@ WABOUÉ! WABOUÉ! WABOUÉ hoyééééé!</div>
 
       <div id="home-support">
         <div class="home-calendar-card">
-          <div class="hc-label">💚 Soutenir WABOUÉ</div>
+          <div class="hc-label">💰 Soutenir WABOUÉ & services</div>
           <div class="hc-note">WABOUÉ est gratuit et le restera. Le faire vivre a un coût réel (hébergement, IA, temps de recherche). Chaque geste compte, même petit.</div>
+
+          <div class="sv-item"><div class="sv-t">🌱 Devenir Membre WABUƐ</div><div class="sv-d">1 000 FCFA par mois (ou plus si tu peux). Tu fais vivre notre langue : nouvelles voix, nouveaux mots, clavier gratuit pour tous.</div>
+            <a class="share-card-btn" target="_blank" rel="noopener" href="https://wa.me/22899619969?text=Bonjour%20Alexi%2C%20je%20veux%20devenir%20Membre%20WABU%C6%90%20%281%20000%20FCFA%20par%20mois%29.">🌱 Je deviens Membre</a></div>
+
+          <div class="sv-item"><div class="sv-t">🎓 Cours d'ikposso en ligne</div><div class="sv-d">Avec un locuteur akposso, par appel vidéo. Pour les enfants et la diaspora. 3 000 FCFA l'heure (5 € depuis l'étranger).</div>
+            <a class="share-card-btn" target="_blank" rel="noopener" href="https://wa.me/22899619969?text=Bonjour%20Alexi%2C%20je%20veux%20r%C3%A9server%20un%20cours%20d%27ikposso%20en%20ligne.">🎓 Réserver un cours</a></div>
+
+          <div class="sv-item"><div class="sv-t">✍️ Traduction en ikposso</div><div class="sv-d">Faire-part, annonce, message, chanson : traduit et vérifié. À partir de 1 000 FCFA.</div>
+            <a class="share-card-btn" target="_blank" rel="noopener" href="https://wa.me/22899619969?text=Bonjour%20Alexi%2C%20je%20veux%20faire%20traduire%20un%20texte%20en%20ikposso.">✍️ Demander une traduction</a></div>
+
+          <div class="sv-item"><div class="sv-t">💚 Faire un don</div><div class="sv-d">Le montant que tu veux.</div></div>
           <div class="hc-day" style="margin-top:8px;">📱 <strong>Flooz / Moov :</strong> +228 99 61 99 69<br>📱 <strong>Yas :</strong> +228 91 04 03 46</div>
+          <a class="share-card-btn" id="fedapay-btn" style="display:none;text-decoration:none;" target="_blank" rel="noopener" href="#">💳 Payer en ligne (Mobile Money ou carte)</a>
           <button class="share-card-btn" id="copy-support-number">📋 Copier le numéro Flooz</button>
-          <a class="share-card-btn" style="display:inline-block;text-decoration:none;" target="_blank" rel="noopener" href="https://wa.me/22899619969?text=Bonjour%20Alexi%2C%20je%20souhaite%20soutenir%20WABOUÉ.">💬 Écrire à Alexi</a>
+          <a class="share-card-btn" style="display:inline-block;text-decoration:none;" target="_blank" rel="noopener" href="https://wa.me/22899619969?text=Bonjour%20Alexi%2C%20je%20souhaite%20soutenir%20WABOU%C3%89.">💬 Écrire à Alexi</a>
+          <div class="hc-note" style="margin-top:6px;">Après ton paiement, envoie la capture à Alexi sur WhatsApp. Merci !</div>
         </div>
       </div>
 
@@ -1750,7 +1767,7 @@ WABOUÉ! WABOUÉ! WABOUÉ hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.27 · 24 nov. 2026 (🔗 nouvelle adresse WABOU-WAB)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.28 · 25 nov. 2026 (💰 Soutenir & services)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -1812,6 +1829,7 @@ WABOUÉ! WABOUÉ! WABOUÉ hoyééééé!</div>
   (function(X){ Object.keys(X).forEach(function(k){ EN[k]=X[k]; }); })({"⬇️ Télécharger le dictionnaire de suggestions": "⬇️ Download the word-suggestion dictionary", "Le dictionnaire propose les mots ikposso au-dessus des touches pendant que tu écris. Il s'installe comme le clavier (étape 3).": "The dictionary suggests Ikposso words above the keys as you type. Install it like the keyboard (step 3)."});
   (function(X){ Object.keys(X).forEach(function(k){ EN[k]=X[k]; }); })({"🎁 Ce clavier est un cadeau de WABUƐ au peuple akposso. Si tu peux, soutiens WABUƐ avec": "🎁 This keyboard is a gift from WABUƐ to the Akposso people. If you can, support WABUƐ with", "par Flooz :": "via Flooz:", "Merci !": "Thank you!"});
   (function(X){ Object.keys(X).forEach(function(k){ EN[k]=X[k]; }); })({"📲 Le clavier ikposso sur ton téléphone": "📲 The Ikposso keyboard on your phone", "Écris l'ikposso directement dans WhatsApp, Facebook et tes SMS, sans copier-coller (Android).": "Type Ikposso directly in WhatsApp, Facebook and your SMS, no copy-paste needed (Android).", "⬇️ Télécharger le clavier ikposso": "⬇️ Download the Ikposso keyboard", "Comment l'installer ? (4 étapes)": "How to install it? (4 steps)", "Autres lettres": "Other letters"});
+  (function(X){ Object.keys(X).forEach(function(k){ EN[k]=X[k]; }); })({"💰 Soutenir WABOUÉ & services": "💰 Support WABOUÉ & services", "🌱 Devenir Membre WABUƐ": "🌱 Become a WABUƐ Member", "1 000 FCFA par mois (ou plus si tu peux). Tu fais vivre notre langue : nouvelles voix, nouveaux mots, clavier gratuit pour tous.": "1,000 FCFA a month (or more if you can). You keep our language alive: new voices, new words, a free keyboard for everyone.", "🌱 Je deviens Membre": "🌱 I become a Member", "🎓 Cours d'ikposso en ligne": "🎓 Online Ikposso lessons", "Avec un locuteur akposso, par appel vidéo. Pour les enfants et la diaspora. 3 000 FCFA l'heure (5 € depuis l'étranger).": "With an Akposso speaker, by video call. For children and the diaspora. 3,000 FCFA per hour (€5 from abroad).", "🎓 Réserver un cours": "🎓 Book a lesson", "✍️ Traduction en ikposso": "✍️ Translation into Ikposso", "Faire-part, annonce, message, chanson : traduit et vérifié. À partir de 1 000 FCFA.": "Announcement, notice, message, song: translated and checked. From 1,000 FCFA.", "✍️ Demander une traduction": "✍️ Ask for a translation", "💚 Faire un don": "💚 Make a donation", "Le montant que tu veux.": "Any amount you like.", "💳 Payer en ligne (Mobile Money ou carte)": "💳 Pay online (Mobile Money or card)", "Après ton paiement, envoie la capture à Alexi sur WhatsApp. Merci !": "After paying, send the screenshot to Alexi on WhatsApp. Thank you!"}); /* v5.28 */
   (function(X){ Object.keys(X).forEach(function(k){ EN[k]=X[k]; }); })({"🔄 Traducteur vérifié (mots et phrases)": "🔄 Verified translator (words and sentences)", "💬 Dialogues de la vie courante": "💬 Everyday dialogues", "📜 Proverbes et contes": "📜 Proverbs and tales", "📜 Tous les proverbes et contes": "📜 All proverbs and tales", "🎙️ Voix akposso": "🎙️ Akposso voices", "Sa voix, notre trésor": "Their voice, our treasure", "Garde la langue vivante. Qui va parler ? Chaque voix est enregistrée avec l’accord de la personne et vérifiée par Alexi avant d’être publiée.": "Keep the language alive. Who will speak? Each voice is recorded with the person’s consent and checked by Alexi before it is published.", "🗣️ Je dis un mot ou une phrase": "🗣️ I say a word or a sentence", "👴🏾 J’enregistre un ancien (proverbe, conte, souvenir, chant)": "👴🏾 I record an elder (proverb, tale, memory, song)", "🔊 Déjà enregistrés": "🔊 Already recorded", "🎙️ Enregistrer en ikposso": "🎙️ Record in Ikposso", "Envoyer l’enregistrement 🌱": "Send the recording 🌱", "Ce que tu vas dire": "What you are going to say", "Ce que ça veut dire": "What it means", "Prénom": "First name", "Ex : Tomégbé": "E.g. Tomégbé", "💬 Groupe WhatsApp WABOUÉ": "💬 WABOUÉ WhatsApp group", "⌨️ Clavier ikposso": "⌨️ Ikposso keyboard", "Lettres de l’ikposso": "Ikposso letters", "C'est aujourd'hui !": "It's today!", "Demain !": "Tomorrow!", "Fête des moissons du fonio · en décembre (date officielle à confirmer)": "Fonio harvest festival · in December (official date to be confirmed)", "Vers le": "Around", "45e édition · Fête de l’unité des peuples Akposso et Akébou": "45th edition · Festival of unity of the Akposso and Akébou peoples", "Flooz / Moov :": "Flooz / Moov:", "Yas :": "Yas:", "🛠️ Atelier WABOUÉ": "🛠️ WABOUÉ Workshop", "Nourriture": "Food", "Akoumé (pâte de maïs)": "Akoumé (maize dough)", "Banane plantain": "Plantain", "Cousine": "Cousin (female)", "Cousine (autre forme)": "Cousin (female, other form)", "utì ou utikpæ": "utì or utikpæ", "ēfoi ou ēfua": "ēfoi or ēfua", "Ɛyɛbuele (mois de OVAZU, l'abondance)": "Ɛyɛbuele (month of OVAZU, abundance)", "🗺️ Région des Plateaux": "🗺️ Plateaux region", "Région des Plateaux": "Plateaux region", "📚 Ressources": "📚 Resources", "🎙️ Entretien": "🎙️ Interview", "📚 Ressources & recherche": "📚 Resources & research", "Sources linguistiques": "Language sources", "Journal of West African Languages — « Temps, aspect, mode en ikposso » ↗": "Journal of West African Languages — « Tense, aspect, mood in Ikposso » ↗", "Webonary — dictionnaires en ligne ↗": "Webonary — online dictionaries ↗", "Fiche du peuple Akposso au Ghana.": "Profile of the Akposso people in Ghana.", "Cartographie libre du territoire.": "Free map of the territory.", "Base ouverte de noms de lieux.": "Open database of place names.", "Fiches d'artistes africains.": "Profiles of African artists.", "Langues « Ghana–Togo Mountain » ↗": "« Ghana–Togo Mountain » languages ↗", "Langues « Central Togo » (Dakubu & Ford) ↗": "« Central Togo » languages (Dakubu & Ford) ↗", "Organisation sociale": "Social organisation", "Rites de passage": "Rites of passage", "Titres :": "Songs:", "📤 Inviter": "📤 Invite", "✕ Quitter": "✕ Leave", "📤 Inviter (WhatsApp)": "📤 Invite (WhatsApp)", "↗ Navigateur": "↗ Browser", "▶ Regarder en direct": "▶ Watch live", "📤 Inviter par WhatsApp": "📤 Invite via WhatsApp", "🏠 Maison de création · 📱 🖼️": "🏠 Creation house · 📱 🖼️", "🏠 Maison de création": "🏠 Creation house", "📷 Créer une vraie image": "📷 Create a real image", "✏️ Modifier": "✏️ Edit", "🚩 Signaler": "🚩 Report", "📱 Application": "📱 App", "Linguistique :": "Linguistics:", "Ethnologue (kpo), Glottolog (ikpo1238), Wikipédia (Kposo language).": "Ethnologue (kpo), Glottolog (ikpo1238), Wikipedia (Kposo language).", "Code ISO 639-3 :": "ISO 639-3 code:", "· Code Glottolog :": "· Glottolog code:", "Globe terrestre avec l'Afrique": "Globe showing Africa", "Appel vidéo et soirée Live": "Video call and Live evening", "🔎 Chercher une plante ou un mal…": "🔎 Search for a plant or an ailment…", "Salon vidéo": "Video room", "Aperçu de l'application": "App preview", "Fermer": "Close", "Ex : Zambé": "E.g. Zambé", "📹 Soirée Live": "📹 Live evening", "Fiche langue : ikpɔsɔ (ikposso)": "Language profile: ikpɔsɔ (ikposso)"}); /* v4.84 : textes restés en français */
   (function(X){ Object.keys(X).forEach(function(k){ EN[k]=X[k]; }); })({"Son sens en anglais (facultatif)": "Its meaning in English", "Sens en anglais / English meaning": "Meaning in English", "Écris le mot ikposso et son sens (en français ou en anglais).": "Write the Ikposso word and its meaning (in English or French).", "Tu connais un mot ikposso qui manque ? Écris-le ici, avec son sens en français ou en anglais. Alexi le vérifie, puis il entre dans le dictionnaire et le traducteur.": "Do you know an Ikposso word that is missing? Write it here, with its meaning in English or French. Alexi checks it, then it enters the dictionary and the translator.", "Mot envoyé ✓ Alexi le vérifiera avant de l'ajouter au dictionnaire.": "Word sent ✓ Alexi will check it before adding it to the dictionary."});
   (function(X){ Object.keys(X).forEach(function(k){ EN[k]=X[k]; }); })({"🇫🇷 Le mot en français": "🇫🇷 The word in French (optional)", "🗣️ Le mot en ikposso": "🗣️ The word in Ikposso", "🇬🇧 Le mot en anglais (facultatif)": "🇬🇧 The word in English", "Ex : spoon": "E.g. spoon", "Écris le mot en ikposso et son sens en français ou en anglais. Ton mot arrive dans la liste d'Alexi, et WhatsApp s'ouvre pour le lui envoyer : il le vérifie avant de l'ajouter. Tu peux aussi lui envoyer ta voix pour qu'on entende la prononciation.": "Write the word in Ikposso and its meaning in English or French. Your word goes into Alexi's list, and WhatsApp opens to send it to him: he checks it before adding it. You can also send him your voice so we can hear the pronunciation.", "Écris le mot en ikposso ET son sens (en français ou en anglais).": "Write the word in Ikposso AND its meaning (in English or French).", "Merci ! Ton mot est gardé pour Alexi. WhatsApp s'ouvre : appuie sur envoyer.": "Thank you! Your word is kept for Alexi. WhatsApp opens: press send."});
@@ -10215,6 +10233,111 @@ window.abuesaEnOf = function(fr){ var k = String(fr||'').toLowerCase().trim(), g
     try{ if(typeof fetchCloudContes === 'function') jobs.push(fetchCloudContes()); }catch(_){}
     if(jobs.length) Promise.all(jobs).then(function(){ if(ov && ov.style.display !== 'none'){ var cur = ov.querySelector('[data-tab="contes"]'); var onContes = cur && cur.style.background.indexOf('forest') !== -1 || (cur && cur.style.color === 'rgb(255, 255, 255)'); open(onContes ? 'contes' : 'proverbes'); try{ if(window.ABUESA_I18N) ABUESA_I18N.applyUT(ov); }catch(_){} } }).catch(function(){});
   };
+})();
+</script>
+<script>
+/* ===== 💰 SOUTENIR & CAISSE WABUƐ (v5.28) =====
+   FEDAPAY_PAGE : coller ici le lien de la page de paiement FedaPay quand le compte sera validé.
+   Caisse : chaque entrée est chiffrée sur le téléphone avec le « code caisse » d'Alexi
+   (AES-GCM). Dans Supabase on ne voit que du texte illisible. Ajout seulement. */
+var FEDAPAY_PAGE = '';
+(function(){ var b=document.getElementById('fedapay-btn'); if(b && FEDAPAY_PAGE){ b.href=FEDAPAY_PAGE; b.style.display='inline-block'; } })();
+
+(function(){
+  var CODE=null, ENTREES=[];
+  function b64e(u8){ var s=''; u8.forEach(function(c){ s+=String.fromCharCode(c); }); return btoa(s); }
+  function b64d(t){ var s=atob(t), u=new Uint8Array(s.length); for(var i=0;i<s.length;i++) u[i]=s.charCodeAt(i); return u; }
+  async function cle(code, sel){
+    var base=await crypto.subtle.importKey('raw',new TextEncoder().encode(code),'PBKDF2',false,['deriveKey']);
+    return crypto.subtle.deriveKey({name:'PBKDF2',salt:sel,iterations:150000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+  }
+  async function chiffrer(obj){
+    var sel=crypto.getRandomValues(new Uint8Array(16)), iv=crypto.getRandomValues(new Uint8Array(12));
+    var k=await cle(CODE,sel);
+    var c=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k,new TextEncoder().encode(JSON.stringify(obj))));
+    return JSON.stringify({s:b64e(sel),i:b64e(iv),c:b64e(c)});
+  }
+  async function dechiffrer(blob){
+    try{ var B=JSON.parse(blob); var k=await cle(CODE,b64d(B.s));
+      var pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(B.i)},k,b64d(B.c));
+      return JSON.parse(new TextDecoder().decode(pt)); }catch(e){ return null; }
+  }
+  function fcfa(n){ return (Math.round(n)).toLocaleString('fr-FR')+' FCFA'; }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  function bloc(){
+    var d=document.createElement('div'); d.id='caisse-admin';
+    d.innerHTML='<h4 style="margin-top:22px;">💰 Caisse WABUƐ</h4>'
+      +'<div id="caisse-verrou"><p style="margin:4px 0;">Tape ton <strong>code caisse</strong>. La première fois, choisis-en un et garde-le bien : sans lui, personne (même pas moi) ne peut relire la caisse.</p>'
+      +'<div class="admin-row"><input type="password" id="caisse-code" placeholder="Code caisse" autocomplete="off"><button id="caisse-ouvrir" type="button">🔓</button></div></div>'
+      +'<div id="caisse-corps" style="display:none;">'
+      +'<div id="caisse-totaux" style="margin:8px 0;font-weight:700;"></div>'
+      +'<div class="admin-row"><select id="caisse-type" style="max-width:130px;"><option value="in">➕ Entrée</option><option value="out">➖ Sortie</option></select>'
+      +'<input type="number" id="caisse-montant" placeholder="Montant (FCFA)" min="1" style="max-width:150px;"></div>'
+      +'<div class="admin-row"><select id="caisse-cat">'
+      +'<option>Don</option><option>Membre WABUƐ</option><option>Cours ikposso</option><option>Traduction</option><option>Subvention</option><option>Hébergement / IA</option><option>Internet / crédit</option><option>Matériel</option><option>Autre</option></select>'
+      +'<input type="date" id="caisse-date" style="max-width:150px;"></div>'
+      +'<div class="admin-row"><input type="text" id="caisse-note" placeholder="Note (ex : prénom, moyen de paiement)" maxlength="140"><button id="caisse-ajouter" type="button">+</button></div>'
+      +'<div id="caisse-statut" class="status-line"></div>'
+      +'<div id="caisse-liste" class="admin-list" style="max-height:320px;overflow:auto;"></div>'
+      +'<p style="font-size:.85em;opacity:.75;">Une erreur ? Ajoute une ligne inverse (ex : une sortie « Correction »). Rien n\'est jamais effacé.</p></div>';
+    return d;
+  }
+
+  function afficher(){
+    var ent=0, sor=0, mois=new Date().toISOString().slice(0,7), entM=0, sorM=0;
+    ENTREES.forEach(function(e){ var m=+e.m||0; if(e.t==='out'){ sor+=m; if((e.d||'').slice(0,7)===mois) sorM+=m; } else { ent+=m; if((e.d||'').slice(0,7)===mois) entM+=m; } });
+    document.getElementById('caisse-totaux').innerHTML='💵 En caisse : '+fcfa(ent-sor)
+      +'<br><span style="font-weight:400;">Ce mois-ci : +'+fcfa(entM)+' / −'+fcfa(sorM)+' · Depuis le début : +'+fcfa(ent)+' / −'+fcfa(sor)+'</span>';
+    var L=ENTREES.slice().sort(function(a,b){ return (b.d||'').localeCompare(a.d||''); });
+    document.getElementById('caisse-liste').innerHTML = L.length ? L.map(function(e){
+      return '<div class="admin-list-item" style="display:flex;justify-content:space-between;gap:8px;"><span>'+esc(e.d)+' · '+esc(e.c)+(e.n?' · '+esc(e.n):'')+'</span><strong style="color:'+(e.t==='out'?'#b3261e':'#1b7a3a')+';white-space:nowrap;">'+(e.t==='out'?'−':'+')+fcfa(e.m)+'</strong></div>';
+    }).join('') : '<p>Aucune entrée pour l\'instant.</p>';
+  }
+
+  async function charger(){
+    if(!supabaseClient){ ENTREES=[]; return 0; }
+    var r=await supabaseClient.from('caisse_entrees').select('blob,created_at').order('id',{ascending:true}).limit(5000);
+    if(r.error) throw r.error;
+    var ok=[]; for(var i=0;i<(r.data||[]).length;i++){ var o=await dechiffrer(r.data[i].blob); if(o && o.v===1) ok.push(o); }
+    ENTREES=ok; return (r.data||[]).length;
+  }
+
+  function brancher(){
+    var o=document.getElementById('caisse-ouvrir'); if(!o) return;
+    document.getElementById('caisse-date').value=new Date().toISOString().slice(0,10);
+    o.addEventListener('click', async function(){
+      var c=document.getElementById('caisse-code').value; if(!c || c.length<4){ showToast('Code caisse : au moins 4 caractères'); return; }
+      CODE=c; o.disabled=true;
+      try{ var total=await charger(); }catch(e){ o.disabled=false; showToast('Erreur : '+(e.message||e)); return; }
+      o.disabled=false;
+      if(total>0 && ENTREES.length===0){ CODE=null; showToast('Code caisse incorrect'); return; }
+      document.getElementById('caisse-verrou').style.display='none';
+      document.getElementById('caisse-corps').style.display='block';
+      if(total===0) document.getElementById('caisse-statut').textContent='Caisse nouvelle : ce code devient ton code caisse. Note-le bien.';
+      afficher();
+    });
+    document.getElementById('caisse-ajouter').addEventListener('click', async function(){
+      var m=parseInt(document.getElementById('caisse-montant').value,10);
+      if(!m || m<=0){ showToast('Écris le montant'); return; }
+      var e={v:1,t:document.getElementById('caisse-type').value,m:m,c:document.getElementById('caisse-cat').value,
+        d:document.getElementById('caisse-date').value||new Date().toISOString().slice(0,10),n:document.getElementById('caisse-note').value.trim().slice(0,140)};
+      var b=this; b.disabled=true;
+      try{ var blob=await chiffrer(e); var r=await supabaseClient.from('caisse_entrees').insert({blob:blob}); if(r.error) throw r.error; }
+      catch(err){ b.disabled=false; showToast('Erreur : '+(err.message||err)); return; }
+      b.disabled=false; ENTREES.push(e);
+      document.getElementById('caisse-montant').value=''; document.getElementById('caisse-note').value='';
+      document.getElementById('caisse-statut').textContent='Enregistré ✓ (chiffré)';
+      afficher();
+    });
+  }
+
+  var orig = renderAdminPanel;
+  renderAdminPanel = function(){
+    orig.apply(this, arguments);
+    if(!document.getElementById('caisse-admin')){ adminSection.appendChild(bloc()); CODE=null; brancher(); }
+  };
+  if(typeof isAdminUnlocked==='function' && isAdminUnlocked() && adminSection && !document.getElementById('caisse-admin')){ adminSection.appendChild(bloc()); brancher(); }
 })();
 </script>
 </body>
