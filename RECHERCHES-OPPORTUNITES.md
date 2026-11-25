@@ -75,3 +75,9 @@
 - Les entreprises, l'État et les fondations demandent presque tous une association déclarée → priorité : association WABUƐ.
 - En attendant : une campagne courte et concrète avec la diaspora, avec un objectif chiffré et un bilan publié.
 - Idée de saison : « Noël des anciens et des enfants akposso » (décembre).
+
+## Le nom est-il unique ? Nous trouve-t-on ? — 25/11/2026
+- « WABOUÉ » : aucun autre résultat sur le web → nom unique. WABƲƐ aussi.
+- Nom proche : « WaBu » (États-Unis) : application de marche pour les plus de 50 ans, et marque déposée WABU (logiciels, WaBu Safety Technologies). Domaine et pays différents, risque faible ; ne jamais raccourcir notre nom en « WABU ».
+- Visibilité : le site (nouvelle adresse depuis le 24/11) n'apparaît pas encore dans les recherches → il faut le déclarer à Google (Search Console) avec le sitemap.
+- Places libres pour l'ikposso : Wikitongues (page kpo vide : 0 vidéo, 0 lexique), lughayangu.com (page Ikposo participative).
