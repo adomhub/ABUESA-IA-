@@ -32,3 +32,10 @@ Décisions prises par Alexi (locuteur natif), une par une, à partir des écritu
 - Exemple confirmé : samedi s'écrit **Ewledʋyɩ** (et non plus Ewleduyɩ).
 - Le nom de marque **WABUƐ** ne change pas (décision d'Alexi, 24 nov. 2026).
 - Les 4 premiers articles Wikipédia (Ikposso, Badou, Ovazu, Wawa) restent tels quels ; les prochaines publications suivent la nouvelle orthographe (décision d'Alexi, 24 nov. 2026).
+
+## La marque : WABƲƐ et WABUƐ (décision d'Alexi, 25/11/2026)
+- On garde **les deux** écritures :
+  - **WABƲƐ** (avec Ʋ) pour les Akposso qui lisent l'ikposso ;
+  - **WABUƐ** (avec U) pour la diaspora et les non-Akposso, qui n'ont pas toujours la lettre Ʋ sur leur clavier ;
+  - **WABOUÉ** reste l'écriture en français.
+- Logo : le globe avec un **W blanc en bas**, et **WABƲƐ en jaune or** sous le globe.
