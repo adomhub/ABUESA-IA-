@@ -16,3 +16,8 @@
 
 ## 4. Données
 - Le dictionnaire, les phrases et la voix ont de la valeur pour l'IA ; les subventions « création de données » paient pour en produire (licence ouverte en général).
+
+## Suivi FedaPay
+- 24 nov. 2026 : compte live créé (ref. acc_0159777633, e-mail adomalexi64@gmail.com), 2FA activée, nom WABUƐ, pays Togo, type « Travailleur indépendant » (= Particulier/Startup : Mobile Money + carte, montants 100 à 20 000 F, transactions limitées par semaine).
+- Blocage : la validation exige un NIF (numéro + document). nif.otr.tg ne s'ouvrait pas le 25 nov. au matin.
+- 25 nov. 2026 : e-mail envoyé à contact@fedapay.com pour demander si on peut valider sans NIF. Autres pistes : OTR WhatsApp +228 90 99 41 01, service des impôts.
