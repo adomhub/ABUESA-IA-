@@ -6,3 +6,5 @@
   https://github.com/common-voice/common-voice/issues/5578
   État : Backlog · Task · attribué à moz-acfort.
 - Prochaine étape : attendre la réponse de Mozilla et suivre le ticket.
+- 25/11/2026 : moz-acfort répond (« these look great »), ajoute l'étiquette SPS et demande une traduction approximative.
+- 25/11/2026, 21 h 17 : traduction française des 60 questions envoyée en commentaire sur #5578.
