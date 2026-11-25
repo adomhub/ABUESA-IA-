@@ -10,67 +10,67 @@ Thank you for your interest in adding a new language to the Common Voice Spontan
 ## Questions
 
 ### Your prompts go here
-akɔ navani nu aliɛ li , nu ɔvazu ayu iɣuiɛ?
-akɔ nésili aɣɛ muani ?
-ɣanɛ kuɣɛ fuɣɛ la nawa ku nudɛ ?
-aké yimɛ nu udjaɣui?
-akɔ navani ni tiɛ kadi kaluia nu bu na?
-awu iti là akɔ na fusu, ku n'dɛ?
-akɔ na mu nu ɔluwini numɛ?
-du utiɣɛ bua ku ɔluwini wani akɔ na du nu íɖísena.
-awu ulo la akɔ na buɛyɛ, ku aɣili numɛ?
-awu ibuélé la, évidjé wanɩ akɔ né buélé tsa?
-akɔ na du mɛ la nu sili?
-ɛɣui akɔ naha muani nu'sili?
-akɔ na kpɔ akitiwa ɖetsí muani?
-akɔ na va ni nitiɛ kamâ évidzé di ?
-ali aɣu ɔsiaɣɔ akɔ naha muani ?
-n'dɛ bua ku alɛ didi nu ka mu ikpɔssɔ ku evidzewani  ?
-awu ɔtsè ni awu ala, la akɔ nabuɛ yɛ ?
-akɔ na vani, nu ɛza wla ɣi?
-akɔ naha udja muani ?
-akɔ namu mɛ, la nɔfu li?
-n'dɛ buaku itô wani alɛ kawu didi ?
-akɔ na vli cocosɩ ni cɔfè aɣusi muani ?
-akɔ négnua mɛ ni tiɣɛ ku ɛfu kédjo fufua ?
-akɔ natɛ ɔlufi muani n'udunu ?
-akɔ naɣɛ mɛ n'idikadi ?
-akɔ na vani nidisena muana ɔlu bua ?
-alévi wani béyadu nʋ aliyɛ li muani ?
-éké kélé  ɔlɔ nuwlu muani , nu ɛsɛmukuɛ ɛyɛtu ?
-aliyɛ li étsi kadu muani nu, tu ilu buadu ɣɛli ?
-awu iwoviu la akɔ nafù, ku n'dɛ?
-akɔ na tu ɔwlɔ ni ítukpa muani?
-akɔ né kélé muani kétu ésé alu?.
-awu ɔluna la afu nu kɛsu, ku n'dɛ?
-mɛ la  ku ali wli buɛ akɔ né kélé ?
-ɛsɛ mu bɛ aɣu édi nié ké zélé, lɛ muani ?
-akɔ néké lé mɛ nu ɩlu fɩ li?.
-zɔ alɛ naɣɛ ku udunu né nu usiné lɛ .
-a wu itsu wʋ la akɔ né dji nu li?.
-akɔ né ké lé kussi ni ukɔ ku muani ?
-mɛ la ku alu wini wani aka zɔ nu kpɔssɔ ayu ɛɣɛdi sɛ ayɛtu?
-ɩgné vlɛ yɛ lɛ muani na wɛ fuɛ?
-akɔ néké lé muani nu itiɛ bua ku unukuvio  du ɔluɛ du nu ɔluɛ ɖu aɣɛtu nafa ɩli?.
-nudɛ bua ku alɛ nʋ kudu ɛlu ku alu wɩni wa nutɩ?
-akɔ na fʋ ké né kélé mɛ nu ɣa nɛfu mu aɣɩti ?
-akɔ néwé lé ɛku muani nu alî ?
-akɔ na du mɛ nu ɛɣuiaɣɛ wa ni li?
-awu ɔsɛha la ɣaha nu evidzé kɔ kaha ɛsɛmubɛ ?
-akɔ na gbɔ éɖifí muani ?
-akɔ na vani  ni di kaɖɩ, mu klo kawʋ fufua ?
-mɛ la buɛ ba nu awi nétsé?.
-tu nu badou ɣɔha lomè lɛ muani ?
-awuɛ sɛ la ɣa zɔ nu ɔluɛ bua ku afɔ su ikpɔssɔ diɣɛ?
-akɔ na  vani nʋ djuklɔ?
-nu dɛ bua ku afu ɣa na liɣɛ?
-ɣadʋ ewlessɛ ka  ɔluɛ kéɣa ɖuɣɛ muani ?
-akɔ né kélé muani ka na kɔsu ɔfu nu ɔbɛ wani ?
-akɔ nadu awu nɔ nu ɛɣui aɣɛ ?
-akɔ né wlédu muani ku dja ha ?
-afu k'évidzé wani kazɛ mɛ la lɛ nu awuɛ séwlé lɩ ?
-nu, ɣa nɛ lu mɔyɛli mua, kpɔssɔ ali ba lɛ muani nu ilʋ ílié fua li?
+akɔ navanɩ nʋ alɩɛ lɩ, nʋ ɔvazʋ ayʋ ɩɣʋɩɛ?
+akɔ nésɩlɩ aɣɛ mʋanɩ ?
+ɣanɛ kʋɣɛ fʋɣɛ la nawa kʋ nʋdɛ ?
+aké yɩmɛ nʋ ʋdjaɣʋɩ?
+akɔ navanɩ nɩ tɩɛ kaɖɩ kalʋɩa nʋ bʋ na?
+awʋ ɩtɩ la akɔ na fʋ, kʋ nʋdɛ?
+akɔ na mʋ nʋ ɔlʋwɩnɩ nʋmɛ?
+dʋ ʋtɩɣɛ bʋa kʋ ɔlʋwɩnɩ wanɩ akɔ na dʋ nʋ ɩɖɩsenǝ.
+awʋ ʋlo la akɔ na bʋɛ yɛ, kʋ aɣɩlɩ nʋmɛ?
+awʋ ɩbʋélé la, évɩdzé wanɩ akɔ né bʋélé tsa?
+akɔ na ɖʋ mɛ la nʋ sɩ lɩ?
+ɛɣʋɩ akɔ naha mʋanɩ nʋ'sɩ lɩ?
+akɔ na kpɔ akɩtɩwa ɖetsɩ mʋanɩ?
+akɔ na va nɩ nɩtɩɛ kamâ évɩdzé dɩ ?
+alɩ aɣʋ ɔsɩaɣɔ akɔ naha mʋanɩ ?
+nʋdɛ bʋa kʋ alɛ dɩdɩ nʋ ka mʋ ɩkpɔssɔ ka evɩdzewanɩ ?
+awʋ ɔtsè nɩ awʋ ala, la akɔ nabʋɛ yɛ ?
+akɔ na vanɩ, nʋ ɛza wla ɣɩ?
+akɔ naha ʋdja mʋanɩ?
+akɔ namʋ mɛ, la nɔfʋ lɩ?
+nʋdɛ bʋakʋ ɩtô wanɩ alɛ kawʋ dɩdɩ ?
+akɔ na vlɩ cocosɩ nɩ cɔfè aɣʋsɩ mʋanɩ ?
+akɔ négnʋa mɛ nɩ tɩɣɛ kʋ ɛfʋ kédjo fʋfʋa ?
+akɔ natɛ ɔlʋfɩ mʋanɩ nʋ dʋnʋ ?
+akɔ naɣɛ mɛ nɩ dɩkadɩ ?
+akɔ na vanɩ nɩdɩsena mʋana ɔlʋ bʋa ?
+alévɩ wanɩ béyadʋ nʋ alɩyɛ lɩ mʋanɩ ?
+éké kélé ɔlɔ nʋwlʋ mʋanɩ , nʋ ɛsɛmʋkʋɛ ɛyɛtʋ ?
+alɩyɛ lɩ étsɩ kadʋ mʋanɩ nʋ, tʋ ɩlʋ bʋadʋ ɣɛlɩ ?
+awʋ ɩwovɩʋ la akɔ nafʋ, kʋ nʋdɛ?
+akɔ na tʋ ɔwlɔ nɩ ɩtʋkpǝ mʋanɩ?
+akɔ né kélé mʋanɩ kétʋ ésé alʋ?
+awʋ ɔlʋna la afʋ nʋ kɛsʋ, kʋ nʋdɛ?
+mɛ la kʋ alɩ wlɩ bʋɛ akɔ né kélé ?
+ɛsɛ mʋ bɛ aɣʋ édɩ nɩé ké zélé, lɛ mʋanɩ ?
+akɔ néké lé mɛ nʋ ɩlʋ fɩ lɩ?
+zɔ alɛ naɣɛ kʋ ʋdʋnʋ né nʋ ʋsɩné lɛ.
+a wʋ ɩtsʋ wʋ la akɔ né djɩ nʋ alɩ?
+akɔ né ké lé kʋssɩ nɩ ʋkɔ kʋ mʋanɩ ?
+mɛ la kʋ alʋ wɩnɩ wanɩ aka zɔ nʋ kpɔssɔ ayʋ ɛɣɛdɩ sɛ ayɛtʋ?
+ɩgné vlɛ yɛ lɛ mʋanɩ na wɛ fʋɛ?
+akɔ néké lé mʋanɩ nʋ ɩtɩɛ bʋa kʋ ʋnʋkʋvɩo dʋ ɔlʋɛ dʋ nʋ ɔlʋɛ ɖʋ aɣɛtʋ nafa ɩlɩ?
+nʋdɛ bʋa kʋ alɛ nʋ kʋdʋ ɛlʋ kʋ alʋ wɩnɩ wa nʋtɩ?
+akɔ na fʋ ké né kélé mɛ nʋ ɣa nɛfʋʋ mʋ aɣɩtɩ ?
+akɔ néwé lé ɛkʋ mʋanɩ nʋ alɩ?
+akɔ na dʋ mɛ nʋ ɛɣʋɩ aɣɛ wa nɩ lɩ?
+awʋ ɔsɛha la ɣaha nʋ evɩdzé kɔ kaha ɛsɛmʋbɛ ?
+akɔ na gbɔ éɖɩfɩ mʋanɩ ?
+akɔ na vanɩ nɩ dɩ kaɖɩ, mʋ klo kawʋ fʋfʋa ?
+mɛ la bʋɛ ba nʋ awɩ nétsé?
+tʋ nʋ Badou ɣɔha Lomé lɛ mʋanɩ ?
+awʋɛ sɛ la ɣa zɔ nʋ ɔlʋɛ bʋa kʋ afɔ sʋ ɩkpɔssɔ dɩɣɛ?
+akɔ na vanɩ nʋ djʋklɔ?
+nʋdɛ bʋa kʋ afʋ ɣa na lɩɣɛ?
+ɣadʋ ewlessɛ ka ɔlʋɛ kéɣa ɖʋɣɛ mʋanɩ ?
+akɔ né kélé mʋanɩ ka na kɔsʋ ɔfʋ nʋ ɔbɛ wanɩ ?
+akɔ nadʋ awʋ nɔ nʋ ɛɣʋɩ aɣɛ ?
+akɔ né wlédʋ mʋanɩ kʋ dja ha ?
+afʋ k'évɩdzé wanɩ kazɛ mɛ la lɛ nʋ awʋɛ séwlé lɩ ?
+nʋ, ɣa nɛ lʋ mɔyɛlɩ mʋa, kpɔssɔ alɩ ba lɛ mʋanɩ nʋ ɩlʋ ɩ́lɩé fʋa lɩ?
 
 ### About this request
 
-This request is made on behalf of WABUƐ (https://adomhub.github.io/WABOU-WAB-/), a community project for the Ikposso language and Akposso culture, by Alexi (native speaker). The questions were written in Ikposso by a native speaker and reviewed by other speakers from our community. None of them asks for personal information.
+This request is made on behalf of WABUƐ (https://adomhub.github.io/WABOU-WAB-/), a community project for the Ikposso language and Akposso culture, by Alexi (native speaker). The questions were written in Ikposso by a native speaker and reviewed and approved by two other native speakers from our community (one man and one woman). None of them asks for personal information.
