@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr" translate="no">
+<head>
+<meta name="google" content="notranslate">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ma mairie — WABOUÉ (démonstration)</title>
+<meta name="description" content="Ma mairie : programme de la semaine, papiers à apporter et rendez-vous sur WhatsApp, en ikposso, en éwé et en français. Page de démonstration de WABOUÉ pour la mairie de Badou (Wawa 1).">
+<meta property="og:title" content="Ma mairie — WABOUÉ">
+<meta property="og:description" content="Programme de la mairie, papiers à apporter et rendez-vous sur WhatsApp, dans ta langue.">
+<meta property="og:image" content="https://adomhub.github.io/WABOU-WAB-/og-image-wabouee.jpg">
+<meta name="theme-color" content="#C7D92E">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F3E8; --paper-dim:#EFE9D8; --citron:#C7D92E; --gold:#B8860B;
+    --clay:#8A3D24; --forest:#2F5233; --forest-deep:#1E3A22; --ink:#000;
+    --line:#D8CFAF; --white:#FFF;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:'Inter',sans-serif; font-size:17.5px; line-height:1.5; }
+  h1,h2,h3{ font-family:'Fraunces',serif; margin:0; }
+  header{ background:var(--citron); padding:14px 16px 16px; position:sticky; top:0; z-index:5; box-shadow:0 2px 6px rgba(0,0,0,.08); }
+  .top-row{ display:flex; align-items:center; gap:10px; }
+  .back{ text-decoration:none; color:var(--forest-deep); font-weight:700; font-size:16px; background:rgba(255,255,255,.55); padding:6px 12px; border-radius:20px; white-space:nowrap; }
+  header h1{ font-size:26px; color:var(--forest-deep); }
+  .commune{ margin-top:10px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .commune label{ font-weight:700; color:var(--forest-deep); }
+  select, input{ font:inherit; padding:10px 12px; border:2px solid var(--line); border-radius:12px; background:var(--white); color:var(--ink); width:100%; }
+  .commune select{ width:auto; flex:1; min-width:200px; }
+  main{ max-width:640px; margin:0 auto; padding:16px 14px 40px; }
+  .demo{ background:#FFF4D6; border:2px dashed var(--gold); border-radius:14px; padding:12px 14px; margin-bottom:18px; }
+  .demo b{ color:var(--clay); }
+  section{ background:var(--white); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:16px; }
+  section h2{ font-size:22px; color:var(--forest-deep); margin-bottom:6px; }
+  .desc{ margin:0 0 12px; }
+  .tag{ display:inline-block; font-size:13px; font-weight:700; background:var(--gold); color:#fff; padding:2px 8px; border-radius:10px; vertical-align:middle; margin-left:6px; }
+  .day{ display:flex; gap:12px; padding:10px 0; border-top:1px solid var(--paper-dim); }
+  .day:first-of-type{ border-top:none; }
+  .day .d{ font-weight:700; min-width:92px; color:var(--clay); }
+  .day.today{ background:#F2F7D2; margin:0 -16px; padding:10px 16px; }
+  .free{ color:var(--forest); font-weight:600; }
+  .closed{ color:#777; }
+  details{ border:1px solid var(--line); border-radius:12px; margin-bottom:10px; background:var(--paper); }
+  summary{ cursor:pointer; padding:12px 14px; font-weight:700; list-style:none; }
+  summary::-webkit-details-marker{ display:none; }
+  summary::after{ content:"＋"; float:right; color:var(--clay); }
+  details[open] summary::after{ content:"－"; }
+  details .inner{ padding:0 14px 12px; }
+  details ul{ margin:6px 0 10px; padding-left:20px; }
+  .muted{ color:#555; font-size:15.5px; }
+  label.f{ display:block; font-weight:700; margin:12px 0 6px; }
+  .btn{ display:block; width:100%; margin-top:16px; padding:14px; border:none; border-radius:14px; background:#25D366; color:#fff; font:inherit; font-weight:700; font-size:18px; cursor:pointer; text-align:center; text-decoration:none; }
+  .btn.secondary{ background:var(--forest); }
+  .lang{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+  .lang span{ background:var(--paper-dim); border-radius:20px; padding:6px 12px; font-weight:600; }
+  footer{ text-align:center; font-size:15px; color:#444; padding:10px 16px 30px; }
+  footer a{ color:var(--forest-deep); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="top-row">
+    <a class="back" href="./">← WABUƐ</a>
+    <h1>🏛️ Ma mairie</h1>
+  </div>
+  <div class="commune">
+    <label for="commune">Ma commune :</label>
+    <select id="commune">
+      <option value="wawa1">Wawa 1 (Badou)</option>
+      <option value="" disabled>D'autres communes bientôt…</option>
+    </select>
+  </div>
+</header>
+
+<main>
+
+  <div class="demo">
+    <b>Page de démonstration.</b> Les informations ci-dessous sont des <b>exemples</b>. Les vraies informations seront fournies et validées par la mairie avant toute mise en service.
+  </div>
+
+  <!-- 1. Programme de la semaine -->
+  <section>
+    <h2>📅 Programme de la semaine <span class="tag">Exemple</span></h2>
+    <p class="desc">Quand la mairie est ouverte, et les jours où il reste de la place pour un rendez-vous.</p>
+    <div id="programme"></div>
+    <p class="muted">Mis à jour chaque semaine par la mairie.</p>
+  </section>
+
+  <!-- 2. Démarches -->
+  <section>
+    <h2>📄 Mes démarches <span class="tag">Exemple</span></h2>
+    <p class="desc">Touche une démarche pour voir les papiers à apporter. Prépare tout avant de venir, pour ne pas faire le trajet pour rien.</p>
+
+    <details>
+      <summary>👶 Déclarer une naissance</summary>
+      <div class="inner">
+        <ul>
+          <li>Certificat d'accouchement (ou de naissance) délivré par la maternité</li>
+          <li>Pièce d'identité des parents</li>
+        </ul>
+        <p class="muted">⏳ Délai légal : à confirmer par la mairie. Tarif : à confirmer par la mairie.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>📃 Copie d'acte de naissance</summary>
+      <div class="inner">
+        <ul>
+          <li>Les références de l'acte (numéro, année), ou une ancienne copie</li>
+          <li>Pièce d'identité du demandeur</li>
+        </ul>
+        <p class="muted">Tarif et délai : à confirmer par la mairie.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>✍️ Légalisation de signature ou de document</summary>
+      <div class="inner">
+        <ul>
+          <li>Le document original et ses copies</li>
+          <li>Pièce d'identité</li>
+        </ul>
+        <p class="muted">Tarif : à confirmer par la mairie.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>🏠 Certificat de résidence</summary>
+      <div class="inner">
+        <ul>
+          <li>Pièce d'identité</li>
+          <li>Liste exacte des papiers : à confirmer par la mairie</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>💍 Mariage civil</summary>
+      <div class="inner">
+        <ul>
+          <li>Liste des papiers des futurs époux et des témoins : à confirmer par la mairie</li>
+        </ul>
+        <p class="muted">Les jours de mariage sont indiqués dans le programme de la semaine.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- 3. Rendez-vous -->
+  <section>
+    <h2>🗓️ Prendre rendez-vous</h2>
+    <p class="desc">Choisis ta démarche et un jour libre. Ta demande part sur WhatsApp, et l'agent de la mairie te confirme l'heure.</p>
+
+    <label class="f" for="rdv-demarche">Ma démarche</label>
+    <select id="rdv-demarche">
+      <option>Déclarer une naissance</option>
+      <option>Copie d'acte de naissance</option>
+      <option>Légalisation</option>
+      <option>Certificat de résidence</option>
+      <option>Mariage civil</option>
+      <option>Autre question</option>
+    </select>
+
+    <label class="f" for="rdv-jour">Jour souhaité</label>
+    <select id="rdv-jour"></select>
+
+    <label class="f" for="rdv-nom">Mon nom</label>
+    <input id="rdv-nom" type="text" placeholder="Ex : Koffi Ayivi" autocomplete="name">
+
+    <label class="f" for="rdv-village">Mon village ou quartier</label>
+    <input id="rdv-village" type="text" placeholder="Ex : Gobé, Badou">
+
+    <button class="btn" id="rdv-envoyer">📲 Envoyer ma demande sur WhatsApp</button>
+    <p class="muted" style="margin-top:10px;">Pendant la démonstration, la demande arrive chez WABUƐ, pas encore à la mairie.</p>
+  </section>
+
+  <!-- 4. Langues -->
+  <section>
+    <h2>🔊 Dans ta langue</h2>
+    <p class="desc">Tu peux poser ta question par écrit ou par message vocal, dans la langue que tu préfères :</p>
+    <div class="lang"><span>Ikposso</span><span>Éwé</span><span>Français</span></div>
+    <p class="muted" style="margin-top:12px;">Bientôt : les réponses enregistrées en ikposso, à écouter directement ici.</p>
+    <a class="btn secondary" id="poser-question" href="#">💬 Poser une question sur WhatsApp</a>
+  </section>
+
+</main>
+
+<footer>
+  Service proposé par <a href="./">WABUƐ</a> · Adom K. Alexi · Badou, Wawa, Togo
+</footer>
+
+<script>
+  // Numéro WhatsApp de démonstration (celui de WABUƐ). À remplacer par le numéro officiel de la mairie.
+  var NUMERO = "22899619969";
+
+  // Programme d'exemple : à remplacer par celui que la mairie envoie chaque semaine.
+  var PROGRAMME = [
+    { jour:"Lundi",    info:"Ouvert · Copies d'actes, légalisations", places:"Rendez-vous libres" },
+    { jour:"Mardi",    info:"Ouvert · Déclarations de naissance",      places:"Rendez-vous libres" },
+    { jour:"Mercredi", info:"Ouvert · Officier d'état civil absent l'après-midi", places:"Matin seulement" },
+    { jour:"Jeudi",    info:"Ouvert · Jour de marché à Badou, beaucoup de monde", places:"Rendez-vous libres" },
+    { jour:"Vendredi", info:"Ouvert le matin",                          places:"Matin seulement" },
+    { jour:"Samedi",   info:"Mariages civils",                          places:null },
+    { jour:"Dimanche", info:"Fermé",                                    places:null }
+  ];
+
+  var jsDays = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
+  var aujourdhui = jsDays[new Date().getDay()];
+
+  var html = "";
+  PROGRAMME.forEach(function(p){
+    html += '<div class="day' + (p.jour === aujourdhui ? ' today' : '') + '">' +
+      '<div class="d">' + p.jour + (p.jour === aujourdhui ? '<br><span class="muted">aujourd\'hui</span>' : '') + '</div>' +
+      '<div>' + p.info + '<br>' +
+      (p.places ? '<span class="free">✅ ' + p.places + '</span>' : '<span class="closed">Pas de rendez-vous</span>') +
+      '</div></div>';
+  });
+  document.getElementById("programme").innerHTML = html;
+
+  var sel = document.getElementById("rdv-jour");
+  PROGRAMME.filter(function(p){ return p.places; }).forEach(function(p){
+    var o = document.createElement("option");
+    o.textContent = p.jour + " — " + p.places;
+    o.value = p.jour;
+    sel.appendChild(o);
+  });
+
+  function ouvrirWhatsApp(texte){
+    window.open("https://wa.me/" + NUMERO + "?text=" + encodeURIComponent(texte), "_blank");
+  }
+
+  document.getElementById("rdv-envoyer").addEventListener("click", function(){
+    var nom = document.getElementById("rdv-nom").value.trim();
+    var village = document.getElementById("rdv-village").value.trim();
+    if(!nom){ alert("Écris ton nom, s'il te plaît."); return; }
+    var texte = "Bonjour, je voudrais un rendez-vous à la mairie de Badou (Wawa 1).\n" +
+      "Démarche : " + document.getElementById("rdv-demarche").value + "\n" +
+      "Jour souhaité : " + sel.value + "\n" +
+      "Nom : " + nom + (village ? "\nVillage / quartier : " + village : "") +
+      "\n\n(Envoyé depuis WABUƐ · Ma mairie)";
+    ouvrirWhatsApp(texte);
+  });
+
+  document.getElementById("poser-question").addEventListener("click", function(e){
+    e.preventDefault();
+    ouvrirWhatsApp("Bonjour, j'ai une question pour la mairie de Badou (Wawa 1) :\n\n(Envoyé depuis WABUƐ · Ma mairie)");
+  });
+</script>
+</body>
+</html>
