@@ -964,14 +964,14 @@
     <div class="section-pad">
       <div class="welcome-block" style="position:static;">
         <h2>ƔANASƐ-BA-WABƲƐ</h2>
+        <div id="wb-pv-ak" data-no-i18n style="font-style:italic;font-weight:700;color:var(--clay,#8B3A1E);font-size:1.15em;margin:2px 0 8px;"></div>
         <div class="fr-translation">Bienvenue à WABOUÉ</div>
+        <div id="wb-pv-fr" style="font-weight:600;margin:2px 0 8px;"></div>
         <p>La culture du peuple akposso, dans ton téléphone : notre langue, nos mots, nos anciens, notre village.</p>
         <div style="font-size:calc(13px * var(--fs,1.15));opacity:.7;margin-top:2px;">WABOUÉ (WABƲƐ), anciennement ABUESA-IA</div>
         <button type="button" id="home-bienvenue-btn" style="margin-top:6px;padding:10px 18px;border-radius:999px;border:1px solid var(--line);background:var(--white);font:inherit;font-weight:700;cursor:pointer;" data-listen="1"><span class="li-ic">🔊</span> <span>Écouter la bienvenue</span></button>
         <div><a href="https://www.facebook.com/share/1UvgwbjN4x/" target="_blank" rel="noopener" class="fb-follow" style="display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:10px 18px;border-radius:999px;background:#1877F2;color:#fff;font-weight:700;text-decoration:none;"><span>👍</span> <span>Suivez-nous sur Facebook</span></a> <a href="https://chat.whatsapp.com/JHzoSRkxDvX62hcXfKQMwZ" target="_blank" rel="noopener" class="wa-join" style="display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:10px 18px;border-radius:999px;background:#128C4A;color:#fff;font-weight:700;text-decoration:none;"><span>💬</span> <span>Rejoindre le groupe WhatsApp</span></a> <a href="https://www.tiktok.com/@alexi.adom2" target="_blank" rel="noopener" class="tt-follow" style="display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:10px 18px;border-radius:999px;background:#000;color:#fff;font-weight:700;text-decoration:none;"><span>🎵</span> <span>Suivez-nous sur TikTok</span></a> <a href="#" role="button" class="home-propose" onclick="event.preventDefault();var o=document.getElementById('open-word');if(o)o.click();" style="display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:10px 18px;border-radius:999px;background:var(--clay);color:#fff;font-weight:700;text-decoration:none;"><span>➕</span> <span>Proposer un mot ikposso</span></a></div>
       </div>
-
-      <div id="home-proverb" style="margin-top:12px;"></div>
 
       <div id="home-gagnant" style="margin:6px 16px 14px;"></div>
 
@@ -1061,6 +1061,8 @@ WABOUÉ! WABOUÉ! WABOUÉ hoyééééé!</div>
       <div id="home-markets"></div>
 
       <div id="home-weather"></div>
+
+      <div id="home-proverb"></div>
 
 
 
@@ -1809,7 +1811,7 @@ WABOUÉ! WABOUÉ! WABOUÉ hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.34 · 26 nov. 2026 (⭐ Proverbe de la semaine sous la bienvenue + 20 proverbes · 🧳 Visiter le pays akposso)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.35 · 26 nov. 2026 (proverbe de la semaine dans la bienvenue + 20 proverbes · 🧳 Visiter le pays akposso)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -5671,6 +5673,10 @@ function renderHomeProverb(){
   }
   const star = cloudProverbs.find(x => x.vedette);
   const p = star || cloudProverbs[Math.floor(Date.now() / 86400000) % cloudProverbs.length];
+  try{
+    const a = document.getElementById('wb-pv-ak'), f = document.getElementById('wb-pv-fr');
+    if(star && a && f){ a.textContent = '« ' + star.ak + ' »'; f.textContent = star.fr; }
+  }catch(_){}
   currentProverb = p;
   el.innerHTML = `<div class="home-calendar-card">
     <div class="hc-label">${star ? '⭐ Proverbe de la semaine' : '💬 Proverbe du jour'}</div>
