@@ -7,7 +7,7 @@
 - **Ovazu 2026 (45ᵉ édition)**, recherche du 26/11 :
   - Rotation constatée : 2022 (41ᵉ) le 10 déc. ; 2023 (42ᵉ) Amlamé le 9 déc. ; 2024 (43ᵉ) Badou le 14 déc., lancement le 7 déc. à Tomégbé ; 2025 (44ᵉ) Kougnohou (Akébou). → **2026 = Amlamé**, ce qui est logique.
   - Toutes ces apothéoses tombent le 2ᵉ samedi de décembre → en 2026, l'apothéose serait le **samedi 12 décembre**. Le 5 décembre pourrait être le **lancement** (cérémonies rituelles une semaine avant, comme en 2024).
-  - Aucun communiqué officiel 2026 trouvé en ligne au 26/11 → à confirmer auprès du comité d'organisation.
+  - ✅ Confirmé par Alexi (26/11) : **samedi 5 décembre 2026 = lancement** ; apothéose attendue le **samedi 12 décembre 2026 à Amlamé** (2ᵉ samedi).
 - **Ovazu** : fête des moissons du fonio des Akposso et Akébou. 44ᵉ édition en 2025 à Kougnohou, en présence de ministres et de délégations du Ghana. Wikivoyage la situe au 2ᵉ samedi de décembre (en 2026 : samedi 12 décembre, **à confirmer par Alexi**).
 - Hébergements cités : Hôtel Abuta, Auberge la Victoire (Badou).
 - Saison sèche (octobre-avril) : la meilleure période pour visiter le Togo.
