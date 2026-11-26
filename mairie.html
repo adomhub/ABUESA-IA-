@@ -7,7 +7,7 @@
 <title>Ma mairie — WABOUÉ (démonstration)</title>
 <meta name="description" content="Ma mairie : programme de la semaine, papiers à apporter et rendez-vous sur WhatsApp, en ikposso, en éwé et en français. Page de démonstration de WABOUÉ pour la mairie de Badou (Wawa 1).">
 <meta property="og:title" content="Ma mairie — WABOUÉ">
-<meta property="og:description" content="Programme de la mairie, papiers à apporter et rendez-vous sur WhatsApp, dans ta langue.">
+<meta property="og:description" content="Programme de la mairie, services, papiers à apporter et rendez-vous sur WhatsApp, dans ta langue.">
 <meta property="og:image" content="https://adomhub.github.io/WABOU-WAB-/og-image-wabouee.jpg">
 <meta name="theme-color" content="#C7D92E">
 <link rel="icon" href="icon-192.png">
@@ -56,6 +56,10 @@
   .btn.secondary{ background:var(--forest); }
   .lang{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
   .lang span{ background:var(--paper-dim); border-radius:20px; padding:6px 12px; font-weight:600; }
+  .famille{ font-size:19px; color:var(--clay); margin:18px 0 8px; }
+  .famille:first-child{ margin-top:4px; }
+  .btn.small{ font-size:16px; padding:11px; margin-top:8px; background:var(--forest); }
+  .annonce{ background:var(--paper); border-left:4px solid var(--gold); border-radius:10px; padding:10px 12px; margin-bottom:10px; }
   footer{ text-align:center; font-size:15px; color:#444; padding:10px 16px 30px; }
   footer a{ color:var(--forest-deep); }
 </style>
@@ -92,77 +96,43 @@
 
   <!-- 2. Démarches -->
   <section>
-    <h2>📄 Mes démarches <span class="tag">Exemple</span></h2>
-    <p class="desc">Touche une démarche pour voir les papiers à apporter. Prépare tout avant de venir, pour ne pas faire le trajet pour rien.</p>
+    <h2>📄 Tous les services de la mairie <span class="tag">Exemple</span></h2>
+    <p class="desc">Touche un service pour voir les papiers à apporter. Prépare tout avant de venir, pour ne pas faire le trajet pour rien.</p>
+    <div id="services"></div>
+    <p class="muted">Les listes de papiers sont des exemples. La mairie donnera la liste exacte, les tarifs et les délais.</p>
+  </section>
 
-    <details>
-      <summary>👶 Déclarer une naissance</summary>
-      <div class="inner">
-        <ul>
-          <li>Certificat d'accouchement (ou de naissance) délivré par la maternité</li>
-          <li>Pièce d'identité des parents</li>
-        </ul>
-        <p class="muted">⏳ Délai légal : à confirmer par la mairie. Tarif : à confirmer par la mairie.</p>
-      </div>
-    </details>
+  <!-- 2 bis. Vie de la commune -->
+  <section id="vie-commune">
+    <h2>📢 Vie de la commune <span class="tag">Exemple</span></h2>
+    <div id="annonces"></div>
 
-    <details>
-      <summary>📃 Copie d'acte de naissance</summary>
-      <div class="inner">
-        <ul>
-          <li>Les références de l'acte (numéro, année), ou une ancienne copie</li>
-          <li>Pièce d'identité du demandeur</li>
-        </ul>
-        <p class="muted">Tarif et délai : à confirmer par la mairie.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>✍️ Légalisation de signature ou de document</summary>
-      <div class="inner">
-        <ul>
-          <li>Le document original et ses copies</li>
-          <li>Pièce d'identité</li>
-        </ul>
-        <p class="muted">Tarif : à confirmer par la mairie.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>🏠 Certificat de résidence</summary>
-      <div class="inner">
-        <ul>
-          <li>Pièce d'identité</li>
-          <li>Liste exacte des papiers : à confirmer par la mairie</li>
-        </ul>
-      </div>
-    </details>
-
-    <details>
-      <summary>💍 Mariage civil</summary>
-      <div class="inner">
-        <ul>
-          <li>Liste des papiers des futurs époux et des témoins : à confirmer par la mairie</li>
-        </ul>
-        <p class="muted">Les jours de mariage sont indiqués dans le programme de la semaine.</p>
-      </div>
-    </details>
+    <h3 style="font-size:19px;margin:18px 0 4px;color:var(--forest-deep);">🚧 Signaler un problème</h3>
+    <p class="desc">Une route abîmée, des déchets, une panne d'eau ou d'éclairage ? Préviens la mairie.</p>
+    <label class="f" for="pb-type">Type de problème</label>
+    <select id="pb-type">
+      <option>Route ou piste abîmée</option>
+      <option>Déchets / insalubrité</option>
+      <option>Eau (forage, borne-fontaine)</option>
+      <option>Éclairage public</option>
+      <option>Marché</option>
+      <option>Autre</option>
+    </select>
+    <label class="f" for="pb-lieu">Où ?</label>
+    <input id="pb-lieu" type="text" placeholder="Ex : près du marché de Badou">
+    <label class="f" for="pb-desc">Explique en quelques mots</label>
+    <input id="pb-desc" type="text" placeholder="Ex : le caniveau est bouché depuis une semaine">
+    <button class="btn" id="pb-envoyer">📲 Signaler sur WhatsApp</button>
+    <p class="muted" style="margin-top:10px;">Tu peux aussi joindre une photo dans WhatsApp après l'ouverture du message.</p>
   </section>
 
   <!-- 3. Rendez-vous -->
-  <section>
+  <section id="rdv">
     <h2>🗓️ Prendre rendez-vous</h2>
     <p class="desc">Choisis ta démarche et un jour libre. Ta demande part sur WhatsApp, et l'agent de la mairie te confirme l'heure.</p>
 
     <label class="f" for="rdv-demarche">Ma démarche</label>
-    <select id="rdv-demarche">
-      <option>Déclarer une naissance</option>
-      <option>Copie d'acte de naissance</option>
-      <option>Légalisation</option>
-      <option>Certificat de résidence</option>
-      <option>Mariage civil</option>
-      <option>Autre question</option>
-    </select>
+    <select id="rdv-demarche"></select>
 
     <label class="f" for="rdv-jour">Jour souhaité</label>
     <select id="rdv-jour"></select>
@@ -195,6 +165,7 @@
 <script>
   // Numéro WhatsApp de démonstration (celui de WABUƐ). À remplacer par le numéro officiel de la mairie.
   var NUMERO = "22899619969";
+  var COMMUNE = "la mairie de Badou (Wawa 1)";
 
   // Programme d'exemple : à remplacer par celui que la mairie envoie chaque semaine.
   var PROGRAMME = [
@@ -207,9 +178,50 @@
     { jour:"Dimanche", info:"Fermé",                                    places:null }
   ];
 
+  // Tous les services. Papiers = exemples à faire valider par la mairie. Ne jamais inventer de tarif.
+  var SERVICES = [
+    { famille:"👶 État civil", items:[
+      { nom:"Déclarer une naissance", papiers:["Certificat d'accouchement (ou de naissance) de la maternité","Pièce d'identité des parents"], note:"Il y a un délai légal pour déclarer : demande-le à la mairie, ne tarde pas." },
+      { nom:"Reconnaître un enfant", papiers:["Pièce d'identité du parent","Acte de naissance de l'enfant, s'il est déjà déclaré"] },
+      { nom:"Mariage civil", papiers:["Acte de naissance des futurs époux","Pièce d'identité des futurs époux","Certificat de résidence","Pièce d'identité des témoins"], note:"À la mairie ou hors mairie. Les jours de mariage sont dans le programme de la semaine." },
+      { nom:"Déclarer un décès", papiers:["Certificat de décès du centre de santé ou du médecin","Pièce d'identité du défunt","Pièce d'identité du déclarant"] },
+      { nom:"Copie d'acte (naissance, mariage, décès)", papiers:["Références de l'acte (numéro, année) ou une ancienne copie","Pièce d'identité du demandeur"], note:"Dans certaines communes pilotes, on peut déjà la demander en ligne. Pas encore à Wawa 1." }
+    ]},
+    { famille:"📜 Certificats et attestations", items:[
+      { nom:"Certificat de résidence", papiers:["Pièce d'identité","Autres papiers : à confirmer par la mairie"] },
+      { nom:"Certificat de vie", papiers:["La personne concernée doit se présenter","Pièce d'identité"] },
+      { nom:"Certificat de célibat", papiers:["Acte de naissance","Pièce d'identité"] },
+      { nom:"Certificat de non-remariage", papiers:["Acte de naissance","Pièce d'identité","Jugement de divorce ou acte de décès du conjoint"] }
+    ]},
+    { famille:"✍️ Légalisations", items:[
+      { nom:"Légalisation de signature", papiers:["Le document, pas encore signé","Pièce d'identité"], note:"Tu signes devant l'agent de la mairie." },
+      { nom:"Copie certifiée conforme", papiers:["Le document original","Les photocopies à certifier"] },
+      { nom:"Certificat d'origine (commerçants)", papiers:["Papiers de la marchandise : à confirmer par la mairie"] }
+    ]},
+    { famille:"🏗️ Construction et terrains", items:[
+      { nom:"Permis de construire", papiers:["Plan du bâtiment","Preuve de propriété du terrain","Pièce d'identité","Liste exacte : à confirmer auprès des services techniques"], note:"À demander avant de commencer les travaux." }
+    ]},
+    { famille:"💰 Taxes et marchés", items:[
+      { nom:"Droits de place au marché", papiers:["Montant et lieu de paiement : à confirmer par la mairie"] },
+      { nom:"Taxes communales", papiers:["Liste des taxes et montants : à confirmer par la mairie"], note:"Toujours demander un reçu." },
+      { nom:"Publicité et enseignes", papiers:["Demande écrite à la mairie","Détails : à confirmer par la mairie"] }
+    ]},
+    { famille:"⚱️ Décès et cimetière", items:[
+      { nom:"Inhumation et emplacement au cimetière", papiers:["Certificat de décès","Autres papiers : à confirmer par la mairie"] }
+    ]}
+  ];
+
+  // Annonces d'exemple : à remplacer par les vraies annonces de la mairie.
+  var ANNONCES = [
+    { titre:"Conseil municipal", texte:"Date de la prochaine session : à venir." },
+    { titre:"Campagne de déclaration des naissances", texte:"Exemple d'annonce : la mairie rappelle aux parents de déclarer les naissances à temps." }
+  ];
+
+  function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+  // Programme
   var jsDays = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
   var aujourdhui = jsDays[new Date().getDay()];
-
   var html = "";
   PROGRAMME.forEach(function(p){
     html += '<div class="day' + (p.jour === aujourdhui ? ' today' : '') + '">' +
@@ -220,6 +232,37 @@
   });
   document.getElementById("programme").innerHTML = html;
 
+  // Services + liste du formulaire de rendez-vous
+  var sh = "", opts = "";
+  SERVICES.forEach(function(f){
+    sh += '<h3 class="famille">' + f.famille + '</h3>';
+    opts += '<optgroup label="' + esc(f.famille) + '">';
+    f.items.forEach(function(s){
+      sh += '<details><summary>' + esc(s.nom) + '</summary><div class="inner"><b>Papiers à apporter :</b><ul>' +
+        s.papiers.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' +
+        (s.note ? '<p>💡 ' + esc(s.note) + '</p>' : '') +
+        '<p class="muted">Tarif : à confirmer par la mairie · Délai : à confirmer par la mairie</p>' +
+        '<button class="btn small" data-rdv="' + esc(s.nom) + '">🗓️ Prendre rendez-vous pour ce service</button>' +
+        '</div></details>';
+      opts += '<option>' + esc(s.nom) + '</option>';
+    });
+    opts += '</optgroup>';
+  });
+  document.getElementById("services").innerHTML = sh;
+  document.getElementById("rdv-demarche").innerHTML = opts + '<option>Autre question</option>';
+
+  document.getElementById("services").addEventListener("click", function(e){
+    var b = e.target.closest("[data-rdv]"); if(!b) return;
+    document.getElementById("rdv-demarche").value = b.dataset.rdv;
+    document.getElementById("rdv").scrollIntoView({ behavior:"smooth" });
+  });
+
+  // Annonces
+  document.getElementById("annonces").innerHTML = ANNONCES.map(function(a){
+    return '<div class="annonce"><b>' + esc(a.titre) + '</b><br>' + esc(a.texte) + '</div>';
+  }).join('');
+
+  // Jours libres
   var sel = document.getElementById("rdv-jour");
   PROGRAMME.filter(function(p){ return p.places; }).forEach(function(p){
     var o = document.createElement("option");
@@ -229,24 +272,31 @@
   });
 
   function ouvrirWhatsApp(texte){
-    window.open("https://wa.me/" + NUMERO + "?text=" + encodeURIComponent(texte), "_blank");
+    window.open("https://wa.me/" + NUMERO + "?text=" + encodeURIComponent(texte + "\n\n(Envoyé depuis WABUƐ · Ma mairie)"), "_blank");
   }
 
   document.getElementById("rdv-envoyer").addEventListener("click", function(){
     var nom = document.getElementById("rdv-nom").value.trim();
     var village = document.getElementById("rdv-village").value.trim();
     if(!nom){ alert("Écris ton nom, s'il te plaît."); return; }
-    var texte = "Bonjour, je voudrais un rendez-vous à la mairie de Badou (Wawa 1).\n" +
+    ouvrirWhatsApp("Bonjour, je voudrais un rendez-vous à " + COMMUNE + ".\n" +
       "Démarche : " + document.getElementById("rdv-demarche").value + "\n" +
       "Jour souhaité : " + sel.value + "\n" +
-      "Nom : " + nom + (village ? "\nVillage / quartier : " + village : "") +
-      "\n\n(Envoyé depuis WABUƐ · Ma mairie)";
-    ouvrirWhatsApp(texte);
+      "Nom : " + nom + (village ? "\nVillage / quartier : " + village : ""));
+  });
+
+  document.getElementById("pb-envoyer").addEventListener("click", function(){
+    var lieu = document.getElementById("pb-lieu").value.trim();
+    var desc = document.getElementById("pb-desc").value.trim();
+    if(!lieu){ alert("Indique où se trouve le problème, s'il te plaît."); return; }
+    ouvrirWhatsApp("Bonjour, je signale un problème à " + COMMUNE + ".\n" +
+      "Type : " + document.getElementById("pb-type").value + "\n" +
+      "Lieu : " + lieu + (desc ? "\nDétails : " + desc : ""));
   });
 
   document.getElementById("poser-question").addEventListener("click", function(e){
     e.preventDefault();
-    ouvrirWhatsApp("Bonjour, j'ai une question pour la mairie de Badou (Wawa 1) :\n\n(Envoyé depuis WABUƐ · Ma mairie)");
+    ouvrirWhatsApp("Bonjour, j'ai une question pour " + COMMUNE + " :");
   });
 </script>
 </body>
