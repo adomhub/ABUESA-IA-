@@ -49,3 +49,4 @@ Sources : Wikivoyage Badou, Petit Futé, Trip.com, AllAfrica (14 sept. 2026, 1er
 
 ## Suivi des contacts
 - 27 nov. 2026, 8 h 40 : e-mail envoyé à la Chocolaterie J.C. Berton (contact@chocolaterieberton.com), offre 10 000 FCFA/mois (≈ 15 €), avec clavier ikposso et stickers. En attente de réponse.
+- 27 nov. 2026, 8 h 48 : e-mail envoyé à À la Reine Astrid (savigny@alareineastrid.fr), offre 10 000 FCFA/mois. En attente de réponse.
