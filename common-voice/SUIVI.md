@@ -16,3 +16,4 @@
 - À faire : vérifier quand la page ikposso apparaît sur le site Spontaneous Speech, puis inviter la communauté à enregistrer.
 - 27 nov. 2026 (≈ 14 h 20) : moz-acfort annonce que l'ikposso est EN LIGNE sur Spontaneous Speech :
   https://commonvoice.mozilla.org/spontaneous-speech/beta/prompts — choisir « Ikposso » dans le menu. Connexion obligatoire pour contribuer.
+- 27 nov. 2026, 16 h 08 : Alexi (profil alexi_wabue) envoie les 2 PREMIERS enregistrements en ikposso sur Spontaneous Speech.
