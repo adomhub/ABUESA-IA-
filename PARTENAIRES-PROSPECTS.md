@@ -36,3 +36,13 @@ Tarifs et offre : à décider par Alexi (proposition ci-dessous).
 - Les 3 premiers partenaires de Badou : 1 mois offert pour remplir l'espace.
 
 Sources : Wikivoyage Badou, Petit Futé, Trip.com, AllAfrica (14 sept. 2026, 1er juin 2026, 13 mai 2026), AFD (projet Wawa 1), IIED, HelloAsso.
+
+## Coordonnées trouvées (27 nov. 2026)
+| Partenaire | Coordonnées publiques | Source |
+|---|---|---|
+| Chocolaterie J.C. Berton (Jean-Claude Berton) | contact@chocolaterieberton.com · 18 rue des Varennes, 86530 Availles-en-Châtellerault, France · facebook.com/lachocolaterieberton | Nouvelle-Aquitaine Tourisme, Tourisme Vienne |
+| À la Reine Astrid (Christophe Bertrand) | savigny@alareineastrid.fr · +33 6 07 52 18 65 · reineastrid.com | Catalogue export artisanat.fr |
+| CCFCC (secrétaire général : Enselme Gouthon) | pas d'e-mail public trouvé : passer par leur page Facebook/LinkedIn ou le bureau à Lomé | AllAfrica |
+| Choco Togo (Komi Agbokou, Lomé) | pas de contact public trouvé : passer par leur page Facebook ou leurs points de vente | Wikipédia, Africanews |
+| ADESCA (Saint-Ouen) | formulaire de contact sur helloasso.com/associations/adesca | HelloAsso |
+| Hôtel Abuta, Auberge la Victoire, El Pacha (Badou) | aucun contact en ligne : à voir sur place ou par le groupe WhatsApp | Wikivoyage, Trip.com |
