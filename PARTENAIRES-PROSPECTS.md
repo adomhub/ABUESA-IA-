@@ -46,3 +46,6 @@ Sources : Wikivoyage Badou, Petit Futé, Trip.com, AllAfrica (14 sept. 2026, 1er
 | Choco Togo (Komi Agbokou, Lomé) | pas de contact public trouvé : passer par leur page Facebook ou leurs points de vente | Wikipédia, Africanews |
 | ADESCA (Saint-Ouen) | formulaire de contact sur helloasso.com/associations/adesca | HelloAsso |
 | Hôtel Abuta, Auberge la Victoire, El Pacha (Badou) | aucun contact en ligne : à voir sur place ou par le groupe WhatsApp | Wikivoyage, Trip.com |
+
+## Suivi des contacts
+- 27 nov. 2026, 8 h 40 : e-mail envoyé à la Chocolaterie J.C. Berton (contact@chocolaterieberton.com), offre 10 000 FCFA/mois (≈ 15 €), avec clavier ikposso et stickers. En attente de réponse.
