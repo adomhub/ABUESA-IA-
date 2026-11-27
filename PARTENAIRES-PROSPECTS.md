@@ -30,9 +30,9 @@ Tarifs et offre : à décider par Alexi (proposition ci-dessous).
 | Radio communautaire de Wawa 1 (en projet) | Même public, même langue : échange de visibilité | via la mairie de Wawa 1 |
 | AASECAA (artistes akposso-akébou, président Zambé) | Artistes à mettre en avant | à chercher |
 
-## Offre proposée (à valider par Alexi)
+## Offre validée par Alexi (27 nov. 2026)
 - Annonce partenaire sur l'accueil de WABƲƐ (logo, texte, bouton WhatsApp/appel) + 1 publication Facebook/TikTok/YouTube par mois.
-- Prix indicatif à décider : par exemple 5 000 FCFA/mois pour un commerce local, sur devis pour les entreprises et chocolatiers.
+- Prix : 5 000 FCFA/mois pour un commerce local, sur devis pour les entreprises et chocolatiers.
 - Les 3 premiers partenaires de Badou : 1 mois offert pour remplir l'espace.
 
 Sources : Wikivoyage Badou, Petit Futé, Trip.com, AllAfrica (14 sept. 2026, 1er juin 2026, 13 mai 2026), AFD (projet Wawa 1), IIED, HelloAsso.
