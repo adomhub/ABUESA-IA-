@@ -1,6 +1,6 @@
 # Objectif 1000 phrases — bibliothèque WABUƐ
 
-Phrases ikposso validées par Alexi (dictionnaire partagé). Mise à jour automatique : 2026-11-26.
+Phrases ikposso validées par Alexi (dictionnaire partagé). Mise à jour automatique : 2026-11-27.
 
 **277 / 1000 phrases**
 
@@ -19,7 +19,7 @@ Phrases ikposso validées par Alexi (dictionnaire partagé). Mise à jour automa
 | 11 | Ɩvʋao avlē mʋanɩ. Ou ɩvʋao avlē. | Bonjour comment allez vous ou comment va tu |
 | 12 | ayē-adawlɩ̄ nabʋē | le fonio est très doux |
 | 13 | ēdɩ / edɩgbo | un (1) |
-| 14 | ítseɖe / ɛga | Argent |
+| 14 | ɩ́tseɖe / ɛga | Argent |
 | 15 | fʋ́ ɔlʋ | Aimer quelqu'un |
 | 16 | fʋsʋ / fʋ | Chercher / Vouloir |
 | 17 | Abʋɛ, éwlésɛ | D'accord, merci beaucoup |
@@ -31,9 +31,9 @@ Phrases ikposso validées par Alexi (dictionnaire partagé). Mise à jour automa
 | 23 | Ɛ ka fʋsʋ mɛ ? | Qu'est-ce que tu cherches ? |
 | 24 | ɩ́vla nʋ ɩ́nedza wanɩ | Les frères et sœurs |
 | 25 | Anasɛ o / Nabɔɛ | Bienvenue |
-| 26 | Ɛɛ, na vlɛ | Oui, je vais bien |
-| 27 | Ɛtsɛ oo | À demain |
-| 28 | ídzo nɛɖí | onze (11) |
+| 26 | ɩ́dzo nɛɖɩ́ | onze (11) |
+| 27 | Ɛɛ, na vlɛ | Oui, je vais bien |
+| 28 | Ɛtsɛ oo | À demain |
 | 29 | evɩdze wanɩ | Les enfants |
 | 30 | À zɔ anʋla nʋ... | Mon père s'appelle... |
 | 31 | À zɔ ana nʋ mɛ ? | Comment s'appelle ta mère ? |
@@ -56,42 +56,42 @@ Phrases ikposso validées par Alexi (dictionnaire partagé). Mise à jour automa
 | 48 | Yanʋ awʋɛ abʋɛ nɔmʋ | ta tenue est très jolie à voir |
 | 49 | A bʋɛ nɔmʋ | tu es beau / belle à voir |
 | 50 | Yanʋ awʋɛ abʋɛ nɔ | j'aime ta tenue |
-| 51 | ɔfí ɖawlí | boisson sucrée / soda |
-| 52 | gboma ɖetsí | sauce gboma (épinards) |
-| 53 | eɖí ɖetsí | sauce graine (de palme) |
-| 54 | aɖemɛ ɖetsí | sauce adémé |
+| 51 | ɔfɩ́ ɖawlɩ́ | boisson sucrée / soda |
+| 52 | gboma ɖetsɩ́ | sauce gboma (épinards) |
+| 53 | eɖɩ́ ɖetsɩ́ | sauce graine (de palme) |
+| 54 | aɖemɛ ɖetsɩ́ | sauce adémé |
 | 55 | amɔ vɛ | huile de palme |
 | 56 | ɔwlɔ ɣa | poulet |
 | 57 | Oo, éwlésɛ | non, merci |
 | 58 | Wélé álɔ | se laver le visage |
 | 59 | Ya awɛ | cuisiner |
-| 60 | Kú ɛfú | balayer |
-| 61 | Wélé ɔkú | faire la vaisselle |
-| 62 | Wélé ɔnú | faire la lessive |
-| 63 | Nó-íví / Ɣa ɔbɛ | aller chercher de l'eau |
-| 64 | Za wla / yawla | se reposer |
-| 65 | Kù kɛkɛ | faire du vélo |
-| 66 | íɖíkaɖí s'íɖíkaɖí | chaque matin |
-| 67 | nɛnɛ / wadí | tôt / vite |
-| 68 | Sɛɣa alɔ | va tout droit |
-| 69 | ívú kɛkɛ / ɛmô | moto |
-| 70 | Ɛ ɣa na ? | tu vas où ? |
-| 71 | Mɛ léwlé yɛ ? | qu'est-ce qui t'arrive ? |
-| 72 | Ɛlú ké dzí nɔ | j'ai mal à la tête |
+| 60 | Kʋ́ ɛfʋ́ | balayer |
+| 61 | Wélé ɔkʋ́ | faire la vaisselle |
+| 62 | Wélé ɔnʋ́ | faire la lessive |
+| 63 | Za wla / yawla | se reposer |
+| 64 | Nó-ɩ́vɩ́ / Ɣa ɔbɛ | aller chercher de l'eau |
+| 65 | Kʋ̀ kɛkɛ | faire du vélo |
+| 66 | ɩ́ɖɩ́kaɖɩ́ s'ɩ́ɖɩ́kaɖɩ́ | chaque matin |
+| 67 | nɛnɛ / wadɩ́ | tôt / vite |
+| 68 | ɩ́vʋ́ kɛkɛ / ɛmô | moto |
+| 69 | Ɛlʋ́ ké dzɩ́ nɔ | j'ai mal à la tête |
+| 70 | Sɛɣa alɔ | va tout droit |
+| 71 | Ɛ ɣa na ? | tu vas où ? |
+| 72 | Mɛ léwlé yɛ ? | qu'est-ce qui t'arrive ? |
 | 73 | Ɔɣlɔ ka kpɔnɔ | je tousse |
 | 74 | Bokɛ o | je suis désolé(e) pour toi / courage |
-| 75 | Kpɔ aɣlaka | remercier |
-| 76 | Ànùní, ànùní ! | au voleur ! |
-| 77 | Ízɛyí ! | attrapez-le ! |
-| 78 | Í zɛyí kana ! | attrape-le pour moi ! |
-| 79 | Í ba tɛ kana oo | venez m'aider ! |
-| 80 | Né kú oo | je suis mort(e) ! (expression forte) |
+| 75 | Ànʋ̀nɩ́, ànʋ̀nɩ́ ! | au voleur ! |
+| 76 | Ɩ́zɛyɩ́ ! | attrapez-le ! |
+| 77 | Ɩ́ zɛyɩ́ kana ! | attrape-le pour moi ! |
+| 78 | Kpɔ aɣlaka | remercier |
+| 79 | Ɩ́ ba tɛ kana oo | venez m'aider ! |
+| 80 | Né kʋ́ oo | je suis mort(e) ! (expression forte) |
 | 81 | Ɛ ka na mɛ ? | tu fais quel travail ? |
 | 82 | Agooo ! | excusez-moi (avant d'entrer chez quelqu'un) |
 | 83 | ɔsɩ ayɔ | mariage |
 | 84 | ɔlʋna ɔmʋ | trouver un travail |
 | 85 | Bɔ kamɩ | condoléances (à plusieurs) |
-| 86 | akpatsô / ɔsí | poisson |
+| 86 | akpatsô / ɔsɩ́ | poisson |
 | 87 | Nadʋɛha / kʋkɔ | s'il te plaît / excuse-moi |
 | 88 | Nadʋɛha zatɩ | s'il te plaît, assieds-toi |
 | 89 | Ɔlʋɛ kɔ bà | d'accord, entre |
@@ -204,10 +204,10 @@ Phrases ikposso validées par Alexi (dictionnaire partagé). Mise à jour automa
 | 196 | Aɖɩ ba bé zɩ | il va pleuvoir |
 | 197 | Ʋklo ka wʋ | il fait froid |
 | 198 | Ɩ́ɖɩ́sena, e tsɩka ba ʋɖʋnʋ. | L'après-midi, elle retourne à la maison. |
-| 199 | Ɛtsɛ o | à demain |
-| 200 | Ɔvlɛ ɔɔvɛ | le pagne rouge |
-| 201 | íɣa ɣa | viande de porc |
-| 202 | Níɣlí, e vlɛ. | La nuit, elle dort. |
+| 199 | ɩ́ɣa ɣa | viande de porc |
+| 200 | Nɩ́ɣlɩ́, e vlɛ. | La nuit, elle dort. |
+| 201 | Ɛtsɛ o | à demain |
+| 202 | Ɔvlɛ ɔɔvɛ | le pagne rouge |
 | 203 | E ya awɛ | elle cuisine |
 | 204 | Ne tsɩka ba nʋ ɩmlé | je reviendrai lundi |
 | 205 | ɛvalɩkʋ ɛdɩ nɛdɩ | chaque semaine |
