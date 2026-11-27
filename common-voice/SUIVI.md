@@ -14,3 +14,5 @@
 - Dépôt common-voice : commit « commit languages: Southern Altai (alt), Ikposso (kpo), Latin (la), Lezgi (lez) » (27 nov. 2026).
 - CHANGELOG : « Welcome to new languages … Ikposso (kpo) » + questions ikposso ajoutées par moz-acfort (spontaneous-speech PR #566).
 - À faire : vérifier quand la page ikposso apparaît sur le site Spontaneous Speech, puis inviter la communauté à enregistrer.
+- 27 nov. 2026 (≈ 14 h 20) : moz-acfort annonce que l'ikposso est EN LIGNE sur Spontaneous Speech :
+  https://commonvoice.mozilla.org/spontaneous-speech/beta/prompts — choisir « Ikposso » dans le menu. Connexion obligatoire pour contribuer.
