@@ -43,3 +43,4 @@
 - 24 nov. 2026 : licences vérifiées — WAXAL (Google, CC-BY-4.0, contient kpo) utilisable librement avec citation ; UGSpeechData complet (Univ. du Ghana) en CC BY-NC-ND 4.0 → accord nécessaire.
 - 24 nov. 2026 : e-mail de collaboration envoyé par Alexi au DCS HCI Lab de l'Université du Ghana (dcshcilab@ug.edu.gh). En attente de réponse.
 - 24 nov. 2026 : priorité 2 faite — orthographe décidée (ɩ, ʋ) et appliquée au dictionnaire, site, lexique audio, clavier, widget, stickers.
+- 27 nov. 2026 : relance envoyée au DCS HCI Lab (même fil), annonce Common Voice, demande d'autorisation UGSpeechData kpo, réponse demandée par e-mail (pas de rencontre).
