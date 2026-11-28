@@ -1,6 +1,6 @@
 # Objectif 1000 phrases — bibliothèque WABUƐ
 
-Phrases ikposso validées par Alexi (dictionnaire partagé). Mise à jour automatique : 2026-11-27.
+Phrases ikposso validées par Alexi (dictionnaire partagé). Mise à jour automatique : 2026-11-28.
 
 **277 / 1000 phrases**
 
