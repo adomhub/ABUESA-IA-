@@ -1063,6 +1063,7 @@ WABOUÉ! WABOUÉ! WABOUÉ hoyééééé!</div>
 
       <div id="home-weather"></div>
 
+      <div id="sondage" style="scroll-margin-top:90px;"></div>
       <div id="home-proverb"></div>
 
 
@@ -1829,7 +1830,7 @@ WABOUÉ! WABOUÉ! WABOUÉ hoyééééé!</div>
           À valider avec les anciens : système tonal exact, classes nominales, verbes, variation entre parlers.
         </div><br>
         Application conçue et développée par Adom K. Alexi, avec Claude (Anthropic).
-        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.36 · 27 nov. 2026 (🎤 Enregistre ta voix en ikposso — Mozilla Common Voice · proverbe de la semaine dans la bienvenue + 20 proverbes · 🧳 Visiter le pays akposso)</span>
+        <br><br><span data-no-i18n style="opacity:.6;font-size:calc(14px * var(--fs,1.15));">Version 5.37 · 28 nov. 2026 (🌾 Sondage public · 🎤 Enregistre ta voix en ikposso — Mozilla Common Voice · proverbe de la semaine dans la bienvenue + 20 proverbes · 🧳 Visiter le pays akposso)</span>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="testSearch()">🔎 Tester la recherche internet</button>
         <br><br><button type="button" class="share-card-btn" data-no-i18n onclick="showSearchErr()">📋 Voir les dernières erreurs (recherche, images)</button>
         <pre id="search-test-out" data-no-i18n style="white-space:pre-wrap;word-break:break-word;font-size:calc(13px * var(--fs,1.15));margin-top:8px;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;"></pre>
@@ -10410,6 +10411,71 @@ var FEDAPAY_PAGE = '';
     if(!document.getElementById('caisse-admin')){ adminSection.appendChild(bloc()); CODE=null; brancher(); }
   };
   if(typeof isAdminUnlocked==='function' && isAdminUnlocked() && adminSection && !document.getElementById('caisse-admin')){ adminSection.appendChild(bloc()); brancher(); }
+})();
+</script>
+
+<script>
+/* ===== Sondage public WABƲƐ (v5.37) ===== */
+(function(){
+  var SONDAGE = {
+    id: 'fonio-2026-11-28',
+    titre: '🌾 Sondage du samedi',
+    q: 'Le fonio (ayē) est-il cher cette année ?',
+    choix: ['💸 Il est cher', '👌 Le prix est normal', '🎉 Moins cher que l\'an dernier', '🤷 Je ne sais pas']
+  };
+  var CLE = 'wabue_sondage_' + SONDAGE.id;
+  function vote(){ try { return localStorage.getItem(CLE); } catch(e){ return null; } }
+  function setVote(i){ try { localStorage.setItem(CLE, String(i)); } catch(e){} }
+  function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function carte(inner){
+    var el = document.getElementById('sondage'); if(!el) return;
+    el.innerHTML = '<div class="home-calendar-card"><div class="hc-label">' + esc(SONDAGE.titre) + '</div>' +
+      '<div class="hc-day" style="font-size:1.05em;">' + esc(SONDAGE.q) + '</div>' + inner +
+      '<button class="share-card-btn" style="margin-top:8px;" onclick="window.partagerSondage()">📲 Partager le sondage</button></div>';
+  }
+  function resultats(rows){
+    var n = SONDAGE.choix.map(function(){ return 0; }), tot = 0;
+    (rows||[]).forEach(function(r){ if(r.choix>=0 && r.choix<n.length){ n[r.choix]++; tot++; } });
+    var mine = vote();
+    var h = SONDAGE.choix.map(function(c,i){
+      var pc = tot ? Math.round(n[i]*100/tot) : 0;
+      return '<div style="margin:8px 0;"><div style="display:flex;justify-content:space-between;font-size:.95em;"><span>' + esc(c) + (String(i)===mine?' ✅':'') + '</span><strong>' + pc + ' %</strong></div>' +
+        '<div style="background:rgba(0,0,0,.08);border-radius:8px;height:10px;overflow:hidden;"><div style="width:' + pc + '%;height:10px;background:#c7d92e;"></div></div></div>';
+    }).join('');
+    carte(h + '<div class="hc-note" style="margin-top:6px;">' + tot + ' vote' + (tot>1?'s':'') + ' · EWLESƐ pour votre avis !</div>');
+  }
+  function charger(){
+    if(!window.supabaseClient && typeof supabaseClient === 'undefined') return;
+    var c = (typeof supabaseClient !== 'undefined') ? supabaseClient : null;
+    if(!c){ return; }
+    c.from('sondage_votes').select('choix').eq('sondage', SONDAGE.id).limit(5000).then(function(r){ resultats(r.data||[]); });
+  }
+  function boutons(){
+    var h = SONDAGE.choix.map(function(c,i){
+      return '<button class="share-card-btn" style="display:block;width:100%;margin:6px 0;text-align:left;" onclick="window.voterSondage(' + i + ')">' + esc(c) + '</button>';
+    }).join('');
+    carte(h + '<div class="hc-note">Touchez une réponse : c\'est anonyme.</div>');
+  }
+  window.voterSondage = function(i){
+    if(vote() !== null){ charger(); return; }
+    var c = (typeof supabaseClient !== 'undefined') ? supabaseClient : null;
+    if(!c){ return; }
+    setVote(i);
+    c.from('sondage_votes').insert({ sondage: SONDAGE.id, choix: i }).then(function(){ charger(); });
+  };
+  window.partagerSondage = function(){
+    var url = location.origin + location.pathname + '#sondage';
+    var txt = '🌾 Sondage WABƲƐ : ' + SONDAGE.q + ' Votez ici 👉 ' + url;
+    if(navigator.share){ navigator.share({ title: 'Sondage WABƲƐ', text: txt, url: url }).catch(function(){}); }
+    else { window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank'); }
+  };
+  function demarrer(essai){
+    var pret = (typeof supabaseClient !== 'undefined') && supabaseClient;
+    if(!pret && essai < 40){ if(essai===0) boutons(); return setTimeout(function(){ demarrer(essai+1); }, 500); }
+    if(vote() !== null) charger(); else boutons();
+    if(location.hash === '#sondage'){ var el = document.getElementById('sondage'); if(el) el.scrollIntoView({behavior:'smooth'}); }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ demarrer(0); }); else demarrer(0);
 })();
 </script>
 </body>
